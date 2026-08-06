@@ -1,0 +1,18 @@
+---
+description: Memory System MVP 全局开发与治理规则
+globs:
+alwaysApply: true
+---
+
+- `01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md` 是唯一业务与技术规格。
+- 不得自行修改技术选型、依赖版本、模型、API Contract、Schema、错误码、状态机、幂等和恢复语义。
+- 每次只能处理一个 Task。
+- 编码前必须存在已批准的 Task Plan。
+- 未收到 PLAN_APPROVED 不得编写业务代码。
+- 每完成一个主要步骤，必须更新当前 Task Plan 和 progress.md。
+- 不得使用 TODO、pass、空实现或伪造业务返回。
+- 业务代码必须同时包含对应测试。
+- 测试失败时不得跳过、删除断言或降低验收标准。
+- 不得自动 Push、Merge、Rebase 或 Force Push。
+- 不得提交 Secret、真实用户数据、模型缓存或数据库数据。
+- 发现规格冲突或需要改变 Contract 时必须停止并报告。
