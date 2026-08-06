@@ -7,18 +7,20 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-OPS-001
-current_task_status: committed
-current_branch: feat/DEV-OPS-001-cursor-workflow-commands
+current_task_status: completed
+completed_at: "2026-08-06 15:30 UTC"
+current_branch: main
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-OPS-001-cursor-agent-workflow-commands.md
-latest_commit: 69fabb7
+current_plan_file: null
+latest_commit: 57800c3
 implementation_commit: 69fabb7b54f6107c424666f145a2ca68507f3fec
-status_record_commit_committed: null
-pr: 2
-pr_status: open
-pr_merged: null
-merge_commit: null
-next_action: 人工提交 docs(status): record DEV-OPS-001 implementation commit and PR；推送功能分支 feat/DEV-OPS-001-cursor-workflow-commands；然后才允许合并 PR #2；Agent 不得 Git Add/Commit/Push/Merge/Rebase；不得开始 DEV-002
+status_record_commit_committed: 5d00a497842a46912ddde8683146d986c2d0619a
+status_record_commit_completed: null
+pr: "#2"
+pr_status: merged
+pr_merged: true
+merge_commit: 57800c3
+next_action: 人工提交 docs(status): complete DEV-OPS-001 after PR merge；推送 main；随后删除本地和远程功能分支 feat/DEV-OPS-001-cursor-workflow-commands；不得开始 DEV-002 或 DEV-OPS-002；Agent 不得 Git Add/Commit/Push/Merge/Rebase/删除分支
 ```
 
 ## 测试状态
@@ -38,6 +40,7 @@ next_action: 人工提交 docs(status): record DEV-OPS-001 implementation commit
 | Task ID | 任务名称 | 完成时间 (UTC) | 实现 Commit | Merge Commit | PR |
 |---|---|---|---|---|---|
 | DEV-001 | 项目骨架、依赖与质量工具 | 2026-08-06 13:20 | `9fbe899` | `a2673ac` | #1 merged |
+| DEV-OPS-001 | Cursor Agent 工作流自动化 | 2026-08-06 15:30 | `69fabb7` | `57800c3` | #2 merged |
 
 ## 规格阻塞项
 
@@ -68,7 +71,7 @@ DEV-OPS-001 产品/流程未决项见其 Task Plan §12.2（OI-OPS-001–005）�
 |---|---|
 | PLANNING_DOCS_APPROVED | 已用于规划文档落盘/修订 |
 | PLAN_APPROVED（DEV-001 计划） | **已通过**（历史；DEV-001 已 completed） |
-| PLAN_APPROVED（DEV-OPS-001 计划） | **已通过**（Round 2）；plan Commit `48a7525`；状态 `committed` |
+| PLAN_APPROVED（DEV-OPS-001 计划） | **已通过**（Round 2）；plan Commit `48a7525`；状态 `completed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-001 实现） | **已通过**（P0=0 / P1=0 / P2=1 / P3=1；P2/P3 已接受残余、本轮不修复） |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
@@ -87,7 +90,7 @@ DEV-OPS-001 产品/流程未决项见其 Task Plan §12.2（OI-OPS-001–005）�
 
 DEV-001：步骤 1–9 均已完成（实现 Commit `9fbe899`；治理 committed `753c4e4`；PR #1 Merge `a2673ac`；completed 治理 Commit `740d821`）。功能分支本地与远程已删除。当前分支 `main`，与 `origin/main` 同步，工作区干净。
 
-## DEV-OPS-001 Git 流程（计划；未执行）
+## DEV-OPS-001 Git 流程（已完成）
 
 ```text
 1. 独立 Plan Review
@@ -96,12 +99,13 @@ DEV-001：步骤 1–9 均已完成（实现 Commit `9fbe899`；治理 committed
 4. 人工在 main 提交 docs(plan): add DEV-OPS-001 cursor agent workflow commands plan
 5. 从 main 创建 feat/DEV-OPS-001-cursor-workflow-commands
 6. /develop-task：approved → in_progress；实施五个 .cursor/commands/*.md + 强制契约测试
-7. 人工实现 Commit + PR
-8. docs(status) 治理 Commit（committed / completed）对齐 DEV-001 状态机
+7. 人工实现 Commit `69fabb7` + PR #2
+8. docs(status) 治理 Commit `5d00a49`（committed 状态落盘）
+9. PR #2 merged → main（Merge Commit `57800c3`）；状态 completed
+10. 待人工：docs(status): complete DEV-OPS-001 after PR merge；推送 main；删除功能分支
 ```
 
-**禁止**将 `docs(plan)` 放在 Plan Review / `PLAN_APPROVED` 之前。
-Agent 禁止执行 Git Add/Commit/Push/Merge/Rebase。
+DEV-OPS-001：步骤 1–9 均已完成（实现 Commit `69fabb7`；治理 committed `5d00a49`；PR #2 Merge `57800c3`）。步骤 10 待人工执行最终治理 Commit 与分支清理。不得开始 DEV-002 或 DEV-OPS-002。
 
 ## 最近执行记录
 
@@ -129,10 +133,11 @@ Agent 禁止执行 Git Add/Commit/Push/Merge/Rebase。
 | 2026-08-06 14:51 UTC | DEV-OPS-001 | tested（保持） | OI-OPS-005 人工 UI 冒烟通过：`plan-task`/`review-plan`/`develop-task`/`review-code`/`close-task` 均可见且可加载；仅验证发现与加载；未改命令/测试；未 Git 写 |
 | 2026-08-06 15:03 UTC | DEV-OPS-001 | tested → reviewed | 独立 Code Review：P0=0/P1=0/P2=1/P3=1；`CODE_REVIEW_APPROVED`；复跑契约 8/unit 20/ruff/mypy 通过；P2/P3 已接受残余、本轮不修复实现；仅改治理文档；未 Git 写 |
 | 2026-08-06 15:23 UTC | DEV-OPS-001 | reviewed → committed | 人工实现 Commit `69fabb7`（`chore(cursor): add project slash commands and command contract tests`）；GitHub PR #2 已创建（open，base main，未 merge）；治理 docs(status) 待人工提交 |
+| 2026-08-06 15:28 UTC | DEV-OPS-001 | committed（治理落盘） | 人工 Commit `5d00a49`（`docs(status): record DEV-OPS-001 implementation commit and PR`）；feat 分支已推送 |
+| 2026-08-06 15:30 UTC | DEV-OPS-001 | committed → completed | PR #2 merged 至 main（Merge Commit `57800c3`）；治理 committed Commit `5d00a49`；实现 Commit `69fabb7` |
 
 ## 下一任务
 
-1. **当前**：DEV-OPS-001 状态 `committed`；实现 Commit `69fabb7`；PR #2 open（未 merge）。
-2. 人工提交 `docs(status): record DEV-OPS-001 implementation commit and PR`；推送功能分支；然后才允许合并 PR #2。
-3. PR 合并后，在 `main` 提交 `docs(status): complete DEV-OPS-001 after PR merge` 并将状态置为 `completed`。
-4. DEV-002 仍保持 `planned`（业务下一任务），但不在本会话启动。
+1. **当前**：DEV-OPS-001 状态 `completed`；PR #2 已合并（Merge Commit `57800c3`）。
+2. 人工提交 `docs(status): complete DEV-OPS-001 after PR merge`；推送 `main`；随后删除本地和远程功能分支 `feat/DEV-OPS-001-cursor-workflow-commands`。
+3. **不得**在本会话启动 DEV-002 或 DEV-OPS-002。

@@ -5,7 +5,8 @@
 ```yaml
 task_id: DEV-OPS-001
 task_name: Cursor Agent 工作流自动化
-status: committed
+status: completed
+completed_at: "2026-08-06 15:30 UTC"
 spec_sections:
   - "非业务规格任务：对齐仓库治理与 03_AI_Prompts 角色流程；不修改技术规格正文"
 prerequisites:
@@ -13,10 +14,10 @@ prerequisites:
   - "当前工作区干净；默认分支 main 与 origin/main 同步"
 branch: "feat/DEV-OPS-001-cursor-workflow-commands"  # 实施分支；计划 Commit 在 main，见 §13
 created_at: "2026-08-06 14:03 UTC"
-updated_at: "2026-08-06 15:23 UTC"
+updated_at: "2026-08-06 15:33 UTC"
 approval_gates:
   planning_docs: "Round 2 复审通过；PLAN_APPROVED"
-  implementation_plan: "status=committed；CODE_REVIEW_APPROVED；实现 Commit 69fabb7；PR #2 open（未 merge）；治理 docs(status) 待人工提交"
+  implementation_plan: "status=completed；CODE_REVIEW_APPROVED；实现 Commit 69fabb7；治理 committed Commit 5d00a49；PR #2 merged（57800c3）；最终 docs(status) 待人工提交"
 ```
 
 ## 2. 任务目标
@@ -540,6 +541,8 @@ out_of_scope_changes:
 | 2026-08-06 14:51 UTC | OI-OPS-005 人工 UI 冒烟 | 仅记录冒烟结果；未改命令/测试 | 人工 `/` 菜单：五命令均可见且可加载 | 冒烟通过；状态保持 tested；未 Git 写 |
 | 2026-08-06 15:03 UTC | 独立 Code Review 回写 | status=tested → reviewed；仅改三份治理文档 | 复跑：契约 8 passed；unit 20 passed；ruff/mypy 通过 | CODE_REVIEW_APPROVED；P2/P3 已接受残余、本轮不修复；未改实现；未 Git 写 |
 | 2026-08-06 15:23 UTC | 人工实现 Commit + PR 创建 | 实现 Commit `69fabb7`；GitHub PR #2 已创建（open，base main，未 merge） | N/A（治理回写） | status→committed；下一步人工 `docs(status)`、推送分支后再合并 PR #2 |
+| 2026-08-06 15:28 UTC | 治理 committed 记录 | 人工 Commit `5d00a49`（`docs(status): record DEV-OPS-001 implementation commit and PR`）于 feat 分支 | N/A（治理回写） | status 保持 committed；PR #2 待合并 |
+| 2026-08-06 15:30 UTC | PR 合并与最终治理回写 | PR #2 merged → main（Merge Commit `57800c3`）；治理 committed Commit `5d00a49` 已记录 | N/A（治理回写） | status→completed；最终 docs(status) 待 main 人工提交 |
 
 ## 16. 实际执行结果
 
@@ -626,23 +629,25 @@ implementation_review:
 
 ```yaml
 implementation_branch: feat/DEV-OPS-001-cursor-workflow-commands
-current_branch: feat/DEV-OPS-001-cursor-workflow-commands
+current_branch: main
 plan_commit: 48a752506943d7aa239f213ee103a7e11561b5dd
 implementation_commit: 69fabb7b54f6107c424666f145a2ca68507f3fec
 implementation_commit_message: "chore(cursor): add project slash commands and command contract tests"
-status_record_commit_committed: null
+status_record_commit_committed: 5d00a497842a46912ddde8683146d986c2d0619a
 status_record_commit_committed_message: "docs(status): record DEV-OPS-001 implementation commit and PR"
 status_record_commit_completed: null
 status_record_commit_completed_message: "docs(status): complete DEV-OPS-001 after PR merge"
-pr: 2
+pr: "#2"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/2"
-pr_status: open
+pr_status: merged
+pr_merged: true
 pr_base: main
 pr_head: feat/DEV-OPS-001-cursor-workflow-commands
-merge_commit: null
-next_git_step: "人工提交 docs(status): record DEV-OPS-001 implementation commit and PR；推送功能分支；然后才允许合并 PR #2；Agent 不得代为 Add/Commit/Push/Merge"
+merge_commit: 57800c3
+completed_at: "2026-08-06 15:30 UTC"
+next_git_step: "人工提交 docs(status): complete DEV-OPS-001 after PR merge；推送 main；随后删除本地和远程功能分支 feat/DEV-OPS-001-cursor-workflow-commands；不得开始 DEV-002 或 DEV-OPS-002；Agent 不得代为 Add/Commit/Push/Delete"
 ```
 
 ### 最终状态
 
-`committed`
+`completed`
