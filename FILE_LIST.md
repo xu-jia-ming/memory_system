@@ -1,0 +1,27 @@
+# 文件清单
+
+- `.cursor/rules/00-memory-system-governance.mdc`
+- `00_README_FIRST.md`
+- `01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md`
+- `02_开发管理/master_plan.md`
+- `02_开发管理/open_issues.md`
+- `02_开发管理/progress.md`
+- `02_开发管理/tasks/.gitkeep`
+- `02_开发管理/tasks/DEV-001-project-skeleton.md`
+- `02_开发管理/tasks/TASK_PLAN_TEMPLATE.md`
+- `03_AI_Prompts/00_全局开发规则.md`
+- `03_AI_Prompts/01_初始化与Backlog.md`
+- `03_AI_Prompts/02_任务计划.md`
+- `03_AI_Prompts/03_计划审查.md`
+- `03_AI_Prompts/04_任务开发.md`
+- `03_AI_Prompts/05_测试补全.md`
+- `03_AI_Prompts/06_代码审查.md`
+- `03_AI_Prompts/07_审查修复.md`
+- `03_AI_Prompts/08_Git提交.md`
+- `03_AI_Prompts/09_会话恢复.md`
+- `03_AI_Prompts/10_Bug修复.md`
+- `04_Git规范/git_workflow.md`
+- `05_测试与验收/mvp_acceptance_checklist.md`
+- `05_测试与验收/test_matrix.md`
+- `06_交付给AI的文件清单.md`
+- `MANIFEST.json`

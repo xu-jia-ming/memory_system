@@ -1,0 +1,127 @@
+{
+  "package_name": "Memory System AI 开发文档包",
+  "package_version": "1.0",
+  "spec_file": "01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md",
+  "files": [
+    {
+      "path": ".cursor/rules/00-memory-system-governance.mdc",
+      "sha256": "7a4709439c955694ec1452f5cb739c23791f96e5f53baf4684f722eea58dbb12",
+      "size_bytes": 942
+    },
+    {
+      "path": "00_README_FIRST.md",
+      "sha256": "df4a9d84e89418094739c745665dd4b9206d945c9941a7756e78c94cb54823dc",
+      "size_bytes": 3596
+    },
+    {
+      "path": "01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md",
+      "sha256": "bb99bdfb99218e546a29c9ededff4c2558687792e77d62b88dce0182bf8b9d7b",
+      "size_bytes": 248235
+    },
+    {
+      "path": "02_开发管理/master_plan.md",
+      "sha256": "c0283abdcda3fd778b70bddb9b916ed5e36d6d2cda80f6f6caa9cdd9bd22d8f1",
+      "size_bytes": 18675
+    },
+    {
+      "path": "02_开发管理/open_issues.md",
+      "sha256": "2c535be8c809fcecc53f37208d3d4e46f00cac178a4db065143e7f96b15f937d",
+      "size_bytes": 7157
+    },
+    {
+      "path": "02_开发管理/progress.md",
+      "sha256": "5b376e5b03d56ed3b0f890a19b3992db0d457fa090dbddb3be1f6d29c96bb6e0",
+      "size_bytes": 3276
+    },
+    {
+      "path": "02_开发管理/tasks/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "02_开发管理/tasks/DEV-001-project-skeleton.md",
+      "sha256": "9f27cb51356f4ce51ccea3d32d4f538dad4259f2f0220aa1d97616f6decc19de",
+      "size_bytes": 20212
+    },
+    {
+      "path": "02_开发管理/tasks/TASK_PLAN_TEMPLATE.md",
+      "sha256": "153b36af134489892db6965e78d4b0b31038251ee4012657975a7e1e9fa6d185",
+      "size_bytes": 2932
+    },
+    {
+      "path": "03_AI_Prompts/00_全局开发规则.md",
+      "sha256": "fb7522e6dd2cbd66108e0d7a0f97db8f170d6167618bfcf5e548deb84d69f68f",
+      "size_bytes": 1532
+    },
+    {
+      "path": "03_AI_Prompts/01_初始化与Backlog.md",
+      "sha256": "3e63a8c413d5d262c7f10268b9b56f20a6e3ff16a4b7917f67d32fd0e8481def",
+      "size_bytes": 1342
+    },
+    {
+      "path": "03_AI_Prompts/02_任务计划.md",
+      "sha256": "50fc013cb28bbf3b3b521c15751a6fea2170759c5f3be069b1f605f05e493c8e",
+      "size_bytes": 1399
+    },
+    {
+      "path": "03_AI_Prompts/03_计划审查.md",
+      "sha256": "306d0230b9852d9c0dfc55518a5b999645a6a8bded6b8ba8a062647e5b743cc2",
+      "size_bytes": 1068
+    },
+    {
+      "path": "03_AI_Prompts/04_任务开发.md",
+      "sha256": "74daad938a55111177ba6d3c8767d4d2384f41c4745c3aef37842d3e8c6c36a4",
+      "size_bytes": 1283
+    },
+    {
+      "path": "03_AI_Prompts/05_测试补全.md",
+      "sha256": "6745eeeb20756a77d580428bbcd98caa6c433aecae91383b8cb2da99d42ebb85",
+      "size_bytes": 1102
+    },
+    {
+      "path": "03_AI_Prompts/06_代码审查.md",
+      "sha256": "b69e2435c724729082a5f37a608d4c259eb4a0837d4773889cd8b898ae7b2554",
+      "size_bytes": 1339
+    },
+    {
+      "path": "03_AI_Prompts/07_审查修复.md",
+      "sha256": "846d581afd7080ce0ea0bb0e67328e0437d703d32258b43b9eb6fb80a0fd210a",
+      "size_bytes": 595
+    },
+    {
+      "path": "03_AI_Prompts/08_Git提交.md",
+      "sha256": "9d012fb39bba2891cfa394669c8e95ed5cd5dbee577a427f0b6a67beaf914cc9",
+      "size_bytes": 1195
+    },
+    {
+      "path": "03_AI_Prompts/09_会话恢复.md",
+      "sha256": "96f873bcc726b2f3f98bf68f4e7d4f83d2c5561be7ca8d541ed554a282b0a8d9",
+      "size_bytes": 618
+    },
+    {
+      "path": "03_AI_Prompts/10_Bug修复.md",
+      "sha256": "9b82fb9b7eb5c58a7d5dfa2e63a6e29d9b82f9c329353fd5e0c6291f97f0b28a",
+      "size_bytes": 696
+    },
+    {
+      "path": "04_Git规范/git_workflow.md",
+      "sha256": "e497485b314df4dfe60129ed6327178e2b6c7b00051e9c920dc870ec697b6dd1",
+      "size_bytes": 2426
+    },
+    {
+      "path": "05_测试与验收/mvp_acceptance_checklist.md",
+      "sha256": "b5d5f4461f0723f88f64ad9e95e3c97a9c0f323303098bc2852db050ad195bbd",
+      "size_bytes": 2101
+    },
+    {
+      "path": "05_测试与验收/test_matrix.md",
+      "sha256": "170db4b7068c06eec10a9666d051bfbc231eaa28060dd05bd2022a9d6631c990",
+      "size_bytes": 1829
+    },
+    {
+      "path": "06_交付给AI的文件清单.md",
+      "sha256": "f1462bc23b18f0493dbdc48b41c7891a413fe78404f5b207acdcc30426593942",
+      "size_bytes": 1514
+    }
+  ]
+}
