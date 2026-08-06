@@ -6,31 +6,31 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-001
-current_task_status: completed
+current_task: DEV-OPS-001
+current_task_status: approved
 current_branch: main
 target_default_branch: main
-current_plan_file: null
-latest_commit: a2673ac
-implementation_commit: 9fbe899
-status_record_commit_committed: 753c4e4
-pr: "#1"
-pr_status: merged
-pr_merged: true
-merge_commit: a2673ac
-next_action: 人工在 main 提交 docs(status): complete DEV-001 after PR merge（治理 completed 状态落盘 Commit）；随后启动 DEV-002 规划阶段（创建 Task Plan 待 PLAN_APPROVED，不得开始实现）；本会话未执行 Git Commit/Push/Merge/Rebase
+current_plan_file: 02_开发管理/tasks/DEV-OPS-001-cursor-agent-workflow-commands.md
+latest_commit: 740d821
+implementation_commit: null
+status_record_commit_committed: null
+pr: null
+pr_status: null
+pr_merged: null
+merge_commit: null
+next_action: 人工在 main 提交 docs(plan): add DEV-OPS-001 cursor agent workflow commands plan；随后创建 feat/DEV-OPS-001-cursor-workflow-commands；在 /develop-task 前置检查通过前保持 approved、不得 in_progress、不得创建 .cursor/commands/；不得开始 DEV-002 实现；本会话未执行 Git Commit/Push/Merge/Rebase
 ```
 
 ## 测试状态
 
 | 测试层级 | 状态 | 最近命令 | 最近结果 |
 |---|---|---|---|
-| Unit | passed | `uv run pytest tests/unit` | 12 passed（Review 复跑） |
-| Contract | n/a | - | DEV-001 不适用 |
-| Integration | n/a | - | DEV-001 不适用 |
-| E2E | n/a | - | DEV-001 不适用 |
-| Ruff | passed | `uv run ruff check .` | All checks passed（Review 复跑） |
-| Mypy | passed | `uv run mypy src tests` | Success: no issues found in 33 source files（Review 复跑） |
+| Unit | passed（DEV-001） | `uv run pytest tests/unit` | 12 passed（DEV-001 Review 复跑）；DEV-OPS-001 尚未实施 |
+| Contract | n/a | - | DEV-OPS-001 不适用业务 Contract |
+| Integration | n/a | - | DEV-OPS-001 不适用 |
+| E2E | n/a | - | DEV-OPS-001 不适用 |
+| Ruff | passed（DEV-001） | `uv run ruff check .` | All checks passed（DEV-001） |
+| Mypy | passed（DEV-001） | `uv run mypy src tests` | Success（DEV-001） |
 
 ## 已完成任务
 
@@ -40,7 +40,7 @@ next_action: 人工在 main 提交 docs(status): complete DEV-001 after PR merge
 
 ## 规格阻塞项
 
-无。OI-010（Build Backend）已于 2026-08-06 人工决议为 `uv_build`，规格 §3.5 已同步，**不再阻塞** DEV-001 实施。
+无。OI-010（Build Backend）已于 2026-08-06 人工决议为 `uv_build`，规格 §3.5 已同步，**不再阻塞**。
 
 ## 实施前置条件
 
@@ -53,10 +53,12 @@ next_action: 人工在 main 提交 docs(status): complete DEV-001 after PR merge
 
 见 `02_开发管理/open_issues.md`。OI-010 为 `resolved`。未解决项不得自行解释为新 Contract。
 
+DEV-OPS-001 产品/流程未决项见其 Task Plan §12.2（OI-OPS-001–005）；**不**写入规格 Contract。
+
 ## 已知风险
 
 - 所有依赖和基础设施版本必须按技术规格锁定（含 `[build-system]` 的 `uv_build`）。
-- DEV-001 仅允许白名单路径；不得创建黑名单或实现 DEV-002+ 功能。
+- DEV-OPS-001：Cursor Commands 为 beta；不得假设未证实的参数替换或自动角色切换。
 - 本地 `uv lock`/`uv sync` 需经代理 `127.0.0.1:7890` 访问 PyPI（环境因素，未写入仓库配置）。
 
 ## 双口令门禁
@@ -64,9 +66,10 @@ next_action: 人工在 main 提交 docs(status): complete DEV-001 after PR merge
 | 口令 | 状态 |
 |---|---|
 | PLANNING_DOCS_APPROVED | 已用于规划文档落盘/修订 |
-| PLAN_APPROVED（DEV-001 计划） | **已通过**（独立复审；BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 2，已纳入 Amendment 003） |
+| PLAN_APPROVED（DEV-001 计划） | **已通过**（历史；DEV-001 已 completed） |
+| PLAN_APPROVED（DEV-OPS-001 计划） | **已通过**（Round 2：BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0）；状态 `approved`；尚未实施 |
 
-## 固定 Git 初始化流程
+## 固定 Git 初始化流程（DEV-001 历史）
 
 ```text
 1. 人工将默认分支规范为 main
@@ -80,7 +83,23 @@ next_action: 人工在 main 提交 docs(status): complete DEV-001 after PR merge
 9. docs(status): complete DEV-001 after PR merge（main；治理状态 completed）
 ```
 
-当前：步骤 1–8 已完成（`build(bootstrap)` Commit `9fbe899`；治理 committed Commit `753c4e4`；PR #1 merged，Merge Commit `a2673ac`；当前分支 `main`）。步骤 9 待人工提交第二个治理 Commit。DEV-001 治理状态 `completed`；下一步进入 DEV-002 规划阶段。
+DEV-001：步骤 1–9 均已完成（实现 Commit `9fbe899`；治理 committed `753c4e4`；PR #1 Merge `a2673ac`；completed 治理 Commit `740d821`）。功能分支本地与远程已删除。当前分支 `main`，与 `origin/main` 同步，工作区干净。
+
+## DEV-OPS-001 Git 流程（计划；未执行）
+
+```text
+1. 独立 Plan Review
+2. PLAN_APPROVED
+3. 状态更新为 approved（Task Plan / master_plan / progress；此时不得实施）
+4. 人工在 main 提交 docs(plan): add DEV-OPS-001 cursor agent workflow commands plan
+5. 从 main 创建 feat/DEV-OPS-001-cursor-workflow-commands
+6. /develop-task：approved → in_progress；实施五个 .cursor/commands/*.md + 强制契约测试
+7. 人工实现 Commit + PR
+8. docs(status) 治理 Commit（committed / completed）对齐 DEV-001 状态机
+```
+
+**禁止**将 `docs(plan)` 放在 Plan Review / `PLAN_APPROVED` 之前。
+Agent 禁止执行 Git Add/Commit/Push/Merge/Rebase。
 
 ## 最近执行记录
 
@@ -97,7 +116,14 @@ next_action: 人工在 main 提交 docs(status): complete DEV-001 after PR merge
 | 2026-08-06 12:55 UTC | DEV-001 | reviewed → committed | 人工 Commit `9fbe899`（build(bootstrap): add project skeleton, uv lock, and quality tooling）；分支已推送；PR #1 open 尚未 merge |
 | 2026-08-06 13:06 UTC | DEV-001 | Git 计划增补 | Amendment 004：§13 增加两条 `docs(status)` 治理 Commit；同步 Git 流程与 next_action |
 | 2026-08-06 13:20 UTC | DEV-001 | committed → completed | PR #1 merged 至 main（Merge Commit `a2673ac`）；治理 committed Commit `753c4e4`；实现 Commit `9fbe899` |
+| 2026-08-06 | DEV-001 | completed 落盘 | main 治理 Commit `740d821`：`docs(status): complete DEV-001 after PR merge`；功能分支已删；main 已同步远程 |
+| 2026-08-06 14:03 UTC | DEV-OPS-001 | planned | 创建 Task Plan；master_plan CHANGE-002 登记；等待独立 Plan Reviewer；未创建 `.cursor/commands/`；未 Git 写 |
+| 2026-08-06 14:16 UTC | DEV-OPS-001 | planned（Amendment 001） | 首轮 PLAN_REJECTED（BLOCKER 0 / MUST_FIX 4 / SHOULD_FIX 6）；已落实全部修订；状态仍 planned；等待同一 Reviewer 复审；未实施、未 Git 写 |
+| 2026-08-06 14:25 UTC | DEV-OPS-001 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0）；状态回写为 approved；未实施、未创建 `.cursor/commands/`、未 Git 写 |
 
 ## 下一任务
 
-DEV-002（配置系统与 `.env.example`）规划阶段：创建 Task Plan 并等待 `PLAN_APPROVED`；不得开始 DEV-002 实现。并行待办：人工在 `main` 提交 `docs(status): complete DEV-001 after PR merge`（第二个治理 Commit）。本会话不执行 Git 操作。
+1. **当前**：人工在 `main` 提交 `docs(plan): add DEV-OPS-001 cursor agent workflow commands plan`。
+2. 随后从 `main` 创建 `feat/DEV-OPS-001-cursor-workflow-commands`。
+3. 在 `/develop-task` 前置检查通过前保持 `approved`；不得进入 `in_progress`；不得创建 `.cursor/commands/`。
+4. DEV-002 仍保持 `planned`（业务下一任务），但不在本会话启动。

@@ -55,6 +55,24 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | planned |
 | DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003 | planned |
 
+### Phase 0 补充：开发工作流自动化（非业务规格）
+
+| Task ID | Task | 规格章节 | 前置依赖 | 状态 |
+|---|---|---|---|---|
+| DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | approved |
+
+#### DEV-OPS-001 Cursor Agent 工作流自动化
+
+- **目标**：在 `.cursor/commands/` 建立五个项目级 Slash Commands（`plan-task` / `review-plan` / `develop-task` / `review-code` / `close-task`），减少长提示词粘贴；每命令内化角色约束、只读检查、可写范围、阶段验证与结束标记；禁止 Agent Git 写；保留五角色隔离；强制新增契约测试。
+- **非目标**：改业务代码；改 DEV-001 既有测试语义；开始 DEV-002；改技术规格正文；Custom Modes；自动 Commit/Push/Merge；合并为超级 Agent；创建 `.cursor/skills/`；假设未证实的命令参数/自动角色切换。
+- **变更文件（预期）**：五个 `.cursor/commands/*.md`；强制 `tests/unit/test_cursor_commands_contract.py`；本任务开发管理回写。
+- **测试**：强制静态契约（存在性 + 最小必含子串 + 角色隔离）；人工 `/` 菜单冒烟；无业务 Contract/Integration/E2E。
+- **验收**：白名单恰好五文件；结束标记互不混用；角色一一对应；状态机 `PLAN_APPROVED`→`approved`（不实施）→`/develop-task` 才 `in_progress`。
+- **Git 顺序**：独立 Review → `PLAN_APPROVED` → `approved` → 人工 `docs(plan)` on main → 创建 `feat/DEV-OPS-001-cursor-workflow-commands` → Developer 实施。
+- **风险**：Commands 为 beta；产品参数机制未证实（见 Task Plan OI-OPS-001–005）。
+- **计划文件**：`02_开发管理/tasks/DEV-OPS-001-cursor-agent-workflow-commands.md`
+- **状态备注**：`approved`（Round 2：BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0 / `PLAN_APPROVED`）；此时不得实施；下一步人工 `docs(plan)` on main，再创建 `feat/DEV-OPS-001-cursor-workflow-commands`；未创建 `.cursor/commands/`；未 Git 写。
+
 #### DEV-001 项目骨架、依赖与质量工具
 
 - **目标**：**只创建 DEV-001 白名单内的 §3.4 目录与文件子集**（不宣称完成全部 §3.4 树）；`pyproject.toml` 依赖约束与 §3.5 完全一致，并含固定 `[build-system]`（`requires = ["uv_build>=0.11.32,<0.13"]`，`build-backend = "uv_build"`）；生成 `uv.lock`；ruff/mypy/pytest 可运行；三 Entrypoint **可安全 import**；通过子进程执行三个 `python -m memory_system.entrypoints.*`，未就绪时明确错误并以非零退出。
@@ -64,7 +82,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：白名单齐套且黑名单不存在；依赖与 build-system / requires-python 契约测试通过；`uv sync --locked`；ruff/mypy/pytest 通过；分阶段更新 progress/Task Plan 状态。
 - **风险**：PRE-ENV-001/002；禁止 import 阶段抛 `SystemExit`/`NotImplementedError`；禁止偏离已决议的 `uv_build`。
 - **计划文件**：`02_开发管理/tasks/DEV-001-project-skeleton.md`
-- **状态备注**：`completed`。实现 Commit `9fbe899`；治理 `committed` 记录 Commit `753c4e4`；PR #1 merged（Merge Commit `a2673ac`）。Amendment 004 第一个治理 Commit 已完成；第二个治理 Commit（`docs(status): complete DEV-001 after PR merge`）待 main 人工提交。
+- **状态备注**：`completed`。实现 Commit `9fbe899`；治理 `committed` 记录 Commit `753c4e4`；PR #1 merged（Merge Commit `a2673ac`）；completed 治理 Commit `740d821`（`docs(status): complete DEV-001 after PR merge`）已在 main 落盘。
 
 #### DEV-002 配置系统与 `.env.example`
 
@@ -326,5 +344,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | Phase 0–5 全表（相对初始骨架 Master Plan 增补 DEV-006，重编号 STM/RET，拆分 STM-011/012/013 等） |
 | 是否改变技术规格 | **否** |
 | 审批 | 规划最终修订版；落盘依据 `PLANNING_DOCS_APPROVED` |
+
+### CHANGE-002
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-06 |
+| 原因 | 登记非业务任务 DEV-OPS-001：项目级 Cursor Slash Commands，降低长提示词重复粘贴；不改变 Phase 0–5 业务任务目标与依赖 |
+| 受影响任务 | 新增 `DEV-OPS-001`（Phase 0 补充）；**不**修改 DEV-001 完成状态；**不**改变 DEV-002+ 业务范围 |
+| 是否改变技术规格 | **否** |
+| 审批 | 初版曾 `PLAN_REJECTED`；Amendment 001 后 Round 2 复审通过（`PLAN_APPROVED`）；状态 `approved`；未实施 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
