@@ -1,0 +1,74 @@
+[project]
+name = "memory-system"
+version = "0.1.0"
+description = "Memory System MVP — shared application package for API and workers"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.139,<0.140",
+    "pydantic>=2.13,<2.14",
+    "pydantic-settings>=2.14,<2.15",
+    "pyyaml>=6.0,<7",
+    "uvicorn[standard]>=0.47,<0.48",
+    "httpx>=0.28,<0.29",
+    "openai>=2.46,<3",
+    "redis>=8.0,<8.1",
+    "pymongo>=4.17,<4.18",
+    "aiokafka>=0.13,<0.14",
+    "neo4j>=5.28,<6",
+    "elasticsearch[async]>=9.4,<9.5",
+    "apscheduler>=3.11,<4",
+    "structlog>=26.1,<27",
+    "prometheus-client>=0.25,<0.26",
+]
+
+[dependency-groups]
+quality = [
+    "ruff>=0.15,<0.16",
+    "mypy>=2.1,<2.2",
+]
+test = [
+    "pytest>=9.1,<9.2",
+    "pytest-asyncio>=1.4,<1.5",
+    "pytest-cov>=7.1,<7.2",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv]
+default-groups = ["quality", "test"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+mypy_path = "src"
+files = ["src", "tests"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = ["--strict-markers"]
+
+[tool.coverage.run]
+source = [
+    "memory_system.domain",
+    "memory_system.application",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true

@@ -7,30 +7,28 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-001
-current_task_status: approved
-current_branch: master
+current_task_status: reviewed
+current_branch: feat/DEV-001-project-skeleton
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-001-project-skeleton.md
 latest_commit: null
-next_action: 人工执行 Git 基线（main）与 docs(plan) Commit；满足 PRE-ENV-001/002 后另开实施会话将状态改为 in_progress 并在 feat/DEV-001-project-skeleton 编码；本轮保持 approved，不得实施、不得 Git
+next_action: 独立 Code Review 已通过（PASS）；等待人工执行 build(bootstrap) Commit；本会话未执行 Git Commit/Push/Merge/Rebase
 ```
-
-说明：`current_branch: master` 表示仓库当前仍为尚无 Commit 的 `master`；目标默认分支为 `main`，由人工规范化，不得将 `current_branch` 写为 `null`。
 
 ## 测试状态
 
 | 测试层级 | 状态 | 最近命令 | 最近结果 |
 |---|---|---|---|
-| Unit | not_started | - | - |
-| Contract | not_started | - | - |
-| Integration | not_started | - | - |
-| E2E | not_started | - | - |
-| Ruff | not_started | - | - |
-| Mypy | not_started | - | - |
+| Unit | passed | `uv run pytest tests/unit` | 12 passed（Review 复跑） |
+| Contract | n/a | - | DEV-001 不适用 |
+| Integration | n/a | - | DEV-001 不适用 |
+| E2E | n/a | - | DEV-001 不适用 |
+| Ruff | passed | `uv run ruff check .` | All checks passed（Review 复跑） |
+| Mypy | passed | `uv run mypy src tests` | Success: no issues found in 33 source files（Review 复跑） |
 
 ## 已完成任务
 
-暂无。
+暂无（DEV-001 已 `reviewed`，尚未人工 Commit / completed）。
 
 ## 规格阻塞项
 
@@ -40,8 +38,8 @@ next_action: 人工执行 Git 基线（main）与 docs(plan) Commit；满足 PRE
 
 | ID | 项 | 说明 | 状态 |
 |---|---|---|---|
-| PRE-ENV-001 | 缺少 `uv` | DEV-001 **实施编码前**必须安装 `uv` | open |
-| PRE-ENV-002 | 主机 Python 3.13.9 | DEV-001 **实施编码前**必须使用 Python 3.12.13（经 uv） | open |
+| PRE-ENV-001 | 缺少 `uv` | DEV-001 **实施编码前**必须安装 `uv` | satisfied（uv 0.12.2） |
+| PRE-ENV-002 | 主机 Python 3.13.9 | DEV-001 **实施编码前**必须使用 Python 3.12.13（经 uv） | satisfied（uv python find 3.12.13 成功；.venv 为 3.12.13） |
 
 ## 规格歧义
 
@@ -49,9 +47,9 @@ next_action: 人工执行 Git 基线（main）与 docs(plan) Commit；满足 PRE
 
 ## 已知风险
 
-- 初始仓库尚无 Commit；需人工执行固定 Git 基线流程。
 - 所有依赖和基础设施版本必须按技术规格锁定（含 `[build-system]` 的 `uv_build`）。
-- 计划已 `PLAN_APPROVED`，但当前仅为 `approved`；未进入 `in_progress` 前不得编写业务代码。
+- DEV-001 仅允许白名单路径；不得创建黑名单或实现 DEV-002+ 功能。
+- 本地 `uv lock`/`uv sync` 需经代理 `127.0.0.1:7890` 访问 PyPI（环境因素，未写入仓库配置）。
 
 ## 双口令门禁
 
@@ -70,6 +68,8 @@ next_action: 人工执行 Git 基线（main）与 docs(plan) Commit；满足 PRE
 5. 实施会话：状态改为 in_progress 后编码；完成后 build(bootstrap) Commit 在 feat 分支
 ```
 
+当前：步骤 1–4 与实现/测试/Review 已完成；步骤 5 的 `build(bootstrap)` Commit 待人工执行。
+
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
@@ -78,7 +78,11 @@ next_action: 人工执行 Git 基线（main）与 docs(plan) Commit；满足 PRE
 | 2026-08-06 07:50 UTC | DEV-001 plan | planned（修订） | 按 MF-001–004、SF-002–004 修订；新增 OI-010 |
 | 2026-08-06 08:11 UTC | OI-010 | resolved | 人工决议 uv_build；规格 §3.5 与计划文档同步 |
 | 2026-08-06 08:30 UTC | DEV-001 | planned → approved | PLAN_APPROVED；Amendment 003（SF-A/SF-B）；未实施、未 Git |
+| 2026-08-06 09:54 UTC | DEV-001 | approved → in_progress | PRE-ENV-001/002 satisfied；当前分支 feat/DEV-001-project-skeleton；开始白名单实施 |
+| 2026-08-06 10:12 UTC | DEV-001 | in_progress → implemented | 白名单文件已创建；`uv lock`/`uv sync --locked` 成功（代理 7890） |
+| 2026-08-06 10:14 UTC | DEV-001 | implemented → tested | pytest 12 passed；ruff/mypy 通过；停止等待 Code Review |
+| 2026-08-06 10:30 UTC | DEV-001 | tested → reviewed | 独立 Code Review PASS（P0/P1=0）；复跑门禁通过；未 Commit；等待人工 build(bootstrap) |
 
 ## 下一任务
 
-`DEV-001`（`approved`）：等待人工 Git 与实施会话；**不要**在本状态直接编码。
+人工在 `feat/DEV-001-project-skeleton` 执行 `build(bootstrap): add project skeleton, uv lock, and quality tooling` Commit。通过前不得 Push/Merge/Rebase；不得将状态改为 `committed` / `completed`（由人工 Commit 后更新）。

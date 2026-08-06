@@ -1,0 +1,50 @@
+# Git and VCS
+.git
+.gitignore
+
+# Local env and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials/
+
+# Python tooling / caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+*.egg-info/
+dist/
+build/
+
+# Docs and planning (not needed in image build context)
+01_技术规格/
+02_开发管理/
+03_AI_Prompts/
+04_评审记录/
+05_测试与验收/
+.cursor/
+*.md
+!README.md
+
+# Tests (installed separately in CI; keep image lean)
+tests/
+
+# Local runtime / model cache
+logs/
+tmp/
+temp/
+data/
+model-cache/
+docker-data/

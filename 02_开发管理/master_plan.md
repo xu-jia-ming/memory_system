@@ -48,7 +48,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| DEV-001 | 项目骨架、依赖与质量工具 | §3.4, §3.5, §3.2, §3.28 | 无 | approved |
+| DEV-001 | 项目骨架、依赖与质量工具 | §3.4, §3.5, §3.2, §3.28 | 无 | reviewed |
 | DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | planned |
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | planned |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | planned |
@@ -64,7 +64,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：白名单齐套且黑名单不存在；依赖与 build-system / requires-python 契约测试通过；`uv sync --locked`；ruff/mypy/pytest 通过；分阶段更新 progress/Task Plan 状态。
 - **风险**：PRE-ENV-001/002；禁止 import 阶段抛 `SystemExit`/`NotImplementedError`；禁止偏离已决议的 `uv_build`。
 - **计划文件**：`02_开发管理/tasks/DEV-001-project-skeleton.md`
-- **状态备注**：独立复审 `PLAN_APPROVED`；当前 `approved`，尚未 `in_progress`。
+- **状态备注**：独立复审 `PLAN_APPROVED`；实现 Code Review `PASS`（P0/P1=0），状态 `reviewed`；等待人工 `build(bootstrap)` Commit（不得自行 Push/Merge/Rebase）。
 
 #### DEV-002 配置系统与 `.env.example`
 
