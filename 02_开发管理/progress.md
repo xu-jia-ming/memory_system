@@ -7,16 +7,18 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-001
-current_task_status: committed
-current_branch: feat/DEV-001-project-skeleton
+current_task_status: completed
+current_branch: main
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-001-project-skeleton.md
-latest_commit: 9fbe899
-latest_commit_message: "build(bootstrap): add project skeleton, uv lock, and quality tooling"
+current_plan_file: null
+latest_commit: a2673ac
+implementation_commit: 9fbe899
+status_record_commit_committed: 753c4e4
 pr: "#1"
-pr_status: open
-pr_merged: false
-next_action: 人工在 feat/DEV-001-project-skeleton 提交 docs(status): record DEV-001 implementation commit and PR（治理 committed 状态）；随后合并 GitHub PR #1；合并后在 main 提交 docs(status): complete DEV-001 after PR merge 并更新为 completed；本会话未执行 Git Commit/Push/Merge/Rebase
+pr_status: merged
+pr_merged: true
+merge_commit: a2673ac
+next_action: 人工在 main 提交 docs(status): complete DEV-001 after PR merge（治理 completed 状态落盘 Commit）；随后启动 DEV-002 规划阶段（创建 Task Plan 待 PLAN_APPROVED，不得开始实现）；本会话未执行 Git Commit/Push/Merge/Rebase
 ```
 
 ## 测试状态
@@ -32,7 +34,9 @@ next_action: 人工在 feat/DEV-001-project-skeleton 提交 docs(status): record
 
 ## 已完成任务
 
-暂无（DEV-001 已 `committed`：Commit `9fbe899`，PR #1 open 尚未 merge；不得提前标记 `completed`）。
+| Task ID | 任务名称 | 完成时间 (UTC) | 实现 Commit | Merge Commit | PR |
+|---|---|---|---|---|---|
+| DEV-001 | 项目骨架、依赖与质量工具 | 2026-08-06 13:20 | `9fbe899` | `a2673ac` | #1 merged |
 
 ## 规格阻塞项
 
@@ -76,7 +80,7 @@ next_action: 人工在 feat/DEV-001-project-skeleton 提交 docs(status): record
 9. docs(status): complete DEV-001 after PR merge（main；治理状态 completed）
 ```
 
-当前：步骤 1–6 已完成（`build(bootstrap)` Commit `9fbe899`；分支 `feat/DEV-001-project-skeleton` 已推送；PR #1 open）。步骤 7 待人工提交第一个治理 Commit；步骤 8–9 待 PR #1 合并后执行。Amendment 004 已落盘（2026-08-06 13:06 UTC）。
+当前：步骤 1–8 已完成（`build(bootstrap)` Commit `9fbe899`；治理 committed Commit `753c4e4`；PR #1 merged，Merge Commit `a2673ac`；当前分支 `main`）。步骤 9 待人工提交第二个治理 Commit。DEV-001 治理状态 `completed`；下一步进入 DEV-002 规划阶段。
 
 ## 最近执行记录
 
@@ -92,7 +96,8 @@ next_action: 人工在 feat/DEV-001-project-skeleton 提交 docs(status): record
 | 2026-08-06 10:30 UTC | DEV-001 | tested → reviewed | 独立 Code Review PASS（P0/P1=0）；复跑门禁通过 |
 | 2026-08-06 12:55 UTC | DEV-001 | reviewed → committed | 人工 Commit `9fbe899`（build(bootstrap): add project skeleton, uv lock, and quality tooling）；分支已推送；PR #1 open 尚未 merge |
 | 2026-08-06 13:06 UTC | DEV-001 | Git 计划增补 | Amendment 004：§13 增加两条 `docs(status)` 治理 Commit；同步 Git 流程与 next_action |
+| 2026-08-06 13:20 UTC | DEV-001 | committed → completed | PR #1 merged 至 main（Merge Commit `a2673ac`）；治理 committed Commit `753c4e4`；实现 Commit `9fbe899` |
 
 ## 下一任务
 
-人工在 `feat/DEV-001-project-skeleton` 提交 `docs(status): record DEV-001 implementation commit and PR`（治理 `committed` 状态回写）。随后合并 GitHub PR #1；合并后在 `main` 提交 `docs(status): complete DEV-001 after PR merge` 并将 DEV-001 更新为 `completed`。不得提前改为 `completed`；本会话不执行 Push/Merge/Rebase。
+DEV-002（配置系统与 `.env.example`）规划阶段：创建 Task Plan 并等待 `PLAN_APPROVED`；不得开始 DEV-002 实现。并行待办：人工在 `main` 提交 `docs(status): complete DEV-001 after PR merge`（第二个治理 Commit）。本会话不执行 Git 操作。
