@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-001
 task_name: 项目骨架、依赖与质量工具
-status: reviewed
+status: committed
 spec_sections:
   - "§3.4 单仓库目录结构（仅本任务白名单子集）"
   - "§3.5 Python 与依赖管理"
@@ -17,10 +17,10 @@ prerequisites:
   - "实施编码前必须满足 PRE-ENV-002（Python 3.12.13 via uv）"
 branch: "feat/DEV-001-project-skeleton"  # 实施分支；计划 Commit 在 main，见 §13
 created_at: "2026-08-06 07:25 UTC"
-updated_at: "2026-08-06 10:30 UTC"
+updated_at: "2026-08-06 13:06 UTC"
 approval_gates:
   planning_docs: "PLANNING_DOCS_APPROVED"
-  implementation_plan: "PLAN_APPROVED；实现 Code Review 通过（reviewed）；等待人工 build(bootstrap) Commit"
+  implementation_plan: "PLAN_APPROVED；实现 Code Review 通过；build(bootstrap) 已人工 Commit（committed）；PR #1 open 待 merge"
 ```
 
 ## 2. 任务目标
@@ -324,6 +324,10 @@ expected_commits:
     message: "docs(plan): add DEV-001 project skeleton plan"
   - branch: "feat/DEV-001-project-skeleton"
     message: "build(bootstrap): add project skeleton, uv lock, and quality tooling"
+  - branch: "feat/DEV-001-project-skeleton"
+    message: "docs(status): record DEV-001 implementation commit and PR"
+  - branch: "main"
+    message: "docs(status): complete DEV-001 after PR merge"
 out_of_scope_changes:
   - "黑名单路径与业务逻辑"
   - "替换 Build Backend 或将 uv_build 写入运行时依赖"
@@ -334,12 +338,14 @@ out_of_scope_changes:
 
 说明：
 
-1. 仓库目前尚无任何 Commit。§14 中的 Amendment 001 / Amendment 002 / Amendment 003 **仅作为本文档内历史记录保留**，不分别创建额外计划 Commit。
+1. 仓库初始阶段尚无任何 Commit（历史记录）。§14 中的 Amendment 001 / Amendment 002 / Amendment 003 **仅作为本文档内历史记录保留**，不分别创建额外计划 Commit。
 2. **`docs(plan): add DEV-001 project skeleton plan` 在 `main` 分支提交**，包含当前最终版 Task Plan（含文内全部 Amendment）以及相关规划状态（如 master_plan / progress 中与本计划相关的 approved 状态更新，按人工基线流程）。
 3. **`build(bootstrap): add project skeleton, uv lock, and quality tooling` 在 `feat/DEV-001-project-skeleton` 分支提交**（从 `main` 切出后实施）；仅在计划已 `PLAN_APPROVED`、状态进入实施、实现与测试完成后提交。
 4. 本文档顶部 `branch` 字段表示**实施分支**，不是计划 Commit 所在分支。
+5. **`docs(status): record DEV-001 implementation commit and PR` 在 `feat/DEV-001-project-skeleton` 分支提交**（Amendment 004）；纯治理文档 Commit，记录 `committed` 状态、实现 Commit `9fbe899` 与 PR #1（open）；**当前待人工执行**。
+6. **`docs(status): complete DEV-001 after PR merge` 在 `main` 分支提交**（PR #1 合并后）；纯治理文档 Commit，将状态更新为 `completed`；**待 PR #1 合并后执行**。
 
-人工基线顺序见 `progress.md`。当前状态为 **`reviewed`**；独立 Code Review 已通过。本审查会话不执行 Git Commit/Push/Merge/Rebase；`build(bootstrap)` Commit 由人工执行。
+人工基线顺序见 `progress.md`。当前状态为 **`committed`**；独立 Code Review 已通过；`build(bootstrap)` Commit `9fbe899` 已由人工落在 `feat/DEV-001-project-skeleton`；GitHub PR #1 已创建且状态为 open（尚未 merge）。下一步：人工合并 PR #1 后再将状态更新为 `completed`。本会话不执行 Git Commit/Push/Merge/Rebase。
 
 ## 14. Plan Amendment
 
@@ -375,6 +381,21 @@ out_of_scope_changes:
 - 审批状态：`PLAN_APPROVED`
 - 复审结果：`BLOCKER 0`，`MUST_FIX 0`，`SHOULD_FIX 2`
 
+### Amendment 004
+
+- 日期：2026-08-06 13:06 UTC
+- 原计划：§13 `expected_commits` 仅列出计划 Commit（`docs(plan)`）与实现 Commit（`build(bootstrap)`）；未覆盖状态机在 `committed` 与 `completed` 阶段的治理文档回写。
+- 修改内容：
+  - 在 `expected_commits` 增加两条纯治理文档 Commit：
+    - `docs(status): record DEV-001 implementation commit and PR`（`feat/DEV-001-project-skeleton`）：记录实现 Commit `9fbe899` 与 PR #1，状态 `committed`。
+    - `docs(status): complete DEV-001 after PR merge`（`main`）：PR #1 合并后将状态更新为 `completed`。
+  - 同步 §13 说明项 5–6 与 `progress.md` Git 流程。
+- 修改原因：状态机要求实现 Commit 完成后记录为 `committed`；PR 合并完成后还需记录为 `completed`；原 Git 计划缺少对应治理 Commit。
+- 是否影响技术规格：否。
+- 是否改变工程范围、依赖、技术选型、代码实现或测试结论：否。
+- 执行状态：**当前仅执行第一个治理状态 Commit**（`docs(status): record …`，feat 分支，待人工提交）；第二个治理 Commit 待 PR #1 合并后在 `main` 执行。
+- 审批状态：治理文档增补（Git 计划一致性）
+
 ## 15. 执行记录
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
@@ -388,7 +409,9 @@ out_of_scope_changes:
 | 2026-08-06 09:56 UTC | Step 6 测试实现 | 创建 test_entrypoints_import.py、test_dependency_contract.py、conftest.py | 待跑 | 仅 stdlib + 已声明 pytest |
 | 2026-08-06 10:12 UTC | Step 3 依赖锁定 | `uv lock` + `uv sync --locked`（经 127.0.0.1:7890 代理访问 PyPI）生成并安装 | sync OK | 未手改 lockfile；status→implemented |
 | 2026-08-06 10:14 UTC | 质量门禁 | 微调 pyproject tool 配置（cov 改 `[tool.coverage.*]`，去掉 unused mypy override） | pytest/ruff/mypy 全通过 | status→tested；未 Commit |
-| 2026-08-06 10:30 UTC | 独立 Code Review | 对照白名单/§3.2/3.4/3.5/3.28 只读审查；复跑质量门禁 | pytest 12 passed；ruff/mypy/sync 通过 | P0/P1=0；status→reviewed；未 Commit |
+| 2026-08-06 10:30 UTC | 独立 Code Review | 对照白名单/§3.2/3.4/3.5/3.28 只读审查；复跑质量门禁 | pytest 12 passed；ruff/mypy/sync 通过 | P0/P1=0；status→reviewed |
+| 2026-08-06 12:55 UTC | 人工实现 Commit | build(bootstrap) Commit `9fbe899`；分支 feat/DEV-001-project-skeleton 已推送；GitHub PR #1 已创建（open，未 merge） | N/A（治理回写） | status→committed；下一步人工合并 PR #1 后再 →completed |
+| 2026-08-06 13:06 UTC | Git 计划增补 | Amendment 004：§13 增加两条 `docs(status)` 治理 Commit；同步 progress Git 流程 | N/A | 第一个治理 Commit 待 feat 分支人工提交；第二个待 PR merge 后 main |
 
 ## 16. 实际执行结果
 
@@ -456,10 +479,13 @@ implementation_review:
 ```yaml
 branch: feat/DEV-001-project-skeleton
 plan_commit: fd14372
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 9fbe899
+implementation_commit_message: "build(bootstrap): add project skeleton, uv lock, and quality tooling"
+pr: "#1"
+pr_status: open
+pr_merged: false
 ```
 
 ### 最终状态
 
-`reviewed`
+`committed`
