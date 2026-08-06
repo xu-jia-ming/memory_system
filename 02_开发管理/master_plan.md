@@ -48,7 +48,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| DEV-001 | 项目骨架、依赖与质量工具 | §3.4, §3.5, §3.2, §3.28 | 无 | approved |
+| DEV-001 | 项目骨架、依赖与质量工具 | §3.4, §3.5, §3.2, §3.28 | 无 | committed |
 | DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | planned |
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | planned |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | planned |
@@ -64,7 +64,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：白名单齐套且黑名单不存在；依赖与 build-system / requires-python 契约测试通过；`uv sync --locked`；ruff/mypy/pytest 通过；分阶段更新 progress/Task Plan 状态。
 - **风险**：PRE-ENV-001/002；禁止 import 阶段抛 `SystemExit`/`NotImplementedError`；禁止偏离已决议的 `uv_build`。
 - **计划文件**：`02_开发管理/tasks/DEV-001-project-skeleton.md`
-- **状态备注**：独立复审 `PLAN_APPROVED`；当前 `approved`，尚未 `in_progress`。
+- **状态备注**：独立复审 `PLAN_APPROVED`；实现 Code Review `PASS`（P0/P1=0）；人工 `build(bootstrap)` Commit `9fbe899` 已落在 `feat/DEV-001-project-skeleton`；GitHub PR #1 为 open（尚未 merge）；状态 `committed`。Git 计划（Amendment 004）含两条 `docs(status)` 治理 Commit：feat 分支记录 `committed`（待人工提交）；PR merge 后 main 记录 `completed`。下一步：人工提交第一个治理 Commit，合并 PR #1，再执行第二个治理 Commit 并更新为 `completed`。
 
 #### DEV-002 配置系统与 `.env.example`
 
