@@ -7,18 +7,18 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-OPS-001
-current_task_status: reviewed
+current_task_status: committed
 current_branch: feat/DEV-OPS-001-cursor-workflow-commands
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-001-cursor-agent-workflow-commands.md
-latest_commit: 48a7525
-implementation_commit: null
+latest_commit: 69fabb7
+implementation_commit: 69fabb7b54f6107c424666f145a2ca68507f3fec
 status_record_commit_committed: null
-pr: null
-pr_status: null
+pr: 2
+pr_status: open
 pr_merged: null
 merge_commit: null
-next_action: 调用 /close-task 进行人工提交前核对；P2/P3 各 1 项已接受为残余、本轮不修复实现；通过后由人工 Commit；Agent 不得 Git Add/Commit/Push/Merge/Rebase；不得开始 DEV-002
+next_action: 人工提交 docs(status): record DEV-OPS-001 implementation commit and PR；推送功能分支 feat/DEV-OPS-001-cursor-workflow-commands；然后才允许合并 PR #2；Agent 不得 Git Add/Commit/Push/Merge/Rebase；不得开始 DEV-002
 ```
 
 ## 测试状态
@@ -68,7 +68,7 @@ DEV-OPS-001 产品/流程未决项见其 Task Plan §12.2（OI-OPS-001–005）�
 |---|---|
 | PLANNING_DOCS_APPROVED | 已用于规划文档落盘/修订 |
 | PLAN_APPROVED（DEV-001 计划） | **已通过**（历史；DEV-001 已 completed） |
-| PLAN_APPROVED（DEV-OPS-001 计划） | **已通过**（Round 2）；plan Commit `48a7525`；状态 `reviewed` |
+| PLAN_APPROVED（DEV-OPS-001 计划） | **已通过**（Round 2）；plan Commit `48a7525`；状态 `committed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-001 实现） | **已通过**（P0=0 / P1=0 / P2=1 / P3=1；P2/P3 已接受残余、本轮不修复） |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
@@ -128,10 +128,11 @@ Agent 禁止执行 Git Add/Commit/Push/Merge/Rebase。
 | 2026-08-06 14:46 UTC | DEV-OPS-001 | implemented → tested | 契约 8 passed；unit 20 passed；ruff/mypy 通过；UI `/` 冒烟待人工；停止等待 Code Review |
 | 2026-08-06 14:51 UTC | DEV-OPS-001 | tested（保持） | OI-OPS-005 人工 UI 冒烟通过：`plan-task`/`review-plan`/`develop-task`/`review-code`/`close-task` 均可见且可加载；仅验证发现与加载；未改命令/测试；未 Git 写 |
 | 2026-08-06 15:03 UTC | DEV-OPS-001 | tested → reviewed | 独立 Code Review：P0=0/P1=0/P2=1/P3=1；`CODE_REVIEW_APPROVED`；复跑契约 8/unit 20/ruff/mypy 通过；P2/P3 已接受残余、本轮不修复实现；仅改治理文档；未 Git 写 |
+| 2026-08-06 15:23 UTC | DEV-OPS-001 | reviewed → committed | 人工实现 Commit `69fabb7`（`chore(cursor): add project slash commands and command contract tests`）；GitHub PR #2 已创建（open，base main，未 merge）；治理 docs(status) 待人工提交 |
 
 ## 下一任务
 
-1. **当前**：DEV-OPS-001 状态 `reviewed`；调用 `/close-task` 进行人工提交前核对。
-2. P2/P3 各 1 项已记录为已接受残余项；**本轮不修复**，避免审批后修改实现。
-3. `/close-task` 通过后由人工 Commit；Agent 不得代为 Git 写。
+1. **当前**：DEV-OPS-001 状态 `committed`；实现 Commit `69fabb7`；PR #2 open（未 merge）。
+2. 人工提交 `docs(status): record DEV-OPS-001 implementation commit and PR`；推送功能分支；然后才允许合并 PR #2。
+3. PR 合并后，在 `main` 提交 `docs(status): complete DEV-OPS-001 after PR merge` 并将状态置为 `completed`。
 4. DEV-002 仍保持 `planned`（业务下一任务），但不在本会话启动。

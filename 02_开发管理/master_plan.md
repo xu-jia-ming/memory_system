@@ -59,7 +59,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | reviewed |
+| DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | committed |
 
 #### DEV-OPS-001 Cursor Agent 工作流自动化
 
@@ -71,7 +71,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **Git 顺序**：独立 Review → `PLAN_APPROVED` → `approved` → 人工 `docs(plan)` on main → 创建 `feat/DEV-OPS-001-cursor-workflow-commands` → Developer 实施。
 - **风险**：Commands 为 beta；产品参数机制未证实（见 Task Plan OI-OPS-001–005）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-001-cursor-agent-workflow-commands.md`
-- **状态备注**：`reviewed`（CODE_REVIEW_APPROVED；P0/P1=0；P2/P3 各 1 项已接受为残余、本轮不修复；下一步 `/close-task` 提交前核对；未 Git 写）。
+- **状态备注**：`committed`（实现 Commit `69fabb7`；PR #2 open 未 merge；治理 `docs(status)` 待人工提交；推送分支后才允许合并 PR #2）。
 
 #### DEV-001 项目骨架、依赖与质量工具
 
@@ -353,6 +353,6 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 原因 | 登记非业务任务 DEV-OPS-001：项目级 Cursor Slash Commands，降低长提示词重复粘贴；不改变 Phase 0–5 业务任务目标与依赖 |
 | 受影响任务 | 新增 `DEV-OPS-001`（Phase 0 补充）；**不**修改 DEV-001 完成状态；**不**改变 DEV-002+ 业务范围 |
 | 是否改变技术规格 | **否** |
-| 审批 | 初版曾 `PLAN_REJECTED`；Amendment 001 后 Round 2 复审通过（`PLAN_APPROVED`）；已实施并自动验证通过；独立 Code Review `CODE_REVIEW_APPROVED`（P0/P1=0；P2/P3 残余已接受）；状态 `reviewed` |
+| 审批 | 初版曾 `PLAN_REJECTED`；Amendment 001 后 Round 2 复审通过（`PLAN_APPROVED`）；实现 Commit `69fabb7`；PR #2 open；状态 `committed`；治理 docs(status) 待提交 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
