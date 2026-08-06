@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-001
 task_name: Cursor Agent 工作流自动化
-status: approved
+status: committed
 spec_sections:
   - "非业务规格任务：对齐仓库治理与 03_AI_Prompts 角色流程；不修改技术规格正文"
 prerequisites:
@@ -13,10 +13,10 @@ prerequisites:
   - "当前工作区干净；默认分支 main 与 origin/main 同步"
 branch: "feat/DEV-OPS-001-cursor-workflow-commands"  # 实施分支；计划 Commit 在 main，见 §13
 created_at: "2026-08-06 14:03 UTC"
-updated_at: "2026-08-06 14:25 UTC"
+updated_at: "2026-08-06 15:23 UTC"
 approval_gates:
   planning_docs: "Round 2 复审通过；PLAN_APPROVED"
-  implementation_plan: "status=approved；此时不得实施、不得创建 .cursor/commands/；下一步人工 docs(plan) 后再切 feat 并由 /develop-task 进入 in_progress"
+  implementation_plan: "status=committed；CODE_REVIEW_APPROVED；实现 Commit 69fabb7；PR #2 open（未 merge）；治理 docs(status) 待人工提交"
 ```
 
 ## 2. 任务目标
@@ -383,21 +383,21 @@ planned
 
 ## 11. 验收标准
 
-- [ ] `.cursor/commands/` 下恰好存在 §5.1 五个文件，无额外命令文件
-- [ ] 五个文件均为普通 Markdown；均采用 §7 统一六段结构
-- [ ] 五个命令分别对应且仅对应一个角色；角色集合恰好为 Planner / Plan Reviewer / Developer / Code Reviewer / Commit Recorder
-- [ ] 每个命令包含「不得自动切换到下一角色」；未合并为超级 Agent
-- [ ] 结束标记符合 §7.2；`review-code` 与 `close-task` 不共用 `READY_FOR_COMMIT`
-- [ ] 每个命令含 §7.1 最小必含子串表全部条目
-- [ ] `tests/unit/test_cursor_commands_contract.py` 已创建且上述断言全部通过
-- [ ] 未修改既有 DEV-001 测试语义/断言；`uv run pytest tests/unit` 通过
-- [ ] 任务编号/计划/分支获取符合 §2.3；正文不得宣称未证实的产品参数 API
-- [ ] `close-task` 仅检查清单 + Commit message 草稿；明确排除 `git add` / `git commit` / `git push` 及 Hash 猜测回写
-- [ ] 未修改黑名单路径；未改技术规格；未开始 DEV-002 实现；未配置 Custom Modes；未创建 `.cursor/skills/`
-- [ ] 状态机符合 §2.1：`PLAN_APPROVED` → `approved`（不实施）→ `/develop-task` 才 → `in_progress`
-- [ ] 人工 `/` 冒烟完成并记录结果
-- [ ] Review 无 P0/P1
-- [ ] 状态已按 Step 0 分阶段回写
+- [x] `.cursor/commands/` 下恰好存在 §5.1 五个文件，无额外命令文件
+- [x] 五个文件均为普通 Markdown；均采用 §7 统一六段结构
+- [x] 五个命令分别对应且仅对应一个角色；角色集合恰好为 Planner / Plan Reviewer / Developer / Code Reviewer / Commit Recorder
+- [x] 每个命令包含「不得自动切换到下一角色」；未合并为超级 Agent
+- [x] 结束标记符合 §7.2；`review-code` 与 `close-task` 不共用 `READY_FOR_COMMIT`
+- [x] 每个命令含 §7.1 最小必含子串表全部条目
+- [x] `tests/unit/test_cursor_commands_contract.py` 已创建且上述断言全部通过
+- [x] 未修改既有 DEV-001 测试语义/断言；`uv run pytest tests/unit` 通过
+- [x] 任务编号/计划/分支获取符合 §2.3；正文不得宣称未证实的产品参数 API
+- [x] `close-task` 仅检查清单 + Commit message 草稿；明确排除 `git add` / `git commit` / `git push` 及 Hash 猜测回写
+- [x] 未修改黑名单路径；未改技术规格；未开始 DEV-002 实现；未配置 Custom Modes；未创建 `.cursor/skills/`
+- [x] 状态机符合 §2.1：`PLAN_APPROVED` → `approved`（不实施）→ `/develop-task` 才 → `in_progress`
+- [x] 人工 `/` 冒烟完成并记录结果
+- [x] Review 无 P0/P1
+- [x] 状态已按 Step 0 分阶段回写
 
 ## 12. 风险与 Open Issues
 
@@ -457,9 +457,17 @@ blocks_implementation: false
 id: OI-OPS-005
 status: open
 blocks_implementation: false
+manual_smoke_dev_ops_001: passed
+manual_smoke_at: "2026-08-06 14:51 UTC"
 ```
 
 CI 不能替代 Cursor UI 冒烟。验收依赖人工冒烟记录；不得伪造「已在 UI 验证」结果。
+
+**DEV-OPS-001 人工冒烟记录（通过）**：
+
+1. 在 Agent 输入框输入 `/`，五个项目命令全部出现：`plan-task`、`review-plan`、`develop-task`、`review-code`、`close-task`。
+2. 命令可被菜单发现与加载。
+3. 本次仅验证发现与加载，未触发业务实施。
 
 ## 13. Git 计划
 
@@ -526,26 +534,51 @@ out_of_scope_changes:
 | 2026-08-06 14:03 UTC | 计划落盘 | 创建本 Task Plan；登记 master_plan / progress | 无 | status=planned；未创建 `.cursor/commands/`；未 Git 写 |
 | 2026-08-06 14:16 UTC | Amendment 001 | 按 MF-001–004 与 SF 全部修订规划文档 | 无 | status 仍为 planned；等待复审；未实施 |
 | 2026-08-06 14:25 UTC | Round 2 批准回写 | status=planned → approved；同步 master_plan / progress | 无 | PLAN_APPROVED；未实施；未创建 `.cursor/commands/`；未 Git 写 |
+| 2026-08-06 14:42 UTC | /develop-task 前置通过 | status=approved → in_progress；同步 master_plan / progress | 无 | 分支 feat/DEV-OPS-001-cursor-workflow-commands；工作区干净；plan Commit 48a7525 为祖先 |
+| 2026-08-06 14:45 UTC | Step 1–6 落地 | 创建五个 `.cursor/commands/*.md` + `tests/unit/test_cursor_commands_contract.py` | 待跑 | status → implemented；未改黑名单；未 Git 写 |
+| 2026-08-06 14:46 UTC | §10 自动验证 | 回写测试结果与状态 | 契约 8 passed；unit 20 passed；ruff/mypy 通过 | status → tested；UI 冒烟待人工；未 Git 写 |
+| 2026-08-06 14:51 UTC | OI-OPS-005 人工 UI 冒烟 | 仅记录冒烟结果；未改命令/测试 | 人工 `/` 菜单：五命令均可见且可加载 | 冒烟通过；状态保持 tested；未 Git 写 |
+| 2026-08-06 15:03 UTC | 独立 Code Review 回写 | status=tested → reviewed；仅改三份治理文档 | 复跑：契约 8 passed；unit 20 passed；ruff/mypy 通过 | CODE_REVIEW_APPROVED；P2/P3 已接受残余、本轮不修复；未改实现；未 Git 写 |
+| 2026-08-06 15:23 UTC | 人工实现 Commit + PR 创建 | 实现 Commit `69fabb7`；GitHub PR #2 已创建（open，base main，未 merge） | N/A（治理回写） | status→committed；下一步人工 `docs(status)`、推送分支后再合并 PR #2 |
 
 ## 16. 实际执行结果
 
 ### 实际修改文件
 
-（实施后填写）
+| 路径 | 操作 |
+|---|---|
+| `.cursor/commands/plan-task.md` | 创建 |
+| `.cursor/commands/review-plan.md` | 创建 |
+| `.cursor/commands/develop-task.md` | 创建 |
+| `.cursor/commands/review-code.md` | 创建 |
+| `.cursor/commands/close-task.md` | 创建 |
+| `tests/unit/test_cursor_commands_contract.py` | 创建 |
+| `02_开发管理/tasks/DEV-OPS-001-cursor-agent-workflow-commands.md` | 修改（状态与执行记录） |
+| `02_开发管理/master_plan.md` | 修改（本任务状态同步） |
+| `02_开发管理/progress.md` | 修改（当前任务状态同步） |
 
 ### 与原计划的差异
 
-暂无实施差异。Amendment 001 仅修订规划。
+无范围差异。未修改黑名单路径；未改 DEV-001 既有测试语义；未开始 DEV-002；未创建 `.cursor/skills/`；未配置 Custom Modes；未修改 `.cursor/rules/`。OI-OPS-005 人工 UI 冒烟已于 2026-08-06 14:51 UTC 通过（五命令均可发现与加载；仅验证发现与加载，未触发业务实施）。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit/静态契约 | `uv run pytest tests/unit/test_cursor_commands_contract.py` | 待实施 |
-| Unit 全量 | `uv run pytest tests/unit` | 待实施 |
-| UI 冒烟 | `/` 菜单 | 待实施 |
-| Ruff | `uv run ruff check .` | 待实施 |
-| Mypy | `uv run mypy src tests` | 待实施 |
+| Unit/静态契约 | `uv run pytest tests/unit/test_cursor_commands_contract.py` | **8 passed** |
+| Unit 全量 | `uv run pytest tests/unit` | **20 passed**（含 DEV-001 既有 12 + 本任务 8） |
+| UI 冒烟 | `/` 菜单（OI-OPS-005） | **通过**（人工；2026-08-06 14:51 UTC；五命令均可见且可加载；仅验证发现与加载） |
+| Ruff | `uv run ruff check .` | **All checks passed** |
+| Mypy | `uv run mypy src tests` | **Success: no issues found in 34 source files** |
+
+**Code Review 复跑（2026-08-06 15:03 UTC）**：
+
+| 测试 | 命令 | 结果 |
+|---|---|---|
+| Unit/静态契约 | `uv run pytest tests/unit/test_cursor_commands_contract.py` | **8 passed** |
+| Unit 全量 | `uv run pytest tests/unit` | **20 passed** |
+| Ruff | `uv run ruff check .` | **All checks passed** |
+| Mypy | `uv run mypy src tests` | **Success: no issues found in 34 source files** |
 
 ### Review 结果
 
@@ -564,23 +597,52 @@ plan_review:
     should_fix: 0
     verdict: PLAN_APPROVED
     reviewed_at: "2026-08-06 14:25 UTC"
-implementation_review: null
+implementation_review:
+  reviewed_at: "2026-08-06 15:03 UTC"
+  p0: 0
+  p1: 0
+  p2: 1
+  p3: 1
+  verdict: CODE_REVIEW_APPROVED
+  accepted_residuals:
+  - level: P2
+    count: 1
+    disposition: accepted_non_blocking
+    fix_in_this_round: false
+    note: 已接受为可维护性/非阻塞残余项；审批后为避免扩大 diff，本轮不修复实现
+  - level: P3
+    count: 1
+    disposition: accepted_non_blocking
+    fix_in_this_round: false
+    note: 已接受为风格/建议性残余项；审批后为避免扩大 diff，本轮不修复实现
+  re_run:
+    contract: "8 passed"
+    unit: "20 passed"
+    ruff: "All checks passed"
+    mypy: "Success: no issues found in 34 source files"
 ```
 
 ### Git 记录
 
 ```yaml
 implementation_branch: feat/DEV-OPS-001-cursor-workflow-commands
-current_branch: main
-plan_commit: null
-implementation_commit: null
+current_branch: feat/DEV-OPS-001-cursor-workflow-commands
+plan_commit: 48a752506943d7aa239f213ee103a7e11561b5dd
+implementation_commit: 69fabb7b54f6107c424666f145a2ca68507f3fec
+implementation_commit_message: "chore(cursor): add project slash commands and command contract tests"
 status_record_commit_committed: null
+status_record_commit_committed_message: "docs(status): record DEV-OPS-001 implementation commit and PR"
 status_record_commit_completed: null
-pr: null
-pr_status: null
-next_git_step: "人工在 main 提交 docs(plan): add DEV-OPS-001 cursor agent workflow commands plan；随后创建 feat/DEV-OPS-001-cursor-workflow-commands"
+status_record_commit_completed_message: "docs(status): complete DEV-OPS-001 after PR merge"
+pr: 2
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/2"
+pr_status: open
+pr_base: main
+pr_head: feat/DEV-OPS-001-cursor-workflow-commands
+merge_commit: null
+next_git_step: "人工提交 docs(status): record DEV-OPS-001 implementation commit and PR；推送功能分支；然后才允许合并 PR #2；Agent 不得代为 Add/Commit/Push/Merge"
 ```
 
 ### 最终状态
 
-`approved`
+`committed`
