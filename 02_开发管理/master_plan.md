@@ -49,7 +49,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | DEV-001 | 项目骨架、依赖与质量工具 | §3.4, §3.5, §3.2, §3.28 | 无 | completed |
-| DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | tested |
+| DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | completed |
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | planned |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | planned |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | planned |
@@ -107,7 +107,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **Git**：`docs(plan)` on `main` → `feat/DEV-002-config-system-env-example` → `feat(settings): add pydantic settings, yaml loader, and env example`。
 - **风险**：Secret 误入 YAML/`.env.example`；`check_env_example` 与 Settings 字段漂移。
 - **计划文件**：`02_开发管理/tasks/DEV-002-config-system-env-example.md`
-- **状态备注**：`reviewed`（plan_commit=ceff988；CODE_REVIEW_APPROVED P0/P1=0；Amendment 002 纠正 pydantic-settings 2.14 tuple 语义文档；pytest 74/ruff/mypy/check_env_example 通过；implementation_commit=null；待 Release Operator）。
+- **状态备注**：`completed`（plan_commit `ceff988`；implementation_commit `f55732c`；治理 committed `8c9f9de`；PR #5 merged `7fba54427ead5bcbde4a5e4141d83bec0e7f7477`；`status_record_commit_completed=null`；下一步 docs(status) complete + **立即 DEV-003**）。
 
 #### DEV-003 Docker Compose、Embedding、Preflight
 
@@ -389,6 +389,6 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 原因 | 登记 DEV-002 初版 Task Plan：配置系统、YAML 命名空间、`.env.example` 与 `check_env_example.py`；细化白/黑名单与规格章节映射 |
 | 受影响任务 | DEV-002（`approved`）；**不**修改 DEV-001 / DEV-OPS-* 完成状态；**不**改变 DEV-003+ 业务范围 |
 | 是否改变技术规格 | **否** |
-| 审批 | Round 1 `PLAN_REJECTED`；Amendment 001；Round 2 `PLAN_APPROVED`；人工确认 2026-08-07 08:03 UTC；plan_commit `ceff988`；实施 `reviewed` + Amendment 002（pydantic-settings tuple 语义纠正）；待 Release Operator |
+| 审批 | Round 1 `PLAN_REJECTED`；Amendment 001；Round 2 `PLAN_APPROVED`；人工确认 2026-08-07 08:03 UTC；plan_commit `ceff988`；implementation `f55732c`；PR #5 merged `7fba544`；状态 `completed` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

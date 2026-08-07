@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-002
 task_name: 配置系统与 .env.example
-status: committed
+status: completed
 spec_sections:
   - "§1.2.6 Context Compression Trigger Strategy（context YAML 与跨字段校验）"
   - "§2.1.4 / §2.1.6 memory_extraction YAML"
@@ -26,10 +26,10 @@ prerequisites:
   - "实施编码前须 PLAN_APPROVED；PRE-ENV-001/002 已 satisfied"
 branch: "feat/DEV-002-config-system-env-example"
 created_at: "2026-08-07 07:32 UTC"
-updated_at: "2026-08-07 08:03 UTC"
+updated_at: "2026-08-07 09:44 UTC"
 approval_gates:
   planning_docs: "Round 2 复审通过；PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 2 非阻塞）；人工确认 PLAN_APPROVED（2026-08-07 08:03 UTC）"
-  implementation_plan: "status=tested；plan_commit=ceff988；分支 feat/DEV-002-config-system-env-example；Developer 实施完成，质量门禁通过，待 Code Review"
+  implementation_plan: "status=completed；plan_commit=ceff988；implementation_commit=f55732c；status_record_commit_committed=8c9f9de；PR #5 merged（7fba544）；status_record_commit_completed 待 docs(status) complete"
 human_scope_confirmations:
   - "APP_ENV 仅支持 development / test；不提供 production.yaml；人工确认可接受，非阻塞"
 ```
@@ -592,7 +592,8 @@ Code Review Round 1（P2-001）已确认该测试通过且功能优先级正确�
 | 2026-08-07 08:15 UTC | Developer 实施 | 创建 settings 包（loader/sources/models/validators）、configs/*.yaml、.env.example、check_env_example.py、单元/契约测试 | `uv run pytest` 74 passed；ruff/mypy/check_env_example 通过 | settings_customise_sources 顺序因 pydantic-settings 2.14 deep_update 语义调整为 env→dotenv→yaml→init（功能优先级仍为 env>yaml>defaults）；见 §17 |
 | 2026-08-07 08:25 UTC | Code Review + Commit Recorder | tested → reviewed；Commit Recorder 输出提交草稿 | Orchestrator 复跑 74 pytest / ruff / mypy / check_env_example 通过 | CODE_REVIEW_APPROVED P0/P1=0；未 Git 写 |
 | 2026-08-07 08:52 UTC | Amendment 002 治理纠正 | 纠正 §Step 2 / §12 对 pydantic-settings 2.14 tuple 语义；新增 Amendment 002；同步 progress/master_plan | 无（未改业务实现） | CODE_REVIEW_APPROVED 仍有效；待 Release Operator |
-| 2026-08-07 09:00 UTC | Release Operator | 受控 git add（16 路径白名单）→ commit → push → gh pr create | PR #5 OPEN；remote/local HEAD 一致 | implementation_commit `f55732c`；待人工 Review/Merge PR |
+| 2026-08-07 09:00 UTC | Release Operator | 受控 git add（16 路径白名单）→ commit → push → gh pr create | PR #5 OPEN；remote/local HEAD 一致 | implementation_commit `f55732c`；治理 committed `8c9f9de` |
+| 2026-08-07 09:44 UTC | Post-merge 治理回写 | committed → completed；记录 PR #5 merge `7fba544` | 无 | `current_task` → DEV-003；status_record_commit_completed=null；未 Git 写 |
 
 ## 17. 实际执行结果
 
@@ -646,11 +647,15 @@ branch: feat/DEV-002-config-system-env-example
 plan_commit: ceff988
 implementation_commit: f55732cdfc48eda66cc1fac2218e9f4afe03ec2e
 implementation_commit_message: "feat(settings): add pydantic settings, yaml loader, and env example"
+status_record_commit_committed: 8c9f9de349024f5ed793098a809244b1c6163b3f
+status_record_commit_committed_message: "docs(status): record DEV-002 implementation commit and PR"
+status_record_commit_completed: null
+merge_commit: 7fba54427ead5bcbde4a5e4141d83bec0e7f7477
 pr_number: 5
 pr_url: https://github.com/xu-jia-ming/memory_system/pull/5
-pr_state: OPEN
+pr_state: MERGED
 ```
 
 ### 最终状态
 
-`committed`
+`completed`

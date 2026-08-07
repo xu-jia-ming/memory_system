@@ -6,25 +6,25 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-002
-current_task_status: committed
-current_branch: feat/DEV-002-config-system-env-example
+current_task: DEV-003
+current_task_status: planned
+current_branch: main
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-002-config-system-env-example.md
-latest_commit: f55732c
-plan_commit: ceff988
-previous_task: DEV-OPS-002
+current_plan_file: null
+latest_commit: 7fba54427ead5bcbde4a5e4141d83bec0e7f7477
+plan_commit: null
+previous_task: DEV-002
 previous_task_status: completed
-previous_task_completed_at: "2026-08-07 07:11 UTC"
-previous_implementation_commit: 4943757a9e8545d55a7ac170e24cba7bb6fbafae
-previous_implementation_commit_message: "chore(cursor): add orchestrator, role subagents, and release permissions"
-previous_status_record_commit_committed: 3c63f77222163f134b0741389f9fbeafe463b63e
-previous_status_record_commit_committed_message: "docs(status): record DEV-OPS-002 implementation commit and PR"
+previous_task_completed_at: "2026-08-07 09:44 UTC"
+previous_implementation_commit: f55732cdfc48eda66cc1fac2218e9f4afe03ec2e
+previous_implementation_commit_message: "feat(settings): add pydantic settings, yaml loader, and env example"
+previous_status_record_commit_committed: 8c9f9de349024f5ed793098a809244b1c6163b3f
+previous_status_record_commit_committed_message: "docs(status): record DEV-002 implementation commit and PR"
 previous_status_record_commit_completed: null
-previous_pr: "#4"
+previous_pr: "#5"
 previous_pr_status: merged
-previous_merge_commit: 5886cc6057578db7687215761508f75de9336049
-next_action: 人工 Review/Merge PR #5（base=main）；Merge 后执行 docs(status) 治理回写
+previous_merge_commit: 7fba54427ead5bcbde4a5e4141d83bec0e7f7477
+next_action: 立即进入 DEV-003（Docker Compose、Embedding 服务与 Preflight）业务规划/实施；人工在 main 提交 docs(status): complete DEV-002 after PR merge；不得插入 DEV-OPS-003、Phase B 或其他 workflow 优化于 DEV-003 之前
 ```
 
 ## 测试状态
@@ -47,6 +47,7 @@ next_action: 人工 Review/Merge PR #5（base=main）；Merge 后执行 docs(sta
 | DEV-001 | 项目骨架、依赖与质量工具 | 2026-08-06 13:20 | `9fbe899` | `a2673ac` | #1 merged |
 | DEV-OPS-001 | Cursor Agent 工作流自动化 | 2026-08-06 15:30 | `69fabb7` | `57800c3` | #2 merged |
 | DEV-OPS-002 | Cursor Orchestrator、Subagents 与 Release Automation | 2026-08-07 07:11 | `4943757` | `5886cc6` | #4 merged |
+| DEV-002 | 配置系统与 `.env.example` | 2026-08-07 09:44 | `f55732c` | `7fba544` | #5 merged |
 
 ## 规格阻塞项
 
@@ -87,7 +88,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（DEV-OPS-002 实现） | **已完成**；implementation_commit `4943757`；PR #4 merged（`5886cc6`） |
 | PLAN_APPROVED（DEV-002 计划） | **已通过**（Round 2；Amendment 001）；plan_commit `ceff988` |
 | CODE_REVIEW_APPROVED（DEV-002 实现） | **已通过**（P0=0 / P1=0 / P2=2 / P3=2；P2-001 由 Amendment 002 关闭；不阻塞 Release） |
-| RELEASE_COMPLETED（DEV-002 实现） | **已完成**；implementation_commit `f55732c`；PR #5 open（base=main） |
+| RELEASE_COMPLETED（DEV-002 实现） | **已完成**；implementation_commit `f55732c`；PR #5 merged（`7fba544`） |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -141,23 +142,24 @@ DEV-OPS-001：步骤 1–10 均已完成（实现 Commit `69fabb7`；治理 comm
 
 DEV-OPS-002：步骤 1–10 均已完成（实现 Commit `4943757`；治理 committed `3c63f77`；PR #4 Merge `5886cc6`；completed 治理 Commit `f4fab24`）。正式功能分支本地与远程已删除。E2E 证据分支保留。
 
-## DEV-002 Git 流程（进行中）
+## DEV-002 Git 流程（已完成）
 
 ```text
 1. 独立 Plan Review Round 1 → PLAN_REJECTED（MF-001 + SF-001–SF-006）
 2. Planner Amendment 001 修订
 3. 独立 Plan Review Round 2 → PLAN_APPROVED
-4. 人工确认 PLAN_APPROVED → approved（Task Plan / master_plan / progress；此时不得实施）  ← 当前
-5. 人工在 main 提交 docs(plan): add DEV-002 config system and env example plan
+4. 人工确认 PLAN_APPROVED → approved
+5. 人工在 main 提交 docs(plan): add DEV-002 config system and env example plan（ceff988）
 6. 从 main 创建 feat/DEV-002-config-system-env-example
-7. Developer 实施：approved → in_progress → …
-8. Code Review → Commit Recorder → Release Operator push/PR
-9. docs(status) 治理 Commit（committed 状态落盘）
-10. 人工 Merge PR → main
-11. docs(status): complete DEV-002 after PR merge（completed）
+7. Developer 实施：approved → in_progress → tested → reviewed
+8. Amendment 002（pydantic-settings 2.14 tuple 语义纠正）
+9. Release Operator：implementation commit `f55732c` + PR #5
+10. feat 分支 docs(status) committed 治理 `8c9f9de`
+11. 人工 Merge PR #5 → main（Merge Commit `7fba544`）
+12. docs(status): complete DEV-002 after PR merge（main；治理状态 completed）← 待人工提交
 ```
 
-DEV-002：步骤 1–4 已完成（Round 1 `PLAN_REJECTED` 与 Amendment 001 历史已保留；Round 2 `PLAN_APPROVED`；人工确认 `APP_ENV` 仅 development/test、无 production.yaml；`status=approved`；未实施、未 Git 写）。步骤 5 待人工执行。
+DEV-002：步骤 1–11 均已完成（实现 Commit `f55732c`；治理 committed `8c9f9de`；PR #5 Merge `7fba544`）。步骤 12 待人工在 main 提交 completed 治理 Commit。功能分支删除待人工执行。
 
 ## 最近执行记录
 
@@ -210,10 +212,13 @@ DEV-002：步骤 1–4 已完成（Round 1 `PLAN_REJECTED` 与 Amendment 001 历
 | 2026-08-07 08:15 UTC | DEV-002 | in_progress → tested | Developer 实施 settings/configs/.env.example/测试；质量门禁全通过 | settings_customise_sources 顺序调整见 Task Plan §17；未 Git 写；待 Code Review |
 | 2026-08-07 08:25 UTC | DEV-002 | tested → reviewed | 独立 Code Review CODE_REVIEW_APPROVED；P0/P1=0；P2=3/P3=2 已记录 | Commit Recorder READY_FOR_HUMAN_COMMIT；implementation_commit=null；未 Git 写 |
 | 2026-08-07 08:52 UTC | DEV-002 | reviewed（Amendment 002） | 纠正 pydantic-settings 2.14 tuple 语义文档；新增 Amendment 002；未改业务实现 | CODE_REVIEW_APPROVED 仍有效；P2-001 关闭；待 Release Operator |
-| 2026-08-07 09:00 UTC | DEV-002 | reviewed → committed | Release Operator RELEASE_COMPLETED；PR #5 open（base=main） | implementation_commit `f55732c`；治理回写待本地落盘 |
+| 2026-08-07 09:00 UTC | DEV-002 | reviewed → committed | Release Operator RELEASE_COMPLETED；PR #5 open（base=main） | implementation_commit `f55732c`；治理 committed `8c9f9de` |
+| 2026-08-07 09:44 UTC | DEV-002 | committed → completed | PR #5 merged 至 main（Merge Commit `7fba544`）；`current_task` → DEV-003 | status_record_commit_completed=null；下一步 docs(status) complete + DEV-003 规划 |
 
 ## 下一任务
 
-1. **当前**：DEV-002 状态 **`committed`**；PR [#5](https://github.com/xu-jia-ming/memory_system/pull/5) OPEN（base=main，head=feat/DEV-002-config-system-env-example）。
-2. **下一步**：人工 Review/Merge PR #5；Merge 后执行 `docs(status): complete DEV-002 after PR merge`。
-3. plan_commit `ceff988`；implementation_commit `f55732cdfc48eda66cc1fac2218e9f4afe03ec2e`。
+1. **当前**：DEV-002 状态 **`completed`**；PR #5 **merged**（`7fba544`）；`origin/main` = `7fba544`。
+2. **立即下一任务**：**DEV-003**（Docker Compose、Embedding 服务与 Preflight）业务规划/实施。
+3. 在 **main** 提交最终治理 Commit：**`docs(status): complete DEV-002 after PR merge`**（`status_record_commit_completed` 待该 Commit 产生后回写）。
+4. 不得插入 DEV-OPS-003、Phase B 或其他 Cursor workflow 优化于 DEV-003 之前。
+5. 功能分支 `feat/DEV-002-config-system-env-example` 删除待人工执行（本轮 Orchestrator 不执行）。
