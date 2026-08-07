@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-002
 task_name: Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
-status: approved
+status: reviewed
 spec_sections:
   - "非业务规格任务：对齐仓库治理与 03_AI_Prompts 角色流程；扩展 DEV-OPS-001 工作流自动化；不修改技术规格正文"
 prerequisites:
@@ -15,10 +15,10 @@ prerequisites:
   - "规划轮次仅允许三份规划文档未提交变更；不得出现实现文件"
 branch: "feat/DEV-OPS-002-cursor-orchestrator-subagents"  # 实施分支；计划 Commit 在 main，见 §13
 created_at: "2026-08-06 15:50 UTC"
-updated_at: "2026-08-07 02:18 UTC"
+updated_at: "2026-08-07 05:05 UTC"
 approval_gates:
   planning_docs: "Round 2 复审通过；PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0）"
-  implementation_plan: "status=approved；此时不得实施；不得创建 agents/permissions/orchestrate-task；不得改治理规则或既有五命令；下一步人工 docs(plan) 后再切 feat；/develop-task 前置通过前不得 in_progress"
+  implementation_plan: "status=reviewed；CODE_REVIEW_APPROVED（P0/P1=0；P2=4/P3=3 已记录为 residual）；等待 Commit Recorder 提交前核对；implementation_commit=null；未 Git 写（本实施分支）"
 ```
 
 ## 2. 任务目标
@@ -584,22 +584,22 @@ Orchestrator → Planner → Plan Reviewer → Developer → Code Reviewer
 
 ## 10. 验收标准
 
-- [ ] §5 白名单文件齐套（含 §5.6 治理例外文件，若实施阶段修订）；黑名单路径未被本任务越权修改
-- [ ] 六个 Subagent 角色隔离（契约测试 + 正文「唯一角色」）；六角色不得 spawn 更深 Subagent
-- [ ] Orchestrator 仅编排；契约断言禁止输出自我批准标记；含 §2.4.1 fail-closed 子串
-- [ ] Orchestrator 仅写 §2.4.2 允许字段；不自写 approved/reviewed/committed/completed
-- [ ] Release Operator 独享候选 Git 写；禁止危险操作条文存在且可测；含退出码检查与 `RELEASE_COMPLETED` 事实核对子串
-- [ ] `permissions.json` 与 `cli.json` 已按 §7 原则落盘；明确非安全边界
-- [ ] `uv run pytest tests/unit/test_cursor_orchestrator_contract.py` 通过
-- [ ] `uv run pytest tests/unit/test_cursor_commands_contract.py` 通过（含第六命令扩展）
-- [ ] `uv run pytest tests/unit` 通过（含 DEV-001 既有测试不退化）
-- [ ] `uv run ruff check .` 通过
-- [ ] `uv run mypy src tests` 通过
-- [ ] 受监督 E2E 冒烟已记录（§9）；契约-only/只读 replay **不计**完整 E2E；未完成项如实标注
-- [ ] DEV-OPS-002 实施期间未修改 DEV-002 业务内容；**completed 后 next_action 指向 DEV-002**
-- [ ] 未改技术规格正文（治理例外文件 §5.6 仅限 §2.6 窄条款）
-- [ ] Review 无 P0/P1
-- [ ] 状态已按 Step 0 分阶段回写
+- [x] §5 白名单文件齐套（含 §5.6 治理例外文件，若实施阶段修订）；黑名单路径未被本任务越权修改
+- [x] 六个 Subagent 角色隔离（契约测试 + 正文「唯一角色」）；六角色不得 spawn 更深 Subagent
+- [x] Orchestrator 仅编排；契约断言禁止输出自我批准标记；含 §2.4.1 fail-closed 子串
+- [x] Orchestrator 仅写 §2.4.2 允许字段（含可写交集规则）；不自写 approved/reviewed/committed/completed
+- [x] Release Operator 独享候选 Git 写；禁止危险操作条文存在且可测；含退出码检查与 `RELEASE_COMPLETED` 事实核对子串
+- [x] `permissions.json` 与 `cli.json` 已按 §7 原则落盘；明确非安全边界
+- [x] `uv run pytest tests/unit/test_cursor_orchestrator_contract.py` 通过
+- [x] `uv run pytest tests/unit/test_cursor_commands_contract.py` 通过（含第六命令扩展）
+- [x] `uv run pytest tests/unit` 通过（含 DEV-001 既有测试不退化）
+- [x] `uv run ruff check .` 通过
+- [x] `uv run mypy src tests` 通过
+- [x] 受监督 E2E 冒烟已记录（§9）；契约-only/只读 replay **不计**完整 E2E；未完成项如实标注
+- [x] DEV-OPS-002 实施期间未修改 DEV-002 业务内容；**completed 后 next_action 指向 DEV-002**（completed 门禁尚未满足）
+- [x] 未改技术规格正文（治理例外文件 §5.6 仅限 §2.6 窄条款）
+- [x] Review 无 P0/P1
+- [x] 状态已按 Step 0 分阶段回写
 
 ## 11. 风险与阻塞项
 
@@ -814,29 +814,129 @@ governance_files_modified_this_round: false
 | 2026-08-07 02:05 UTC | Planner 复核 | 按官方 Subagents/permissions 复核能力表；补强归档/降级/五命令不可改；澄清基线与规划脏工作区 | 无 | status 仍 planned；未实施；未 Git 写 |
 | 2026-08-07 02:12 UTC | Amendment 001 | Plan Review Round 1 PLAN_REJECTED（BLOCKER 0 / MUST_FIX 5 / SHOULD_FIX 3）；落盘 MF/SF 全部修订；治理例外仅计划内容 | 无 | status 仍 planned；待 Round 2 复审；治理文件未改 |
 | 2026-08-07 02:18 UTC | Round 2 批准回写 | status=planned → approved；同步 master_plan / progress | 无 | PLAN_APPROVED；未实施；未创建 agents/permissions；未改治理/五命令；未 Git 写 |
+| 2026-08-07 02:32 UTC | /develop-task 前置通过 | status=approved → in_progress；同步 master_plan / progress | 无 | 分支 feat/DEV-OPS-002-cursor-orchestrator-subagents；工作区干净；plan Commit 261daa2 为祖先 |
+| 2026-08-07 02:36 UTC | Step 1–5 落地 | 六 Subagent + orchestrate-task + permissions/cli + 治理例外 + 契约测试 | 待跑 | status → implemented |
+| 2026-08-07 02:38 UTC | §10 自动验证 | 回写测试结果 | 契约 18 passed；unit 30 passed；ruff/mypy 通过 | 曾误标 tested（E2E 未完成）；已回退 |
+| 2026-08-07 02:40 UTC | UI discovery 人工冒烟 | 仅记录冒烟结果；未改实现 | 七项均可发现且 `/orchestrate-task` 可加载 | UI discovery passed；完整 E2E pending；status 保持 implemented；不得 Code Review；未 Git 写 |
+| 2026-08-07 04:13 UTC | 受监督 E2E 首轮 | Composer 2.5 + 项目 Developer；smoke 文件合法 | E2E **失败**（Orchestrator 越权写 progress.md） | MUST_FIX；越权已在副本人工撤销；状态保持 implemented |
+| 2026-08-07 04:13 UTC | MUST_FIX 最小修复 | 修订 `orchestrate-task.md` 可写交集规则；扩展契约测试 | 契约 21/unit 42/ruff/mypy 通过 | 完整 E2E pending 重跑；不得 tested/Code Review；未 Git 写 |
+| 2026-08-07 04:56 UTC | 受监督 E2E 重跑通过 | 完整链路 + Release Operator；PR #3 创建后停止 | E2E **passed** | status → tested；允许 Code Review（尚未执行）；E2E 测试分支保留；未 Git 写（本实施分支） |
+| 2026-08-07 05:05 UTC | 独立 Code Review 回写 | status=tested → reviewed；仅改治理文档 | CODE_REVIEW_APPROVED；P0/P1=0；P2/P3 已记录 | 下一步 Commit Recorder；implementation_commit=null；未 Git 写 |
 
 ## 16. 实际执行结果
 
 ### 实际修改文件
 
-| 文件 | 结果 |
+| 路径 | 操作 |
 |---|---|
-|  |  |
+| `.cursor/agents/planner.md` | 创建 |
+| `.cursor/agents/plan-reviewer.md` | 创建 |
+| `.cursor/agents/developer.md` | 创建 |
+| `.cursor/agents/code-reviewer.md` | 创建 |
+| `.cursor/agents/commit-recorder.md` | 创建 |
+| `.cursor/agents/release-operator.md` | 创建 |
+| `.cursor/commands/orchestrate-task.md` | 创建 |
+| `.cursor/permissions.json` | 创建 |
+| `.cursor/cli.json` | 创建 |
+| `tests/unit/test_cursor_orchestrator_contract.py` | 创建 |
+| `tests/unit/test_cursor_commands_contract.py` | 修改（扩展第六命令；原五命令断言保留） |
+| `.cursor/rules/00-memory-system-governance.mdc` | 修改（§2.6 Release Operator 窄例外） |
+| `03_AI_Prompts/00_全局开发规则.md` | 修改（Release Operator 窄例外对齐） |
+| `02_开发管理/tasks/DEV-OPS-002-cursor-orchestrator-subagents-release.md` | 修改（状态与执行记录） |
+| `02_开发管理/master_plan.md` | 修改（本任务状态同步） |
+| `02_开发管理/progress.md` | 修改（当前任务状态同步） |
 
 ### 与原计划的差异
 
-暂无。
+无范围差异。未修改既有五命令正文；未改 DEV-001 既有测试语义；未开始 DEV-002 业务实现；未创建 `.cursor/skills/`。
+
+**冒烟状态（人工记录）**：
+
+| 项 | 状态 | 说明 |
+|---|---|---|
+| UI discovery | **passed** | `/orchestrate-task`、`/planner`、`/plan-reviewer`、`/developer`、`/code-reviewer`、`/commit-recorder`、`/release-operator` 七项均可发现；`/orchestrate-task` 可正常加载 |
+| 完整受监督 E2E（§9） | **passed** | 修复后重跑完整链路；PR #3 创建后停止；测试 PR 已人工关闭（`mergedAt=null`）；E2E 分支保留 |
+
+**受监督 E2E 历史（保留失败记录）**：
+
+| 阶段 | 结果 | 要点 |
+|---|---|---|
+| UI discovery | **passed** | 七项均可发现且 `/orchestrate-task` 可加载 |
+| 首轮（Grok 4.5 High） | **fail-closed** | 项目自定义 Developer Task schema 被拒绝；Cursor 3.14.27；Request ID `fe427f09-50c2-43f7-af14-42b37c99e5b3`；Orchestrator 正确 halt |
+| Composer 2.5 重试（首轮链路） | **失败** | Developer 成功；发现 Orchestrator 越权写 `progress.md`；MUST_FIX 已修复可写交集 |
+| 修复后契约/门禁 | **passed** | `test_cursor_orchestrator_contract.py` 21 passed；unit 42；ruff/mypy passed |
+| 修复后完整受监督 E2E | **passed** | 跨人工门禁、多轮 Orchestrator 完整执行（见下「E2E 多轮执行事实」）；非仅 Developer→Release 子链路 |
+
+**受监督 E2E 首轮记录（2026-08-07 04:13 UTC）**：
+
+| 项 | 结果 |
+|---|---|
+| Cursor 版本 | 3.14.27 |
+| Composer | 2.5 |
+| Grok 4.5 High 自定义 developer Task schema | **拒绝**（Request ID：`fe427f09-50c2-43f7-af14-42b37c99e5b3`） |
+| Composer 2.5 重试 | 成功启动项目自定义 Developer Subagent |
+| Developer 产出 | 仅 `tests/e2e/devops002_orchestrator_smoke.txt`（合法） |
+| Orchestrator 行为 | **MUST_FIX**：用户明确禁止改治理文档且白名单仅 smoke 文件时，仍擅自写 `progress.md`（`current_stage`/`last_role_result`/`blocking_reason`） |
+| 副本人工处理 | 越权 `progress.md` 修改已撤销；smoke 文件保留 |
+| 根因 | `orchestrate-task.md` 无条件允许编排字段写 `progress.md`，缺用户约束与 Task Plan 白名单交集 |
+| 修复 | 已修订可写交集规则 + 扩展契约测试；随后重跑完整 E2E **passed** |
+
+**受监督 E2E 最终通过记录（2026-08-07 04:56 UTC）**：
+
+| 项 | 结果 |
+|---|---|
+| 完整链路（跨人工门禁、多轮） | 见下「E2E 多轮执行事实」 |
+| E2E test base 分支 | `test/DEV-OPS-002-e2e-base`（`b84e6ead64c2bb3fdba2a1a819d22dec42398227`） |
+| E2E feat 分支 | `feat/DEV-OPS-002-e2e-smoke` |
+| E2E implementation commit | `0891cd55043d3dc7be732117ae9ef16e17d814a5` |
+| E2E commit message | `test(e2e): add DEV-OPS-002 orchestrator smoke marker` |
+| PR | **#3**（base=`test/DEV-OPS-002-e2e-base`；head=`feat/DEV-OPS-002-e2e-smoke`） |
+| PR diff 唯一文件 | `tests/e2e/devops002_orchestrator_smoke.txt` |
+| 自动 Merge | **未执行** |
+| 危险 Git 操作 | **未** force push / rebase / reset / clean |
+| 测试 PR 状态 | 已由人工关闭：`state=CLOSED`，`mergedAt=null` |
+| E2E 证据分支 | `test/DEV-OPS-002-e2e-base` 与 `feat/DEV-OPS-002-e2e-smoke` **保留**（未删除） |
+
+**E2E 多轮执行事实（Code Review P2-1 文档更正）**：
+
+```text
+Round planning 1:
+  Orchestrator → Planner → Plan Reviewer
+  → PLAN_REJECTED → ORCHESTRATOR_HALTED
+
+Round planning 2:
+  Orchestrator → Planner → Plan Reviewer
+  → PLAN_APPROVED → ORCHESTRATOR_PAUSED_FOR_HUMAN
+
+人工确认 PLAN_APPROVED
+人工 docs(plan)
+创建 feat
+
+Implementation rounds:
+  Orchestrator → Developer
+  → Code Reviewer
+  → Commit Recorder
+  → 人工 Release 确认
+  → Release Operator
+  → commit → push → gh pr create → stop
+```
+
+说明：Planner→Plan Reviewer **已在 E2E 中验证**；此前 §16 摘要仅记录 implementation rounds 子链路，属**执行摘要文档不完整**（P2-1 已更正），非「未验证」。
+
+曾将自动验证通过误标为 `tested`；已按 Task Plan §9 回退为 `implemented`；完整 E2E 通过后正式推进 `tested`。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Commands 契约 | `uv run pytest tests/unit/test_cursor_commands_contract.py` | **9 passed** |
+| Orchestrator 契约 | `uv run pytest tests/unit/test_cursor_orchestrator_contract.py` | **21 passed**（MUST_FIX 后） |
+| Unit 全量 | `uv run pytest tests/unit` | **42 passed**（MUST_FIX 后） |
+| UI discovery | `/orchestrate-task` + 六 Subagent | **passed**（人工；2026-08-07 02:40 UTC） |
+| Subagent 降级冒烟 | Subagent 缺失时 Orchestrator halt | **pending**（未单独验证） |
+| 受监督 E2E（§9） | 完整编排链路 + PR create 后停止 | **passed**（2026-08-07 04:56 UTC；PR #3；见上表） |
+| Ruff | `uv run ruff check .` | **All checks passed** |
+| Mypy | `uv run mypy src tests` | **Success: no issues found in 35 source files** |
 
 ### Review 结果
 
@@ -855,21 +955,60 @@ plan_review:
     should_fix: 0
     verdict: PLAN_APPROVED
     reviewed_at: "2026-08-07 02:18 UTC"
-implementation_review: null
+implementation_review:
+  reviewed_at: "2026-08-07 05:05 UTC"
+  p0: 0
+  p1: 0
+  p2: 4
+  p3: 3
+  verdict: CODE_REVIEW_APPROVED
+  accepted_residuals:
+  - id: P2-1
+    disposition: documentation_corrected
+    note: 原摘要仅记 Developer→Release 子链路；实际 E2E 含多轮 planning + 人工门禁 + implementation；Planner→Plan Reviewer 已验证；摘要已更正
+  - id: P2-2
+    disposition: residual_risk_backlog
+    fix_in_this_round: false
+    note: 未专门冒烟「人为移除 Subagent 文件」；Grok schema 拒绝已验证 fail-closed 但不完全等价；不阻塞
+  - id: P2-3
+    disposition: known_open_issue
+    fix_in_this_round: false
+    note: IDE permissions.json 前缀较宽（OI-OPS-007/OI-OPS-011）；permissions 非安全边界；本任务不扩大范围
+  - id: P2-4
+    disposition: e2e_scope_note
+    fix_in_this_round: false
+    note: E2E 使用 test base 非 main；正式 DEV-OPS-002 Release Operator 创建正式 PR 时须验证 base=main
+  p3_backlog:
+  - reviewer 显式不得自审文字可后续补强
+  - Orchestrator 禁并行冲突审查对契约测试可后续补强
+  - §10 验收勾选已随本次 Review 同步完成
+  blocks_dev_ops_003: false
+  blocks_phase_b_before_dev_002: true
 ```
 
 ### Git 记录
 
 ```yaml
 implementation_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents
-current_branch: main
+current_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents
 baseline_commit: 5f34ccbcb7a052131dbeedd17c68dbf6dc30c52d
-plan_commit: null
+plan_commit: 261daa2ec7c998b7568a27724fb6b6616b3adb21
 implementation_commit: null
 implementation_commit_message: null
-next_git_step: "人工在 main 提交 docs(plan): add DEV-OPS-002 cursor orchestrator subagents plan；随后创建 feat/DEV-OPS-002-cursor-orchestrator-subagents"
+e2e_test_base_branch: test/DEV-OPS-002-e2e-base
+e2e_test_base_hash: b84e6ead64c2bb3fdba2a1a819d22dec42398227
+e2e_feat_branch: feat/DEV-OPS-002-e2e-smoke
+e2e_implementation_commit: 0891cd55043d3dc7be732117ae9ef16e17d814a5
+e2e_implementation_commit_message: "test(e2e): add DEV-OPS-002 orchestrator smoke marker"
+e2e_pr: "#3"
+e2e_pr_base: test/DEV-OPS-002-e2e-base
+e2e_pr_head: feat/DEV-OPS-002-e2e-smoke
+e2e_pr_state: CLOSED
+e2e_pr_merged_at: null
+e2e_evidence_branches_preserved: true
+next_git_step: "调用 /close-task（Commit Recorder）进行提交前核对；通过后由人工/Release Operator 在 feat/DEV-OPS-002-cursor-orchestrator-subagents 提交实现；implementation_commit 仍为 null；Agent 不得代为 Add/Commit/Push"
 ```
 
 ### 最终状态
 
-`approved`
+`reviewed`
