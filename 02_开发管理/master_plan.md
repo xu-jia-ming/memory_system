@@ -61,6 +61,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | completed |
 | DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | implemented |
+| DEV-OPS-002-E2E-SMOKE | DEV-OPS-002 专用低风险 Orchestrator E2E 冒烟 | 非业务：父任务 §9 受监督完整 E2E；非业务实现 | DEV-OPS-002（implemented；UI discovery passed） | approved |
+
+#### DEV-OPS-002-E2E-SMOKE DEV-OPS-002 专用低风险 Orchestrator E2E 冒烟
+
+- **目标**：在隔离 E2E 副本上走通 Orchestrator 全角色链路；实施阶段仅新增 `tests/e2e/devops002_orchestrator_smoke.txt`（内容恰好 `DEV-OPS-002_ORCHESTRATOR_E2E_OK` + trailing newline）；人工确认后 Release Operator **仅**对该 txt `git add`/commit/push，并以 `test/DEV-OPS-002-e2e-base` 为 base 创建 PR 后立即停止。
+- **非目标**：改业务代码/依赖/配置/既有命令/Agent/既有测试；Merge、删分支、force push、rebase、reset、clean；以 `main` 为 PR base；将契约-only 计为完整 E2E；开始 DEV-002；实施态 Release 混入治理文档；本任务不交付 E2E 不可行时的降级实现（归属人工/Orchestrator 回退 DEV-OPS-001 五命令）。
+- **变更文件（实施白名单唯一）**：`tests/e2e/devops002_orchestrator_smoke.txt`。规划阶段仅本 Task Plan + master_plan/progress 登记（仅经基线 `docs(plan)` 落盘；不得经实施 Release 混入）。
+- **测试（至少）**：`git diff --check`；`test "$(cat …)" = "DEV-OPS-002_ORCHESTRATOR_E2E_OK"`（字符串本体）；`cmp -s … <(printf '%s\n' '…')`（恰好一个 trailing newline）。
+- **验收**：白名单精确；内容精确（含换行客观验）；Release `git add` **仅**该 txt；禁止危险 Git；PR base=`test/DEV-OPS-002-e2e-base`；创建 PR 后停止。通过后方可解除父任务完整 E2E pending。
+- **Git 顺序**：基线 `test/DEV-OPS-002-e2e-base` → `PLAN_APPROVED` → 基线 `docs(plan)` → 创建 `feat/DEV-OPS-002-e2e-smoke` → Developer 仅增 txt → Review → 人工确认 → Release 仅 txt commit/push/PR → 停止。
+- **风险**：permissions 非安全边界；push 与 force 前缀；远程/权限失败不得伪造 PR；误混治理进 Release。
+- **计划文件**：`02_开发管理/tasks/DEV-OPS-002-E2E-SMOKE.md`
+- **状态备注**：`approved`（Round 1 曾 `PLAN_REJECTED`；Amendment 001 后 Round 2 `PLAN_APPROVED` 且已人工确认；BLOCKER=0 / MUST_FIX=0 / SHOULD_FIX=0；仍不得实施；下一步人工基线 `docs(plan)` 后创建 `feat/DEV-OPS-002-e2e-smoke`）。
 
 #### DEV-OPS-002 Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
 
@@ -377,5 +390,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | 新增 `DEV-OPS-002`（Phase 0 补充）；**不**修改 DEV-OPS-001 / DEV-001 完成状态；**不**改变 DEV-002+ 业务范围 |
 | 是否改变技术规格 | **否** |
 | 审批 | Round 1 曾 `PLAN_REJECTED`；Amendment 001 后 Round 2 通过（`PLAN_APPROVED`）；状态 `approved`；未实施 |
+
+### CHANGE-004
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-07 |
+| 原因 | 登记非业务任务 DEV-OPS-002-E2E-SMOKE：父任务 DEV-OPS-002 §9 专用低风险完整 E2E 冒烟；隔离副本上验证 Orchestrator 全链路至 PR create；不改变 Phase 0–5 业务任务目标与依赖 |
+| 受影响任务 | 新增 `DEV-OPS-002-E2E-SMOKE`（Phase 0 补充）；**不**修改 DEV-OPS-002 业务目标/白名单；**不**改变 DEV-002+ 业务范围；父任务完整 E2E 仍 pending 直至本任务通过 |
+| 是否改变技术规格 | **否** |
+| 审批 | Round 1 `PLAN_REJECTED`（MF-001 + SF-001/SF-002）；Amendment 001 后 Round 2 `PLAN_APPROVED`（BLOCKER=0 / MUST_FIX=0 / SHOULD_FIX=0）且**已人工确认**；状态 `approved`；仍不得实施；未实施冒烟文件；未 Git 写；下一步人工 `docs(plan)` 后创建 `feat/DEV-OPS-002-e2e-smoke` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

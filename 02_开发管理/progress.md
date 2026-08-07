@@ -6,12 +6,20 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-OPS-002
-current_task_status: implemented
-current_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents
+current_task: DEV-OPS-002-E2E-SMOKE
+current_task_status: approved
+current_branch: test/DEV-OPS-002-e2e-base
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-OPS-002-cursor-orchestrator-subagents-release.md
-latest_commit: 261daa2
+planning_baseline_branch: test/DEV-OPS-002-e2e-base
+implementation_branch: feat/DEV-OPS-002-e2e-smoke
+current_plan_file: 02_开发管理/tasks/DEV-OPS-002-E2E-SMOKE.md
+latest_commit: dd5e158
+parent_task: DEV-OPS-002
+parent_task_status: implemented
+parent_plan_file: 02_开发管理/tasks/DEV-OPS-002-cursor-orchestrator-subagents-release.md
+current_stage: awaiting_human_docs_plan
+last_role_result: PLAN_APPROVED
+blocking_reason: "已人工确认 PLAN_APPROVED；approved 仍不得实施；下一步人工提交 docs(plan)，随后创建 feat/DEV-OPS-002-e2e-smoke"
 previous_task: DEV-OPS-001
 previous_task_status: completed
 previous_task_completed_at: "2026-08-06 15:30 UTC"
@@ -21,8 +29,10 @@ previous_status_record_commit_completed: 5f34ccbcb7a052131dbeedd17c68dbf6dc30c52
 previous_pr: "#2"
 previous_pr_status: merged
 previous_merge_commit: 57800c3
-next_action: 执行受监督低风险 E2E（§9）；UI discovery 已通过；完整 E2E pending；E2E 通过前不得 tested 与 Code Review；Agent 不得 Git Add/Commit/Push/Merge/Rebase；不得启动 DEV-002 业务实现
+next_action: 人工在基线 test/DEV-OPS-002-e2e-base 提交 docs(plan)，随后创建 feat/DEV-OPS-002-e2e-smoke；approved 仍不得实施
 ```
+
+
 
 ## 测试状态
 
@@ -35,7 +45,7 @@ next_action: 执行受监督低风险 E2E（§9）；UI discovery 已通过；�
 | Ruff | passed（DEV-OPS-002） | `uv run ruff check .` | All checks passed |
 | Mypy | passed（DEV-OPS-002） | `uv run mypy src tests` | Success: no issues found in 35 source files |
 | UI discovery（§9 / OI-OPS-005 延续） | passed（DEV-OPS-002） | 人工 `/` 菜单 | 七项均可发现：`/orchestrate-task`、`/planner`、`/plan-reviewer`、`/developer`、`/code-reviewer`、`/commit-recorder`、`/release-operator`（2026-08-07 02:40 UTC） |
-| E2E 冒烟（§9） | pending | 受监督完整编排链路 | 阻塞 tested；须人工执行 |
+| E2E 冒烟（§9） | pending | DEV-OPS-002-E2E-SMOKE | 计划已 approved（人工确认 PLAN_APPROVED）；仍不得实施；下一步人工 docs(plan) 后创建 feat |
 
 ## 已完成任务
 
@@ -68,6 +78,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 - 所有依赖和基础设施版本必须按技术规格锁定（含 `[build-system]` 的 `uv_build`）。
 - DEV-OPS-001：Cursor Commands 为 beta；不得假设未证实的参数替换或自动角色切换。
 - DEV-OPS-002：Subagent 继承父工具；IDE `permissions.json` 无硬 deny；`git push` 前缀与 `--force` 区分未证实为硬保证；结束标记无官方结构化协议。
+- DEV-OPS-002-E2E-SMOKE：隔离副本远程/权限失败不得伪造 PR；PR base 必须为 `test/DEV-OPS-002-e2e-base`；Release `git add` 仅 smoke txt；E2E 不可行时降级归属人工/Orchestrator（DEV-OPS-001 五命令），非本冒烟交付物。
 - 本地 `uv lock`/`uv sync` 需经代理 `127.0.0.1:7890` 访问 PyPI（环境因素，未写入仓库配置）。
 
 ## 双口令门禁
@@ -79,6 +90,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | PLAN_APPROVED（DEV-OPS-001 计划） | **已通过**（Round 2）；plan Commit `48a7525`；状态 `completed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-001 实现） | **已通过**（P0=0 / P1=0 / P2=1 / P3=1；P2/P3 已接受残余、本轮不修复） |
 | PLAN_APPROVED（DEV-OPS-002 计划） | **已通过**（Round 2）；plan Commit `261daa2`；状态 `implemented`；UI discovery passed；完整 E2E pending |
+| PLAN_APPROVED（DEV-OPS-002-E2E-SMOKE 计划） | **已通过**（Round 2；BLOCKER=0 / MUST_FIX=0 / SHOULD_FIX=0；含 Amendment 001；Round 1 曾 PLAN_REJECTED）；**已人工确认**；状态 `approved`；仍不得实施 |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -130,6 +142,20 @@ DEV-OPS-001：步骤 1–10 均已完成（实现 Commit `69fabb7`；治理 comm
 
 受监督 E2E 冒烟（实施验收强制）：专用低风险 feat 分支；人工确认后 Release；PR create 后停止；失败 halt 并回退 DEV-OPS-001 五命令。
 
+## DEV-OPS-002-E2E-SMOKE Git 流程（已批准；待人工 docs(plan)）
+
+```text
+1. 独立 Plan Review（Round 1 PLAN_REJECTED → Amendment 001 → Round 2 PLAN_APPROVED）
+2. PLAN_APPROVED → 人工确认 → approved（当前；不得实施）
+3. 人工 docs(plan) 落盘（基线 test/DEV-OPS-002-e2e-base；治理文档仅此步）← 下一步
+4. 从 test/DEV-OPS-002-e2e-base 创建 feat/DEV-OPS-002-e2e-smoke
+5. Developer：仅新增 tests/e2e/devops002_orchestrator_smoke.txt
+6. 验证：git diff --check；test "$(cat …)" = "…"（本体）；cmp -s … <(printf '%s\n' '…')（换行）
+7. Code Review → Commit Recorder
+8. 人工确认后 Release Operator：git add 仅该 txt / commit / push；gh pr create（base=test/DEV-OPS-002-e2e-base）
+9. 创建 PR 后立即停止；禁止 merge/删分支/force/rebase/reset/clean；禁止 Release 混入治理文档
+```
+
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
@@ -142,7 +168,7 @@ DEV-OPS-001：步骤 1–10 均已完成（实现 Commit `69fabb7`；治理 comm
 | 2026-08-06 10:12 UTC | DEV-001 | in_progress → implemented | 白名单文件已创建；`uv lock`/`uv sync --locked` 成功（代理 7890） |
 | 2026-08-06 10:14 UTC | DEV-001 | implemented → tested | pytest 12 passed；ruff/mypy 通过；停止等待 Code Review |
 | 2026-08-06 10:30 UTC | DEV-001 | tested → reviewed | 独立 Code Review PASS（P0/P1=0）；复跑门禁通过 |
-| 2026-08-06 12:55 UTC | DEV-001 | reviewed → committed | 人工 Commit `9fbe899`（build(bootstrap): add project skeleton, uv lock, and quality tooling）；分支已推送；PR #1 open 尚未 merge |
+| 2026-08-06 12:55 UTC | DEV-001 | tested → committed | 人工 Commit `9fbe899`（build(bootstrap): add project skeleton, uv lock, and quality tooling）；分支已推送；PR #1 open 尚未 merge |
 | 2026-08-06 13:06 UTC | DEV-001 | Git 计划增补 | Amendment 004：§13 增加两条 `docs(status)` 治理 Commit；同步 Git 流程与 next_action |
 | 2026-08-06 13:20 UTC | DEV-001 | committed → completed | PR #1 merged 至 main（Merge Commit `a2673ac`）；治理 committed Commit `753c4e4`；实现 Commit `9fbe899` |
 | 2026-08-06 | DEV-001 | completed 落盘 | main 治理 Commit `740d821`：`docs(status): complete DEV-001 after PR merge`；功能分支已删；main 已同步远程 |
@@ -168,9 +194,13 @@ DEV-OPS-001：步骤 1–10 均已完成（实现 Commit `69fabb7`；治理 comm
 | 2026-08-07 02:36 UTC | DEV-OPS-002 | in_progress → implemented | 六 Subagent + Orchestrator + 权限 + 治理例外 + 契约测试已创建 |
 | 2026-08-07 02:38 UTC | DEV-OPS-002 | implemented → tested（误标） | 契约 18/unit 30/ruff/mypy 通过；E2E 未完成即标 tested（不符合 §9） |
 | 2026-08-07 02:40 UTC | DEV-OPS-002 | tested → implemented | UI discovery 人工通过（七项）；完整 E2E pending；不得 Code Review；仅改治理文档 |
+| 2026-08-07 03:03 UTC | DEV-OPS-002-E2E-SMOKE | planned | Planner 创建 Task Plan；master_plan CHANGE-004 登记；progress 规划态；next_action=计划审查；未实施 smoke txt；未 Git 写 |
+| 2026-08-07 03:15 UTC | DEV-OPS-002-E2E-SMOKE | planned（Amendment 001） | Round 1 PLAN_REJECTED（MF-001 + SF-001 + SF-002）；已全部落实：收窄 Release git add 仅 txt；增 cmp 换行验；补 §9 降级归属；status 仍 planned；next_action=计划审查；未实施、未 Git 写 |
+| 2026-08-07 03:22 UTC | DEV-OPS-002-E2E-SMOKE | planned → approved | 人工确认 Round 2 PLAN_APPROVED（BLOCKER=0 / MUST_FIX=0 / SHOULD_FIX=0）；三份规划文档回写 approved；Round 1/Amendment 001 历史保留；仍不得实施；下一步人工 docs(plan) 后创建 feat/DEV-OPS-002-e2e-smoke；未 Git 写 |
 
 ## 下一任务
 
-1. **当前**：DEV-OPS-002 状态 `implemented`；UI discovery **passed**；完整受监督 E2E **pending**。
-2. 下一步：执行受监督低风险 E2E（§9）；通过后方可标 `tested` 并进入 Code Review。
-3. DEV-002 业务实现不在本会话启动。
+1. **当前**：`DEV-OPS-002-E2E-SMOKE` 状态 `approved`；计划文件 `02_开发管理/tasks/DEV-OPS-002-E2E-SMOKE.md`。
+2. **下一步**：人工在基线 `test/DEV-OPS-002-e2e-base` 提交 `docs(plan)`，随后创建 `feat/DEV-OPS-002-e2e-smoke`；**approved 仍不得实施**。
+3. 父任务 DEV-OPS-002 仍为 `implemented`；完整 E2E 通过前不得标 `tested`/Code Review。
+4. DEV-002 业务实现不在本会话启动。
