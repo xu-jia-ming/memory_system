@@ -50,7 +50,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | DEV-001 | 项目骨架、依赖与质量工具 | §3.4, §3.5, §3.2, §3.28 | 无 | completed |
 | DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | completed |
-| DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | planned |
+| DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | approved |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | planned |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | planned |
 | DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003 | planned |
@@ -111,12 +111,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### DEV-003 Docker Compose、Embedding、Preflight
 
-- **目标**：`compose*.yaml`、`versions.env`/`versions.lock.env`、`compose.sh`、`start_embedding.sh`、`lock_tei_images.sh`、Preflight、Dockerfile；CPU/GPU Embedding 互斥 Override。
-- **非目标**：业务 Migration 逻辑细节（属 DEV-004）；应用业务 API。
-- **变更文件**：`Dockerfile`、`compose.yaml`、`compose.override.yaml`、`compose.embedding.{cpu,gpu}.yaml`、`compose.test.yaml`、`versions.env`、`versions.lock.env`、`scripts/compose.sh`、`scripts/start_embedding.sh`、`scripts/lock_tei_images.sh`、`scripts/preflight/check_linux_host.sh`。
-- **测试**：Integration（compose config 校验、preflight 脚本在本机条件允许时）；禁止裸 `docker compose`。
-- **验收**：经 wrapper 可构建/启动基础设施与 embedding-service（按规格 §3.17）。
-- **风险**：版本硬编码漂移；CPU/GPU 同时启用。
+- **目标**：`compose*.yaml`、`versions.env`/`versions.lock.env`、`compose.sh`（唯一 Wrapper，`--embedding=none|cpu|gpu|current`，`--stack=dev|test`）、`start_embedding.sh`（`cpu`/`gpu`/`auto` → `.runtime/embedding.env`）、`lock_tei_images.sh`（TEI 1.9.3 Digest 锁）、`preflight/check_linux_host.sh`（§3.18 全文：GPU-first `auto`、硬失败/Warning 表、Digest 诊断）、多阶段 `Dockerfile`；§3.3 全拓扑；三应用容器 §7.6 确定性 `required_env_keys()` 注入（`env_file` + `environment:`，禁止隐式继承）。
+- **非目标**：`scripts/migrate.py` 与 `001`–`004` Migration 逻辑（DEV-004）；`init-infra` 成功执行验收；FastAPI/鉴权（DEV-005）；`TEIEmbeddingClient`（DEV-006）；修改 `settings/**`；裸 `docker compose`。
+- **变更文件（白名单）**：§ Task Plan §5（`Dockerfile`、`compose.yaml`、`compose.override.yaml`、`compose.embedding.{cpu,gpu}.yaml`、`compose.test.yaml`、`versions.env`、`versions.lock.env`、`scripts/compose.sh`、`start_embedding.sh`、`lock_tei_images.sh`、`preflight/check_linux_host.sh`、`.gitignore`、`README.md`、契约/集成测试）。
+- **测试**：Unit/Contract（`compose.sh config` 经 Wrapper、裸 `docker compose` 静态禁令、`versions.env` 契约、`required_env_keys` 三容器全覆盖、§3.3 全服务集、test 栈 `-f` 顺序）；Integration（Preflight CPU/GPU/auto 路径、Digest 输出、mode↔budget）；**禁止**测试中裸 `docker compose`。
+- **验收**：`versions.lock.env` 含真实 `@sha256:` Digest；`compose.sh config` 可解析全服务；三应用容器 env 覆盖 `required_env_keys()`；Preflight `auto` GPU-first / `gpu` 禁止降级；grace period 480/300/300s；CPU/GPU 双路径 §12；黑名单未越权。
+- **Git**：`docs(plan)` on `main` → `feat/DEV-003-docker-compose-embedding-preflight` → `feat(docker): add compose stack, embedding scripts, and preflight`。
+- **风险**：TEI 镜像拉取体积/代理；GPU/A5000 环境可选；`init-infra run` 在 DEV-004 前预期失败；`vm.max_map_count` 宿主机要求。
+- **计划文件**：`02_开发管理/tasks/DEV-003-docker-compose-embedding-preflight.md`
+- **状态备注**：`approved`（Round 1 `PLAN_REJECTED`；Amendment 001；Round 2 `PLAN_APPROVED`；人工确认 2026-08-07 10:33 UTC；`main` @ `0b91a34`；`plan_commit=null`；未实施、未 Git 写；下一步人工 `docs(plan)` on `main`）
 
 #### DEV-004 Migration Runner 与基础设施初始化
 
@@ -390,5 +393,25 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | DEV-002（`approved`）；**不**修改 DEV-001 / DEV-OPS-* 完成状态；**不**改变 DEV-003+ 业务范围 |
 | 是否改变技术规格 | **否** |
 | 审批 | Round 1 `PLAN_REJECTED`；Amendment 001；Round 2 `PLAN_APPROVED`；人工确认 2026-08-07 08:03 UTC；plan_commit `ceff988`；implementation `f55732c`；PR #5 merged `7fba544`；状态 `completed` |
+
+### CHANGE-005
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-07 |
+| 原因 | 登记 DEV-003 初版 Task Plan：Docker Compose 全拓扑、TEI Embedding 部署链（1.9.3 Digest 锁）、Preflight、与 DEV-002 Settings/`.env.example` 衔接；细化白/黑名单、`compose.sh` 唯一 Wrapper 与测试策略 |
+| 受影响任务 | DEV-003（`planned`）；**不**修改 DEV-001 / DEV-OPS-* / DEV-002 完成状态；**不**改变 DEV-004+ 业务范围 |
+| 是否改变技术规格 | **否** |
+| 审批 | Round 1 `PLAN_REJECTED`（MF-001、MF-002、SF-001–005）；Amendment 001；Round 2 `PLAN_APPROVED`；人工确认 2026-08-07 10:33 UTC；状态 `approved`；`plan_commit=null`（待 docs(plan) on main） |
+
+### CHANGE-005 Amendment 001
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-07 |
+| 原因 | Round 1 Plan Review 拒绝项修订：闭合三应用容器 `required_env_keys()` 确定性注入（§7.6）；Preflight §3.18 全文（GPU-first `auto`、内存门槛、Digest 输出、mode↔budget）；回滚步骤、契约测试全服务集、test 栈 `-f` 顺序、治理文档入 §9 |
+| 受影响任务 | DEV-003（`approved`）；**不**改变 DEV-004+ 业务范围 |
+| 是否改变技术规格 | **否**（对齐既有 §3.10.5、§3.18 字面要求） |
+| 审批 | Round 2 `PLAN_APPROVED`（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 5 非阻塞）；人工确认 2026-08-07 10:33 UTC；状态 `approved` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

@@ -7,11 +7,11 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-003
-current_task_status: planned
+current_task_status: approved
 current_branch: main
 target_default_branch: main
-current_plan_file: null
-latest_commit: 7fba54427ead5bcbde4a5e4141d83bec0e7f7477
+current_plan_file: 02_开发管理/tasks/DEV-003-docker-compose-embedding-preflight.md
+latest_commit: 0b91a341c0842b73ae33e55e57a23e2cb0e4ce11
 plan_commit: null
 previous_task: DEV-002
 previous_task_status: completed
@@ -24,7 +24,7 @@ previous_status_record_commit_completed: null
 previous_pr: "#5"
 previous_pr_status: merged
 previous_merge_commit: 7fba54427ead5bcbde4a5e4141d83bec0e7f7477
-next_action: 立即进入 DEV-003（Docker Compose、Embedding 服务与 Preflight）业务规划/实施；人工在 main 提交 docs(status): complete DEV-002 after PR merge；不得插入 DEV-OPS-003、Phase B 或其他 workflow 优化于 DEV-003 之前
+next_action: 人工在 main 提交 docs(plan): add DEV-003 docker compose embedding preflight plan；随后从 main 创建 feat/DEV-003-docker-compose-embedding-preflight 并 /develop-task（不得在未 docs(plan) 前实施）
 ```
 
 ## 测试状态
@@ -87,6 +87,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | CODE_REVIEW_APPROVED（DEV-OPS-002 实现） | **已通过**（P0=0 / P1=0 / P2=4 / P3=3；P2/P3 为 residual/backlog，不阻塞） |
 | RELEASE_COMPLETED（DEV-OPS-002 实现） | **已完成**；implementation_commit `4943757`；PR #4 merged（`5886cc6`） |
 | PLAN_APPROVED（DEV-002 计划） | **已通过**（Round 2；Amendment 001）；plan_commit `ceff988` |
+| PLAN_APPROVED（DEV-003 计划） | **已通过**（Round 1 `PLAN_REJECTED`；Amendment 001；Round 2 `PLAN_APPROVED` BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 5 非阻塞）；人工确认 2026-08-07 10:33 UTC；`plan_commit=null`（待 docs(plan) on main） |
 | CODE_REVIEW_APPROVED（DEV-002 实现） | **已通过**（P0=0 / P1=0 / P2=2 / P3=2；P2-001 由 Amendment 002 关闭；不阻塞 Release） |
 | RELEASE_COMPLETED（DEV-002 实现） | **已完成**；implementation_commit `f55732c`；PR #5 merged（`7fba544`） |
 
@@ -159,7 +160,22 @@ DEV-OPS-002：步骤 1–10 均已完成（实现 Commit `4943757`；治理 comm
 12. docs(status): complete DEV-002 after PR merge（main；治理状态 completed）← 待人工提交
 ```
 
-DEV-002：步骤 1–11 均已完成（实现 Commit `f55732c`；治理 committed `8c9f9de`；PR #5 Merge `7fba544`）。步骤 12 待人工在 main 提交 completed 治理 Commit。功能分支删除待人工执行。
+DEV-002：步骤 1–12 均已完成（实现 Commit `f55732c`；治理 committed `8c9f9de`；PR #5 Merge `7fba544`；completed 治理 Commit `0b91a34`）。功能分支删除待人工执行。
+
+## DEV-003 Git 流程（approved，未实施）
+
+```text
+1. 独立 Plan Review Round 1 → PLAN_REJECTED（MF-001 + MF-002 + SF-001–005）
+2. Planner Amendment 001 修订
+3. 独立 Plan Review Round 2 → PLAN_APPROVED
+4. 人工确认 PLAN_APPROVED → approved（2026-08-07 10:33 UTC）← 当前
+5. 人工在 main 提交 docs(plan): add DEV-003 docker compose embedding preflight plan ← 待执行
+6. 从 main 创建 feat/DEV-003-docker-compose-embedding-preflight
+7. /develop-task：approved → in_progress；实施 §5 白名单
+8. Code Review → Release Operator → docs(status) committed → 人工 Merge PR → completed
+```
+
+DEV-003：步骤 1–4 已完成；步骤 5 待人工在 `main` 提交 `docs(plan)`；未创建 feat 分支；未实施、未 Git 写。
 
 ## 最近执行记录
 
@@ -214,11 +230,13 @@ DEV-002：步骤 1–11 均已完成（实现 Commit `f55732c`；治理 committe
 | 2026-08-07 08:52 UTC | DEV-002 | reviewed（Amendment 002） | 纠正 pydantic-settings 2.14 tuple 语义文档；新增 Amendment 002；未改业务实现 | CODE_REVIEW_APPROVED 仍有效；P2-001 关闭；待 Release Operator |
 | 2026-08-07 09:00 UTC | DEV-002 | reviewed → committed | Release Operator RELEASE_COMPLETED；PR #5 open（base=main） | implementation_commit `f55732c`；治理 committed `8c9f9de` |
 | 2026-08-07 09:44 UTC | DEV-002 | committed → completed | PR #5 merged 至 main（Merge Commit `7fba544`）；`current_task` → DEV-003 | status_record_commit_completed=null；下一步 docs(status) complete + DEV-003 规划 |
+| 2026-08-07 10:30 UTC | DEV-003 | planned（Amendment 001 / Round 2） | Round 1 PLAN_REJECTED（MF-001 env 注入、MF-002 Preflight §3.18、SF-001–005）；已修订 Task Plan §7.6/Step 10/§11–§13/Amendment 001；progress/master_plan 同步 | 未实施、未 Git 写；status 保持 planned；等待 Plan Review Round 2 |
+| 2026-08-07 10:33 UTC | DEV-003 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 5 非阻塞）；人工确认 PLAN_APPROVED；治理回写 Task Plan / progress / master_plan | 未实施、未创建 feat 分支、未 Git 写；下一步人工 docs(plan) on main |
 
 ## 下一任务
 
-1. **当前**：DEV-002 状态 **`completed`**；PR #5 **merged**（`7fba544`）；`origin/main` = `7fba544`。
-2. **立即下一任务**：**DEV-003**（Docker Compose、Embedding 服务与 Preflight）业务规划/实施。
-3. 在 **main** 提交最终治理 Commit：**`docs(status): complete DEV-002 after PR merge`**（`status_record_commit_completed` 待该 Commit 产生后回写）。
-4. 不得插入 DEV-OPS-003、Phase B 或其他 Cursor workflow 优化于 DEV-003 之前。
-5. 功能分支 `feat/DEV-002-config-system-env-example` 删除待人工执行（本轮 Orchestrator 不执行）。
+1. **当前**：DEV-003 状态 **`approved`**；Task Plan `02_开发管理/tasks/DEV-003-docker-compose-embedding-preflight.md`；`main` @ `0b91a34`；`plan_commit=null`。
+2. **立即下一动作（人工）**：在 **`main`** 提交 **`docs(plan): add DEV-003 docker compose embedding preflight plan`**（含 Task Plan 与 governance 更新）。
+3. 随后从 `main` 创建 **`feat/DEV-003-docker-compose-embedding-preflight`**，再调用 `/develop-task` 进入 `in_progress` 实施。
+4. 不得插入 DEV-OPS-003、Phase B 或其他 Cursor workflow 优化于 DEV-003 实施之前。
+5. 功能分支 `feat/DEV-002-config-system-env-example` 删除待人工执行。
