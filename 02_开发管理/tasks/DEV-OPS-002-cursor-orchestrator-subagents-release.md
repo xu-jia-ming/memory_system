@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-002
 task_name: Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
-status: reviewed
+status: committed
 spec_sections:
   - "非业务规格任务：对齐仓库治理与 03_AI_Prompts 角色流程；扩展 DEV-OPS-001 工作流自动化；不修改技术规格正文"
 prerequisites:
@@ -15,10 +15,10 @@ prerequisites:
   - "规划轮次仅允许三份规划文档未提交变更；不得出现实现文件"
 branch: "feat/DEV-OPS-002-cursor-orchestrator-subagents"  # 实施分支；计划 Commit 在 main，见 §13
 created_at: "2026-08-06 15:50 UTC"
-updated_at: "2026-08-07 05:05 UTC"
+updated_at: "2026-08-07 07:00 UTC"
 approval_gates:
   planning_docs: "Round 2 复审通过；PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0）"
-  implementation_plan: "status=reviewed；CODE_REVIEW_APPROVED（P0/P1=0；P2=4/P3=3 已记录为 residual）；等待 Commit Recorder 提交前核对；implementation_commit=null；未 Git 写（本实施分支）"
+  implementation_plan: "status=committed；RELEASE_COMPLETED；implementation_commit=4943757；PR #4 open（base=main，未 merge）；status_record_commit_committed=null；等待 docs(status) 治理 Commit"
 ```
 
 ## 2. 任务目标
@@ -822,6 +822,8 @@ governance_files_modified_this_round: false
 | 2026-08-07 04:13 UTC | MUST_FIX 最小修复 | 修订 `orchestrate-task.md` 可写交集规则；扩展契约测试 | 契约 21/unit 42/ruff/mypy 通过 | 完整 E2E pending 重跑；不得 tested/Code Review；未 Git 写 |
 | 2026-08-07 04:56 UTC | 受监督 E2E 重跑通过 | 完整链路 + Release Operator；PR #3 创建后停止 | E2E **passed** | status → tested；允许 Code Review（尚未执行）；E2E 测试分支保留；未 Git 写（本实施分支） |
 | 2026-08-07 05:05 UTC | 独立 Code Review 回写 | status=tested → reviewed；仅改治理文档 | CODE_REVIEW_APPROVED；P0/P1=0；P2/P3 已记录 | 下一步 Commit Recorder；implementation_commit=null；未 Git 写 |
+| 2026-08-07 07:00 UTC | 正式 Release | Release Operator：commit → push → gh pr create | RELEASE_COMPLETED；PR #4 open（base=main） | status → committed；implementation_commit=4943757；未 merge；E2E 证据分支保留 |
+| 2026-08-07 07:00 UTC | Release 后治理回写 | 仅改治理文档 | 记录 implementation commit / PR #4 / runtime note | status_record_commit_committed=null；下一步 docs(status) 治理 Commit |
 
 ## 16. 实际执行结果
 
@@ -923,6 +925,30 @@ Implementation rounds:
 
 说明：Planner→Plan Reviewer **已在 E2E 中验证**；此前 §16 摘要仅记录 implementation rounds 子链路，属**执行摘要文档不完整**（P2-1 已更正），非「未验证」。
 
+**正式 Release 记录（2026-08-07 07:00 UTC）**：
+
+| 项 | 结果 |
+|---|---|
+| Release Operator | **RELEASE_COMPLETED** |
+| Implementation branch | `feat/DEV-OPS-002-cursor-orchestrator-subagents` |
+| Implementation commit | `4943757a9e8545d55a7ac170e24cba7bb6fbafae` |
+| Implementation commit message | `chore(cursor): add orchestrator, role subagents, and release permissions` |
+| Remote 核对 | `origin/feat/DEV-OPS-002-cursor-orchestrator-subagents` = `4943757a9e8545d55a7ac170e24cba7bb6fbafae` |
+| 正式 PR | **#4**（[https://github.com/xu-jia-ming/memory_system/pull/4](https://github.com/xu-jia-ming/memory_system/pull/4)） |
+| PR state | **OPEN**（not merged） |
+| PR base | `main` |
+| PR head | `feat/DEV-OPS-002-cursor-orchestrator-subagents` |
+| PR headRefOid | `4943757a9e8545d55a7ac170e24cba7bb6fbafae` |
+| PR diff 人工核对 | 仅含 §5 精确白名单 **16 个文件**；无白名单外文件 |
+| Merge | **未执行** |
+| 分支删除 | **未执行** |
+| 危险 Git 操作 | **未** force push / rebase / reset / clean |
+| E2E 证据分支 | `test/DEV-OPS-002-e2e-base` 与 `feat/DEV-OPS-002-e2e-smoke` **保留**（未删除） |
+
+**Release runtime note（非阻塞）**：
+
+shell git wrapper 尝试使用 `--trailer` 时因环境 Git 2.25.1 不支持而拒绝；Release Operator 随后使用 `/usr/bin/git`；最终 commit 成功；commit message 精确符合计划；commit hash / remote hash / PR headRefOid 均已独立验真一致。不作为阻塞项；不扩展本任务范围。
+
 曾将自动验证通过误标为 `tested`；已按 Task Plan §9 回退为 `implemented`；完整 E2E 通过后正式推进 `tested`。
 
 ### 测试结果
@@ -993,8 +1019,19 @@ implementation_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents
 current_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents
 baseline_commit: 5f34ccbcb7a052131dbeedd17c68dbf6dc30c52d
 plan_commit: 261daa2ec7c998b7568a27724fb6b6616b3adb21
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 4943757a9e8545d55a7ac170e24cba7bb6fbafae
+implementation_commit_message: "chore(cursor): add orchestrator, role subagents, and release permissions"
+implementation_pr: "#4"
+implementation_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/4"
+implementation_pr_state: OPEN
+implementation_pr_base: main
+implementation_pr_head: feat/DEV-OPS-002-cursor-orchestrator-subagents
+implementation_pr_head_ref_oid: 4943757a9e8545d55a7ac170e24cba7bb6fbafae
+implementation_pr_merged: false
+implementation_pr_diff_verified: "§5 精确白名单 16 文件；无白名单外文件"
+release_operator_verdict: RELEASE_COMPLETED
+status_record_commit_committed: null
+release_runtime_note: "shell git wrapper --trailer 因 Git 2.25.1 拒绝；改用 /usr/bin/git；commit 成功；hash 三方一致；非阻塞"
 e2e_test_base_branch: test/DEV-OPS-002-e2e-base
 e2e_test_base_hash: b84e6ead64c2bb3fdba2a1a819d22dec42398227
 e2e_feat_branch: feat/DEV-OPS-002-e2e-smoke
@@ -1006,9 +1043,9 @@ e2e_pr_head: feat/DEV-OPS-002-e2e-smoke
 e2e_pr_state: CLOSED
 e2e_pr_merged_at: null
 e2e_evidence_branches_preserved: true
-next_git_step: "调用 /close-task（Commit Recorder）进行提交前核对；通过后由人工/Release Operator 在 feat/DEV-OPS-002-cursor-orchestrator-subagents 提交实现；implementation_commit 仍为 null；Agent 不得代为 Add/Commit/Push"
+next_git_step: "在当前 feat 分支提交并 push 治理状态 Commit：docs(status): record DEV-OPS-002 implementation commit and PR；随后才允许人工审阅/合并 PR #4；status_record_commit_committed 待该 Commit 产生后回写；不得标 completed；Agent 不得代为 Merge"
 ```
 
 ### 最终状态
 
-`reviewed`
+`committed`

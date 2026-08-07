@@ -7,11 +7,20 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-OPS-002
-current_task_status: reviewed
+current_task_status: committed
 current_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-002-cursor-orchestrator-subagents-release.md
 latest_commit: 261daa2
+implementation_commit: 4943757a9e8545d55a7ac170e24cba7bb6fbafae
+implementation_commit_message: "chore(cursor): add orchestrator, role subagents, and release permissions"
+current_pr: "#4"
+current_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/4"
+current_pr_status: open
+current_pr_base: main
+current_pr_head: feat/DEV-OPS-002-cursor-orchestrator-subagents
+current_pr_head_ref_oid: 4943757a9e8545d55a7ac170e24cba7bb6fbafae
+status_record_commit_committed: null
 previous_task: DEV-OPS-001
 previous_task_status: completed
 previous_task_completed_at: "2026-08-06 15:30 UTC"
@@ -21,7 +30,7 @@ previous_status_record_commit_completed: 5f34ccbcb7a052131dbeedd17c68dbf6dc30c52
 previous_pr: "#2"
 previous_pr_status: merged
 previous_merge_commit: 57800c3
-next_action: 调用 /close-task（Commit Recorder）进行提交前核对；CODE_REVIEW_APPROVED 已记录；implementation_commit 仍为 null；不得标 committed/completed；不得删除 E2E 证据分支；Agent 不得 Git Add/Commit/Push/Merge/Rebase；不得启动 DEV-002 业务实现
+next_action: 在当前 feat 分支提交并 push 治理状态 Commit：`docs(status): record DEV-OPS-002 implementation commit and PR`；随后才允许人工审阅/合并 PR #4；status_record_commit_committed 仍为 null 直至该 Commit 产生；不得标 completed；不得删除 E2E 证据分支；不得启动 DEV-002 业务实现
 ```
 
 ## 测试状态
@@ -78,8 +87,9 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | PLAN_APPROVED（DEV-001 计划） | **已通过**（历史；DEV-001 已 completed） |
 | PLAN_APPROVED（DEV-OPS-001 计划） | **已通过**（Round 2）；plan Commit `48a7525`；状态 `completed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-001 实现） | **已通过**（P0=0 / P1=0 / P2=1 / P3=1；P2/P3 已接受残余、本轮不修复） |
-| PLAN_APPROVED（DEV-OPS-002 计划） | **已通过**（Round 2）；plan Commit `261daa2`；状态 `reviewed` |
+| PLAN_APPROVED（DEV-OPS-002 计划） | **已通过**（Round 2）；plan Commit `261daa2`；状态 `committed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-002 实现） | **已通过**（P0=0 / P1=0 / P2=4 / P3=3；P2/P3 为 residual/backlog，不阻塞） |
+| RELEASE_COMPLETED（DEV-OPS-002 实现） | **已完成**；implementation_commit `4943757`；PR #4 open（base=main，未 merge） |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -173,10 +183,13 @@ DEV-OPS-001：步骤 1–10 均已完成（实现 Commit `69fabb7`；治理 comm
 | 2026-08-07 04:13 UTC | DEV-OPS-002 | MUST_FIX 最小修复 | 修订 orchestrate-task 可写交集 + 契约测试 | 契约 21/unit 42/ruff/mypy 通过；E2E pending 重跑 |
 | 2026-08-07 04:56 UTC | DEV-OPS-002 | implemented → tested | 受监督完整 E2E passed；PR #3 创建后停止 | 允许 Code Review（尚未执行）；E2E 分支保留；仅改治理文档 |
 | 2026-08-07 05:05 UTC | DEV-OPS-002 | tested → reviewed | 独立 Code Review CODE_REVIEW_APPROVED；P0/P1=0；P2/P3 已记录 | 下一步 Commit Recorder；implementation_commit=null；仅改治理文档 |
+| 2026-08-07 07:00 UTC | DEV-OPS-002 | reviewed → committed | Release Operator RELEASE_COMPLETED；PR #4 open（base=main） | implementation_commit `4943757`；runtime note 已记录；status_record_commit_committed=null |
+| 2026-08-07 07:00 UTC | DEV-OPS-002 | committed（治理回写） | 仅改治理文档 | 下一步 docs(status) 治理 Commit；PR #4 待人工 merge |
 
 ## 下一任务
 
-1. **当前**：DEV-OPS-002 状态 `reviewed`；`CODE_REVIEW_APPROVED` 已记录。
-2. 下一步：调用 **`/close-task`**（Commit Recorder）进行提交前核对。
-3. `implementation_commit` 仍为 **null**；不得标 `committed`/`completed`。
-4. E2E 证据分支保留；不得删除；不得启动 DEV-002。
+1. **当前**：DEV-OPS-002 状态 `committed`；`RELEASE_COMPLETED` 已记录；PR #4 **open**（未 merge）。
+2. 下一步：在当前 `feat/DEV-OPS-002-cursor-orchestrator-subagents` 分支提交并 push 治理状态 Commit：**`docs(status): record DEV-OPS-002 implementation commit and PR`**。
+3. `status_record_commit_committed` 仍为 **null**（治理 docs Commit 尚未产生）；不得标 `completed`。
+4. 治理 Commit push 后，才允许人工审阅/合并 PR #4。
+5. E2E 证据分支保留；不得删除；DEV-002 仅在 DEV-OPS-002 `completed` 后立即进入。
