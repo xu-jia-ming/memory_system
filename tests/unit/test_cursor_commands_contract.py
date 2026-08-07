@@ -7,12 +7,17 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 COMMANDS_DIR = REPO_ROOT / ".cursor" / "commands"
 
-COMMAND_ROLE_MAP: dict[str, str] = {
+ORIGINAL_FIVE_COMMAND_ROLE_MAP: dict[str, str] = {
     "plan-task.md": "Planner",
     "review-plan.md": "Plan Reviewer",
     "develop-task.md": "Developer",
     "review-code.md": "Code Reviewer",
     "close-task.md": "Commit Recorder",
+}
+
+COMMAND_ROLE_MAP: dict[str, str] = {
+    **ORIGINAL_FIVE_COMMAND_ROLE_MAP,
+    "orchestrate-task.md": "Orchestrator",
 }
 
 REQUIRED_END_MARKERS: dict[str, tuple[str, ...]] = {
@@ -21,6 +26,7 @@ REQUIRED_END_MARKERS: dict[str, tuple[str, ...]] = {
     "develop-task.md": ("READY_FOR_CODE_REVIEW",),
     "review-code.md": ("CODE_REVIEW_APPROVED", "CODE_REVIEW_REJECTED"),
     "close-task.md": ("READY_FOR_HUMAN_COMMIT",),
+    "orchestrate-task.md": ("ORCHESTRATOR_PAUSED_FOR_HUMAN", "ORCHESTRATOR_HALTED"),
 }
 
 REQUIRED_SUBSTRINGS: tuple[str, ...] = (
@@ -42,7 +48,8 @@ REQUIRED_SECTION_HEADINGS: tuple[str, ...] = (
     "## 结束标记",
 )
 
-ALL_ROLES: tuple[str, ...] = tuple(COMMAND_ROLE_MAP.values())
+ALL_ORIGINAL_ROLES: tuple[str, ...] = tuple(ORIGINAL_FIVE_COMMAND_ROLE_MAP.values())
+ALL_COMMAND_ROLES: tuple[str, ...] = tuple(COMMAND_ROLE_MAP.values())
 
 
 def _command_path(filename: str) -> Path:
@@ -87,20 +94,27 @@ def test_each_command_has_six_section_structure() -> None:
         assert positions == sorted(positions), f"{filename} section headings out of order"
 
 
-def test_role_mapping_is_one_to_one() -> None:
-    assert len(COMMAND_ROLE_MAP) == 5
-    assert set(COMMAND_ROLE_MAP.values()) == set(ALL_ROLES)
-    for filename, role in COMMAND_ROLE_MAP.items():
+def test_original_five_role_mapping_is_one_to_one() -> None:
+    assert len(ORIGINAL_FIVE_COMMAND_ROLE_MAP) == 5
+    assert set(ORIGINAL_FIVE_COMMAND_ROLE_MAP.values()) == set(ALL_ORIGINAL_ROLES)
+    for filename, role in ORIGINAL_FIVE_COMMAND_ROLE_MAP.items():
         text = _read_command(filename)
         unique_role_decl = f"唯一角色 = {role}"
         assert unique_role_decl in text, f"{filename} missing unique role declaration for {role}"
-        for other_role in ALL_ROLES:
+        for other_role in ALL_ORIGINAL_ROLES:
             if other_role == role:
                 continue
             other_decl = f"唯一角色 = {other_role}"
             assert other_decl not in text, (
                 f"{filename} must not declare unique role for other role {other_role}"
             )
+
+
+def test_orchestrator_role_is_isolated() -> None:
+    text = _read_command("orchestrate-task.md")
+    assert "唯一角色 = Orchestrator" in text
+    for other_role in ALL_ORIGINAL_ROLES:
+        assert f"唯一角色 = {other_role}" not in text
 
 
 def test_no_super_agent_merge_declaration() -> None:
@@ -110,7 +124,6 @@ def test_no_super_agent_merge_declaration() -> None:
     )
     for filename, role in COMMAND_ROLE_MAP.items():
         text = _read_command(filename)
-        # Commands must prohibit super-agent merge, not implement one.
         assert any(phrase in text for phrase in forbidden_phrases), (
             f"{filename} must explicitly prohibit super Agent merge"
         )
@@ -127,25 +140,26 @@ def test_end_markers_match_role_and_are_not_cross_used() -> None:
 
     review_code = _read_command("review-code.md")
     close_task = _read_command("close-task.md")
+    orchestrator = _read_command("orchestrate-task.md")
 
-    # review-code must require CODE_REVIEW_* markers, not human-commit marker.
     assert "CODE_REVIEW_APPROVED" in review_code
     assert "CODE_REVIEW_REJECTED" in review_code
     assert "最后一行必须且仅为：`READY_FOR_HUMAN_COMMIT`" not in review_code
     assert "最后一行必须且仅为：READY_FOR_HUMAN_COMMIT" not in review_code
 
-    # close-task must require READY_FOR_HUMAN_COMMIT, not CODE_REVIEW_* as end marker.
     assert "READY_FOR_HUMAN_COMMIT" in close_task
     assert "最后一行必须且仅为：`CODE_REVIEW_APPROVED`" not in close_task
     assert "最后一行必须且仅为：`CODE_REVIEW_REJECTED`" not in close_task
     assert "最后一行必须且仅为：CODE_REVIEW_APPROVED" not in close_task
     assert "最后一行必须且仅为：CODE_REVIEW_REJECTED" not in close_task
 
-    # Shared READY_FOR_COMMIT must not be either command's required end marker.
     assert "最后一行必须且仅为：`READY_FOR_COMMIT`" not in review_code
     assert "最后一行必须且仅为：`READY_FOR_COMMIT`" not in close_task
     assert "最后一行必须且仅为：READY_FOR_COMMIT" not in review_code
     assert "最后一行必须且仅为：READY_FOR_COMMIT" not in close_task
+
+    assert "最后一行必须且仅为：`PLAN_APPROVED`" not in orchestrator
+    assert "最后一行必须且仅为：`CODE_REVIEW_APPROVED`" not in orchestrator
 
 
 def test_review_code_explicitly_forbids_commit_end_markers() -> None:

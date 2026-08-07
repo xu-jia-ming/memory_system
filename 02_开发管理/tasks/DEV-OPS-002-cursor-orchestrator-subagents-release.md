@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-002
 task_name: Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
-status: approved
+status: implemented
 spec_sections:
   - "非业务规格任务：对齐仓库治理与 03_AI_Prompts 角色流程；扩展 DEV-OPS-001 工作流自动化；不修改技术规格正文"
 prerequisites:
@@ -15,10 +15,10 @@ prerequisites:
   - "规划轮次仅允许三份规划文档未提交变更；不得出现实现文件"
 branch: "feat/DEV-OPS-002-cursor-orchestrator-subagents"  # 实施分支；计划 Commit 在 main，见 §13
 created_at: "2026-08-06 15:50 UTC"
-updated_at: "2026-08-07 02:18 UTC"
+updated_at: "2026-08-07 02:40 UTC"
 approval_gates:
   planning_docs: "Round 2 复审通过；PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0）"
-  implementation_plan: "status=approved；此时不得实施；不得创建 agents/permissions/orchestrate-task；不得改治理规则或既有五命令；下一步人工 docs(plan) 后再切 feat；/develop-task 前置通过前不得 in_progress"
+  implementation_plan: "status=implemented；自动验证已通过；UI discovery 人工通过；完整受监督 E2E pending；E2E 通过前不得 tested/Code Review；未 Git 写"
 ```
 
 ## 2. 任务目标
@@ -814,29 +814,59 @@ governance_files_modified_this_round: false
 | 2026-08-07 02:05 UTC | Planner 复核 | 按官方 Subagents/permissions 复核能力表；补强归档/降级/五命令不可改；澄清基线与规划脏工作区 | 无 | status 仍 planned；未实施；未 Git 写 |
 | 2026-08-07 02:12 UTC | Amendment 001 | Plan Review Round 1 PLAN_REJECTED（BLOCKER 0 / MUST_FIX 5 / SHOULD_FIX 3）；落盘 MF/SF 全部修订；治理例外仅计划内容 | 无 | status 仍 planned；待 Round 2 复审；治理文件未改 |
 | 2026-08-07 02:18 UTC | Round 2 批准回写 | status=planned → approved；同步 master_plan / progress | 无 | PLAN_APPROVED；未实施；未创建 agents/permissions；未改治理/五命令；未 Git 写 |
+| 2026-08-07 02:32 UTC | /develop-task 前置通过 | status=approved → in_progress；同步 master_plan / progress | 无 | 分支 feat/DEV-OPS-002-cursor-orchestrator-subagents；工作区干净；plan Commit 261daa2 为祖先 |
+| 2026-08-07 02:36 UTC | Step 1–5 落地 | 六 Subagent + orchestrate-task + permissions/cli + 治理例外 + 契约测试 | 待跑 | status → implemented |
+| 2026-08-07 02:38 UTC | §10 自动验证 | 回写测试结果 | 契约 18 passed；unit 30 passed；ruff/mypy 通过 | 曾误标 tested（E2E 未完成）；已回退 |
+| 2026-08-07 02:40 UTC | UI discovery 人工冒烟 | 仅记录冒烟结果；未改实现 | 七项均可发现且 `/orchestrate-task` 可加载 | UI discovery passed；完整 E2E pending；status 保持 implemented；不得 Code Review；未 Git 写 |
 
 ## 16. 实际执行结果
 
 ### 实际修改文件
 
-| 文件 | 结果 |
+| 路径 | 操作 |
 |---|---|
-|  |  |
+| `.cursor/agents/planner.md` | 创建 |
+| `.cursor/agents/plan-reviewer.md` | 创建 |
+| `.cursor/agents/developer.md` | 创建 |
+| `.cursor/agents/code-reviewer.md` | 创建 |
+| `.cursor/agents/commit-recorder.md` | 创建 |
+| `.cursor/agents/release-operator.md` | 创建 |
+| `.cursor/commands/orchestrate-task.md` | 创建 |
+| `.cursor/permissions.json` | 创建 |
+| `.cursor/cli.json` | 创建 |
+| `tests/unit/test_cursor_orchestrator_contract.py` | 创建 |
+| `tests/unit/test_cursor_commands_contract.py` | 修改（扩展第六命令；原五命令断言保留） |
+| `.cursor/rules/00-memory-system-governance.mdc` | 修改（§2.6 Release Operator 窄例外） |
+| `03_AI_Prompts/00_全局开发规则.md` | 修改（Release Operator 窄例外对齐） |
+| `02_开发管理/tasks/DEV-OPS-002-cursor-orchestrator-subagents-release.md` | 修改（状态与执行记录） |
+| `02_开发管理/master_plan.md` | 修改（本任务状态同步） |
+| `02_开发管理/progress.md` | 修改（当前任务状态同步） |
 
 ### 与原计划的差异
 
-暂无。
+无范围差异。未修改既有五命令正文；未改 DEV-001 既有测试语义；未开始 DEV-002 业务实现；未创建 `.cursor/skills/`。
+
+**冒烟状态（人工记录）**：
+
+| 项 | 状态 | 说明 |
+|---|---|---|
+| UI discovery | **passed** | `/orchestrate-task`、`/planner`、`/plan-reviewer`、`/developer`、`/code-reviewer`、`/commit-recorder`、`/release-operator` 七项均可发现；`/orchestrate-task` 可正常加载 |
+| 完整受监督 E2E（§9） | **pending** | 未执行；Amendment 001 / §9：E2E 未通过前不得标 `tested`/`reviewed`/`completed` |
+
+曾将自动验证通过误标为 `tested`；已按 Task Plan §9 回退为 `implemented`，待 E2E 通过后再推进 `tested`。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Commands 契约 | `uv run pytest tests/unit/test_cursor_commands_contract.py` | **9 passed** |
+| Orchestrator 契约 | `uv run pytest tests/unit/test_cursor_orchestrator_contract.py` | **9 passed** |
+| Unit 全量 | `uv run pytest tests/unit` | **30 passed** |
+| UI discovery | `/orchestrate-task` + 六 Subagent | **passed**（人工；2026-08-07 02:40 UTC；七项均可发现且可加载） |
+| Subagent 降级冒烟 | Subagent 缺失时 Orchestrator halt | **pending**（未在本轮 UI discovery 中验证） |
+| 受监督 E2E（§9） | 完整编排链路 + PR create 后停止 | **pending**（阻塞 `tested`；须人工执行） |
+| Ruff | `uv run ruff check .` | **All checks passed** |
+| Mypy | `uv run mypy src tests` | **Success: no issues found in 35 source files** |
 
 ### Review 结果
 
@@ -862,14 +892,14 @@ implementation_review: null
 
 ```yaml
 implementation_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents
-current_branch: main
+current_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents
 baseline_commit: 5f34ccbcb7a052131dbeedd17c68dbf6dc30c52d
-plan_commit: null
+plan_commit: 261daa2ec7c998b7568a27724fb6b6616b3adb21
 implementation_commit: null
 implementation_commit_message: null
-next_git_step: "人工在 main 提交 docs(plan): add DEV-OPS-002 cursor orchestrator subagents plan；随后创建 feat/DEV-OPS-002-cursor-orchestrator-subagents"
+next_git_step: "执行受监督低风险 E2E（§9）；E2E 通过后方可标 tested 并进入 Code Review；Agent 不得代为 Add/Commit/Push"
 ```
 
 ### 最终状态
 
-`approved`
+`implemented`

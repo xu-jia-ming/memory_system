@@ -1,0 +1,26 @@
+{
+  // NOTE: 此文件不是安全边界（OI-OPS-007）。Real gates: runtime state, path whitelist, exit codes.
+  "terminalAllowlist": [
+    "git status",
+    "git diff",
+    "git log",
+    "git branch",
+    "git rev-parse",
+    "git add",
+    "git commit",
+    "git push",
+    "gh",
+    "uv"
+  ],
+  "autoRun": {
+    "block_instructions": [
+      "Never run git push --force, git push -f, or git push --force-with-lease.",
+      "Never run git reset --hard, git clean -fd, or git branch -D.",
+      "Never run git merge, git rebase, or gh pr merge.",
+      "Never delete remote branches or tags.",
+      "Never read .env, .env.local, or any .env* secret files.",
+      "Never commit directly to main for implementation changes.",
+      "Release Operator must verify each shell command exit code; non-zero means stop."
+    ]
+  }
+}

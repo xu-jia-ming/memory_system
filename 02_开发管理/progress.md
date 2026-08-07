@@ -7,11 +7,11 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-OPS-002
-current_task_status: approved
-current_branch: main
+current_task_status: implemented
+current_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-002-cursor-orchestrator-subagents-release.md
-latest_commit: 5f34ccbcb7a052131dbeedd17c68dbf6dc30c52d
+latest_commit: 261daa2
 previous_task: DEV-OPS-001
 previous_task_status: completed
 previous_task_completed_at: "2026-08-06 15:30 UTC"
@@ -21,20 +21,21 @@ previous_status_record_commit_completed: 5f34ccbcb7a052131dbeedd17c68dbf6dc30c52
 previous_pr: "#2"
 previous_pr_status: merged
 previous_merge_commit: 57800c3
-next_action: 人工在 main 提交 docs(plan): add DEV-OPS-002 cursor orchestrator subagents plan；随后创建 feat/DEV-OPS-002-cursor-orchestrator-subagents；在 /develop-task 前置通过前保持 approved、不得 in_progress；不得创建 agents/permissions；不得改治理规则或既有五命令；不得启动 DEV-002 实现；本会话未执行 Git Commit/Push/Merge/Rebase
+next_action: 执行受监督低风险 E2E（§9）；UI discovery 已通过；完整 E2E pending；E2E 通过前不得 tested 与 Code Review；Agent 不得 Git Add/Commit/Push/Merge/Rebase；不得启动 DEV-002 业务实现
 ```
 
 ## 测试状态
 
 | 测试层级 | 状态 | 最近命令 | 最近结果 |
 |---|---|---|---|
-| Unit | passed（DEV-OPS-001；DEV-OPS-002 尚未实施） | `uv run pytest tests/unit` | 20 passed（DEV-OPS-001 Code Review 复跑 2026-08-06 15:03 UTC） |
-| Contract | n/a | - | DEV-OPS-002 规划中；将新增 orchestrator 静态契约 |
+| Unit | passed（DEV-OPS-002） | `uv run pytest tests/unit` | 30 passed（契约 18 + DEV-001 既有 12） |
+| Contract | n/a | - | DEV-OPS-002 不适用业务 Contract；orchestrator/commands 静态契约见 Unit |
 | Integration | n/a | - | 不适用 |
 | E2E | n/a | - | 不适用 |
-| Ruff | passed（DEV-OPS-001） | `uv run ruff check .` | All checks passed |
-| Mypy | passed（DEV-OPS-001） | `uv run mypy src tests` | Success: no issues found in 34 source files |
-| UI 冒烟（OI-OPS-005） | passed（DEV-OPS-001） | 人工 `/` 菜单 | 五命令均可见且可加载（2026-08-06 14:51 UTC；仅验证发现与加载） |
+| Ruff | passed（DEV-OPS-002） | `uv run ruff check .` | All checks passed |
+| Mypy | passed（DEV-OPS-002） | `uv run mypy src tests` | Success: no issues found in 35 source files |
+| UI discovery（§9 / OI-OPS-005 延续） | passed（DEV-OPS-002） | 人工 `/` 菜单 | 七项均可发现：`/orchestrate-task`、`/planner`、`/plan-reviewer`、`/developer`、`/code-reviewer`、`/commit-recorder`、`/release-operator`（2026-08-07 02:40 UTC） |
+| E2E 冒烟（§9） | pending | 受监督完整编排链路 | 阻塞 tested；须人工执行 |
 
 ## 已完成任务
 
@@ -77,7 +78,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | PLAN_APPROVED（DEV-001 计划） | **已通过**（历史；DEV-001 已 completed） |
 | PLAN_APPROVED（DEV-OPS-001 计划） | **已通过**（Round 2）；plan Commit `48a7525`；状态 `completed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-001 实现） | **已通过**（P0=0 / P1=0 / P2=1 / P3=1；P2/P3 已接受残余、本轮不修复） |
-| PLAN_APPROVED（DEV-OPS-002 计划） | **已通过**（Round 2：BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0）；状态 `approved`；尚未实施 |
+| PLAN_APPROVED（DEV-OPS-002 计划） | **已通过**（Round 2）；plan Commit `261daa2`；状态 `implemented`；UI discovery passed；完整 E2E pending |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -162,10 +163,14 @@ DEV-OPS-001：步骤 1–10 均已完成（实现 Commit `69fabb7`；治理 comm
 | 2026-08-07 02:05 UTC | DEV-OPS-002 | planned（Planner 复核） | `/plan-task` 复核官方 Subagents/permissions；补强归档/降级/五命令不可改；状态仍 planned；未实施、未 Git 写 |
 | 2026-08-07 02:12 UTC | DEV-OPS-002 | planned（Amendment 001） | Round 1 PLAN_REJECTED（BLOCKER 0 / MUST_FIX 5 / SHOULD_FIX 3）；已落实治理例外/fail-closed/退出码/E2E/完成后进 DEV-002；治理文件尚未改；待 Round 2 |
 | 2026-08-07 02:18 UTC | DEV-OPS-002 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0）；状态回写为 approved；未实施、未创建 agents/permissions、未改治理/五命令、未 Git 写 |
+| 2026-08-07 | DEV-OPS-002 | docs(plan) + feat 分支 | 人工 Commit `261daa2`；已切到 `feat/DEV-OPS-002-cursor-orchestrator-subagents` |
+| 2026-08-07 02:32 UTC | DEV-OPS-002 | approved → in_progress | `/develop-task` 前置检查通过；开始白名单实施 |
+| 2026-08-07 02:36 UTC | DEV-OPS-002 | in_progress → implemented | 六 Subagent + Orchestrator + 权限 + 治理例外 + 契约测试已创建 |
+| 2026-08-07 02:38 UTC | DEV-OPS-002 | implemented → tested（误标） | 契约 18/unit 30/ruff/mypy 通过；E2E 未完成即标 tested（不符合 §9） |
+| 2026-08-07 02:40 UTC | DEV-OPS-002 | tested → implemented | UI discovery 人工通过（七项）；完整 E2E pending；不得 Code Review；仅改治理文档 |
 
 ## 下一任务
 
-1. **当前**：人工在 `main` 提交 `docs(plan): add DEV-OPS-002 cursor orchestrator subagents plan`。
-2. 随后从 `main` 创建 `feat/DEV-OPS-002-cursor-orchestrator-subagents`。
-3. 在 `/develop-task` 前置检查通过前保持 `approved`；不得进入 `in_progress`；不得创建 `.cursor/agents/**`、`.cursor/permissions.json`、`orchestrate-task`；不得修改既有五命令或治理规则；不得启动 DEV-002 实现。
-4. **完成后硬约束**（实施完成且 `completed` 之后）：`next_action` **必须**立即为 DEV-002；Phase B / DEV-OPS-003 不得插队。
+1. **当前**：DEV-OPS-002 状态 `implemented`；UI discovery **passed**；完整受监督 E2E **pending**。
+2. 下一步：执行受监督低风险 E2E（§9）；通过后方可标 `tested` 并进入 Code Review。
+3. DEV-002 业务实现不在本会话启动。

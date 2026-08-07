@@ -60,7 +60,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | completed |
-| DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | approved |
+| DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | implemented |
 
 #### DEV-OPS-002 Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
 
@@ -72,7 +72,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **Git 顺序**：独立 Review → `PLAN_APPROVED` → `approved` → 人工 `docs(plan)` on main → 创建 feat → Developer → Review → Release commit/push/PR → 人工 Merge → `completed` → **立即 DEV-002**。
 - **风险**：IDE permissions 非安全边界；`git push` 前缀与 `--force`；结束标记非结构化协议（OI-OPS-006–013）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-002-cursor-orchestrator-subagents-release.md`
-- **状态备注**：`approved`（Round 2：BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0 / `PLAN_APPROVED`）；此时不得实施；下一步人工 `docs(plan)` on main，再创建 `feat/DEV-OPS-002-cursor-orchestrator-subagents`；未创建 agents/permissions；未改治理/五命令；未 Git 写。
+- **状态备注**：`implemented`（自动验证已通过；UI discovery 人工通过；完整受监督 E2E pending；E2E 通过前不得 tested/Code Review；未 Git 写）。
 
 #### DEV-OPS-001 Cursor Agent 工作流自动化
 
