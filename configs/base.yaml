@@ -1,0 +1,176 @@
+context:
+  compression_trigger_tokens: 5000
+  compression_target_tokens: 3000
+  preferred_recent_messages: 10
+  absolute_min_recent_messages: 2
+  max_compressed_context_estimated_tokens: 1000
+  max_compression_rounds_per_request: 3
+  max_message_estimated_tokens: 2000
+  max_working_memory_estimated_tokens: 12000
+  max_archive_estimated_tokens: 7000
+  allowed_future_timestamp_skew_seconds: 300
+  compression_llm_timeout_seconds: 120
+  compression_lock_ttl_seconds: 420
+  safety_margin_seconds: 30
+
+memory_extraction:
+  prompt_version: "memory_extraction_v1"
+  llm_timeout_seconds: 120
+  max_archive_estimated_tokens: 8000
+  max_memory_candidates_per_archive: 50
+  max_entity_candidates_per_archive: 100
+  max_memory_content_characters: 512
+  max_entity_name_characters: 128
+  max_entity_alias_count_per_candidate: 32
+  max_entity_alias_characters: 128
+  max_predicate_characters: 64
+  max_object_value_characters: 256
+  max_original_time_text_characters: 128
+  max_stored_entity_alias_count: 50
+  max_search_text_tokens: 1024
+
+memory_retrieval:
+  elasticsearch_version: "9.4.4"
+  physical_index_name: "memory_retrieval_v1"
+  index_name: "memory_retrieval_current"
+  embedding_provider: "local_tei"
+  embedding_model: "BAAI/bge-m3"
+  embedding_model_revision: "57aacf8560157b7c1d4f771ce1a199877aeeec74"
+  embedding_dimension: 1024
+  embedding_max_input_tokens: 1024
+  embedding_timeout_seconds: 10
+  elasticsearch_timeout_seconds: 5
+  neo4j_timeout_seconds: 5
+  retrieval_total_timeout_seconds: 15
+  bm25_top_n: 30
+  vector_top_n: 30
+  vector_num_candidates: 100
+  fused_top_n: 30
+  rrf_k: 60
+  graph_expand_per_seed: 2
+  max_graph_candidates: 20
+  graph_decay: 0.60
+  default_top_k: 10
+  max_top_k: 20
+  max_source_message_ids: 20
+  recency_half_life_days: 30
+  retrieval_score_weight: 0.55
+  importance_weight: 0.15
+  confidence_weight: 0.10
+  frequency_weight: 0.10
+  recency_weight: 0.10
+  conflicted_penalty: 0.85
+  superseded_penalty: 0.60
+
+memory_consolidation:
+  enabled: true
+  schedule_cron: "0 3 * * *"
+  timezone: "UTC"
+  scheduler_max_instances: 1
+  scheduler_coalesce: true
+  scheduler_misfire_grace_time_seconds: 3600
+  batch_size: 500
+  evidence_saturation_count: 5
+  profile_half_life_days: 365
+  fact_half_life_days: 180
+  preference_half_life_days: 120
+  event_half_life_days: 60
+  superseded_half_life_days: 30
+  confidence_weight: 0.55
+  evidence_weight: 0.45
+  reinforcement_bonus_weight: 0.35
+  min_importance: 0.05
+  conflicted_min_importance: 0.30
+  max_importance: 1.00
+
+llm:
+  provider: "deepseek"
+  base_url: "https://api.deepseek.com"
+  api_mode: "openai_chat_completions"
+  compression:
+    model: "deepseek-v4-flash"
+    thinking: "disabled"
+    response_format: "json_object"
+    temperature: 0
+    max_output_tokens: 2048
+  extraction:
+    model: "deepseek-v4-flash"
+    thinking: "disabled"
+    response_format: "json_object"
+    temperature: 0
+    max_output_tokens: 8192
+
+embedding:
+  max_client_batch_size: 64
+  per_input_token_limit: 1024
+  cpu:
+    client_total_token_budget: 4096
+    tei_max_batch_tokens: 8192
+  gpu:
+    client_total_token_budget: 16384
+    tei_max_batch_tokens: 16384
+    minimum_free_memory_mb: 8192
+  consistency:
+    minimum_cosine_similarity: 0.999
+
+kafka:
+  topic: context.archive.created
+  partitions: 3
+  replication_factor: 1
+  retention_ms: 604800000
+  cleanup_policy: delete
+  compression_type: producer
+  max_message_bytes: 1048576
+
+kafka_producer:
+  acks: all
+  enable_idempotence: true
+  compression_type: lz4
+  request_timeout_ms: 30000
+  max_batch_size: 16384
+  linger_ms: 10
+
+kafka_consumer:
+  enable_auto_commit: false
+  auto_offset_reset: earliest
+  session_timeout_ms: 30000
+  heartbeat_interval_ms: 10000
+  max_poll_interval_ms: 900000
+  max_poll_records: 1
+
+http_client:
+  connect_timeout_seconds: 5
+  read_timeout_seconds: 120
+  write_timeout_seconds: 30
+  pool_timeout_seconds: 5
+  max_connections: 100
+  max_keepalive_connections: 20
+
+embedding_http_client:
+  connect_timeout_seconds: 5
+  read_timeout_seconds: 30
+
+redis:
+  socket_connect_timeout_seconds: 3
+  socket_timeout_seconds: 5
+  max_connections: 50
+
+mongodb:
+  server_selection_timeout_ms: 5000
+  connect_timeout_ms: 5000
+  max_pool_size: 50
+
+neo4j:
+  connection_timeout_seconds: 5
+  connection_acquisition_timeout_seconds: 10
+  max_connection_pool_size: 50
+
+elasticsearch:
+  request_timeout_seconds: 10
+  max_retries: 2
+  retry_on_timeout: true
+
+shutdown:
+  memory_api_timeout_seconds: 450
+  extraction_worker_timeout_seconds: 270
+  consolidation_worker_timeout_seconds: 270

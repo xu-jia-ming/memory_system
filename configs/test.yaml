@@ -1,0 +1,3 @@
+# Test environment overrides for pytest.
+context:
+  compression_llm_timeout_seconds: 30

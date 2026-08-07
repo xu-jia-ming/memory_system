@@ -7,11 +7,12 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-002
-current_task_status: approved
-current_branch: main
+current_task_status: committed
+current_branch: feat/DEV-002-config-system-env-example
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-002-config-system-env-example.md
-latest_commit: f4fab24
+latest_commit: f55732c
+plan_commit: ceff988
 previous_task: DEV-OPS-002
 previous_task_status: completed
 previous_task_completed_at: "2026-08-07 07:11 UTC"
@@ -23,19 +24,19 @@ previous_status_record_commit_completed: null
 previous_pr: "#4"
 previous_pr_status: merged
 previous_merge_commit: 5886cc6057578db7687215761508f75de9336049
-next_action: 人工在 main 提交 docs(plan): add DEV-002 config system and env example plan；然后创建 feat/DEV-002-config-system-env-example；不得在未 docs(plan) 前实施编码
+next_action: 人工 Review/Merge PR #5（base=main）；Merge 后执行 docs(status) 治理回写
 ```
 
 ## 测试状态
 
 | 测试层级 | 状态 | 最近命令 | 最近结果 |
 |---|---|---|---|
-| Unit | passed（main @ 5886cc6） | `uv run pytest tests/unit` | 42 passed（DEV-OPS-002 orchestrator/commands 契约 + DEV-001 既有） |
-| Contract | n/a | - | DEV-OPS-002 不适用业务 Contract；orchestrator/commands 静态契约见 Unit |
+| Unit | passed | `uv run pytest tests/unit` | 70 passed（含 DEV-002 settings 28 + DEV-001/DEV-OPS 既有 42） |
+| Contract | passed | `uv run pytest tests/contract/test_env_example_contract.py` | 4 passed |
 | Integration | n/a | - | 不适用 |
 | E2E | n/a | - | 不适用 |
-| Ruff | passed（main） | `uv run ruff check .` | All checks passed |
-| Mypy | passed（main） | `uv run mypy src tests` | Success: no issues found in 35 source files |
+| Ruff | passed | `uv run ruff check .` | All checks passed |
+| Mypy | passed | `uv run mypy src tests` | Success: 42 source files |
 | UI discovery（§9 / OI-OPS-005 延续） | passed（DEV-OPS-002） | 人工 `/` 菜单 | 七项均可发现：`/orchestrate-task`、`/planner`、`/plan-reviewer`、`/developer`、`/code-reviewer`、`/commit-recorder`、`/release-operator`（2026-08-07 02:40 UTC） |
 | E2E 冒烟（§9） | passed（DEV-OPS-002） | 受监督完整编排链路 | PR #3；`0891cd5`；测试 PR 已关闭（未 merge）；E2E 分支保留 |
 
@@ -84,7 +85,9 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | PLAN_APPROVED（DEV-OPS-002 计划） | **已通过**（Round 2）；plan Commit `261daa2`；状态 `completed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-002 实现） | **已通过**（P0=0 / P1=0 / P2=4 / P3=3；P2/P3 为 residual/backlog，不阻塞） |
 | RELEASE_COMPLETED（DEV-OPS-002 实现） | **已完成**；implementation_commit `4943757`；PR #4 merged（`5886cc6`） |
-| PLAN_APPROVED（DEV-002 计划） | **已通过**（Round 2；Amendment 001；BLOCKER 0 / MUST_FIX 0）；人工确认 2026-08-07 08:03 UTC；`status=approved`；plan_commit 待人工 docs(plan) |
+| PLAN_APPROVED（DEV-002 计划） | **已通过**（Round 2；Amendment 001）；plan_commit `ceff988` |
+| CODE_REVIEW_APPROVED（DEV-002 实现） | **已通过**（P0=0 / P1=0 / P2=2 / P3=2；P2-001 由 Amendment 002 关闭；不阻塞 Release） |
+| RELEASE_COMPLETED（DEV-002 实现） | **已完成**；implementation_commit `f55732c`；PR #5 open（base=main） |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -204,12 +207,13 @@ DEV-002：步骤 1–4 已完成（Round 1 `PLAN_REJECTED` 与 Amendment 001 历
 | 2026-08-07 07:16 UTC | DEV-OPS-002 | completed（治理回写） | 仅改治理文档；`current_task` → DEV-002 | status_record_commit_completed=null；下一步 docs(status) complete |
 | 2026-08-07 07:32 UTC | DEV-002 | planned（Round 1 规划） | 创建 Task Plan `02_开发管理/tasks/DEV-002-config-system-env-example.md`；master_plan CHANGE-004；progress 规划态回写 | 未实施、未 Git 写；等待独立 Plan Review |
 | 2026-08-07 08:00 UTC | DEV-002 | planned（Amendment 001 / Round 2） | Round 1 PLAN_REJECTED（MF-001 + SF-001–SF-006）；已修订 Task Plan（settings_customise_sources 顺序、shutdown/retrieval 校验、EMBEDDING_* env 决策、conftest 禁止改、§7.2 九字段、pytest -k 引号）；progress/master_plan 同步 | 未实施、未 Git 写；status 保持 planned；等待 Plan Review Round 2 |
-| 2026-08-07 08:03 UTC | DEV-002 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0）；人工确认 PLAN_APPROVED；人工范围确认 APP_ENV=development/test、无 production.yaml；同步 Task Plan / master_plan / progress | 未实施、未创建 feat 分支、未 Git 写；下一步人工 docs(plan) on main |
+| 2026-08-07 08:15 UTC | DEV-002 | in_progress → tested | Developer 实施 settings/configs/.env.example/测试；质量门禁全通过 | settings_customise_sources 顺序调整见 Task Plan §17；未 Git 写；待 Code Review |
+| 2026-08-07 08:25 UTC | DEV-002 | tested → reviewed | 独立 Code Review CODE_REVIEW_APPROVED；P0/P1=0；P2=3/P3=2 已记录 | Commit Recorder READY_FOR_HUMAN_COMMIT；implementation_commit=null；未 Git 写 |
+| 2026-08-07 08:52 UTC | DEV-002 | reviewed（Amendment 002） | 纠正 pydantic-settings 2.14 tuple 语义文档；新增 Amendment 002；未改业务实现 | CODE_REVIEW_APPROVED 仍有效；P2-001 关闭；待 Release Operator |
+| 2026-08-07 09:00 UTC | DEV-002 | reviewed → committed | Release Operator RELEASE_COMPLETED；PR #5 open（base=main） | implementation_commit `f55732c`；治理回写待本地落盘 |
 
 ## 下一任务
 
-1. **当前**：DEV-002 状态 **`approved`**；Task Plan 经 Amendment 001 修订并经 Round 2 `PLAN_APPROVED`；`current_plan_file` = `02_开发管理/tasks/DEV-002-config-system-env-example.md`。
-2. **下一步（人工）**：在 **main** 提交 **`docs(plan): add DEV-002 config system and env example plan`**（含 Task Plan 与本轮治理更新），再创建 **`feat/DEV-002-config-system-env-example`**。
-3. **禁止**：在 `docs(plan)` 提交前调用 Developer 或进入 `in_progress`；不得插入 DEV-OPS-003、Phase B 或其他 workflow 优化。
-4. **范围确认（已接受）**：`APP_ENV` 仅 `development` / `test`；不提供 `production.yaml`。
-5. DEV-OPS-002 completed 治理 Commit `f4fab24` 已在 main；E2E 证据分支保留。
+1. **当前**：DEV-002 状态 **`committed`**；PR [#5](https://github.com/xu-jia-ming/memory_system/pull/5) OPEN（base=main，head=feat/DEV-002-config-system-env-example）。
+2. **下一步**：人工 Review/Merge PR #5；Merge 后执行 `docs(status): complete DEV-002 after PR merge`。
+3. plan_commit `ceff988`；implementation_commit `f55732cdfc48eda66cc1fac2218e9f4afe03ec2e`。
