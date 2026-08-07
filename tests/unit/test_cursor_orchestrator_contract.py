@@ -6,6 +6,8 @@ import json
 import re
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 AGENTS_DIR = REPO_ROOT / ".cursor" / "agents"
 COMMANDS_DIR = REPO_ROOT / ".cursor" / "commands"
@@ -62,6 +64,66 @@ RELEASE_OPERATOR_FORBIDDEN_SUBSTRINGS: tuple[str, ...] = (
 )
 
 ALL_AGENT_ROLES: tuple[str, ...] = tuple(AGENT_ROLE_MAP.values())
+
+# Each rule must be present in orchestrate-task.md; removing any rule should fail its test.
+WRITABLE_SCOPE_CONTRACT_RULES: tuple[dict[str, str], ...] = (
+    {
+        "rule_id": "compute_each_round",
+        "pattern": r"每轮.*先计算.*实际可写集合",
+        "description": "must compute writable scope at start of each round",
+    },
+    {
+        "rule_id": "intersection_formula",
+        "pattern": r"实际可写集合\s*=\s*[\s\S]*∩[\s\S]*∩",
+        "description": "writable scope uses three-way intersection",
+    },
+    {
+        "rule_id": "user_explicit_forbid_priority",
+        "pattern": r"用户.*显式.*优先|用户显式约束优先",
+        "description": "user explicit forbid takes priority",
+    },
+    {
+        "rule_id": "task_plan_whitelist_priority",
+        "pattern": r"Task Plan 白名单优先",
+        "description": "task plan whitelist constrains orchestrator writes",
+    },
+    {
+        "rule_id": "no_governance_when_not_whitelisted",
+        "pattern": r"白名单[\s\S]*不含[\s\S]*progress\.md[\s\S]*不得写",
+        "description": "cannot write progress when not in task plan whitelist",
+    },
+    {
+        "rule_id": "empty_intersection_no_writes",
+        "pattern": r"实际可写集合.*为空.*不得写任何文件",
+        "description": "empty intersection forbids all file writes",
+    },
+    {
+        "rule_id": "report_only_no_persist",
+        "pattern": (
+            r"仅在.*最终回复.*报告.*current_stage.*last_role_result"
+            r".*blocking_reason.*不得持久化"
+        ),
+        "description": "report orchestration fields in reply only when empty",
+    },
+    {
+        "rule_id": "no_whitelist_expansion",
+        "pattern": r"不得因为需要记录编排态而扩大白名单|不得扩大白名单",
+        "description": "must not expand whitelist for orchestration logging",
+    },
+    {
+        "rule_id": "conflict_halt",
+        "pattern": (
+            r"用户约束与 Task Plan.*冲突.*ORCHESTRATOR_HALTED"
+            r"|无法确定交集时.*ORCHESTRATOR_HALTED"
+        ),
+        "description": "conflict or unknown intersection triggers halt",
+    },
+    {
+        "rule_id": "manual_gates_unchanged",
+        "pattern": r"不放宽.*approved.*reviewed.*committed.*completed",
+        "description": "manual status gates remain unchanged",
+    },
+)
 
 
 def _read_agent(filename: str) -> str:
@@ -145,6 +207,34 @@ def test_orchestrator_does_not_self_approve() -> None:
     assert "最后一行必须且仅为：`CODE_REVIEW_APPROVED`" not in text
     assert "唯一角色 = Planner" not in text
     assert "唯一角色 = Release Operator" not in text
+
+
+@pytest.mark.parametrize(
+    "rule",
+    WRITABLE_SCOPE_CONTRACT_RULES,
+    ids=[rule["rule_id"] for rule in WRITABLE_SCOPE_CONTRACT_RULES],
+)
+def test_orchestrator_writable_scope_contract_rule(rule: dict[str, str]) -> None:
+    text = _read_orchestrator()
+    assert re.search(rule["pattern"], text, re.DOTALL), (
+        f"orchestrate-task missing writable-scope rule {rule['rule_id']}: "
+        f"{rule['description']}"
+    )
+
+
+def test_orchestrator_writable_scope_intersection_operands_explicit() -> None:
+    text = _read_orchestrator()
+    assert "命令默认允许字段" in text or "命令默认允许" in text
+    assert "当前 Task Plan 允许路径/字段" in text or "当前 Task Plan" in text
+    assert "用户本轮显式允许范围" in text
+    assert "∩" in text
+
+
+def test_orchestrator_forbids_unconditional_progress_write() -> None:
+    text = _read_orchestrator()
+    assert "**仅可**回写 `progress.md`" not in text
+    assert "无条件" not in text or "不是**无条件可写" in text
+    assert "默认字段**不是**无条件可写" in text or "默认字段不是无条件可写" in text
 
 
 def test_release_operator_exit_code_and_fact_substrings() -> None:

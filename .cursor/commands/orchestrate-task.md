@@ -33,16 +33,37 @@
 
 ## 允许修改范围
 
-**仅可**回写 `progress.md` 或 Task Plan 执行记录中的编排态字段：
+### 每轮先计算「实际可写集合」（强制；优先于任何默认编排字段）
 
-| 允许 | 禁止 Orchestrator 自行写入 |
+每轮 Orchestrator 开始编排前，**必须先计算**本轮 `实际可写集合`：
+
+```text
+实际可写集合 =
+  命令默认允许字段/路径
+  ∩ 当前 Task Plan 允许路径/字段（§5 白名单及执行记录字段）
+  ∩ 用户本轮显式允许范围
+```
+
+计算规则（**fail-closed**）：
+
+1. **用户显式约束优先**：若用户在本轮消息中明确写出「不得修改 `progress.md` / Task Plan / `master_plan.md` / 治理文件」或等价表述，该禁止**立即生效**，Orchestrator **不得**以记录编排态为由写入上述文件。
+2. **Task Plan 白名单优先**：若当前 Task Plan 的实施或发布白名单**不含** `02_开发管理/progress.md`、`02_开发管理/master_plan.md`、Task Plan 自身或其它治理文档，则 Orchestrator **不得写** `progress.md`、Task Plan 与上述治理路径——即使命令默认允许编排字段。
+3. **不得扩大白名单**：不得因为需要记录 `current_stage` / `last_role_result` / `blocking_reason` 而擅自把治理文档加入可写范围；不得替 Subagent 扩大实施白名单。
+4. **交集为空 → 只读**：若 `实际可写集合` 为空，Orchestrator **不得写任何文件**（含 `progress.md`、Task Plan、业务文件）。此时仅在**最终回复**中报告 `current_stage`、`last_role_result`、`blocking_reason`，**不得持久化**到仓库。
+5. **冲突 halt**：用户约束与 Task Plan 白名单冲突、或无法确定交集时，输出 `ORCHESTRATOR_HALTED` 并停止；**不得猜测**可写范围。
+
+### 命令默认允许字段（仅当落入「实际可写集合」时才可写）
+
+| 命令默认允许（编排态） | 禁止 Orchestrator 自行写入（人工门禁不变） |
 |---|---|
 | `current_stage` | `approved`（仅人工确认 `PLAN_APPROVED` 后） |
 | `last_role_result` | `reviewed`（仅 `CODE_REVIEW_APPROVED` 门禁后） |
 | `blocking_reason` | `committed`（仅 Release Operator 真实 Git/PR 事实后） |
 | | `completed`（仅人工 Merge + 最终 docs 后） |
 
-允许 **Foreground 调用**一个角色 Subagent（禁止并行调用互相冲突的审查对）。不得直接修改业务白名单外文件。
+上述默认字段**不是**无条件可写；必须同时满足 Task Plan 白名单与用户本轮显式允许。本规则**不放宽** `approved` / `reviewed` / `committed` / `completed` 的人工门禁。
+
+允许 **Foreground 调用**一个角色 Subagent（禁止并行调用互相冲突的审查对）。除落入 `实际可写集合` 的字段外，不得直接修改任何文件。
 
 ## 阶段验证
 
@@ -68,6 +89,8 @@
 | 返回内容**无法解析** | 立即停止 |
 | 角色返回拒绝或失败标记 | 立即停止；不得自动调用下一角色 |
 | 无法发现/调用 Subagent | 立即停止；**不得冒充** |
+| 用户约束与 Task Plan 白名单冲突，或**无法确定** `实际可写集合` | 输出 `ORCHESTRATOR_HALTED`；**不得猜测** |
+| `实际可写集合` 为空却试图写文件 | 输出 `ORCHESTRATOR_HALTED`；仅可在回复中报告编排态，**不得持久化** |
 
 ### 人工门禁暂停
 
