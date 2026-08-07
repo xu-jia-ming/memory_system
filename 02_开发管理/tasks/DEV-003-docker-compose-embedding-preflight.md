@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-003
 task_name: Docker Compose、Embedding 服务与 Preflight
-status: tested
+status: committed
 spec_sections:
   - "§3.2 应用容器与进程边界"
   - "§3.3 Docker Compose 服务拓扑"
@@ -780,6 +780,8 @@ out_of_scope_changes:
 | 2026-08-07 12:00 UTC | Step 12–13 | `.gitignore`、README、4 个测试文件 | unit+contract+integration | 94 passed / 2 skipped |
 | 2026-08-07 12:05 UTC | 质量门禁 | ruff + mypy + pytest 全量 | 94 passed / 2 skipped；ruff/mypy 通过 | `status` → `tested` |
 | 2026-08-07 14:48 UTC | lock_tei GPU 缺陷修复 | `lock_tei_images.sh` GPU `--gpus all`；fail-closed stderr；+2 单元测试 | pytest 96 passed / 2 skipped；`lock_tei_images.sh` validate passed | P2-001 记入 §17 接受偏差 A |
+| 2026-08-07 15:00 UTC | Release Operator | implementation commit `d366fb6`；PR #6 open | RELEASE_COMPLETED | `status` → `committed` |
+| 2026-08-07 15:05 UTC | committed 治理准备 | progress / master_plan / Task Plan 回写 committed 态 | 无 | 待人工 `docs(status): record DEV-003 implementation commit and PR` |
 
 ## 17. 实际执行结果
 
@@ -839,10 +841,15 @@ review_report: "GPU lock fix re-review CODE_REVIEW_APPROVED；P2-001 Verdict A�
 ```yaml
 branch: feat/DEV-003-docker-compose-embedding-preflight
 plan_commit: 1b63d51fe5d6926a5b88f6cdd3ece6a4cf88b4e1
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: d366fb6212e9768ccc11559663ef95be08157dc7
+implementation_commit_message: "feat(docker): add compose stack, embedding scripts, and preflight"
+pr_number: 6
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/6"
+pr_state: OPEN
+pr_base: main
+status_record_commit_committed: null
 ```
 
 ### 最终状态
 
-`reviewed`
+`committed`
