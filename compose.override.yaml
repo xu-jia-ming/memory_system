@@ -1,0 +1,31 @@
+# Development overrides (§3.14) — bind ports to 127.0.0.1 only.
+services:
+  memory-api:
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  redis:
+    ports:
+      - "127.0.0.1:6379:6379"
+
+  mongodb:
+    ports:
+      - "127.0.0.1:27017:27017"
+
+  kafka:
+    ports:
+      - "127.0.0.1:29092:29092"
+
+  neo4j:
+    ports:
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
+
+  elasticsearch:
+    ports:
+      - "127.0.0.1:9200:9200"
+
+  # embedding-service: default not exposed to host (§3.14). Uncomment for debug:
+  # embedding-service:
+  #   ports:
+  #     - "127.0.0.1:8080:80"

@@ -1,0 +1,191 @@
+# Base Compose topology (§3.3). Use scripts/compose.sh — never bare docker compose.
+# Embedding image is supplied by compose.embedding.{cpu,gpu}.yaml when --embedding != none.
+
+x-app-env: &app-env
+  env_file:
+    - .env
+  environment:
+    EMBEDDING_EFFECTIVE_RUNTIME_MODE: ${EMBEDDING_EFFECTIVE_RUNTIME_MODE}
+    EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET: ${EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET}
+    HTTP_PROXY: ${PROXY__HTTP_URL}
+    HTTPS_PROXY: ${PROXY__HTTP_URL}
+    NO_PROXY: "localhost,127.0.0.1,redis,mongodb,kafka,neo4j,elasticsearch,embedding-service,memory-api,memory-extraction-worker,memory-consolidation-worker"
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+x-app-build: &app-build
+  context: .
+  dockerfile: Dockerfile
+  args:
+    PYTHON_IMAGE: ${PYTHON_IMAGE}
+
+services:
+  redis:
+    image: ${REDIS_IMAGE}
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - memory-system-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  mongodb:
+    image: ${MONGODB_IMAGE}
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - memory-system-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  kafka:
+    image: ${KAFKA_IMAGE}
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,PLAINTEXT_HOST://:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      CLUSTER_ID: memory-system-kafka-kraft-01
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    networks:
+      - memory-system-network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 > /dev/null 2>&1",
+        ]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 45s
+
+  neo4j:
+    image: ${NEO4J_IMAGE}
+    environment:
+      NEO4J_AUTH: none
+      NEO4J_PLUGINS: '[]'
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+    networks:
+      - memory-system-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:7474 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  elasticsearch:
+    image: ${ELASTICSEARCH_IMAGE}
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: -Xms1g -Xmx1g
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - memory-system-network
+    mem_limit: 2g
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9200/_cluster/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  memory-api:
+    build: *app-build
+    command: ["python", "-m", "memory_system.entrypoints.api"]
+    <<: *app-env
+    stop_grace_period: 480s
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - memory-system-network
+
+  memory-extraction-worker:
+    build: *app-build
+    command: ["python", "-m", "memory_system.entrypoints.extraction_worker"]
+    <<: *app-env
+    stop_grace_period: 300s
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - memory-system-network
+
+  memory-consolidation-worker:
+    build: *app-build
+    command: ["python", "-m", "memory_system.entrypoints.consolidation_worker"]
+    <<: *app-env
+    stop_grace_period: 300s
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    networks:
+      - memory-system-network
+
+  init-infra:
+    build: *app-build
+    command: ["python", "-m", "scripts.migrate"]
+    restart: "no"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - memory-system-network
+
+networks:
+  memory-system-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+  mongodb-data:
+  kafka-data:
+  neo4j-data:
+  neo4j-logs:
+  elasticsearch-data:
+  embedding-model-cache:
