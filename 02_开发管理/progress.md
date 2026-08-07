@@ -6,12 +6,13 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-004
-current_task_status: planned
+current_task: DEV-OPS-003
+current_task_status: approved
 current_branch: main
 target_default_branch: main
-current_plan_file: null
-latest_commit: 0ac80e566fdd33c41b813803af43a0b4ca237e9b
+current_plan_file: 02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md
+workflow_mode_for_this_task: STRICT
+latest_commit: c1234c5b28373f57c118d0afc9442a90dee8cd51
 plan_commit: null
 previous_task: DEV-003
 previous_task_status: completed
@@ -20,11 +21,19 @@ previous_implementation_commit: d366fb6212e9768ccc11559663ef95be08157dc7
 previous_implementation_commit_message: "feat(docker): add compose stack, embedding scripts, and preflight"
 previous_status_record_commit_committed: ad493be85cc4c4c56ccce908ae6cced08c66e80d
 previous_status_record_commit_committed_message: "docs(status): record DEV-003 implementation commit and PR"
-previous_status_record_commit_completed: null
+previous_status_record_commit_completed: c1234c5b28373f57c118d0afc9442a90dee8cd51
+previous_status_record_commit_completed_message: "docs(status): complete DEV-003 after PR merge"
 previous_pr: "#6"
 previous_pr_status: merged
 previous_merge_commit: 0ac80e566fdd33c41b813803af43a0b4ca237e9b
-next_action: 进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；人工在 main 提交 docs(status): complete DEV-003 after PR merge；功能分支 feat/DEV-003-docker-compose-embedding-preflight 删除待人工；不得插入 DEV-OPS-003、Phase B 或其他 workflow 优化于 DEV-004 之前
+deferred_business_task: DEV-004
+deferred_business_task_status: planned
+next_action: 人工在 main 提交 docs(plan) 并 push；随后创建 feat/DEV-OPS-003-normal-strict-workflow-modes；本任务自身 STRICT（NORMAL 自动 phase 尚未可用）；docs(plan)+分支前置满足前不得调用 Developer；不得开始 DEV-004
+insertion_override:
+  overridden_next_action: "进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；…不得插入 DEV-OPS-003…"
+  override_reason: "用户本轮显式字段 TASK_ID=DEV-OPS-003 覆盖 progress.md 先前 next_action；人工插入 DEV-OPS-003 于 DEV-004 业务规划之前"
+  override_at: "2026-08-07 15:22 UTC"
+  note: "不得开始 DEV-004；DEV-OPS-003 completed 后 next_action 必须回到 DEV-004 业务规划"
 ```
 
 ## 测试状态
@@ -88,6 +97,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | PLAN_APPROVED（DEV-OPS-002 计划） | **已通过**（Round 2）；plan Commit `261daa2`；状态 `completed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-002 实现） | **已通过**（P0=0 / P1=0 / P2=4 / P3=3；P2/P3 为 residual/backlog，不阻塞） |
 | RELEASE_COMPLETED（DEV-OPS-002 实现） | **已完成**；implementation_commit `4943757`；PR #4 merged（`5886cc6`） |
+| PLAN_APPROVED（DEV-OPS-003 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-001；Amendment 001；Round 2 Plan Reviewer = `PLAN_APPROVED`；BLOCKER 0 / MUST_FIX 0）；人工确认 2026-08-07 15:39 UTC；状态 `approved`；`plan_commit=null`（待 docs(plan) on main） |
 | PLAN_APPROVED（DEV-002 计划） | **已通过**（Round 2；Amendment 001）；plan_commit `ceff988` |
 | PLAN_APPROVED（DEV-003 计划） | **已通过**（Round 1 `PLAN_REJECTED`；Amendment 001；Round 2 `PLAN_APPROVED`）；plan_commit `1b63d51`；人工确认 2026-08-07 10:33 UTC |
 | CODE_REVIEW_APPROVED（DEV-002 实现） | **已通过**（P0=0 / P1=0 / P2=2 / P3=2；P2-001 由 Amendment 002 关闭；不阻塞 Release） |
@@ -179,10 +189,10 @@ DEV-002：步骤 1–12 均已完成（实现 Commit `f55732c`；治理 committe
 8. Release Operator：implementation commit `d366fb6` + PR #6 open
 9. feat 分支 docs(status) committed 治理 `ad493be`
 10. 人工 Merge PR #6 → main（Merge Commit `0ac80e5`）
-11. docs(status): complete DEV-003 after PR merge（main；治理状态 completed）← 待人工提交
+11. docs(status): complete DEV-003 after PR merge（main Commit `c1234c5`）
 ```
 
-DEV-003：步骤 1–10 均已完成（实现 Commit `d366fb6`；治理 committed `ad493be`；PR #6 Merge `0ac80e5`）。步骤 11 待人工在 `main` 提交 completed 治理 Commit。功能分支删除待人工执行。
+DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committed `ad493be`；PR #6 Merge `0ac80e5`；completed 治理 `c1234c5`）。功能分支本地与远程已不存在。`main` 与 `origin/main` 同步于 `c1234c5`。
 
 ## 最近执行记录
 
@@ -246,11 +256,29 @@ DEV-003：步骤 1–10 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-07 15:08 UTC | DEV-003 | committed（治理落盘） | 人工 Commit `ad493be`（`docs(status): record DEV-003 implementation commit and PR`） | PR #6 待人工 merge |
 | 2026-08-07 15:10 UTC | DEV-003 | committed → completed | PR #6 merged 至 main（Merge Commit `0ac80e5`）；`current_task` → DEV-004 | `status_record_commit_completed=null`；下一步 docs(status) complete |
 | 2026-08-07 15:10 UTC | DEV-003 | completed（治理准备） | 回写 progress / Task Plan / master_plan 为 completed 态 | 未 Git 写；待人工 `docs(status): complete DEV-003 after PR merge` |
+| 2026-08-07 | DEV-003 | completed（治理落盘） | 人工 Commit `c1234c5`（`docs(status): complete DEV-003 after PR merge`） | `main`==`origin/main`；feat 分支已清理 |
+| 2026-08-07 15:22 UTC | DEV-OPS-003 | planned（人工插入覆盖） | 用户显式覆盖先前「不得插入 DEV-OPS-003 / 立即 DEV-004」next_action；创建 Task Plan；master_plan CHANGE-006 登记 | 未实施、未 Git 写、未创建分支；**不得开始 DEV-004**；等待独立 Plan Review |
+| 2026-08-07 15:35 UTC | DEV-OPS-003 | planned（Amendment 001） | Round 1 `PLAN_REJECTED`（MF-001）；封闭方案 A：`IMPLEMENTATION_RELEASE` 禁 push/commit main；committed/record 仅 feat；采纳 SF-001–SF-004 | 状态保持 planned；未实施、未 Git 写；等待 Round 2 Plan Review |
+| 2026-08-07 15:39 UTC | DEV-OPS-003 | planned → approved | Round 2 Plan Reviewer = `PLAN_APPROVED`（BLOCKER 0 / MUST_FIX 0；SF-R2-001/002 非阻塞）；人工确认 `PLAN_APPROVED`；治理回写 Task Plan / progress / master_plan；SF-R2-002 checklist 换行 hygiene；Amendment 001 原文保留 | 未实施、未创建 feat、未 Git 写；本任务自身 STRICT；NORMAL 自动 phase 尚未可用；下一步人工 docs(plan) on main |
+
+## DEV-OPS-003 Git 流程（进行中；本任务自身 STRICT）
+
+```text
+1. 独立 Plan Review Round 1 → PLAN_REJECTED（MF-001）
+2. Planner Amendment 001
+3. 独立 Plan Review Round 2 → PLAN_APPROVED
+4. 人工确认 PLAN_APPROVED → approved（2026-08-07 15:39 UTC）← 当前
+5. 人工在 main 提交 docs(plan): add DEV-OPS-003 normal and strict workflow modes plan 并 push
+6. 从 main 创建 feat/DEV-OPS-003-normal-strict-workflow-modes
+7. Developer 实施（STRICT；不得假定 NORMAL PLAN_LANDING / IMPLEMENTATION_RELEASE / POST_MERGE_CLEANUP 已可用）
+8. Code Review → Commit Recorder → 人工/显式触发 Release Operator（IMPLEMENTATION_RELEASE）
+9. 人工 Merge PR → 人工 post-merge 治理与清理 → completed → next_action=DEV-004
+```
 
 ## 下一任务
 
-1. **当前**：DEV-003 状态 **`completed`**；PR **#6 merged**（`0ac80e5`）；实现 Commit **`d366fb6`**；治理 committed **`ad493be`**；`main` @ `0ac80e5`。
-2. **立即下一动作（人工）**：在 **`main`** 提交 **`docs(status): complete DEV-003 after PR merge`**。
-3. **随后**：进入 **DEV-004**（Migration Runner 与基础设施初始化）业务规划；`current_task` 已切换为 DEV-004 `planned`。
-4. 不得插入 DEV-OPS-003、Phase B 或其他 Cursor workflow 优化于 DEV-004 之前。
-5. 功能分支 `feat/DEV-003-docker-compose-embedding-preflight` 删除待人工执行。
+1. **当前**：`current_task` = **DEV-OPS-003**（`approved`）；计划文件 `02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md`（含 Amendment 001 原文）。
+2. **立即下一动作**：人工在 `main` 提交 `docs(plan): add DEV-OPS-003 normal and strict workflow modes plan` 并 push；随后创建 `feat/DEV-OPS-003-normal-strict-workflow-modes`。**不得**假定 NORMAL 自动 phase 已可用；本任务自身 STRICT。
+3. **覆盖关系**：先前 next_action 要求进入 DEV-004 且禁止插入 DEV-OPS-003；**用户显式覆盖**，人工插入 DEV-OPS-003 于 DEV-004 之前。
+4. **DEV-004**：保持 `planned`（deferred）；**本任务期间不得开始**；DEV-OPS-003 `completed` 后 `next_action` 必须回到 DEV-004 业务规划。
+5. **Git**：`main` @ `c1234c5`；`plan_commit=null`；未创建 feat；本轮 Orchestrator **未**执行 Git 写。

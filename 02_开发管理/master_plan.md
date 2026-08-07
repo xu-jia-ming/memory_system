@@ -61,6 +61,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | completed |
 | DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | completed |
+| DEV-OPS-003 | NORMAL / STRICT 工作流模式；减少常规人工机械门禁 | 非业务：扩展 DEV-OPS-002；保留六 Subagent 与唯一 Git 写角色 | DEV-OPS-002 | approved |
+
+#### DEV-OPS-003 NORMAL / STRICT 工作流模式
+
+- **目标**：引入 `NORMAL`（默认）与 `STRICT`（显式）两种工作流模式。NORMAL 常规人工门禁仅 `PLAN_APPROVED` + Human PR Merge；机械 Git 步骤由 Orchestrator 在批准转换点**自动调度** Release Operator（分 `PLAN_LANDING` / `IMPLEMENTATION_RELEASE` / `POST_MERGE_CLEANUP`）。STRICT 保留 DEV-OPS-002 行为。Release Operator **仍是唯一 Git 写 Subagent**；Orchestrator 自身不写 Git。
+- **非目标**：开始 DEV-004；改业务代码/规格；webhook 自动 merge；Orchestrator 直接 Git 写；取消 Code Review / 测试门禁；删除六 Subagent 或五 fallback 命令；`gh pr merge` / force push / `git branch -D`。
+- **关键设计决策**：最小变更保留 DEV-OPS-002 安全模型——Git 写权威仍集中于 Release Operator；NORMAL 仅减少「人工再次批准去调用 Release」的机械门禁。
+- **变更文件（预期）**：`orchestrate-task.md`；`release-operator.md`（及最小 Agent 对齐）；治理窄例外两文件；`permissions.json` / `cli.json`；契约测试（含新建 modes contract）；本任务开发管理回写。
+- **测试**：NORMAL/STRICT 合同；fail-closed negatives；既有 DEV-OPS-002 契约保持或有意修订并写 rationale；受监督冒烟（实施后）。
+- **验收**：mode 声明；NORMAL 两门禁；STRICT 兼容；唯一 Git 写；异常 HALT；完成后 `next_action`→DEV-004；**本任务期间不得启动 DEV-004**。
+- **插入说明**：**人工显式插入**于 DEV-004 业务规划之前（用户覆盖先前「不得插入 DEV-OPS-003」的 next_action）。
+- **计划文件**：`02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md`
+- **状态备注**：`approved`（2026-08-07 15:22 UTC 初版；15:35 UTC Amendment 001 回应 Round 1 `PLAN_REJECTED` / MF-001 方案 A + SF-001–004；Round 2 Plan Reviewer = `PLAN_APPROVED`；人工确认 2026-08-07 15:39 UTC）；未实施；未创建 feat；未 Git 写；本任务自身 STRICT（NORMAL 自动 phase 尚未可用）；`plan_commit=null`（待人工 docs(plan) on main）。
 
 #### DEV-OPS-002 Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
 
@@ -119,7 +132,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **Git**：`docs(plan)` on `main` → `feat/DEV-003-docker-compose-embedding-preflight` → `feat(docker): add compose stack, embedding scripts, and preflight`。
 - **风险**：TEI 镜像拉取体积/代理；GPU/A5000 环境可选；`init-infra run` 在 DEV-004 前预期失败；`vm.max_map_count` 宿主机要求。
 - **计划文件**：`02_开发管理/tasks/DEV-003-docker-compose-embedding-preflight.md`
-- **状态备注**：`completed`（plan_commit `1b63d51`；implementation_commit `d366fb6`；治理 committed `ad493be`；PR #6 merged `0ac80e566fdd33c41b813803af43a0b4ca237e9b`；`status_record_commit_completed=null`；P2-001 接受偏差 A；GPU lock `--gpus all`；TEI validate-only passed；下一步 **DEV-004** 业务规划）
+- **状态备注**：`completed`（plan_commit `1b63d51`；implementation_commit `d366fb6`；治理 committed `ad493be`；PR #6 merged `0ac80e566fdd33c41b813803af43a0b4ca237e9b`；completed 治理 `c1234c5`；P2-001 接受偏差 A；GPU lock `--gpus all`；TEI validate-only passed；业务下一任务原为 DEV-004，**已被用户显式插入的 DEV-OPS-003 暂缓**）
 
 #### DEV-004 Migration Runner 与基础设施初始化
 
@@ -129,6 +142,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Integration（首次成功、重复幂等、checksum 篡改失败）；ES alias/mapping 断言。
 - **验收**：`python -m scripts.migrate` 符合 §3.26/§3.32。
 - **风险**：修改已执行 Migration；与规格 Mapping 不一致。
+- **调度备注**：状态仍 `planned`；**因用户显式插入 DEV-OPS-003 而暂缓启动**；不得在 DEV-OPS-003 完成前开始 DEV-004 规划/实施。
 
 #### DEV-005 通用 API、鉴权、Request ID、日志与指标
 
@@ -413,5 +427,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | DEV-003（`approved`）；**不**改变 DEV-004+ 业务范围 |
 | 是否改变技术规格 | **否**（对齐既有 §3.10.5、§3.18 字面要求） |
 | 审批 | Round 2 `PLAN_APPROVED`（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 5 非阻塞）；人工确认 2026-08-07 10:33 UTC；状态 `approved` |
+
+### CHANGE-006
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-07 |
+| 原因 | **人工显式插入**非业务任务 DEV-OPS-003：NORMAL/STRICT 工作流模式，减少常规机械人工门禁；覆盖先前 progress「不得插入 DEV-OPS-003 / 立即 DEV-004」next_action；不改变 Phase 0–5 业务任务目标与依赖 |
+| 受影响任务 | 新增 `DEV-OPS-003`（Phase 0 补充，现 `approved`）；DEV-004 保持 `planned` 但**延后至 DEV-OPS-003 completed 之后**；**不**修改 DEV-OPS-001/002 / DEV-001–003 完成状态；**不**改变 DEV-004+ 业务范围正文 |
+| 是否改变技术规格 | **否** |
+| 审批 | Round 1 `PLAN_REJECTED`（MF-001）；Amendment 001；Round 2 Plan Reviewer = `PLAN_APPROVED`（BLOCKER 0 / MUST_FIX 0）；人工确认 2026-08-07 15:39 UTC；状态 `approved`；`plan_commit=null`（待 docs(plan) on main） |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
