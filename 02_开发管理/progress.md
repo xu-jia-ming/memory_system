@@ -6,31 +6,32 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-OPS-001
-current_task_status: completed
-completed_at: "2026-08-06 15:30 UTC"
+current_task: DEV-OPS-002
+current_task_status: approved
 current_branch: main
 target_default_branch: main
-current_plan_file: null
-latest_commit: 57800c3
-implementation_commit: 69fabb7b54f6107c424666f145a2ca68507f3fec
-status_record_commit_committed: 5d00a497842a46912ddde8683146d986c2d0619a
-status_record_commit_completed: null
-pr: "#2"
-pr_status: merged
-pr_merged: true
-merge_commit: 57800c3
-next_action: 人工提交 docs(status): complete DEV-OPS-001 after PR merge；推送 main；随后删除本地和远程功能分支 feat/DEV-OPS-001-cursor-workflow-commands；不得开始 DEV-002 或 DEV-OPS-002；Agent 不得 Git Add/Commit/Push/Merge/Rebase/删除分支
+current_plan_file: 02_开发管理/tasks/DEV-OPS-002-cursor-orchestrator-subagents-release.md
+latest_commit: 5f34ccbcb7a052131dbeedd17c68dbf6dc30c52d
+previous_task: DEV-OPS-001
+previous_task_status: completed
+previous_task_completed_at: "2026-08-06 15:30 UTC"
+previous_implementation_commit: 69fabb7b54f6107c424666f145a2ca68507f3fec
+previous_status_record_commit_committed: 5d00a497842a46912ddde8683146d986c2d0619a
+previous_status_record_commit_completed: 5f34ccbcb7a052131dbeedd17c68dbf6dc30c52d
+previous_pr: "#2"
+previous_pr_status: merged
+previous_merge_commit: 57800c3
+next_action: 人工在 main 提交 docs(plan): add DEV-OPS-002 cursor orchestrator subagents plan；随后创建 feat/DEV-OPS-002-cursor-orchestrator-subagents；在 /develop-task 前置通过前保持 approved、不得 in_progress；不得创建 agents/permissions；不得改治理规则或既有五命令；不得启动 DEV-002 实现；本会话未执行 Git Commit/Push/Merge/Rebase
 ```
 
 ## 测试状态
 
 | 测试层级 | 状态 | 最近命令 | 最近结果 |
 |---|---|---|---|
-| Unit | passed（DEV-OPS-001） | `uv run pytest tests/unit` | 20 passed（Code Review 复跑 2026-08-06 15:03 UTC） |
-| Contract | n/a | - | DEV-OPS-001 不适用业务 Contract；命令静态契约见 Unit |
-| Integration | n/a | - | DEV-OPS-001 不适用 |
-| E2E | n/a | - | DEV-OPS-001 不适用 |
+| Unit | passed（DEV-OPS-001；DEV-OPS-002 尚未实施） | `uv run pytest tests/unit` | 20 passed（DEV-OPS-001 Code Review 复跑 2026-08-06 15:03 UTC） |
+| Contract | n/a | - | DEV-OPS-002 规划中；将新增 orchestrator 静态契约 |
+| Integration | n/a | - | 不适用 |
+| E2E | n/a | - | 不适用 |
 | Ruff | passed（DEV-OPS-001） | `uv run ruff check .` | All checks passed |
 | Mypy | passed（DEV-OPS-001） | `uv run mypy src tests` | Success: no issues found in 34 source files |
 | UI 冒烟（OI-OPS-005） | passed（DEV-OPS-001） | 人工 `/` 菜单 | 五命令均可见且可加载（2026-08-06 14:51 UTC；仅验证发现与加载） |
@@ -59,10 +60,13 @@ next_action: 人工提交 docs(status): complete DEV-OPS-001 after PR merge；�
 
 DEV-OPS-001 产品/流程未决项见其 Task Plan §12.2（OI-OPS-001–005）；**不**写入规格 Contract。
 
+DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）；**不**写入规格 Contract。
+
 ## 已知风险
 
 - 所有依赖和基础设施版本必须按技术规格锁定（含 `[build-system]` 的 `uv_build`）。
 - DEV-OPS-001：Cursor Commands 为 beta；不得假设未证实的参数替换或自动角色切换。
+- DEV-OPS-002：Subagent 继承父工具；IDE `permissions.json` 无硬 deny；`git push` 前缀与 `--force` 区分未证实为硬保证；结束标记无官方结构化协议。
 - 本地 `uv lock`/`uv sync` 需经代理 `127.0.0.1:7890` 访问 PyPI（环境因素，未写入仓库配置）。
 
 ## 双口令门禁
@@ -73,6 +77,7 @@ DEV-OPS-001 产品/流程未决项见其 Task Plan §12.2（OI-OPS-001–005）�
 | PLAN_APPROVED（DEV-001 计划） | **已通过**（历史；DEV-001 已 completed） |
 | PLAN_APPROVED（DEV-OPS-001 计划） | **已通过**（Round 2）；plan Commit `48a7525`；状态 `completed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-001 实现） | **已通过**（P0=0 / P1=0 / P2=1 / P3=1；P2/P3 已接受残余、本轮不修复） |
+| PLAN_APPROVED（DEV-OPS-002 计划） | **已通过**（Round 2：BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0）；状态 `approved`；尚未实施 |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -102,10 +107,27 @@ DEV-001：步骤 1–9 均已完成（实现 Commit `9fbe899`；治理 committed
 7. 人工实现 Commit `69fabb7` + PR #2
 8. docs(status) 治理 Commit `5d00a49`（committed 状态落盘）
 9. PR #2 merged → main（Merge Commit `57800c3`）；状态 completed
-10. 待人工：docs(status): complete DEV-OPS-001 after PR merge；推送 main；删除功能分支
+10. docs(status): complete DEV-OPS-001 after PR merge（main Commit `5f34ccb`）
 ```
 
-DEV-OPS-001：步骤 1–9 均已完成（实现 Commit `69fabb7`；治理 committed `5d00a49`；PR #2 Merge `57800c3`）。步骤 10 待人工执行最终治理 Commit 与分支清理。不得开始 DEV-002 或 DEV-OPS-002。
+DEV-OPS-001：步骤 1–10 均已完成（实现 Commit `69fabb7`；治理 committed `5d00a49`；PR #2 Merge `57800c3`；completed 治理 Commit `5f34ccb`）。
+
+## DEV-OPS-002 Git 流程（已批准；待提交计划 Commit）
+
+```text
+1. 独立 Plan Review（Round 2 已通过）
+2. PLAN_APPROVED
+3. 状态更新为 approved（不得实施）
+4. 人工在 main 提交 docs(plan): add DEV-OPS-002 cursor orchestrator subagents plan
+5. 从 main 创建 feat/DEV-OPS-002-cursor-orchestrator-subagents
+6. Developer 实施 Orchestrator + Subagents + permissions + 治理窄例外 + 契约测试
+7. Code Review → Commit Recorder →（门禁后）Release Operator push/PR
+8. 人工 Merge；docs(status)；删除功能分支 → completed
+9. 立即进入 DEV-002（next_action 必须为 DEV-002 业务规划/实施）
+   — Phase B / DEV-OPS-003 不得插队
+```
+
+受监督 E2E 冒烟（实施验收强制）：专用低风险 feat 分支；人工确认后 Release；PR create 后停止；失败 halt 并回退 DEV-OPS-001 五命令。
 
 ## 最近执行记录
 
@@ -135,9 +157,15 @@ DEV-OPS-001：步骤 1–9 均已完成（实现 Commit `69fabb7`；治理 commi
 | 2026-08-06 15:23 UTC | DEV-OPS-001 | reviewed → committed | 人工实现 Commit `69fabb7`（`chore(cursor): add project slash commands and command contract tests`）；GitHub PR #2 已创建（open，base main，未 merge）；治理 docs(status) 待人工提交 |
 | 2026-08-06 15:28 UTC | DEV-OPS-001 | committed（治理落盘） | 人工 Commit `5d00a49`（`docs(status): record DEV-OPS-001 implementation commit and PR`）；feat 分支已推送 |
 | 2026-08-06 15:30 UTC | DEV-OPS-001 | committed → completed | PR #2 merged 至 main（Merge Commit `57800c3`）；治理 committed Commit `5d00a49`；实现 Commit `69fabb7` |
+| 2026-08-06 | DEV-OPS-001 | completed 落盘 | main 治理 Commit `5f34ccb`：`docs(status): complete DEV-OPS-001 after PR merge` |
+| 2026-08-06 15:50 UTC | DEV-OPS-002 | planned | 创建 Task Plan；master_plan CHANGE-003 登记；等待独立 Plan Review；未创建 Subagent/Orchestrator/权限；未 Git 写；未改 DEV-002 |
+| 2026-08-07 02:05 UTC | DEV-OPS-002 | planned（Planner 复核） | `/plan-task` 复核官方 Subagents/permissions；补强归档/降级/五命令不可改；状态仍 planned；未实施、未 Git 写 |
+| 2026-08-07 02:12 UTC | DEV-OPS-002 | planned（Amendment 001） | Round 1 PLAN_REJECTED（BLOCKER 0 / MUST_FIX 5 / SHOULD_FIX 3）；已落实治理例外/fail-closed/退出码/E2E/完成后进 DEV-002；治理文件尚未改；待 Round 2 |
+| 2026-08-07 02:18 UTC | DEV-OPS-002 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0）；状态回写为 approved；未实施、未创建 agents/permissions、未改治理/五命令、未 Git 写 |
 
 ## 下一任务
 
-1. **当前**：DEV-OPS-001 状态 `completed`；PR #2 已合并（Merge Commit `57800c3`）。
-2. 人工提交 `docs(status): complete DEV-OPS-001 after PR merge`；推送 `main`；随后删除本地和远程功能分支 `feat/DEV-OPS-001-cursor-workflow-commands`。
-3. **不得**在本会话启动 DEV-002 或 DEV-OPS-002。
+1. **当前**：人工在 `main` 提交 `docs(plan): add DEV-OPS-002 cursor orchestrator subagents plan`。
+2. 随后从 `main` 创建 `feat/DEV-OPS-002-cursor-orchestrator-subagents`。
+3. 在 `/develop-task` 前置检查通过前保持 `approved`；不得进入 `in_progress`；不得创建 `.cursor/agents/**`、`.cursor/permissions.json`、`orchestrate-task`；不得修改既有五命令或治理规则；不得启动 DEV-002 实现。
+4. **完成后硬约束**（实施完成且 `completed` 之后）：`next_action` **必须**立即为 DEV-002；Phase B / DEV-OPS-003 不得插队。

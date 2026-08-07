@@ -60,6 +60,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | completed |
+| DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | approved |
+
+#### DEV-OPS-002 Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
+
+- **目标**：建立长期 Memory System Orchestrator；用户提供 `TASK_ID` + 目标后，按状态机调用六个独立角色 Subagent；Orchestrator 只编排且 fail-closed；Release Operator 为唯一候选 Git 写角色（受控 add/commit/push/PR）；`completed` 后**立即**进入 DEV-002。
+- **非目标**：改业务代码；实施期间改 DEV-002 业务范围；超级 Agent；自动 Merge / force push / 读 Secret；多任务并行调度；复杂嵌套 Subagent；本规划轮次创建 agents/权限文件；Phase B 排在 DEV-002 之前；插入 DEV-OPS-003。
+- **变更文件（预期）**：`.cursor/commands/orchestrate-task.md`；六个 `.cursor/agents/*.md`；`.cursor/permissions.json`；CLI 权限文件；强制契约测试；**实施阶段**修订治理例外文件 `.cursor/rules/00-memory-system-governance.mdc` 与 `03_AI_Prompts/00_全局开发规则.md`（窄例外）；本任务开发管理回写。
+- **测试**：静态契约（fail-closed / 退出码 / 角色隔离）；受监督低风险 E2E（全角色链路至 PR create；契约-only 不计）；人工 UI 冒烟。
+- **验收**：角色隔离；Orchestrator 不批准/不自写状态；Release 门禁 + 真实退出码；E2E 通过后方可 tested+；`completed` → `next_action=DEV-002`。
+- **Git 顺序**：独立 Review → `PLAN_APPROVED` → `approved` → 人工 `docs(plan)` on main → 创建 feat → Developer → Review → Release commit/push/PR → 人工 Merge → `completed` → **立即 DEV-002**。
+- **风险**：IDE permissions 非安全边界；`git push` 前缀与 `--force`；结束标记非结构化协议（OI-OPS-006–013）。
+- **计划文件**：`02_开发管理/tasks/DEV-OPS-002-cursor-orchestrator-subagents-release.md`
+- **状态备注**：`approved`（Round 2：BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0 / `PLAN_APPROVED`）；此时不得实施；下一步人工 `docs(plan)` on main，再创建 `feat/DEV-OPS-002-cursor-orchestrator-subagents`；未创建 agents/permissions；未改治理/五命令；未 Git 写。
 
 #### DEV-OPS-001 Cursor Agent 工作流自动化
 
@@ -71,7 +84,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **Git 顺序**：独立 Review → `PLAN_APPROVED` → `approved` → 人工 `docs(plan)` on main → 创建 `feat/DEV-OPS-001-cursor-workflow-commands` → Developer 实施。
 - **风险**：Commands 为 beta；产品参数机制未证实（见 Task Plan OI-OPS-001–005）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-001-cursor-agent-workflow-commands.md`
-- **状态备注**：`completed`（实现 Commit `69fabb7`；治理 committed `5d00a49`；PR #2 merged `57800c3`；completed_at 2026-08-06 15:30 UTC；最终 `docs(status)` 待 main 人工提交；随后删除功能分支）。
+- **状态备注**：`completed`。实现 Commit `69fabb7`；治理 committed `5d00a49`；PR #2 merged（`57800c3`）；completed 治理 Commit `5f34ccb`（`docs(status): complete DEV-OPS-001 after PR merge`）。
 
 #### DEV-001 项目骨架、依赖与质量工具
 
@@ -353,6 +366,16 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 原因 | 登记非业务任务 DEV-OPS-001：项目级 Cursor Slash Commands，降低长提示词重复粘贴；不改变 Phase 0–5 业务任务目标与依赖 |
 | 受影响任务 | 新增 `DEV-OPS-001`（Phase 0 补充）；**不**修改 DEV-001 完成状态；**不**改变 DEV-002+ 业务范围 |
 | 是否改变技术规格 | **否** |
-| 审批 | 初版曾 `PLAN_REJECTED`；Amendment 001 后 Round 2 复审通过（`PLAN_APPROVED`）；实现 Commit `69fabb7`；治理 committed `5d00a49`；PR #2 merged（`57800c3`）；状态 `completed`；最终 docs(status) 待提交 |
+| 审批 | 初版曾 `PLAN_REJECTED`；Amendment 001 后 Round 2 复审通过（`PLAN_APPROVED`）；实现 Commit `69fabb7`；治理 committed `5d00a49`；PR #2 merged（`57800c3`）；最终 docs(status) `5f34ccb`；状态 `completed` |
+
+### CHANGE-003
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-06 |
+| 原因 | 登记非业务任务 DEV-OPS-002：Orchestrator + 可复用 Subagents + 受控 Release Automation；降低多会话手工编排成本；不改变 Phase 0–5 业务任务目标与依赖 |
+| 受影响任务 | 新增 `DEV-OPS-002`（Phase 0 补充）；**不**修改 DEV-OPS-001 / DEV-001 完成状态；**不**改变 DEV-002+ 业务范围 |
+| 是否改变技术规格 | **否** |
+| 审批 | Round 1 曾 `PLAN_REJECTED`；Amendment 001 后 Round 2 通过（`PLAN_APPROVED`）；状态 `approved`；未实施 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
