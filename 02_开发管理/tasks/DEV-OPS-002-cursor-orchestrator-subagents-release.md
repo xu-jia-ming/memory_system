@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-002
 task_name: Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
-status: committed
+status: completed
 spec_sections:
   - "非业务规格任务：对齐仓库治理与 03_AI_Prompts 角色流程；扩展 DEV-OPS-001 工作流自动化；不修改技术规格正文"
 prerequisites:
@@ -15,10 +15,10 @@ prerequisites:
   - "规划轮次仅允许三份规划文档未提交变更；不得出现实现文件"
 branch: "feat/DEV-OPS-002-cursor-orchestrator-subagents"  # 实施分支；计划 Commit 在 main，见 §13
 created_at: "2026-08-06 15:50 UTC"
-updated_at: "2026-08-07 07:00 UTC"
+updated_at: "2026-08-07 07:16 UTC"
 approval_gates:
   planning_docs: "Round 2 复审通过；PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 0）"
-  implementation_plan: "status=committed；RELEASE_COMPLETED；implementation_commit=4943757；PR #4 open（base=main，未 merge）；status_record_commit_committed=null；等待 docs(status) 治理 Commit"
+  implementation_plan: "status=completed；PR #4 merged（5886cc6）；status_record_commit_committed=3c63f77；status_record_commit_completed=null；下一步 docs(status) complete 治理 Commit；立即进入 DEV-002"
 ```
 
 ## 2. 任务目标
@@ -824,6 +824,8 @@ governance_files_modified_this_round: false
 | 2026-08-07 05:05 UTC | 独立 Code Review 回写 | status=tested → reviewed；仅改治理文档 | CODE_REVIEW_APPROVED；P0/P1=0；P2/P3 已记录 | 下一步 Commit Recorder；implementation_commit=null；未 Git 写 |
 | 2026-08-07 07:00 UTC | 正式 Release | Release Operator：commit → push → gh pr create | RELEASE_COMPLETED；PR #4 open（base=main） | status → committed；implementation_commit=4943757；未 merge；E2E 证据分支保留 |
 | 2026-08-07 07:00 UTC | Release 后治理回写 | 仅改治理文档 | 记录 implementation commit / PR #4 / runtime note | status_record_commit_committed=null；下一步 docs(status) 治理 Commit |
+| 2026-08-07 07:11 UTC | PR #4 人工 Merge | feat → main | PR **MERGED**；merge_commit `5886cc6` | 正式功能分支本地/远端已删除；E2E 证据分支保留 |
+| 2026-08-07 07:16 UTC | completed 治理回写 | 仅改治理文档 | status=committed → completed | status_record_commit_committed=3c63f77；status_record_commit_completed=null；next_action=DEV-002 |
 
 ## 16. 实际执行结果
 
@@ -935,15 +937,17 @@ Implementation rounds:
 | Implementation commit message | `chore(cursor): add orchestrator, role subagents, and release permissions` |
 | Remote 核对 | `origin/feat/DEV-OPS-002-cursor-orchestrator-subagents` = `4943757a9e8545d55a7ac170e24cba7bb6fbafae` |
 | 正式 PR | **#4**（[https://github.com/xu-jia-ming/memory_system/pull/4](https://github.com/xu-jia-ming/memory_system/pull/4)） |
-| PR state | **OPEN**（not merged） |
+| PR state | **MERGED** |
 | PR base | `main` |
 | PR head | `feat/DEV-OPS-002-cursor-orchestrator-subagents` |
 | PR headRefOid | `4943757a9e8545d55a7ac170e24cba7bb6fbafae` |
+| Merge commit | `5886cc6057578db7687215761508f75de9336049` |
+| mergedAt | `2026-08-07T07:11:20Z` |
+| origin/main 核对 | `5886cc6057578db7687215761508f75de9336049` |
 | PR diff 人工核对 | 仅含 §5 精确白名单 **16 个文件**；无白名单外文件 |
-| Merge | **未执行** |
-| 分支删除 | **未执行** |
+| 正式功能分支清理 | local `feat/DEV-OPS-002-cursor-orchestrator-subagents`：**已删除**；remote：**已删除** |
 | 危险 Git 操作 | **未** force push / rebase / reset / clean |
-| E2E 证据分支 | `test/DEV-OPS-002-e2e-base` 与 `feat/DEV-OPS-002-e2e-smoke` **保留**（未删除） |
+| E2E 证据分支 | `test/DEV-OPS-002-e2e-base`（`b84e6ea`）与 `feat/DEV-OPS-002-e2e-smoke`（`0891cd5`）**保留**（未删除） |
 
 **Release runtime note（非阻塞）**：
 
@@ -1015,22 +1019,29 @@ implementation_review:
 ### Git 记录
 
 ```yaml
-implementation_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents
-current_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents
+implementation_branch: feat/DEV-OPS-002-cursor-orchestrator-subagents  # 已删除（local + remote）
+current_branch: main
 baseline_commit: 5f34ccbcb7a052131dbeedd17c68dbf6dc30c52d
 plan_commit: 261daa2ec7c998b7568a27724fb6b6616b3adb21
 implementation_commit: 4943757a9e8545d55a7ac170e24cba7bb6fbafae
 implementation_commit_message: "chore(cursor): add orchestrator, role subagents, and release permissions"
-implementation_pr: "#4"
-implementation_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/4"
-implementation_pr_state: OPEN
-implementation_pr_base: main
-implementation_pr_head: feat/DEV-OPS-002-cursor-orchestrator-subagents
-implementation_pr_head_ref_oid: 4943757a9e8545d55a7ac170e24cba7bb6fbafae
-implementation_pr_merged: false
+pr: "#4"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/4"
+pr_status: merged
+pr_merged: true
+pr_base: main
+pr_head: feat/DEV-OPS-002-cursor-orchestrator-subagents
+pr_head_ref_oid: 4943757a9e8545d55a7ac170e24cba7bb6fbafae
+merge_commit: 5886cc6057578db7687215761508f75de9336049
+merged_at: "2026-08-07T07:11:20Z"
+origin_main: 5886cc6057578db7687215761508f75de9336049
 implementation_pr_diff_verified: "§5 精确白名单 16 文件；无白名单外文件"
 release_operator_verdict: RELEASE_COMPLETED
-status_record_commit_committed: null
+status_record_commit_committed: 3c63f77222163f134b0741389f9fbeafe463b63e
+status_record_commit_committed_message: "docs(status): record DEV-OPS-002 implementation commit and PR"
+status_record_commit_completed: null
+implementation_branch_deleted_local: true
+implementation_branch_deleted_remote: true
 release_runtime_note: "shell git wrapper --trailer 因 Git 2.25.1 拒绝；改用 /usr/bin/git；commit 成功；hash 三方一致；非阻塞"
 e2e_test_base_branch: test/DEV-OPS-002-e2e-base
 e2e_test_base_hash: b84e6ead64c2bb3fdba2a1a819d22dec42398227
@@ -1043,9 +1054,9 @@ e2e_pr_head: feat/DEV-OPS-002-e2e-smoke
 e2e_pr_state: CLOSED
 e2e_pr_merged_at: null
 e2e_evidence_branches_preserved: true
-next_git_step: "在当前 feat 分支提交并 push 治理状态 Commit：docs(status): record DEV-OPS-002 implementation commit and PR；随后才允许人工审阅/合并 PR #4；status_record_commit_committed 待该 Commit 产生后回写；不得标 completed；Agent 不得代为 Merge"
+next_git_step: "在 main 提交并 push 最终治理状态 Commit：docs(status): complete DEV-OPS-002 after PR merge；status_record_commit_completed 待该 Commit 产生后回写；next_action 立即进入 DEV-002 业务规划/实施；不得插入 DEV-OPS-003 / Phase B"
 ```
 
 ### 最终状态
 
-`committed`
+`completed`

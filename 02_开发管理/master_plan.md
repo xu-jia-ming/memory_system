@@ -60,7 +60,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | completed |
-| DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | committed |
+| DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | completed |
 
 #### DEV-OPS-002 Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
 
@@ -72,7 +72,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **Git 顺序**：独立 Review → `PLAN_APPROVED` → `approved` → 人工 `docs(plan)` on main → 创建 feat → Developer → Review → Release commit/push/PR → 人工 Merge → `completed` → **立即 DEV-002**。
 - **风险**：IDE permissions 非安全边界；`git push` 前缀与 `--force`；结束标记非结构化协议（OI-OPS-006–013）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-002-cursor-orchestrator-subagents-release.md`
-- **状态备注**：`committed`（RELEASE_COMPLETED；implementation_commit `4943757`；PR #4 open、base=main、未 merge；status_record_commit_committed=null；下一步 docs(status) 治理 Commit；E2E 证据分支保留；不得启动 DEV-002 直至 completed）。
+- **状态备注**：`completed`（implementation_commit `4943757`；治理 committed `3c63f77`；PR #4 merged `5886cc6`；`mergedAt=2026-08-07T07:11:20Z`；正式功能分支已删；E2E 证据分支保留；`status_record_commit_completed=null`；下一步 docs(status) complete + **立即 DEV-002**）。
 
 #### DEV-OPS-001 Cursor Agent 工作流自动化
 
