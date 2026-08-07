@@ -4,19 +4,19 @@ Python monorepo for the Memory System MVP (API + extraction worker + consolidati
 
 ## Status
 
-**Phase 0 bootstrap is in progress.** This repository currently provides the DEV-001 project skeleton, locked dependencies, and quality tooling only.
+**Phase 0 infrastructure (DEV-003)** delivers Docker Compose topology, TEI Embedding deployment, and Linux host Preflight.
 
-- Compose, Docker images, Embedding service, and host Preflight are **not** available yet (DEV-003; see technical specification §3.17).
-- Configuration / `.env.example` is **not** available yet (DEV-002).
-- Business APIs, workers, migrations, and infrastructure clients are **not** implemented.
+- **Available**: `scripts/compose.sh` (唯一 Compose 入口), `scripts/start_embedding.sh`, `scripts/lock_tei_images.sh`, `scripts/preflight/check_linux_host.sh`, `versions.env` / `versions.lock.env`, multi-stage `Dockerfile`, full §3.3 Compose stack.
+- **Configuration**: `.env.example` + `configs/` (DEV-002).
+- **Not yet available**: Migration Runner (`scripts/migrate.py`, DEV-004), FastAPI application shell (DEV-005), TEI Embedding Client (DEV-006).
 
-Do not assume `docker compose` / Compose wrappers or application endpoints are runnable.
+**禁止**在脚本、CI 或文档示例中直接调用裸 `docker compose`；一律经 `./scripts/compose.sh`。
 
 ## Runtime
 
 - Python **3.12.13** (see `.python-version`)
 - Dependency management: **uv** with committed `uv.lock`
-- Build backend: **`uv_build`** as fixed in technical specification §3.5 (`requires = ["uv_build>=0.11.32,<0.13"]`, `build-backend = "uv_build"`)
+- Infrastructure image tags: `versions.env` + TEI digests in `versions.lock.env`
 
 ## Entrypoints (spec §3.2)
 
@@ -26,16 +26,82 @@ Do not assume `docker compose` / Compose wrappers or application endpoints are r
 | memory-extraction-worker | `python -m memory_system.entrypoints.extraction_worker` |
 | memory-consolidation-worker | `python -m memory_system.entrypoints.consolidation_worker` |
 
-Until later Phase 0 tasks wire settings and application services, these modules are safe to import but exit non-zero when executed.
+Until DEV-005 wires settings and application services, these modules are safe to import but exit non-zero when executed.
 
-## Local setup (after DEV-001)
+## Local setup
 
 ```bash
 uv sync --locked
-uv run pytest tests/unit
+cp .env.example .env   # edit secrets as needed
+```
+
+Quality gates:
+
+```bash
+uv run pytest tests/unit tests/contract tests/integration
 uv run ruff check .
 uv run mypy src tests
 ```
+
+## Standard startup (§3.17)
+
+All Compose operations go through `./scripts/compose.sh`.
+
+```bash
+# 1. Preflight (Linux host)
+bash scripts/preflight/check_linux_host.sh --mode=auto
+
+# 2. Lock TEI images (first time or after tag change)
+./scripts/lock_tei_images.sh --update
+
+# 3. Prepare environment
+cp .env.example .env
+
+# 4. Pull/build without embedding override
+./scripts/compose.sh --embedding=none pull
+./scripts/compose.sh --embedding=none build
+
+# 5. Start infrastructure
+./scripts/compose.sh --embedding=none \
+  up -d redis mongodb kafka neo4j elasticsearch
+
+# 6. Start embedding only (writes .runtime/embedding.env)
+./scripts/start_embedding.sh auto
+
+# 7. Initialize infrastructure (Migration Runner: DEV-004)
+./scripts/compose.sh --embedding=current run --rm init-infra
+
+# 8. Start application containers
+./scripts/compose.sh --embedding=current up -d \
+  memory-api memory-extraction-worker memory-consolidation-worker
+```
+
+### Useful commands
+
+```bash
+./scripts/compose.sh --embedding=current ps
+./scripts/compose.sh --embedding=current logs -f memory-api
+./scripts/compose.sh --embedding=current down          # keep volumes
+./scripts/compose.sh --embedding=current down -v      # destroy data (explicit)
+./scripts/compose.sh --stack=test --embedding=cpu config  # test stack
+```
+
+### Embedding modes
+
+| Script / flag | Behavior |
+| --- | --- |
+| `start_embedding.sh cpu` | CPU TEI, budget 4096 |
+| `start_embedding.sh gpu` | GPU TEI (RTX A5000), budget 16384; no auto-fallback |
+| `start_embedding.sh auto` | GPU-first; falls back to CPU |
+| `compose.sh --embedding=none` | No TEI override |
+| `compose.sh --embedding=current` | Read `.runtime/embedding.env` |
+
+### Rollback (DEV-003 Task Plan §13)
+
+1. `./scripts/compose.sh --embedding=current down` (no `-v`)
+2. Remove `.runtime/embedding.env`; re-run preflight + `start_embedding.sh`
+3. Restore `versions.lock.env` from Git if digest update was bad
+4. `rm -rf .runtime/`
 
 ## Specification
 

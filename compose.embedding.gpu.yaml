@@ -1,0 +1,48 @@
+# GPU TEI override (§3.10.4, RTX A5000 Ampere 8.6). Mutually exclusive with compose.embedding.cpu.yaml.
+services:
+  embedding-service:
+    image: ${TEI_GPU_IMAGE}
+    environment:
+      AUTO_TRUNCATE: "false"
+      HTTP_PROXY: ${PROXY__HTTP_URL}
+      HTTPS_PROXY: ${PROXY__HTTP_URL}
+      NO_PROXY: "localhost,127.0.0.1,redis,mongodb,kafka,neo4j,elasticsearch,embedding-service,memory-api,memory-extraction-worker,memory-consolidation-worker"
+    command:
+      - --model-id
+      - ${EMBEDDING_MODEL_ID}
+      - --revision
+      - ${EMBEDDING_MODEL_REVISION}
+      - --served-model-name
+      - ${EMBEDDING_MODEL_ID}
+      - --dtype
+      - float16
+      - --max-client-batch-size
+      - "64"
+      - --max-batch-tokens
+      - "16384"
+      - --max-batch-requests
+      - "16"
+      - --max-concurrent-requests
+      - "32"
+      - --json-output
+    volumes:
+      - embedding-model-cache:/data
+    mem_limit: 8g
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities:
+                - gpu
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - memory-system-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:80/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 120s

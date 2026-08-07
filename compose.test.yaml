@@ -1,0 +1,51 @@
+# Isolated test stack (§3.4 rule 8). Replaces compose.override.yaml when --stack=test.
+name: memory-system-test
+
+services:
+  redis:
+    container_name: memory-system-redis-test
+    volumes:
+      - redis-data-test:/data
+
+  mongodb:
+    container_name: memory-system-mongodb-test
+    environment:
+      MONGO_INITDB_DATABASE: memory_system_test
+    volumes:
+      - mongodb-data-test:/data/db
+
+  kafka:
+    container_name: memory-system-kafka-test
+    volumes:
+      - kafka-data-test:/var/lib/kafka/data
+
+  neo4j:
+    container_name: memory-system-neo4j-test
+    volumes:
+      - neo4j-data-test:/data
+      - neo4j-logs-test:/logs
+
+  elasticsearch:
+    container_name: memory-system-elasticsearch-test
+    volumes:
+      - elasticsearch-data-test:/usr/share/elasticsearch/data
+
+  memory-api:
+    container_name: memory-system-api-test
+
+  memory-extraction-worker:
+    container_name: memory-system-extraction-worker-test
+
+  memory-consolidation-worker:
+    container_name: memory-system-consolidation-worker-test
+
+  init-infra:
+    container_name: memory-system-init-infra-test
+
+volumes:
+  redis-data-test:
+  mongodb-data-test:
+  kafka-data-test:
+  neo4j-data-test:
+  neo4j-logs-test:
+  elasticsearch-data-test:

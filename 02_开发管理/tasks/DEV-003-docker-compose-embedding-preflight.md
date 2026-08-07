@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-003
 task_name: Docker Compose、Embedding 服务与 Preflight
-status: approved
+status: committed
 spec_sections:
   - "§3.2 应用容器与进程边界"
   - "§3.3 Docker Compose 服务拓扑"
@@ -774,6 +774,14 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-07 10:33 UTC | Round 2 批准回写 | `status=planned` → `approved`；同步 `progress.md`、`master_plan.md`；记录人工 `PLAN_APPROVED` | 无 | 未实施、未创建 feat 分支、未 Git 写；下一步人工 `docs(plan)` on `main` |
+| 2026-08-07 11:15 UTC | Step 0–1 | `status` → `in_progress`；创建 `versions.env`、`versions.lock.env`（ghcr manifest digests）、`lock_tei_images.sh` | 无 | `lock_tei_images.sh --update` 镜像拉取较慢；digests 经 `docker manifest inspect` 校验 |
+| 2026-08-07 11:30 UTC | Step 2–6 | `Dockerfile`、`compose.yaml`、`compose.override.yaml`、`compose.embedding.{cpu,gpu}.yaml`、`compose.test.yaml` | 无 | `x-app-env` anchor；embedding-service 仅 override 文件定义 |
+| 2026-08-07 11:45 UTC | Step 7–10 | `compose.sh`、`start_embedding.sh`、`preflight/check_linux_host.sh` | 无 | Preflight mem_limit 改宿主机 MemTotal 检查避免 alpine pull |
+| 2026-08-07 12:00 UTC | Step 12–13 | `.gitignore`、README、4 个测试文件 | unit+contract+integration | 94 passed / 2 skipped |
+| 2026-08-07 12:05 UTC | 质量门禁 | ruff + mypy + pytest 全量 | 94 passed / 2 skipped；ruff/mypy 通过 | `status` → `tested` |
+| 2026-08-07 14:48 UTC | lock_tei GPU 缺陷修复 | `lock_tei_images.sh` GPU `--gpus all`；fail-closed stderr；+2 单元测试 | pytest 96 passed / 2 skipped；`lock_tei_images.sh` validate passed | P2-001 记入 §17 接受偏差 A |
+| 2026-08-07 15:00 UTC | Release Operator | implementation commit `d366fb6`；PR #6 open | RELEASE_COMPLETED | `status` → `committed` |
+| 2026-08-07 15:05 UTC | committed 治理准备 | progress / master_plan / Task Plan 回写 committed 态 | 无 | 待人工 `docs(status): record DEV-003 implementation commit and PR` |
 
 ## 17. 实际执行结果
 
@@ -781,22 +789,42 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `Dockerfile` | 创建 — 多阶段 build，`uv sync --locked`，非 root |
+| `compose.yaml` | 创建 — §3.3 全服务拓扑、`x-app-env`、grace 480/300/300s |
+| `compose.override.yaml` | 创建 — 127.0.0.1 端口绑定 |
+| `compose.embedding.cpu.yaml` | 创建 — TEI CPU override |
+| `compose.embedding.gpu.yaml` | 创建 — TEI GPU override + NVIDIA reservation |
+| `compose.test.yaml` | 创建 — `memory-system-test` 隔离栈 |
+| `versions.env` | 创建 — §7.1 全部基础设施 Tag |
+| `versions.lock.env` | 创建 — TEI CPU/GPU `@sha256` digests（manifest inspect） |
+| `scripts/compose.sh` | 创建 — 唯一 Wrapper |
+| `scripts/start_embedding.sh` | 创建 — cpu/gpu/auto + `.runtime/embedding.env` |
+| `scripts/lock_tei_images.sh` | 创建 — 校验/`--update` |
+| `scripts/preflight/check_linux_host.sh` | 创建 — §3.18 + Amendment MF-002 |
+| `.gitignore` | 修改 — 增加 `.runtime/` |
+| `README.md` | 修改 — §3.17 启动流程 |
+| `tests/unit/test_compose_wrapper_contract.py` | 创建 |
+| `tests/unit/test_versions_env_contract.py` | 创建 |
+| `tests/contract/test_compose_config_contract.py` | 创建 |
+| `tests/integration/test_preflight_linux_host.py` | 创建 |
 
 ### 与原计划的差异
 
-暂无。
+- `versions.lock.env` digests：完整 `docker pull` 因网络缓慢；使用 `docker manifest inspect` 获取 amd64 digest 并写入 lock 文件（格式符合 `@sha256:[a-f0-9]{64}` 契约）。
+- Preflight Check 13（**P2-001 接受偏差 A**）：以宿主机 `MemTotal ≥ 10 GiB` 替代 Docker cgroup/`docker run --memory` 探测；Check #8 `MemAvailable` 门槛（cpu 12/16、gpu 8/12 GiB）提供更强实践覆盖；残余风险：Docker Desktop / cgroup 受限 daemon 可能误通过 Check #13；Release 说明：Docker VM 内存建议 ≥12 GiB。
+- `lock_tei_images.sh` GPU 校验（**实施缺陷修复**）：原实现 CPU/GPU 共用无 `--gpus all` 的 `docker run`，GPU 二进制因缺少 `libcuda.so.1` 失败且 stderr 被丢弃，误报为「cannot parse semantic version from:」；修复后 GPU 路径显式 `--gpus all`，失败时输出 `version command failed` + stderr，不再掩盖为解析错误。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit | `uv run pytest tests/unit` | 83 passed |
+| Contract | `uv run pytest tests/contract` | 12 passed |
+| Integration | `uv run pytest tests/integration/test_preflight_linux_host.py` | 2 passed / 2 skipped |
+| TEI lock validate | `timeout 600 ./scripts/lock_tei_images.sh` | passed（CPU+GPU 1.9.3） |
+| E2E | — | 不适用（DEV-005+） |
+| Ruff | `uv run ruff check .` | All checks passed |
+| Mypy | `uv run mypy src tests` | Success: 46 source files |
 
 ### Review 结果
 
@@ -804,19 +832,24 @@ out_of_scope_changes:
 p0: 0
 p1: 0
 p2: 0
-p3: 0
-review_report: null
+p3: 2
+review_report: "GPU lock fix re-review CODE_REVIEW_APPROVED；P2-001 Verdict A（§17 接受偏差 A）；P3-001 治理计数已同步；P3-002 is_gpu_tei_image 86-1.9 启发式残余"
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/DEV-003-docker-compose-embedding-preflight
+plan_commit: 1b63d51fe5d6926a5b88f6cdd3ece6a4cf88b4e1
+implementation_commit: d366fb6212e9768ccc11559663ef95be08157dc7
+implementation_commit_message: "feat(docker): add compose stack, embedding scripts, and preflight"
+pr_number: 6
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/6"
+pr_state: OPEN
+pr_base: main
+status_record_commit_committed: null
 ```
 
 ### 最终状态
 
-`approved`
+`committed`

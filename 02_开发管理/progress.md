@@ -7,12 +7,12 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-003
-current_task_status: approved
-current_branch: main
+current_task_status: committed
+current_branch: feat/DEV-003-docker-compose-embedding-preflight
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-003-docker-compose-embedding-preflight.md
-latest_commit: 0b91a341c0842b73ae33e55e57a23e2cb0e4ce11
-plan_commit: null
+latest_commit: d366fb6212e9768ccc11559663ef95be08157dc7
+plan_commit: 1b63d51fe5d6926a5b88f6cdd3ece6a4cf88b4e1
 previous_task: DEV-002
 previous_task_status: completed
 previous_task_completed_at: "2026-08-07 09:44 UTC"
@@ -20,23 +20,24 @@ previous_implementation_commit: f55732cdfc48eda66cc1fac2218e9f4afe03ec2e
 previous_implementation_commit_message: "feat(settings): add pydantic settings, yaml loader, and env example"
 previous_status_record_commit_committed: 8c9f9de349024f5ed793098a809244b1c6163b3f
 previous_status_record_commit_committed_message: "docs(status): record DEV-002 implementation commit and PR"
-previous_status_record_commit_completed: null
+previous_status_record_commit_completed: 0b91a341c0842b73ae33e55e57a23e2cb0e4ce11
 previous_pr: "#5"
 previous_pr_status: merged
 previous_merge_commit: 7fba54427ead5bcbde4a5e4141d83bec0e7f7477
-next_action: 人工在 main 提交 docs(plan): add DEV-003 docker compose embedding preflight plan；随后从 main 创建 feat/DEV-003-docker-compose-embedding-preflight 并 /develop-task（不得在未 docs(plan) 前实施）
+next_action: 人工 Review/Merge PR #6（base=main）；Merge 后执行 docs(status): complete DEV-003 after PR merge
 ```
 
 ## 测试状态
 
 | 测试层级 | 状态 | 最近命令 | 最近结果 |
 |---|---|---|---|
-| Unit | passed | `uv run pytest tests/unit` | 70 passed（含 DEV-002 settings 28 + DEV-001/DEV-OPS 既有 42） |
-| Contract | passed | `uv run pytest tests/contract/test_env_example_contract.py` | 4 passed |
-| Integration | n/a | - | 不适用 |
+| Unit | passed | `uv run pytest tests/unit` | 83 passed（含 DEV-003 compose/versions 12 + 既有 71） |
+| Contract | passed | `uv run pytest tests/contract` | 12 passed（含 compose config 8 + env example 4） |
+| Integration | passed | `uv run pytest tests/integration/test_preflight_linux_host.py` | 2 passed / 2 skipped |
+| TEI lock validate | passed | `timeout 600 ./scripts/lock_tei_images.sh` | CPU+GPU 1.9.3（GPU `--gpus all` 修复后） |
 | E2E | n/a | - | 不适用 |
 | Ruff | passed | `uv run ruff check .` | All checks passed |
-| Mypy | passed | `uv run mypy src tests` | Success: 42 source files |
+| Mypy | passed | `uv run mypy src tests` | Success: 46 source files |
 | UI discovery（§9 / OI-OPS-005 延续） | passed（DEV-OPS-002） | 人工 `/` 菜单 | 七项均可发现：`/orchestrate-task`、`/planner`、`/plan-reviewer`、`/developer`、`/code-reviewer`、`/commit-recorder`、`/release-operator`（2026-08-07 02:40 UTC） |
 | E2E 冒烟（§9） | passed（DEV-OPS-002） | 受监督完整编排链路 | PR #3；`0891cd5`；测试 PR 已关闭（未 merge）；E2E 分支保留 |
 
@@ -87,9 +88,11 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | CODE_REVIEW_APPROVED（DEV-OPS-002 实现） | **已通过**（P0=0 / P1=0 / P2=4 / P3=3；P2/P3 为 residual/backlog，不阻塞） |
 | RELEASE_COMPLETED（DEV-OPS-002 实现） | **已完成**；implementation_commit `4943757`；PR #4 merged（`5886cc6`） |
 | PLAN_APPROVED（DEV-002 计划） | **已通过**（Round 2；Amendment 001）；plan_commit `ceff988` |
-| PLAN_APPROVED（DEV-003 计划） | **已通过**（Round 1 `PLAN_REJECTED`；Amendment 001；Round 2 `PLAN_APPROVED` BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 5 非阻塞）；人工确认 2026-08-07 10:33 UTC；`plan_commit=null`（待 docs(plan) on main） |
+| PLAN_APPROVED（DEV-003 计划） | **已通过**（Round 1 `PLAN_REJECTED`；Amendment 001；Round 2 `PLAN_APPROVED`）；plan_commit `1b63d51`；人工确认 2026-08-07 10:33 UTC |
 | CODE_REVIEW_APPROVED（DEV-002 实现） | **已通过**（P0=0 / P1=0 / P2=2 / P3=2；P2-001 由 Amendment 002 关闭；不阻塞 Release） |
 | RELEASE_COMPLETED（DEV-002 实现） | **已完成**；implementation_commit `f55732c`；PR #5 merged（`7fba544`） |
+| CODE_REVIEW_APPROVED（DEV-003 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=2；P2-001 Verdict A 接受偏差；GPU lock 修复后复审） |
+| RELEASE_COMPLETED（DEV-003 实现） | **已完成**；implementation_commit `d366fb6`；PR #6 open（base=main，未 merge） |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -162,20 +165,23 @@ DEV-OPS-002：步骤 1–10 均已完成（实现 Commit `4943757`；治理 comm
 
 DEV-002：步骤 1–12 均已完成（实现 Commit `f55732c`；治理 committed `8c9f9de`；PR #5 Merge `7fba544`；completed 治理 Commit `0b91a34`）。功能分支删除待人工执行。
 
-## DEV-003 Git 流程（approved，未实施）
+## DEV-003 Git 流程（committed，PR open）
 
 ```text
 1. 独立 Plan Review Round 1 → PLAN_REJECTED（MF-001 + MF-002 + SF-001–005）
 2. Planner Amendment 001 修订
 3. 独立 Plan Review Round 2 → PLAN_APPROVED
-4. 人工确认 PLAN_APPROVED → approved（2026-08-07 10:33 UTC）← 当前
-5. 人工在 main 提交 docs(plan): add DEV-003 docker compose embedding preflight plan ← 待执行
+4. 人工确认 PLAN_APPROVED → approved（2026-08-07 10:33 UTC）
+5. 人工在 main 提交 docs(plan)（`1b63d51`）
 6. 从 main 创建 feat/DEV-003-docker-compose-embedding-preflight
-7. /develop-task：approved → in_progress；实施 §5 白名单
-8. Code Review → Release Operator → docs(status) committed → 人工 Merge PR → completed
+7. Developer 实施 → tested → reviewed（GPU lock 修复 + P2-001 Verdict A）
+8. Release Operator：implementation commit `d366fb6` + PR #6 open ← 当前
+9. docs(status): record DEV-003 implementation commit and PR ← 本轮回写待提交
+10. 人工 Merge PR #6 → main
+11. docs(status): complete DEV-003 after PR merge（main；治理状态 completed）
 ```
 
-DEV-003：步骤 1–4 已完成；步骤 5 待人工在 `main` 提交 `docs(plan)`；未创建 feat 分支；未实施、未 Git 写。
+DEV-003：步骤 1–8 已完成（实现 Commit `d366fb6`；PR #6 **open**；`status_record_commit_committed=null`）。步骤 9 治理回写已准备（未 Git 写）。步骤 10–11 待人工 Merge 后执行。
 
 ## 最近执行记录
 
@@ -232,11 +238,14 @@ DEV-003：步骤 1–4 已完成；步骤 5 待人工在 `main` 提交 `docs(pla
 | 2026-08-07 09:44 UTC | DEV-002 | committed → completed | PR #5 merged 至 main（Merge Commit `7fba544`）；`current_task` → DEV-003 | status_record_commit_completed=null；下一步 docs(status) complete + DEV-003 规划 |
 | 2026-08-07 10:30 UTC | DEV-003 | planned（Amendment 001 / Round 2） | Round 1 PLAN_REJECTED（MF-001 env 注入、MF-002 Preflight §3.18、SF-001–005）；已修订 Task Plan §7.6/Step 10/§11–§13/Amendment 001；progress/master_plan 同步 | 未实施、未 Git 写；status 保持 planned；等待 Plan Review Round 2 |
 | 2026-08-07 10:33 UTC | DEV-003 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 5 非阻塞）；人工确认 PLAN_APPROVED；治理回写 Task Plan / progress / master_plan | 未实施、未创建 feat 分支、未 Git 写；下一步人工 docs(plan) on main |
+| 2026-08-07 12:05 UTC | DEV-003 | approved → in_progress → tested | Developer 实施 §5 白名单：Compose 拓扑、Embedding 脚本、Preflight、测试；94 passed / 2 skipped；ruff/mypy 通过 | 未 Git 写；`versions.lock.env` digests 经 manifest inspect；待 Code Review |
+| 2026-08-07 14:48 UTC | DEV-003 | tested → reviewed | GPU lock `--gpus all` 修复；pytest 96 passed / 2 skipped；`lock_tei_images.sh` validate passed | P2-001 Verdict A 记入 §17 |
+| 2026-08-07 15:00 UTC | DEV-003 | reviewed → committed | Release Operator RELEASE_COMPLETED；PR #6 open（base=main）；implementation_commit `d366fb6` | 治理 docs(status) committed 待提交 |
+| 2026-08-07 15:05 UTC | DEV-003 | committed（治理准备） | 回写 progress / Task Plan / master_plan 为 committed 态；记录 PR #6 OPEN | 未 Git 写；待人工 `docs(status): record DEV-003 implementation commit and PR` |
 
 ## 下一任务
 
-1. **当前**：DEV-003 状态 **`approved`**；Task Plan `02_开发管理/tasks/DEV-003-docker-compose-embedding-preflight.md`；`main` @ `0b91a34`；`plan_commit=null`。
-2. **立即下一动作（人工）**：在 **`main`** 提交 **`docs(plan): add DEV-003 docker compose embedding preflight plan`**（含 Task Plan 与 governance 更新）。
-3. 随后从 `main` 创建 **`feat/DEV-003-docker-compose-embedding-preflight`**，再调用 `/develop-task` 进入 `in_progress` 实施。
-4. 不得插入 DEV-OPS-003、Phase B 或其他 Cursor workflow 优化于 DEV-003 实施之前。
-5. 功能分支 `feat/DEV-002-config-system-env-example` 删除待人工执行。
+1. **当前**：DEV-003 状态 **`committed`**；实现 Commit **`d366fb6`**；PR **#6 open**（https://github.com/xu-jia-ming/memory_system/pull/6）；分支 `feat/DEV-003-docker-compose-embedding-preflight`。
+2. **立即下一动作（人工）**：在 feat 分支提交 **`docs(status): record DEV-003 implementation commit and PR`**。
+3. **随后**：人工 Review/Merge PR #6 → `main`；再提交 **`docs(status): complete DEV-003 after PR merge`**。
+4. 不得插入 DEV-OPS-003、Phase B 或其他 workflow 优化于 DEV-004 之前（DEV-003 Merge 后进入 DEV-004 规划/实施）。

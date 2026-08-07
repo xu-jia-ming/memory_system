@@ -44,6 +44,7 @@ coverage.xml
 Thumbs.db
 
 # Runtime / local data
+.runtime/
 logs/
 tmp/
 temp/
