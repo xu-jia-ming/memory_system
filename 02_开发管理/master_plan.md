@@ -50,7 +50,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | DEV-001 | 项目骨架、依赖与质量工具 | §3.4, §3.5, §3.2, §3.28 | 无 | completed |
 | DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | completed |
-| DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | committed |
+| DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | completed |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | planned |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | planned |
 | DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003 | planned |
@@ -119,7 +119,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **Git**：`docs(plan)` on `main` → `feat/DEV-003-docker-compose-embedding-preflight` → `feat(docker): add compose stack, embedding scripts, and preflight`。
 - **风险**：TEI 镜像拉取体积/代理；GPU/A5000 环境可选；`init-infra run` 在 DEV-004 前预期失败；`vm.max_map_count` 宿主机要求。
 - **计划文件**：`02_开发管理/tasks/DEV-003-docker-compose-embedding-preflight.md`
-- **状态备注**：`committed`（plan_commit `1b63d51`；implementation_commit `d366fb6`；PR #6 open base=main；`status_record_commit_committed=null`；P2-001 接受偏差 A；GPU lock `--gpus all` 已修复；TEI validate-only passed；下一步人工 Merge PR #6 + docs(status) complete）
+- **状态备注**：`completed`（plan_commit `1b63d51`；implementation_commit `d366fb6`；治理 committed `ad493be`；PR #6 merged `0ac80e566fdd33c41b813803af43a0b4ca237e9b`；`status_record_commit_completed=null`；P2-001 接受偏差 A；GPU lock `--gpus all`；TEI validate-only passed；下一步 **DEV-004** 业务规划）
 
 #### DEV-004 Migration Runner 与基础设施初始化
 

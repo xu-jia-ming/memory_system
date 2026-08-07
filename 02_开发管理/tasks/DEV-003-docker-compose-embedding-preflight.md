@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-003
 task_name: Docker Compose、Embedding 服务与 Preflight
-status: committed
+status: completed
 spec_sections:
   - "§3.2 应用容器与进程边界"
   - "§3.3 Docker Compose 服务拓扑"
@@ -782,6 +782,8 @@ out_of_scope_changes:
 | 2026-08-07 14:48 UTC | lock_tei GPU 缺陷修复 | `lock_tei_images.sh` GPU `--gpus all`；fail-closed stderr；+2 单元测试 | pytest 96 passed / 2 skipped；`lock_tei_images.sh` validate passed | P2-001 记入 §17 接受偏差 A |
 | 2026-08-07 15:00 UTC | Release Operator | implementation commit `d366fb6`；PR #6 open | RELEASE_COMPLETED | `status` → `committed` |
 | 2026-08-07 15:05 UTC | committed 治理准备 | progress / master_plan / Task Plan 回写 committed 态 | 无 | 待人工 `docs(status): record DEV-003 implementation commit and PR` |
+| 2026-08-07 15:08 UTC | committed 治理落盘 | 人工 Commit `ad493be` | PR #6 待 merge | — |
+| 2026-08-07 15:10 UTC | PR #6 merged | Merge Commit `0ac80e5` on `main` | — | `status` → `completed`（治理待 complete 落盘） |
 
 ## 17. 实际执行结果
 
@@ -845,11 +847,14 @@ implementation_commit: d366fb6212e9768ccc11559663ef95be08157dc7
 implementation_commit_message: "feat(docker): add compose stack, embedding scripts, and preflight"
 pr_number: 6
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/6"
-pr_state: OPEN
+pr_state: MERGED
 pr_base: main
-status_record_commit_committed: null
+merge_commit: 0ac80e566fdd33c41b813803af43a0b4ca237e9b
+status_record_commit_committed: ad493be85cc4c4c56ccce908ae6cced08c66e80d
+status_record_commit_committed_message: "docs(status): record DEV-003 implementation commit and PR"
+status_record_commit_completed: null
 ```
 
 ### 最终状态
 
-`committed`
+`completed`
