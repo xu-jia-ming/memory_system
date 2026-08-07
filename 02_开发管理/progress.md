@@ -7,11 +7,11 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-002
-current_task_status: reviewed
+current_task_status: committed
 current_branch: feat/DEV-002-config-system-env-example
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-002-config-system-env-example.md
-latest_commit: ceff988
+latest_commit: f55732c
 plan_commit: ceff988
 previous_task: DEV-OPS-002
 previous_task_status: completed
@@ -24,7 +24,7 @@ previous_status_record_commit_completed: null
 previous_pr: "#4"
 previous_pr_status: merged
 previous_merge_commit: 5886cc6057578db7687215761508f75de9336049
-next_action: 人工确认 Release 后调用 Release Operator（精确 git add → commit → push → gh pr create）；**禁止**人工直接 implementation commit
+next_action: 人工 Review/Merge PR #5（base=main）；Merge 后执行 docs(status) 治理回写
 ```
 
 ## 测试状态
@@ -87,6 +87,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（DEV-OPS-002 实现） | **已完成**；implementation_commit `4943757`；PR #4 merged（`5886cc6`） |
 | PLAN_APPROVED（DEV-002 计划） | **已通过**（Round 2；Amendment 001）；plan_commit `ceff988` |
 | CODE_REVIEW_APPROVED（DEV-002 实现） | **已通过**（P0=0 / P1=0 / P2=2 / P3=2；P2-001 由 Amendment 002 关闭；不阻塞 Release） |
+| RELEASE_COMPLETED（DEV-002 实现） | **已完成**；implementation_commit `f55732c`；PR #5 open（base=main） |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -209,10 +210,10 @@ DEV-002：步骤 1–4 已完成（Round 1 `PLAN_REJECTED` 与 Amendment 001 历
 | 2026-08-07 08:15 UTC | DEV-002 | in_progress → tested | Developer 实施 settings/configs/.env.example/测试；质量门禁全通过 | settings_customise_sources 顺序调整见 Task Plan §17；未 Git 写；待 Code Review |
 | 2026-08-07 08:25 UTC | DEV-002 | tested → reviewed | 独立 Code Review CODE_REVIEW_APPROVED；P0/P1=0；P2=3/P3=2 已记录 | Commit Recorder READY_FOR_HUMAN_COMMIT；implementation_commit=null；未 Git 写 |
 | 2026-08-07 08:52 UTC | DEV-002 | reviewed（Amendment 002） | 纠正 pydantic-settings 2.14 tuple 语义文档；新增 Amendment 002；未改业务实现 | CODE_REVIEW_APPROVED 仍有效；P2-001 关闭；待 Release Operator |
+| 2026-08-07 09:00 UTC | DEV-002 | reviewed → committed | Release Operator RELEASE_COMPLETED；PR #5 open（base=main） | implementation_commit `f55732c`；治理回写待本地落盘 |
 
 ## 下一任务
 
-1. **当前**：DEV-002 状态 **`reviewed`**；`CODE_REVIEW_APPROVED`；Amendment 002 已落盘；Commit Recorder 草稿仍有效。
-2. **下一步（人工 Release 门禁）**：确认后调用 **Release Operator** 执行受控 `git add`（白名单精确路径）→ `git commit` → `git push` → `gh pr create` → 远端/PR 核验。
-3. **禁止**：人工直接执行 implementation `git add` / `git commit`；不得插入 DEV-OPS-003 等于 DEV-002 Release 之前。
-4. plan_commit `ceff988`；implementation_commit 待 Release Operator 提交后回写。
+1. **当前**：DEV-002 状态 **`committed`**；PR [#5](https://github.com/xu-jia-ming/memory_system/pull/5) OPEN（base=main，head=feat/DEV-002-config-system-env-example）。
+2. **下一步**：人工 Review/Merge PR #5；Merge 后执行 `docs(status): complete DEV-002 after PR merge`。
+3. plan_commit `ceff988`；implementation_commit `f55732cdfc48eda66cc1fac2218e9f4afe03ec2e`。

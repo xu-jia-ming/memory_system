@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-002
 task_name: 配置系统与 .env.example
-status: tested
+status: committed
 spec_sections:
   - "§1.2.6 Context Compression Trigger Strategy（context YAML 与跨字段校验）"
   - "§2.1.4 / §2.1.6 memory_extraction YAML"
@@ -592,6 +592,7 @@ Code Review Round 1（P2-001）已确认该测试通过且功能优先级正确�
 | 2026-08-07 08:15 UTC | Developer 实施 | 创建 settings 包（loader/sources/models/validators）、configs/*.yaml、.env.example、check_env_example.py、单元/契约测试 | `uv run pytest` 74 passed；ruff/mypy/check_env_example 通过 | settings_customise_sources 顺序因 pydantic-settings 2.14 deep_update 语义调整为 env→dotenv→yaml→init（功能优先级仍为 env>yaml>defaults）；见 §17 |
 | 2026-08-07 08:25 UTC | Code Review + Commit Recorder | tested → reviewed；Commit Recorder 输出提交草稿 | Orchestrator 复跑 74 pytest / ruff / mypy / check_env_example 通过 | CODE_REVIEW_APPROVED P0/P1=0；未 Git 写 |
 | 2026-08-07 08:52 UTC | Amendment 002 治理纠正 | 纠正 §Step 2 / §12 对 pydantic-settings 2.14 tuple 语义；新增 Amendment 002；同步 progress/master_plan | 无（未改业务实现） | CODE_REVIEW_APPROVED 仍有效；待 Release Operator |
+| 2026-08-07 09:00 UTC | Release Operator | 受控 git add（16 路径白名单）→ commit → push → gh pr create | PR #5 OPEN；remote/local HEAD 一致 | implementation_commit `f55732c`；待人工 Review/Merge PR |
 
 ## 17. 实际执行结果
 
@@ -643,10 +644,13 @@ review_report: "P2-001 closed by Amendment 002 (tuple doc corrected); P2-002 APP
 ```yaml
 branch: feat/DEV-002-config-system-env-example
 plan_commit: ceff988
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: f55732cdfc48eda66cc1fac2218e9f4afe03ec2e
+implementation_commit_message: "feat(settings): add pydantic settings, yaml loader, and env example"
+pr_number: 5
+pr_url: https://github.com/xu-jia-ming/memory_system/pull/5
+pr_state: OPEN
 ```
 
 ### 最终状态
 
-`reviewed`
+`committed`
