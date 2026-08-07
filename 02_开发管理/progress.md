@@ -7,11 +7,11 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-002
-current_task_status: planned
+current_task_status: approved
 current_branch: main
 target_default_branch: main
-current_plan_file: null
-latest_commit: 5886cc6057578db7687215761508f75de9336049
+current_plan_file: 02_开发管理/tasks/DEV-002-config-system-env-example.md
+latest_commit: f4fab24
 previous_task: DEV-OPS-002
 previous_task_status: completed
 previous_task_completed_at: "2026-08-07 07:11 UTC"
@@ -23,7 +23,7 @@ previous_status_record_commit_completed: null
 previous_pr: "#4"
 previous_pr_status: merged
 previous_merge_commit: 5886cc6057578db7687215761508f75de9336049
-next_action: 立即进入 DEV-002（配置系统与 .env.example）业务规划/实施；不得插入 DEV-OPS-003、Phase B 或其他 Cursor workflow 优化任务于 DEV-002 之前；在 main 提交最终治理 Commit：docs(status): complete DEV-OPS-002 after PR merge；E2E 证据分支保留；本轮不实际开始 DEV-002 实现编码
+next_action: 人工在 main 提交 docs(plan): add DEV-002 config system and env example plan；然后创建 feat/DEV-002-config-system-env-example；不得在未 docs(plan) 前实施编码
 ```
 
 ## 测试状态
@@ -84,6 +84,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | PLAN_APPROVED（DEV-OPS-002 计划） | **已通过**（Round 2）；plan Commit `261daa2`；状态 `completed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-002 实现） | **已通过**（P0=0 / P1=0 / P2=4 / P3=3；P2/P3 为 residual/backlog，不阻塞） |
 | RELEASE_COMPLETED（DEV-OPS-002 实现） | **已完成**；implementation_commit `4943757`；PR #4 merged（`5886cc6`） |
+| PLAN_APPROVED（DEV-002 计划） | **已通过**（Round 2；Amendment 001；BLOCKER 0 / MUST_FIX 0）；人工确认 2026-08-07 08:03 UTC；`status=approved`；plan_commit 待人工 docs(plan) |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -135,9 +136,25 @@ DEV-OPS-001：步骤 1–10 均已完成（实现 Commit `69fabb7`；治理 comm
    — Phase B / DEV-OPS-003 不得插队
 ```
 
-DEV-OPS-002：步骤 1–9 均已完成（实现 Commit `4943757`；治理 committed `3c63f77`；PR #4 Merge `5886cc6`；`mergedAt=2026-08-07T07:11:20Z`）。正式功能分支本地与远程已删除。E2E 证据分支 `test/DEV-OPS-002-e2e-base`（`b84e6ea`）与 `feat/DEV-OPS-002-e2e-smoke`（`0891cd5`）保留。步骤 10 待人工在 main 提交 completed 治理 Commit。
+DEV-OPS-002：步骤 1–10 均已完成（实现 Commit `4943757`；治理 committed `3c63f77`；PR #4 Merge `5886cc6`；completed 治理 Commit `f4fab24`）。正式功能分支本地与远程已删除。E2E 证据分支保留。
 
-受监督 E2E 冒烟（实施验收强制）：专用低风险 feat 分支；人工确认后 Release；PR create 后停止；失败 halt 并回退 DEV-OPS-001 五命令。
+## DEV-002 Git 流程（进行中）
+
+```text
+1. 独立 Plan Review Round 1 → PLAN_REJECTED（MF-001 + SF-001–SF-006）
+2. Planner Amendment 001 修订
+3. 独立 Plan Review Round 2 → PLAN_APPROVED
+4. 人工确认 PLAN_APPROVED → approved（Task Plan / master_plan / progress；此时不得实施）  ← 当前
+5. 人工在 main 提交 docs(plan): add DEV-002 config system and env example plan
+6. 从 main 创建 feat/DEV-002-config-system-env-example
+7. Developer 实施：approved → in_progress → …
+8. Code Review → Commit Recorder → Release Operator push/PR
+9. docs(status) 治理 Commit（committed 状态落盘）
+10. 人工 Merge PR → main
+11. docs(status): complete DEV-002 after PR merge（completed）
+```
+
+DEV-002：步骤 1–4 已完成（Round 1 `PLAN_REJECTED` 与 Amendment 001 历史已保留；Round 2 `PLAN_APPROVED`；人工确认 `APP_ENV` 仅 development/test、无 production.yaml；`status=approved`；未实施、未 Git 写）。步骤 5 待人工执行。
 
 ## 最近执行记录
 
@@ -185,11 +202,14 @@ DEV-OPS-002：步骤 1–9 均已完成（实现 Commit `4943757`；治理 commi
 | 2026-08-07 07:00 UTC | DEV-OPS-002 | committed（治理落盘） | 人工 Commit `3c63f77`（`docs(status): record DEV-OPS-002 implementation commit and PR`） | PR #4 待人工 merge |
 | 2026-08-07 07:11 UTC | DEV-OPS-002 | committed → completed | PR #4 merged 至 main（Merge Commit `5886cc6`）；`mergedAt=2026-08-07T07:11:20Z` | 正式功能分支本地/远端已删除；E2E 证据分支保留 |
 | 2026-08-07 07:16 UTC | DEV-OPS-002 | completed（治理回写） | 仅改治理文档；`current_task` → DEV-002 | status_record_commit_completed=null；下一步 docs(status) complete |
+| 2026-08-07 07:32 UTC | DEV-002 | planned（Round 1 规划） | 创建 Task Plan `02_开发管理/tasks/DEV-002-config-system-env-example.md`；master_plan CHANGE-004；progress 规划态回写 | 未实施、未 Git 写；等待独立 Plan Review |
+| 2026-08-07 08:00 UTC | DEV-002 | planned（Amendment 001 / Round 2） | Round 1 PLAN_REJECTED（MF-001 + SF-001–SF-006）；已修订 Task Plan（settings_customise_sources 顺序、shutdown/retrieval 校验、EMBEDDING_* env 决策、conftest 禁止改、§7.2 九字段、pytest -k 引号）；progress/master_plan 同步 | 未实施、未 Git 写；status 保持 planned；等待 Plan Review Round 2 |
+| 2026-08-07 08:03 UTC | DEV-002 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0）；人工确认 PLAN_APPROVED；人工范围确认 APP_ENV=development/test、无 production.yaml；同步 Task Plan / master_plan / progress | 未实施、未创建 feat 分支、未 Git 写；下一步人工 docs(plan) on main |
 
 ## 下一任务
 
-1. **当前**：DEV-OPS-002 状态 **`completed`**；PR #4 **merged**；`origin/main` = `5886cc6`。
-2. **立即下一任务**：**DEV-002**（配置系统与 `.env.example`）业务规划/实施。
-3. 不得插入 DEV-OPS-003、Phase B 或其他 Cursor workflow 优化于 DEV-002 之前。
-4. 在 **main** 提交最终治理 Commit：**`docs(status): complete DEV-OPS-002 after PR merge`**（`status_record_commit_completed` 待该 Commit 产生后回写）。
-5. E2E 证据分支保留；本轮不实际开始 DEV-002 实现编码。
+1. **当前**：DEV-002 状态 **`approved`**；Task Plan 经 Amendment 001 修订并经 Round 2 `PLAN_APPROVED`；`current_plan_file` = `02_开发管理/tasks/DEV-002-config-system-env-example.md`。
+2. **下一步（人工）**：在 **main** 提交 **`docs(plan): add DEV-002 config system and env example plan`**（含 Task Plan 与本轮治理更新），再创建 **`feat/DEV-002-config-system-env-example`**。
+3. **禁止**：在 `docs(plan)` 提交前调用 Developer 或进入 `in_progress`；不得插入 DEV-OPS-003、Phase B 或其他 workflow 优化。
+4. **范围确认（已接受）**：`APP_ENV` 仅 `development` / `test`；不提供 `production.yaml`。
+5. DEV-OPS-002 completed 治理 Commit `f4fab24` 已在 main；E2E 证据分支保留。

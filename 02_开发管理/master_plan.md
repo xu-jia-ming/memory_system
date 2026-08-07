@@ -49,7 +49,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | DEV-001 | 项目骨架、依赖与质量工具 | §3.4, §3.5, §3.2, §3.28 | 无 | completed |
-| DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | planned |
+| DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | approved |
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | planned |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | planned |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | planned |
@@ -99,12 +99,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### DEV-002 配置系统与 `.env.example`
 
-- **目标**：Pydantic Settings + YAML loader（env > env YAML > base.yaml > defaults）；**创建** `configs/` 与 `base.yaml` / `development.yaml` / `test.yaml`（DEV-001 不创建 configs）；完整 `.env.example`；`scripts/check_env_example.py`。
-- **非目标**：Compose、真实客户端连接、业务阈值之外的选型变更。
-- **变更文件**：`src/memory_system/settings/`（实现）、`configs/{base,development,test}.yaml`、`.env.example`、`scripts/check_env_example.py`。
-- **测试**：Unit（优先级、非法 YAML、跨字段校验）；Contract（示例键完整且无 Secret）。
-- **验收**：启动非法配置失败；CI/脚本可校验 `.env.example`。
-- **风险**：Secret 写入 YAML/示例。
+- **目标**：Pydantic Settings + YAML loader（env > env YAML > base.yaml > defaults）；`settings/loader.py` 使用 `yaml.safe_load`；`settings_customise_sources` 保证 env 优先；**创建** `configs/base.yaml` / `development.yaml` / `test.yaml`（含 §1.2.6 `context`、§2.1.4/§2.1.6 `memory_extraction`、§2.2.14 `memory_retrieval`、§2.3.12 `memory_consolidation`、§3.9 `llm`、§3.10 `embedding`、§3.19 `kafka*`、§3.24 连接池、§3.25 `shutdown` 命名空间）；完整 `.env.example`（§7.1 全部必需 env 键）；`scripts/check_env_example.py`（单一 `required_env_keys()` 来源）；`SecretStr` 用于 API Key 与敏感 URI；跨字段校验（context 不等式、consolidation/retrieval 权重、shutdown 与 lock TTL 关系）。
+- **非目标**：Compose/Docker/Preflight（DEV-003）；Migration（DEV-004）；API 壳与鉴权接线（DEV-005）；真实基础设施 Client 连接；三 Entrypoint 可启动服务；`pyproject.toml`/`uv.lock` 依赖变更。
+- **变更文件（白名单）**：`src/memory_system/settings/__init__.py`、`loader.py`、`sources.py`、`models.py`、`validators.py`；`configs/base.yaml`、`configs/development.yaml`、`configs/test.yaml`；`.env.example`；`scripts/check_env_example.py`；`tests/unit/test_settings_loader.py`、`tests/unit/test_settings_validation.py`；`tests/contract/test_env_example_contract.py`。
+- **测试**：Unit（YAML 合并、env>yaml 优先级、非法 YAML 根节点、§1.2.6/§2.3.12/§2.2.14/§3.25 校验失败）；Contract（`check_env_example.py` 退出码 0、必需键完整、无真实 Secret）。
+- **验收**：`get_settings()` 非法配置 `ValidationError`；`uv run python scripts/check_env_example.py` 通过；ruff/mypy/pytest 通过；黑名单路径未越权。
+- **Git**：`docs(plan)` on `main` → `feat/DEV-002-config-system-env-example` → `feat(settings): add pydantic settings, yaml loader, and env example`。
+- **风险**：Secret 误入 YAML/`.env.example`；`check_env_example` 与 Settings 字段漂移。
+- **计划文件**：`02_开发管理/tasks/DEV-002-config-system-env-example.md`
+- **状态备注**：`approved`（Round 1 `PLAN_REJECTED` + Amendment 001；Round 2 `PLAN_APPROVED` BLOCKER 0 / MUST_FIX 0；人工确认 2026-08-07 08:03 UTC；`APP_ENV` 仅 development/test、无 production.yaml 已人工接受；plan_commit=null；下一步人工 `docs(plan)` on main → `feat/DEV-002-config-system-env-example`；未实施、未 Git 写）。
 
 #### DEV-003 Docker Compose、Embedding、Preflight
 
@@ -377,5 +380,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | 新增 `DEV-OPS-002`（Phase 0 补充）；**不**修改 DEV-OPS-001 / DEV-001 完成状态；**不**改变 DEV-002+ 业务范围 |
 | 是否改变技术规格 | **否** |
 | 审批 | Round 1 曾 `PLAN_REJECTED`；Amendment 001 后 Round 2 通过（`PLAN_APPROVED`）；状态 `approved`；未实施 |
+
+### CHANGE-004
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-07 |
+| 原因 | 登记 DEV-002 初版 Task Plan：配置系统、YAML 命名空间、`.env.example` 与 `check_env_example.py`；细化白/黑名单与规格章节映射 |
+| 受影响任务 | DEV-002（`approved`）；**不**修改 DEV-001 / DEV-OPS-* 完成状态；**不**改变 DEV-003+ 业务范围 |
+| 是否改变技术规格 | **否** |
+| 审批 | Round 1 `PLAN_REJECTED`；Amendment 001；Round 2 `PLAN_APPROVED`；人工确认 2026-08-07 08:03 UTC；`status=approved`；plan_commit 待人工 docs(plan) |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
