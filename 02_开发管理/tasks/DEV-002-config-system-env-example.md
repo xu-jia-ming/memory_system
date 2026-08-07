@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-002
 task_name: 配置系统与 .env.example
-status: approved
+status: tested
 spec_sections:
   - "§1.2.6 Context Compression Trigger Strategy（context YAML 与跨字段校验）"
   - "§2.1.4 / §2.1.6 memory_extraction YAML"
@@ -29,7 +29,7 @@ created_at: "2026-08-07 07:32 UTC"
 updated_at: "2026-08-07 08:03 UTC"
 approval_gates:
   planning_docs: "Round 2 复审通过；PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX 2 非阻塞）；人工确认 PLAN_APPROVED（2026-08-07 08:03 UTC）"
-  implementation_plan: "status=approved；plan_commit=null；下一步人工 docs(plan) on main；然后创建 feat/DEV-002-config-system-env-example；不得在未 docs(plan) 前实施"
+  implementation_plan: "status=tested；plan_commit=ceff988；分支 feat/DEV-002-config-system-env-example；Developer 实施完成，质量门禁通过，待 Code Review"
 human_scope_confirmations:
   - "APP_ENV 仅支持 development / test；不提供 production.yaml；人工确认可接受，非阻塞"
 ```
@@ -40,7 +40,7 @@ human_scope_confirmations:
 
 完成后应具备：
 
-1. **Pydantic Settings + YAML Loader**：优先级固定为 `环境变量 > configs/{APP_ENV}.yaml > configs/base.yaml > Model 默认值`；`settings/loader.py` 使用 `yaml.safe_load`；通过 `settings_customise_sources` 保证 env 高于 YAML（pydantic-settings v2：**tuple 中靠后的 Source 优先级更高**；`yaml_merged` 必须排在 `env` **之前**）。
+1. **Pydantic Settings + YAML Loader**：优先级固定为 `环境变量 > configs/{APP_ENV}.yaml > configs/base.yaml > Model 默认值`；`settings/loader.py` 使用 `yaml.safe_load`；通过 `settings_customise_sources` 保证 env 高于 YAML（pydantic-settings 2.14：**tuple 中先列出的 Source 优先级更高**；见 Amendment 002）。
 2. **三份 YAML 配置文件**：`configs/base.yaml`（含规格全部业务阈值命名空间默认值）、`configs/development.yaml`、`configs/test.yaml`（仅环境覆盖；**不得**含 Secret）。
 3. **完整 `.env.example`**：覆盖 §3.8 / §3.21 / §3.30 P1 要求的全部必需环境变量；仅非敏感示例值。
 4. **`scripts/check_env_example.py`**：CI 可调用；断言 Settings 声明的全部必需 env 键均出现在 `.env.example`，且示例文件不含真实 Secret。
@@ -227,38 +227,39 @@ human_scope_confirmations:
 ### Step 2 — 自定义 Settings Source（`settings/sources.py`）
 
 - 实现 `YamlSettingsSource`（或等价），将 Step 1 合并字典按 pydantic 嵌套字段名注入（支持 env 双下划线与 YAML 小写嵌套对齐）。
-- **pydantic-settings v2 语义（Amendment 001 MF-001）**：`settings_customise_sources` 返回的 tuple 中，**靠后的条目优先级更高**（后覆盖前）。
-- 在 `Settings.settings_customise_sources` 中**必须**按下列顺序排列（低 → 高）：
+- **pydantic-settings 2.14 语义（Amendment 002 纠正）**：`settings_customise_sources` 返回的 tuple 在合并时使用 `state = deep_update(source_state, state)`，**先列出的 source 在冲突时优先**（先覆盖后）。
+- 在 `Settings.settings_customise_sources` 中**必须**按下列顺序排列（高 → 低，即 tuple **从前到后**优先级递减）：
 
 ```text
-init (Model 默认值)
-  → yaml_merged
+env
   → dotenv（若启用）
-  → env
-  → file_secret（若启用）
+  → yaml_merged
+  → init (Model 默认值)
 ```
+
+**MVP 禁用** `file_secret`：不配置 `secrets_dir`；不加入 tuple。若未来启用，须排在 tuple **最前**（高于 `env`）。
 
 **生效优先级链（高者胜）**：
 
-| 优先级（低→高） | Source | MVP 决策 |
+| 优先级（高→低） | Source | MVP 决策 |
 |---|---|---|
-| 1（最低） | `init` | Model `Field(default=...)` |
-| 2 | `yaml_merged` | `base.yaml` + `{APP_ENV}.yaml` 递归合并 |
-| 3 | `dotenv` | **启用**：`SettingsConfigDict(env_file=".env")` 供本地开发；`.env` 不提交 |
-| 4 | `env` | 进程环境变量（含 Compose 注入） |
-| 5（最高） | `file_secret` | **MVP 禁用**：不配置 `secrets_dir`；不加入 tuple |
+| 1（最高） | `env` | 进程环境变量（含 Compose 注入） |
+| 2 | `dotenv` | **启用**：`SettingsConfigDict(env_file=".env")` 供本地开发；`.env` 不提交 |
+| 3 | `yaml_merged` | `base.yaml` + `{APP_ENV}.yaml` 递归合并 |
+| 4（最低） | `init` | Model `Field(default=...)` |
 
-最终生效顺序须满足：**env > yaml_merged > defaults**（与 §3.8 一致）；`env` 必须能覆盖 YAML 中任意同名字段（单元测试 `CONTEXT__COMPRESSION_TRIGGER_TOKENS` 覆盖 YAML 为验收用例）。
+最终生效顺序须满足：**env > yaml_merged > defaults**（与 §3.8 一致）；`env` 必须能覆盖 YAML 中任意同名字段。
+
+**验收测试**：`tests/unit/test_settings_loader.py::test_env_overrides_yaml_for_context_tokens` — 设置 `CONTEXT__COMPRESSION_TRIGGER_TOKENS=8888`（YAML 默认 `5000`），断言 `get_settings().context.compression_trigger_tokens == 8888`。
 
 ```mermaid
 flowchart LR
-  D[init defaults] --> Y[yaml_merged]
-  Y --> V[dotenv .env]
-  V --> E[env vars]
-  E --> F[file_secret disabled]
+  E[env vars] --> V[dotenv .env]
+  V --> Y[yaml_merged]
+  Y --> D[init defaults]
 ```
 
-若未来启用 `file_secret`，其须排在 tuple **末尾**（高于 `env`）。
+> **历史说明**：Amendment 001 MF-001 曾将 tuple 表述为「靠后优先级更高」并列 `init → yaml → dotenv → env`；实施阶段验证该表述与 pydantic-settings 2.14 实际合并语义不符。Amendment 002 仅纠正技术事实，不扩展 DEV-002 范围。
 
 ### Step 3 — Settings Model（`settings/models.py`）
 
@@ -440,7 +441,7 @@ flowchart LR
 ## 12. 验收标准
 
 - [ ] §5 白名单文件全部存在且内容符合本计划；§6 黑名单路径未被创建/修改（含 `tests/conftest.py`）；entrypoints 仍为非就绪退出语义
-- [ ] `settings_customise_sources` tuple 顺序为 `init → yaml_merged → dotenv → env`（`file_secret` 禁用）；**env 覆盖 YAML 覆盖 defaults** 有可测用例
+- [ ] `settings_customise_sources` tuple 顺序为 `env → dotenv → yaml_merged → init`（`file_secret` 禁用；Amendment 002）；**env 覆盖 YAML 覆盖 defaults** 由 `test_env_overrides_yaml_for_context_tokens` 验证
 - [ ] `loader.py` 仅使用 `yaml.safe_load`；非法根节点启动失败
 - [ ] `configs/base.yaml` 含 §7.2 全部命名空间且数值与规格一致（含 `memory_extraction` 九项边界字段）
 - [ ] `.env.example` 含 §7.1 全部必需键（含两 `EMBEDDING_*` 运行时键）；无真实 Secret
@@ -537,6 +538,50 @@ out_of_scope_changes:
 - 人工确认 `PLAN_APPROVED`；`status` 回写为 `approved`（**不得实施**）。
 - 人工范围确认：`APP_ENV` 仅 `development` / `test`；**不提供** `production.yaml`；可接受，非阻塞。
 
+### Amendment 002
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-07 UTC |
+| 触发 | 实施 + Code Review 阶段发现：Amendment 001 / §Step 2 对 pydantic-settings 2.14 `settings_customise_sources` 合并语义的描述与库实际行为不符 |
+| 范围 | **仅**纠正 Task Plan 技术事实与验收表述；**不**修改已通过审查的业务实现；**不**扩展 DEV-002 范围 |
+| 是否改变技术规格 | **否**（§3.8 功能优先级 `env > yaml > defaults` 不变） |
+
+#### 实施阶段发现的真实库行为
+
+- 依赖：`pydantic-settings>=2.14,<2.15`（与 `pyproject.toml` 锁定一致）。
+- `settings_customise_sources` 返回的 tuple 在加载时按顺序合并；pydantic-settings 2.14 使用 `state = deep_update(source_state, state)`。
+- **`deep_update(new, accumulated)` 在键冲突时保留 `accumulated`** → **tuple 中先列出的 source 优先级更高**（先覆盖后）。
+
+#### 原计划描述为何不准确
+
+- Amendment 001 MF-001 将 tuple 表述为「靠后优先级更高」，并规定顺序 `init → yaml_merged → dotenv → env`。
+- 该表述与 pydantic-settings 2.14 实测合并方向相反；若按该顺序字面实现，将导致 **YAML 覆盖 env**，违反 §3.8。
+
+#### 实际实现采用的 source 顺序
+
+```text
+(env, dotenv, yaml_merged, init)
+```
+
+对应生效优先级：**env > dotenv > yaml_merged > init defaults**；满足规格 **env > yaml > defaults**。
+
+实现位置：`src/memory_system/settings/models.py` — `Settings.settings_customise_sources`。
+
+#### 测试如何证明 env > yaml > defaults
+
+| 测试 | 文件 | 行为 |
+|---|---|---|
+| `test_env_overrides_yaml_for_context_tokens` | `tests/unit/test_settings_loader.py` | `monkeypatch.setenv("CONTEXT__COMPRESSION_TRIGGER_TOKENS", "8888")`；YAML `base.yaml` 默认 `5000`；断言 `get_settings().context.compression_trigger_tokens == 8888` |
+
+Code Review Round 1（P2-001）已确认该测试通过且功能优先级正确。
+
+#### 对 Code Review / Release 的影响
+
+- **不**触发重新实施；**不**修改 `src/**` / `tests/**` 实现（治理一致性已由 Amendment 002 文档纠正）。
+- `CODE_REVIEW_APPROVED`（P0=0 / P1=0）**仍然有效**；P2-001 由本 Amendment 关闭（文档与实现一致）。
+- Commit Recorder 提交范围不变；Release Operator 门禁流程不变。
+
 ## 16. 执行记录
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
@@ -544,6 +589,9 @@ out_of_scope_changes:
 | 2026-08-07 07:32 UTC | Round 1 规划 | 创建本 Task Plan；更新 progress.md、master_plan.md CHANGE-004 | 无 | 未实施、未 Git 写；status=planned |
 | 2026-08-07 08:00 UTC | Round 2 规划修订（Amendment 001） | 落实 MF-001、SF-001–SF-006；更新 progress.md、master_plan.md DEV-002 备注 | 无 | 未实施、未 Git 写；status 保持 planned；等待 Plan Review Round 2 |
 | 2026-08-07 08:03 UTC | Round 2 批准回写 | status=planned → approved；同步 progress.md、master_plan.md；记录人工 PLAN_APPROVED 与 APP_ENV 范围确认 | 无 | 未实施、未创建 feat 分支、未 Git 写；下一步人工 docs(plan) on main |
+| 2026-08-07 08:15 UTC | Developer 实施 | 创建 settings 包（loader/sources/models/validators）、configs/*.yaml、.env.example、check_env_example.py、单元/契约测试 | `uv run pytest` 74 passed；ruff/mypy/check_env_example 通过 | settings_customise_sources 顺序因 pydantic-settings 2.14 deep_update 语义调整为 env→dotenv→yaml→init（功能优先级仍为 env>yaml>defaults）；见 §17 |
+| 2026-08-07 08:25 UTC | Code Review + Commit Recorder | tested → reviewed；Commit Recorder 输出提交草稿 | Orchestrator 复跑 74 pytest / ruff / mypy / check_env_example 通过 | CODE_REVIEW_APPROVED P0/P1=0；未 Git 写 |
+| 2026-08-07 08:52 UTC | Amendment 002 治理纠正 | 纠正 §Step 2 / §12 对 pydantic-settings 2.14 tuple 语义；新增 Amendment 002；同步 progress/master_plan | 无（未改业务实现） | CODE_REVIEW_APPROVED 仍有效；待 Release Operator |
 
 ## 17. 实际执行结果
 
@@ -551,43 +599,54 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-| （实施前） | — |
+| `src/memory_system/settings/__init__.py` | 导出 `Settings`、`get_settings()` |
+| `src/memory_system/settings/loader.py` | `yaml.safe_load` + 递归 merge |
+| `src/memory_system/settings/sources.py` | `YamlSettingsSource` |
+| `src/memory_system/settings/models.py` | 嵌套 Settings 模型、`required_env_keys()`、`get_settings()` |
+| `src/memory_system/settings/validators.py` | context/consolidation/retrieval/shutdown 跨字段校验 |
+| `configs/base.yaml` | §7.2 全部命名空间默认值 |
+| `configs/development.yaml` | 空覆盖（注释） |
+| `configs/test.yaml` | 测试友好覆盖（compression_llm_timeout_seconds: 30） |
+| `.env.example` | §7.1 全部必需 env 键 |
+| `scripts/check_env_example.py` | 必需键完整性 + Secret 启发式检查 |
+| `tests/unit/test_settings_loader.py` | 加载/优先级/非法 YAML |
+| `tests/unit/test_settings_validation.py` | 跨字段校验失败用例 |
+| `tests/contract/test_env_example_contract.py` | `.env.example` 契约 |
 
 ### 与原计划的差异
 
-暂无。
+1. **`settings_customise_sources` tuple 顺序**：已由 **Amendment 002** 正式纠正并写入 §Step 2。实施采用 `(env, dotenv, yaml, init)` 以达到 **env > yaml > defaults**；`test_env_overrides_yaml_for_context_tokens` 已验证。Amendment 001 MF-001 的「靠后优先级更高」表述保留于历史记录，不再作为实施依据。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | `uv run pytest tests/unit/test_settings_*.py` | 待实施 |
-| Contract | `uv run pytest tests/contract/test_env_example_contract.py` | 待实施 |
-| Env check | `uv run python scripts/check_env_example.py` | 待实施 |
-| Integration | N/A | N/A |
-| E2E | N/A | N/A |
-| Ruff | `uv run ruff check .` | 待实施 |
-| Mypy | `uv run mypy src tests` | 待实施 |
+| Unit | `uv run pytest tests/unit/test_settings_loader.py tests/unit/test_settings_validation.py` | 28 passed |
+| Contract | `uv run pytest tests/contract/test_env_example_contract.py` | 4 passed |
+| Full suite | `uv run pytest` | 74 passed |
+| Env check | `uv run python scripts/check_env_example.py` | exit 0 |
+| Ruff | `uv run ruff check .` | All checks passed |
+| Mypy | `uv run mypy src tests` | Success: 42 source files |
 
 ### Review 结果
 
 ```yaml
 p0: 0
 p1: 0
-p2: 0
-p3: 0
-review_report: null
+p2: 2
+p3: 2
+review_report: "P2-001 closed by Amendment 002 (tuple doc corrected); P2-002 APP_ENV only in .env yaml selection; P2-003 required_env_keys hardcoded; P3 typing/test gaps"
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/DEV-002-config-system-env-example
+plan_commit: ceff988
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`approved`
+`reviewed`

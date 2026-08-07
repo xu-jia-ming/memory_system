@@ -1,0 +1,2 @@
+# Development environment overrides.
+# Connection strings and secrets are supplied via environment variables.
