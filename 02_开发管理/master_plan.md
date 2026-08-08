@@ -185,12 +185,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### DEV-006 TEI Embedding Client + Token Budget
 
-- **目标**：共享 `EmbeddingClient` Protocol + TEI HTTP 适配；`/tokenize` 与 `/v1/embeddings`；1024 token 硬限制；CPU/GPU Token Budget 确定性分批；输出维度 1024。
-- **非目标**：ES 写入；BM25；改模型/Revision/引擎版本。
-- **变更文件**：`src/memory_system/infrastructure/embedding/`、Contract fixtures。
-- **测试**：Contract（Fake TEI）；Integration（真实 TEI，发布阻塞 CPU 模式）。
-- **验收**：供 EXT-007 与 Retrieval 复用；规格 §3.10/§2.2.6。
-- **风险**：热切换；维度漂移；超长输入未拒绝。
+- **目标**：共享 `EmbeddingClient` Protocol + `TEIEmbeddingClient`；`POST /tokenize` + `POST /v1/embeddings`；单条 1024 Token 硬限制（`embedding_input_too_long`）；CPU/GPU `EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET` First-Fit-In-Order 分批；输出维度严格 1024；`create_embedding_client(settings, http_client)`；窄升级 `runtime.check_embedding` 为 embed 探针（仍非 Readiness 阻塞）。
+- **非目标**：ES 写入；BM25/RRF；Retrieval Warning 降级；EXT-007 索引同步；改模型/Revision/TEI 引擎/Compose/scripts；`settings/models.py` 结构变更；STM/RET/EXT 业务。
+- **变更文件（白名单）**：`src/memory_system/infrastructure/embedding/**`；`runtime.py`（仅 `check_embedding`）；`validators.py`（mode↔budget）；Contract Fake TEI + Fixture；Unit/Contract/Integration 测试；本任务开发管理回写。
+- **测试**：Unit（分批/校验）；Contract（Fake TEI，§8.7 九场景）；Integration（真实 TEI **CPU 发布阻塞**；GPU 一致性可选 skip）。
+- **验收**：§2.2.6、§3.10.6、§8 行为合同；ruff/mypy/pytest 全绿；供 EXT-007 与 RET-* 复用。
+- **风险**：TEI `/tokenize` 响应格式对齐；Integration 首次模型下载耗时；GPU Cosine 0.999 可能需人工验收；禁止运行时热切换与降阈值。
+- **计划文件**：`02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md`
+- **状态备注**：`planned`（用户显式 `TASK_ID=DEV-006`；`workflow_mode=NORMAL`（explicit）；`main` @ `b340f3f`；**未实施、未 Git 写**；`next_action=计划审查`；**不得开始 STM/EXT/RET 实施**）。
 
 ---
 
@@ -507,5 +509,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | DEV-005（`completed`）；**不**修改 DEV-001–004 / DEV-OPS-* 完成状态；**不**开始 DEV-006/STM/Retrieval 实施；**不**改变后续业务任务范围正文 |
 | 是否改变技术规格 | **否**（Health 路径为工程冻结，见 Task Plan §8.5；不扩展业务 API Contract） |
 | 审批 | Planner 初版；独立 Plan Review → `PLAN_APPROVED`；人工确认；PLAN_LANDING 完成（plan_commit `2548c9a`）；Developer `tested`；Code Review `CODE_REVIEW_APPROVED`（P0/P1=0）；IMPLEMENTATION_RELEASE（implementation `d32ddc7`；record `76a91ce`）；PR #12 MERGED `a68d951c50eaeab66f589e5eff5c55d6611f3f43`；POST_MERGE_CLEANUP 本轮 |
+
+### CHANGE-011
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-08 |
+| 原因 | 登记 DEV-006 初版 Task Plan：TEI Embedding Client + Token Budget（EXT-007 与 Retrieval 共享）；细化白/黑名单、§8 行为合同（1024 硬限制、CPU/GPU budget 分批、/tokenize + /v1/embeddings、1024 维）、Contract Fake TEI + Integration 真实 TEI 测试策略与 NORMAL 三相 Git 计划 |
+| 受影响任务 | DEV-006（`planned`）；**不**修改 DEV-001–005 / DEV-OPS-* 完成状态；**不**开始 STM/EXT/RET 实施；**不**改变后续业务任务范围正文 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner 初版；等待独立 Plan Review → `PLAN_APPROVED` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
