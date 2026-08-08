@@ -164,6 +164,7 @@ services:
   init-infra:
     build: *app-build
     command: ["python", "-m", "scripts.migrate"]
+    <<: *app-env
     restart: "no"
     depends_on:
       mongodb:

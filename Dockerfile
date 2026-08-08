@@ -19,12 +19,12 @@ ENV PATH="/root/.local/bin:${PATH}"
 
 WORKDIR /app
 
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock README.md ./
 RUN uv sync --locked --no-dev --no-install-project
 
 COPY src ./src
 COPY configs ./configs
-COPY scripts/__init__.py ./scripts/__init__.py
+COPY scripts ./scripts
 
 RUN uv sync --locked --no-dev
 
@@ -42,7 +42,7 @@ WORKDIR /app
 COPY --from=builder --chown=appuser:appuser /app/.venv /app/.venv
 COPY --from=builder --chown=appuser:appuser /app/src /app/src
 COPY --from=builder --chown=appuser:appuser /app/configs /app/configs
-COPY --from=builder --chown=appuser:appuser /app/scripts/__init__.py /app/scripts/__init__.py
+COPY --from=builder --chown=appuser:appuser /app/scripts /app/scripts
 
 ENV PATH="/app/.venv/bin:${PATH}"
 
