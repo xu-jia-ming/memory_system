@@ -61,7 +61,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | completed |
 | DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | completed |
-| DEV-OPS-003 | NORMAL / STRICT 工作流模式；减少常规人工机械门禁 | 非业务：扩展 DEV-OPS-002；保留六 Subagent 与唯一 Git 写角色 | DEV-OPS-002 | approved |
+| DEV-OPS-003 | NORMAL / STRICT 工作流模式；减少常规人工机械门禁 | 非业务：扩展 DEV-OPS-002；保留六 Subagent 与唯一 Git 写角色 | DEV-OPS-002 | committed |
 
 #### DEV-OPS-003 NORMAL / STRICT 工作流模式
 
@@ -73,7 +73,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：mode 声明；NORMAL 两门禁；STRICT 兼容；唯一 Git 写；异常 HALT；完成后 `next_action`→DEV-004；**本任务期间不得启动 DEV-004**。
 - **插入说明**：**人工显式插入**于 DEV-004 业务规划之前（用户覆盖先前「不得插入 DEV-OPS-003」的 next_action）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md`
-- **状态备注**：`approved`（2026-08-07 15:22 UTC 初版；15:35 UTC Amendment 001 回应 Round 1 `PLAN_REJECTED` / MF-001 方案 A + SF-001–004；Round 2 Plan Reviewer = `PLAN_APPROVED`；人工确认 2026-08-07 15:39 UTC）；未实施；未创建 feat；未 Git 写；本任务自身 STRICT（NORMAL 自动 phase 尚未可用）；`plan_commit=null`（待人工 docs(plan) on main）。
+- **状态备注**：`committed`（2026-08-08 01:25 UTC IMPLEMENTATION_RELEASE；implementation_commit `640616b`；PR #7 OPEN base=main head=`feat/DEV-OPS-003-normal-strict-workflow-modes`；`CODE_REVIEW_APPROVED` P0=0/P1=0/P2=0/P3=2；plan_commit `d45ea2f`；Step 7 冒烟 pending；等待人工 Merge；STRICT 人工 post-merge；**本任务期间不得启动 DEV-004**）。
 
 #### DEV-OPS-002 Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
 
@@ -434,8 +434,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|
 | 日期 | 2026-08-07 |
 | 原因 | **人工显式插入**非业务任务 DEV-OPS-003：NORMAL/STRICT 工作流模式，减少常规机械人工门禁；覆盖先前 progress「不得插入 DEV-OPS-003 / 立即 DEV-004」next_action；不改变 Phase 0–5 业务任务目标与依赖 |
-| 受影响任务 | 新增 `DEV-OPS-003`（Phase 0 补充，现 `approved`）；DEV-004 保持 `planned` 但**延后至 DEV-OPS-003 completed 之后**；**不**修改 DEV-OPS-001/002 / DEV-001–003 完成状态；**不**改变 DEV-004+ 业务范围正文 |
+| 受影响任务 | 新增 `DEV-OPS-003`（Phase 0 补充，现 `committed`）；DEV-004 保持 `planned` 但**延后至 DEV-OPS-003 completed 之后**；**不**修改 DEV-OPS-001/002 / DEV-001–003 完成状态；**不**改变 DEV-004+ 业务范围正文 |
 | 是否改变技术规格 | **否** |
-| 审批 | Round 1 `PLAN_REJECTED`（MF-001）；Amendment 001；Round 2 Plan Reviewer = `PLAN_APPROVED`（BLOCKER 0 / MUST_FIX 0）；人工确认 2026-08-07 15:39 UTC；状态 `approved`；`plan_commit=null`（待 docs(plan) on main） |
+| 审批 | Round 1 `PLAN_REJECTED`（MF-001）；Amendment 001；Round 2 Plan Reviewer = `PLAN_APPROVED`（BLOCKER 0 / MUST_FIX 0）；人工确认 2026-08-07 15:39 UTC；plan_commit `d45ea2f`；Developer 落地后 `tested`；`CODE_REVIEW_APPROVED` → `reviewed`（P2 CLOSED）；2026-08-08 01:25 UTC `IMPLEMENTATION_RELEASE` → `committed`；implementation_commit `640616b`；PR #7 OPEN |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

@@ -85,7 +85,7 @@ docs(progress): record STM-003 completion
 - 测试失败时提交；
 - 为保存进度提交已知错误代码；
 - 一个 Commit 混合多个无关 Task；
-- 自动 Push；
+- 自动 Push（一般会话禁止；**唯一例外**：仅 Release Operator 按已批准 Task Plan 的 `RELEASE_PHASE` 执行受控 push——见治理窄例外 DEV-OPS-002/003；不扩大到 Orchestrator 或其他角色；`IMPLEMENTATION_RELEASE` 永久禁止 `git push origin main`）；
 - 自动 Merge；
 - Force Push；
 - 修改已执行 Migration；

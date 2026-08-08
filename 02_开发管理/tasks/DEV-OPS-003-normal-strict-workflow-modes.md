@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-003
 task_name: Add NORMAL / STRICT workflow modes and reduce routine human gates
-status: approved
+status: committed
 spec_sections:
   - "非业务规格任务：扩展 DEV-OPS-002 Orchestrator/Subagent 工作流；不修改技术规格正文与业务 Contract"
 prerequisites:
@@ -13,12 +13,12 @@ prerequisites:
   - "DEV-003 completed（PR #6 merged；docs(status) complete 已在 main：c1234c5）"
   - "基线：main @ c1234c5b28373f57c118d0afc9442a90dee8cd51；与 origin/main 同步；工作区干净（规划轮次只读验证）"
   - "本任务为人工显式插入：在 DEV-004 业务规划之前执行；不得开始 DEV-004"
-branch: "feat/DEV-OPS-003-normal-strict-workflow-modes"  # 实施分支；计划 Commit 在 main，见 §13
+branch: "feat/DEV-OPS-003-normal-strict-workflow-modes"
 created_at: "2026-08-07 15:22 UTC"
-updated_at: "2026-08-07 15:39 UTC"
+updated_at: "2026-08-08 01:25 UTC"
 approval_gates:
   planning_docs: "Round 1 PLAN_REJECTED（MF-001）；Amendment 001；Round 2 Plan Reviewer = PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX SF-R2-001–002 非阻塞）；人工确认 PLAN_APPROVED 2026-08-07 15:39 UTC"
-  implementation_plan: "status=approved；未实施；未创建功能分支；未 Git 写；本任务自身 STRICT/人工流程（§13；NORMAL 自动 phase 尚未可用）；待人工 docs(plan) on main + 建 feat 后方可 Developer"
+  implementation_plan: "status=committed；IMPLEMENTATION_RELEASE 完成；implementation_commit=640616b；PR #7 OPEN；P2 CLOSED；复审 CODE_REVIEW_APPROVED（P0=0/P1=0/P2=0/P3=2）；plan_commit=d45ea2f；未开始 DEV-004；Step 7 冒烟 pending"
 insertion_override:
   prior_next_action: "进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；…不得插入 DEV-OPS-003…"
   override_by: "用户本轮显式字段 + Orchestrator 调用（TASK_ID=DEV-OPS-003）"
@@ -549,21 +549,21 @@ Release Operator 仍是唯一 Git 写角色，但按 `RELEASE_PHASE` 收窄允�
 | `IMPLEMENTATION_RELEASE` 含糊「write/push committed governance」 | 改为：仅 feat 上 record；显式禁止 `git push origin main` | 封闭 MF-001 方案 A |
 ## 9. 验收标准
 
-- [ ] Task Plan 已批准且人工确认 `PLAN_APPROVED` 后才实施
-- [ ] Orchestrator 启动时声明 `workflow_mode`；缺省 NORMAL；STRICT 可显式选择
-- [ ] NORMAL 常规人工门禁仅为 `PLAN_APPROVED` + Human PR Merge；其余机械步骤由 Orchestrator 调度 Release Operator 完成
-- [ ] STRICT 行为与 DEV-OPS-002 对齐（无自动 PLAN_LANDING/POST_MERGE_CLEANUP；无成功后自动续跑）
-- [ ] Release Operator 仍为唯一 Git 写角色；Orchestrator 无 Git 写
-- [ ] **MF-001 / DD-006**：`IMPLEMENTATION_RELEASE` 永久禁止 push/commit main；committed/`docs(status): record` 仅 feat；Merge 前状态可为 `committed`
-- [ ] NORMAL 不削弱 §2.2 安全属性
-- [ ] 异常路径 HALT/FAIL 且需人工干预
-- [ ] 五命令仍可用；六 Subagent 仍在；`/orchestrate-task` 仍为入口
-- [ ] 契约测试：既有 + 新增 NORMAL/STRICT/negatives（含 MF-001）全部通过
-- [ ] permissions/cli 显式含 `git fetch`；remote-delete 口径符合 SF-004
-- [ ] `uv run ruff check .` 通过
-- [ ] `uv run mypy src tests` 通过
+- [x] Task Plan 已批准且人工确认 `PLAN_APPROVED` 后才实施
+- [x] Orchestrator 启动时声明 `workflow_mode`；缺省 NORMAL；STRICT 可显式选择
+- [x] NORMAL 常规人工门禁仅为 `PLAN_APPROVED` + Human PR Merge；其余机械步骤由 Orchestrator 调度 Release Operator 完成
+- [x] STRICT 行为与 DEV-OPS-002 对齐（无自动 PLAN_LANDING/POST_MERGE_CLEANUP；无成功后自动续跑）
+- [x] Release Operator 仍为唯一 Git 写角色；Orchestrator 无 Git 写
+- [x] **MF-001 / DD-006**：`IMPLEMENTATION_RELEASE` 永久禁止 push/commit main；committed/`docs(status): record` 仅 feat；Merge 前状态可为 `committed`
+- [x] NORMAL 不削弱 §2.2 安全属性
+- [x] 异常路径 HALT/FAIL 且需人工干预
+- [x] 五命令仍可用；六 Subagent 仍在；`/orchestrate-task` 仍为入口
+- [x] 契约测试：既有 + 新增 NORMAL/STRICT/negatives（含 MF-001）全部通过
+- [x] permissions/cli 显式含 `git fetch`；remote-delete 口径符合 SF-004
+- [x] `uv run ruff check .` 通过
+- [x] `uv run mypy src tests` 通过
 - [ ] Code Review 无 P0/P1
-- [ ] **未**创建或实施 DEV-004
+- [x] **未**创建或实施 DEV-004
 - [ ] `completed` 后 `next_action` 回到 DEV-004 业务规划
 
 ## 10. 风险与阻塞项
@@ -661,47 +661,79 @@ out_of_scope_changes:
 | 2026-08-07 15:22 UTC | Planner 起草 Task Plan | 新建本文件；回写 progress/master_plan 规划态 | 未跑（规划 only） | 用户显式覆盖 progress 中「不得插入 DEV-OPS-003」；未实施、未 Git 写、未开始 DEV-004 |
 | 2026-08-07 15:35 UTC | Planner Amendment 001（回应 PLAN_REJECTED） | 封闭 MF-001 方案 A；采纳 SF-001–SF-004；同步 progress 规划态为再审 | 未跑（规划 only） | 状态保持 `planned`；未实施、未 Git 写、未开始 DEV-004 |
 | 2026-08-07 15:39 UTC | Round 2 批准回写（人工 PLAN_APPROVED） | status=`planned` → `approved`；同步 progress / master_plan；记录 Round 2 Plan Reviewer = `PLAN_APPROVED`；保留 Amendment 001 原文；仅 hygiene 修正 SF-R2-002 checklist 换行 | 未跑 | SF-R2-001（`expected_commits` 分支标注）未改合同表达，仅报告；未实施、未创建 feat、未 Git 写；本任务自身 STRICT；NORMAL 自动 phase 尚未可用；下一步人工 `docs(plan)` on main |
+| 2026-08-07 15:49 UTC | Developer 开始（STRICT） | status=`approved` → `in_progress`；只读核对分支 `feat/DEV-OPS-003-normal-strict-workflow-modes`、HEAD=`d45ea2f`、工作区干净 | 未跑 | 前置满足；禁止 Git 写；不得开始 DEV-004 |
+| 2026-08-07 15:55 UTC | Developer 白名单落地 + 契约测试 | §5 路径全部落地；新建 `test_cursor_workflow_modes_contract.py`；修订 orchestrator 契约（mode 条件化自动续跑 + MF-001）；回写 progress/master_plan | 见 §16 | status=`in_progress` → `implemented` → `tested`；Step 7 受监督冒烟 pending；待独立 Code Review |
+| 2026-08-08 00:58 UTC | Orchestrator 复测 | 复跑核心契约 + 全量 unit + ruff + mypy | 49 / 101 / ruff / mypy 通过 | 与 Developer §16 一致；未 Git 写 |
+| 2026-08-08 01:00 UTC | 独立 Code Review | 只读审查；回写 `tested` → `reviewed` | CODE_REVIEW_APPROVED；P0=0 P1=0 P2=1 P3=2 | P2/P3 非阻塞；下一步 Commit Recorder；STRICT 不自动 IMPLEMENTATION_RELEASE |
+| 2026-08-08 01:05 UTC | Commit Recorder | 精确边界核对；输出 implementation commit 草稿 | 边界 PASS；13 路径 ⊆ §5 | `READY_FOR_HUMAN_COMMIT`；未 Git 写；须另一次显式 STRICT Release |
+| 2026-08-08 01:15 UTC | Developer P2 最小修正 | 角色段 mode-conditional 自动续跑；modes 契约新增 `test_role_section_mode_conditional_auto_continue`；commands 共享子串保留 | 见 §16 复测 | status 保持 `reviewed`（P2 fix pending re-review）；未改五命令/src/DEV-004；未 Git 写 |
+| 2026-08-08 01:20 UTC | P2 复审 + Commit Recorder | Code Reviewer 确认 P2 CLOSED；边界再核对 | CODE_REVIEW_APPROVED；P0=0 P1=0 P2=0 P3=2；契约 50 / unit 102 | `READY_FOR_HUMAN_COMMIT`；STRICT 不自动 Release；未 Git 写 |
+| 2026-08-08 01:25 UTC | Release Operator IMPLEMENTATION_RELEASE（STRICT） | 精确 13 路径 add/commit/push；PR #7 创建；本 feat 回写 committed | unit 102 / 契约 50 / ruff / mypy 已绿灯（前置） | implementation_commit=`640616b`；PR OPEN base=main head=feat；禁 push main；Step 7 冒烟仍 pending |
 ## 16. 实际执行结果
 
 ### 实际修改文件
 
 | 文件 | 结果 |
 |---|---|
-| （实施后填写） |  |
+| `.cursor/commands/orchestrate-task.md` | 已修订：mode 声明；NORMAL 自动续跑；STRICT 保留；WAITING_FOR_PR_MERGE；phase 调度；fail-closed；Orchestrator 永不 Git 写；**P2**：角色段「不得自动切换到下一角色」澄清为不得变身/兼任 + mode-conditional 自动调用 |
+| `.cursor/agents/release-operator.md` | 已修订：三分 phase；DD-006；STRICT 误调 FAIL；退出码；成功须声明 phase |
+| `.cursor/agents/commit-recorder.md` | 已修订（最小）：NORMAL 不阻止自动 Release；STRICT 仍可作显式前置；仍禁 Git 写 |
+| `.cursor/permissions.json` | 已修订：显式 `git fetch`/`switch`/`pull`/`checkout`；SF-004 remote-delete 口径 |
+| `.cursor/cli.json` | 已修订：allow 对齐；仍禁 force / hard reset / gh pr merge |
+| `.cursor/rules/00-memory-system-governance.mdc` | 已修订：分 phase 窄例外 + DD-006 |
+| `03_AI_Prompts/00_全局开发规则.md` | 已修订：同上对齐 |
+| `04_Git规范/git_workflow.md` | 已修订（最小 SF-002）：Release Operator 例外指针 |
+| `tests/unit/test_cursor_orchestrator_contract.py` | 已修订：mode 条件化 + permissions/cli 断言扩展 + rationale（本轮未再改） |
+| `tests/unit/test_cursor_workflow_modes_contract.py` | **新建** + P2：`test_role_section_mode_conditional_auto_continue` |
+| `tests/unit/test_cursor_commands_contract.py` | 未改（保留共享子串「不得自动切换到下一角色」；五命令未被削弱） |
+| `02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md` | 执行记录与状态回写 |
+| `02_开发管理/progress.md` | 实施态回写 |
+| `02_开发管理/master_plan.md` | 状态与 CHANGE 备注回写 |
 
 ### 与原计划的差异
 
-暂无。
+- 未修改可选 Agent（planner/plan-reviewer/developer/code-reviewer）：合同测试不要求额外对齐。
+- Step 7 受监督冒烟：未执行（pending；契约-only 不计 E2E）。
+- P2 最小修正：未改 commands contract 共享子串策略；仅角色段语义澄清 + modes 契约收紧。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit/Contract |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
-| E2E 冒烟 |  |  |
+| Unit/Contract（核心） | `uv run pytest tests/unit/test_cursor_orchestrator_contract.py tests/unit/test_cursor_workflow_modes_contract.py tests/unit/test_cursor_commands_contract.py -q` | 50 passed（P2 复测） |
+| Unit（全量） | `uv run pytest tests/unit -q` | 102 passed |
+| Ruff | `uv run ruff check .` | All checks passed |
+| Mypy | `uv run mypy src tests` | Success: 47 source files |
+| E2E 冒烟（Step 7） | — | **pending**（未伪造） |
 
 ### Review 结果
 
 ```yaml
-p0: null
-p1: null
-p2: null
-p3: null
-review_report: null
+p0: 0
+p1: 0
+p2: 0
+p3: 2
+verdict: CODE_REVIEW_APPROVED
+review_report: |
+  先前 P2 CLOSED（2026-08-08 复审）：角色段「不得自动切换」= 不得变身/兼任；
+  自动调用 = mode-conditional（NORMAL 唯一成功标记+门禁；STRICT 禁续跑；异常 HALT）。
+  P3 残余：Step 7 冒烟 pending；CHANGE-006 卫生（非阻塞）。
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
-pr: null
+branch: feat/DEV-OPS-003-normal-strict-workflow-modes
+plan_commit: d45ea2faf3b057c9e8ca0cf8699c0a973fe2e638
+implementation_commit: 640616b3e4d9556c7d1bf2f81271ba62bc12cbe7
+implementation_commit_message: "chore(cursor): add NORMAL/STRICT workflow modes and release phases"
+pr: "#7"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/7"
+pr_state: OPEN
+pr_base: main
+pr_head: feat/DEV-OPS-003-normal-strict-workflow-modes
 ```
 
 ### 最终状态
 
-`planned`
+`committed`（IMPLEMENTATION_RELEASE 完成；PR #7 OPEN；等待人工 Merge；Step 7 冒烟 pending；不得开始 DEV-004）
