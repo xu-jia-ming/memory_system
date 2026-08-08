@@ -63,6 +63,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | completed |
 | DEV-OPS-003 | NORMAL / STRICT 工作流模式；减少常规人工机械门禁 | 非业务：扩展 DEV-OPS-002；保留六 Subagent 与唯一 Git 写角色 | DEV-OPS-002 | completed |
 | DEV-OPS-004 | 本机 Mihomo 网络回退策略文档（AI 工作流） | 非业务：全局开发规则 + 契约测试；不改规格/业务代理 Contract | DEV-OPS-003 | completed |
+| DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 非业务：人类日常操作手册 + 契约测试；不改 Orchestrator/mode/业务 | DEV-OPS-003, DEV-OPS-004, DEV-004 | approved |
+
+#### DEV-OPS-005 Human Prompt Playbook and Recovery Operations Manual
+
+- **目标**：新建权威人类操作手册 `03_AI_Prompts/01_项目日常操作手册.md`（文首「我以后只需要记住什么？」；六模板；规则 A–E），使会话历史不可用时人类仍能继续项目；强制静态契约 `tests/unit/test_project_operations_playbook_contract.py`。
+- **非目标**：开始 DEV-005 实施；改 Orchestrator / NORMAL·STRICT 实现；扩大 permissions；改 migrate/compose/Dockerfile/agents；业务 `src/**`；全文复制 Mihomo §18。
+- **关键设计决策**：单一人类权威 Playbook（与 `00_全局开发规则.md` 职责分离；网络细节仅引用 §18）；可选 README 短发现指针；真实 mode 缺陷记 follow-up 不改语义。
+- **变更文件（预期）**：`03_AI_Prompts/01_项目日常操作手册.md`；`tests/unit/test_project_operations_playbook_contract.py`；可选 `README.md`；本任务开发管理回写。
+- **测试**：强制静态契约（存在性 + 六模板 + 规则 A–E + NORMAL 两门禁/禁令/recovery invariants）；无真实 Integration/E2E；ruff/mypy/既有 unit 保持通过。
+- **验收**：手册与契约通过；未越权；完成后 `next_action`→DEV-005 规划；**本任务期间不得启动 DEV-005 实施**。
+- **插入说明**：**人工显式插入**于 DEV-005 业务规划/实施之前（用户覆盖先前「进入 DEV-005」的 next_action）。
+- **计划文件**：`02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md`
+- **状态备注**：`planned`（等待独立 Plan Review；`workflow_mode=NORMAL`（explicit）；基线 main@`4a5cbc2`；**下一业务任务仍为 DEV-005，本任务期间推迟且不实施**）。
 
 #### DEV-OPS-004 本机 Mihomo 网络回退策略（AI 面向）
 
@@ -472,5 +485,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | DEV-004（`completed`）；**不**修改 DEV-001–003 / DEV-OPS-* 完成状态；**不**开始 DEV-005/006 实施；**不**改变后续业务任务范围正文 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner 初版；独立 Plan Review → `PLAN_APPROVED`；人工确认 approved；PLAN_LANDING 完成（plan_commit `5c2274f`）；Developer tested；GD-DEV-004-001 治理记录；CODE_REVIEW_APPROVED；IMPLEMENTATION_RELEASE（implementation `d8730a6`；record `5246b5d`）；PR #10 MERGED `206b7a688cbad3070dc3f1646111efa165f2be87`；POST_MERGE_CLEANUP 本轮 |
+
+### CHANGE-009
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-08 |
+| 原因 | **人工显式插入**非业务任务 DEV-OPS-005：人类 Prompt Playbook 与 Recovery 操作手册；覆盖先前 progress「进入 DEV-005 业务规划」next_action；不改变 Phase 0–5 业务任务目标与依赖；不改 Orchestrator / NORMAL·STRICT 实现 |
+| 受影响任务 | 新增 `DEV-OPS-005`（Phase 0 补充，现 `planned`）；DEV-005 保持 `planned` 且为本任务期间推迟的下一业务任务；**不**修改 DEV-OPS-001–004 / DEV-001–004 完成状态；**不**改变 DEV-005+ 业务范围正文 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner 初版；等待独立 Plan Review → `PLAN_APPROVED`；未实施 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

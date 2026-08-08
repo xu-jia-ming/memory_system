@@ -6,14 +6,14 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-005
-current_task_status: planned
+current_task: DEV-OPS-005
+current_task_status: approved
 current_branch: main
 target_default_branch: main
-current_plan_file: null
-workflow_mode_for_this_task: null
-workflow_mode_source: null
-latest_commit: 206b7a688cbad3070dc3f1646111efa165f2be87
+current_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
+workflow_mode_for_this_task: NORMAL
+workflow_mode_source: explicit
+latest_commit: 4a5cbc2e9a7f5472749cc0181b7f91153b91479d
 plan_commit: null
 implementation_commit: null
 implementation_commit_message: null
@@ -29,7 +29,7 @@ previous_implementation_commit: d8730a670d577c1f9acb75ebb112fc8f88ea6662
 previous_implementation_commit_message: "feat(infra): add migration runner with mongo neo4j es kafka init"
 previous_status_record_commit_committed: 5246b5d3ba6a78c940f4469bbba2356005a41f29
 previous_status_record_commit_committed_message: "docs(status): record DEV-004 implementation commit and PR"
-previous_status_record_commit_completed: null  # filled after this docs(status): complete commit
+previous_status_record_commit_completed: 4a5cbc2e9a7f5472749cc0181b7f91153b91479d
 previous_status_record_commit_completed_message: "docs(status): complete DEV-004 after PR merge"
 previous_pr: "#10"
 previous_pr_status: merged
@@ -40,6 +40,7 @@ formal_DEV-004_plan_file: 02_开发管理/tasks/DEV-004-migration-runner-es-mapp
 formal_DEV-004_plan_commit: 5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a
 formal_DEV-004_implementation_commit: d8730a670d577c1f9acb75ebb112fc8f88ea6662
 formal_DEV-004_status_record_committed: 5246b5d3ba6a78c940f4469bbba2356005a41f29
+formal_DEV-004_status_record_completed: 4a5cbc2e9a7f5472749cc0181b7f91153b91479d
 formal_DEV-004_pr: "#10"
 formal_DEV-004_pr_state: MERGED
 formal_DEV-004_merge_commit: 206b7a688cbad3070dc3f1646111efa165f2be87
@@ -78,13 +79,19 @@ step7_smoke_pr: "#8"
 step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
-# Next business task
-deferred_business_task: null
-deferred_business_task_status: null
-next_action: 进入 DEV-005（通用 API 壳、鉴权、Request ID、日志与指标）业务规划；本 Commit 不得开始 DEV-005 实施
-insertion_override: null
-human_plan_approved_at: "2026-08-08 07:46 UTC"
-human_plan_approved_note: "PLAN_APPROVED；吸收 Plan Reviewer SHOULD_FIX 1–5 为 Amendment 001；NORMAL 自动续跑"
+# Next business task (deferred during DEV-OPS-005)
+deferred_business_task: DEV-005
+deferred_business_task_status: planned
+next_action: PLAN_LANDING（docs(plan) + 创建 feat）后 Developer 实施
+insertion_override:
+  prior_current_task: DEV-005
+  prior_next_action: "进入 DEV-005（通用 API 壳、鉴权、Request ID、日志与指标）业务规划；本 Commit 不得开始 DEV-005 实施"
+  override_by: "用户显式 TASK_ID=DEV-OPS-005 WORKFLOW_MODE=NORMAL(explicit)"
+  effect: "current_task=DEV-OPS-005 approved；DEV-005 推迟且本任务期间不得实施"
+  overridden_at: "2026-08-08 10:20 UTC"
+human_plan_approved_at: "2026-08-08 10:30 UTC"
+human_plan_approved_note: "PLAN_APPROVED；吸收 Plan Reviewer SHOULD_FIX 1–3；NORMAL 自动续跑 PLAN_LANDING→…→WAITING_FOR_PR_MERGE"
+# Retained DEV-004 governance deviation evidence (historical; not cleared by this ops insert)
 governance_deviation:
   id: GD-DEV-004-001
   type: NON_BLOCKING_GOVERNANCE_DEVIATION
@@ -185,7 +192,8 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | PLAN_APPROVED（DEV-004 计划） | **已通过**；plan_commit `5c2274f`；Amendment 001–002（含 GD-DEV-004-001）；`workflow_mode=NORMAL`（explicit） |
 | CODE_REVIEW_APPROVED（DEV-004 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=4） |
 | RELEASE_COMPLETED（DEV-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `d8730a670d577c1f9acb75ebb112fc8f88ea6662`；PR #10 MERGED（`206b7a688cbad3070dc3f1646111efa165f2be87`） |
-| RELEASE_COMPLETED（DEV-004 POST_MERGE_CLEANUP） | **已完成**（本轮）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
+| RELEASE_COMPLETED（DEV-004 POST_MERGE_CLEANUP） | **已完成**；completed 治理 `4a5cbc2`；exact feat 已删 |
+| PLAN_APPROVED（DEV-OPS-005 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-1–3；Amendment 001；Round 2 `PLAN_APPROVED`；Amendment 002 章节编号）；人工确认 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；`workflow_mode=NORMAL`（explicit）；plan_commit 待 PLAN_LANDING |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -372,6 +380,11 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 09:58 UTC | DEV-004 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `d8730a6`；PR #10 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；等待人工 Merge |
 | 2026-08-08 10:07 UTC | DEV-004 | PR #10 MERGED | Merge Commit `206b7a688cbad3070dc3f1646111efa165f2be87`；main 含 Migration Runner + ES Mapping/Alias | 等待自动 POST_MERGE_CLEANUP |
 | 2026-08-08 10:10 UTC | DEV-004 | committed → completed | POST_MERGE_CLEANUP：main docs(status): complete；删 exact feat | `current_task`→DEV-005 planned；未开始 DEV-005 实施 |
+| 2026-08-08 10:20 UTC | DEV-OPS-005 | planned（人工插入覆盖） | 用户显式覆盖先前「进入 DEV-005 业务规划」；创建 Task Plan；master_plan CHANGE-009 登记 | 未实施、未 Git 写、未创建分支；**不得开始 DEV-005**；等待独立 Plan Review |
+| 2026-08-08 10:22 UTC | DEV-OPS-005 | Plan Review Round 1 | 独立 Plan Reviewer：`PLAN_REJECTED`；BLOCKER=0；MUST_FIX=MF-1/MF-2/MF-3（READY_FOR_HUMAN_COMMIT 非第三门、START_EXISTING_TASK planning-only、PLAN_APPROVED 后 NORMAL 自动链） | 未实施；等待 Planner Amendment |
+| 2026-08-08 10:25 UTC | DEV-OPS-005 | Amendment 001 | Planner 吸收 MF-1/MF-2/MF-3 + SHOULD_FIX 入 §2/§5/§8；status 保持 planned | 未实施、未 Git 写 |
+| 2026-08-08 10:28 UTC | DEV-OPS-005 | Plan Review Round 2 | 独立 Plan Reviewer：`PLAN_APPROVED`；BLOCKER=0；MUST_FIX=0；SHOULD_FIX=STRICT 对照/章节编号/progress 时间线 | 等待人工确认 |
+| 2026-08-08 10:30 UTC | DEV-OPS-005 | approved（人工 PLAN_APPROVED） | 用户确认批准 Task Plan；要求吸收 SHOULD_FIX 1–3；NORMAL 自动续跑 | 进入 PLAN_LANDING；**不得开始 DEV-005** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -404,8 +417,9 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-005**（`planned`）；`current_branch=main`；`latest_commit=206b7a688cbad3070dc3f1646111efa165f2be87`（DEV-004 merge）。
-2. **立即下一动作**：**DEV-005 业务规划**（通用 API 壳、鉴权、Request ID、日志与指标）；本 Commit 不得开始 DEV-005 实施。
-3. **DEV-004**：已 `completed`（implementation `d8730a6`；committed 治理 `5246b5d`；PR #10 MERGED `206b7a6`；POST_MERGE complete 本轮）。
-4. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
-5. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
+1. **当前**：`current_task` = **DEV-OPS-005**（`approved`）；`workflow_mode=NORMAL`（explicit）；`current_branch=main`；`latest_commit=4a5cbc2e9a7f5472749cc0181b7f91153b91479d`；计划文件 `02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md`。
+2. **立即下一动作**：`PLAN_LANDING` → Developer 实施 Playbook + 契约；**本任务期间不得开始 DEV-005 实施**。
+3. **推迟的业务任务**：`DEV-005` 保持 `planned`（通用 API 壳等）；完成本 ops 任务后 `next_action` 再恢复 DEV-005 业务规划。
+4. **DEV-004**：已 `completed`（implementation `d8730a6`；committed 治理 `5246b5d`；PR #10 MERGED `206b7a6`；complete 治理 `4a5cbc2`）。
+5. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
+6. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
