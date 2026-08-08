@@ -7,21 +7,23 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-OPS-005
-current_task_status: approved
+current_task_status: committed
 current_branch: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: a601a3ba569b12b8fc0ae8ff913f66927381af19
+latest_commit: 373cd331313e02d053a6b49af11beaa7be02acbc
 plan_commit: a601a3ba569b12b8fc0ae8ff913f66927381af19
-implementation_commit: null
-implementation_commit_message: null
-pr: null
-pr_url: null
-pr_status: null
-pr_base: null
-pr_head: null
+implementation_commit: 373cd331313e02d053a6b49af11beaa7be02acbc
+implementation_commit_message: "docs(ai): add human project operations playbook and contract tests"
+pr: "#11"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/11"
+pr_status: OPEN
+pr_base: main
+pr_head: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
+status_record_committed: null
+status_record_committed_pending: true
 previous_task: DEV-004
 previous_task_status: completed
 previous_task_completed_at: "2026-08-08 10:07 UTC"
@@ -82,15 +84,17 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task (deferred during DEV-OPS-005)
 deferred_business_task: DEV-005
 deferred_business_task_status: planned
-next_action: Developer 在 feat/DEV-OPS-005-human-prompt-playbook-recovery-operations 按已批准 Task Plan §5 白名单实施（plan_commit=a601a3ba569b12b8fc0ae8ff913f66927381af19）；不得开始 DEV-005
+next_action: WAITING_FOR_PR_MERGE（PR #11 OPEN）；人工 Merge 后 POST_MERGE_CLEANUP；不得开始 DEV-005
 insertion_override:
   prior_current_task: DEV-005
   prior_next_action: "进入 DEV-005（通用 API 壳、鉴权、Request ID、日志与指标）业务规划；本 Commit 不得开始 DEV-005 实施"
   override_by: "用户显式 TASK_ID=DEV-OPS-005 WORKFLOW_MODE=NORMAL(explicit)"
-  effect: "current_task=DEV-OPS-005 approved；DEV-005 推迟且本任务期间不得实施"
+  effect: "current_task=DEV-OPS-005 committed；DEV-005 推迟且本任务期间不得实施"
   overridden_at: "2026-08-08 10:20 UTC"
 human_plan_approved_at: "2026-08-08 10:30 UTC"
 human_plan_approved_note: "PLAN_APPROVED；吸收 Plan Reviewer SHOULD_FIX 1–3；NORMAL 自动续跑 PLAN_LANDING→…→WAITING_FOR_PR_MERGE"
+code_review_approved_at: "2026-08-08 10:46 UTC"
+code_review_result: "CODE_REVIEW_APPROVED；P0=0；P1=0；P2=0；P3=3（残余不阻塞）"
 # Retained DEV-004 governance deviation evidence (historical; not cleared by this ops insert)
 governance_deviation:
   id: GD-DEV-004-001
@@ -109,15 +113,16 @@ governance_deviation:
 
 | 测试层级 | 状态 | 最近命令 | 最近结果 |
 |---|---|---|---|
-| Unit | passed | `uv run pytest tests/unit -q` | **128 passed**（DEV-004 recovery；exit=0） |
-| Contract（业务） | passed | `uv run pytest tests/contract -q` | **17 passed**（含 migrate paths + compose；exit=0） |
+| Unit | passed（DEV-OPS-005） | `uv run pytest tests/unit -q` | **156 passed**；exit=0（含 Playbook 契约 28） |
+| Contract（Playbook DEV-OPS-005） | passed | `uv run pytest tests/unit/test_project_operations_playbook_contract.py -q` | **28 passed**；exit=0 |
+| Contract（业务） | passed | `uv run pytest tests/contract -q` | **17 passed**（含 migrate paths + compose；exit=0；本任务未改） |
 | Contract（Cursor 工作流） | passed | `uv run pytest tests/unit/test_cursor_orchestrator_contract.py tests/unit/test_cursor_workflow_modes_contract.py tests/unit/test_cursor_commands_contract.py -q` | 50 passed（既有；本任务未改五命令） |
 | Contract（Mihomo 网络回退） | passed | `uv run pytest tests/unit/test_mihomo_network_fallback_contract.py -q` | 15 passed（DEV-OPS-004；本任务未改） |
-| Integration | passed | `uv run pytest tests/integration/test_migrate_infra.py -v` | **1 passed**（79s；compose test 栈；exit=0） |
+| Integration | passed | `uv run pytest tests/integration/test_migrate_infra.py -v` | **1 passed**（79s；compose test 栈；exit=0；本任务未改） |
 | TEI lock validate | passed | `timeout 600 ./scripts/lock_tei_images.sh` | CPU+GPU 1.9.3（GPU `--gpus all` 修复后；DEV-003） |
 | E2E | passed（DEV-OPS-003 Step 7） | DEV-OPS-003-SMOKE NORMAL 受监督全链路 | **PASSED**：默认 NORMAL；两人工门（PLAN_APPROVED + PR Merge）；三相 Release 真实执行；PR #8 MERGED（`e14d71e`）；POST_MERGE `45c74f8`；STRICT 正路径证据=正式 DEV-OPS-003 自身 |
-| Ruff | passed | `uv run ruff check .` | All checks passed（DEV-004） |
-| Mypy | passed | `uv run mypy src tests scripts` | Success: 60 source files（DEV-004） |
+| Ruff | passed（DEV-OPS-005） | `uv run ruff check .` | All checks passed；exit=0 |
+| Mypy | passed（DEV-OPS-005） | `uv run mypy src tests scripts` | Success: 61 source files；exit=0 |
 | UI discovery（§9 / OI-OPS-005 延续） | passed（DEV-OPS-002） | 人工 `/` 菜单 | 七项均可发现：`/orchestrate-task`、`/planner`、`/plan-reviewer`、`/developer`、`/code-reviewer`、`/commit-recorder`、`/release-operator`（2026-08-07 02:40 UTC） |
 | E2E 冒烟（§9） | passed（DEV-OPS-002） | 受监督完整编排链路 | PR #3；`0891cd5`；测试 PR 已关闭（未 merge）；E2E 分支保留 |
 
@@ -194,6 +199,8 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（DEV-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `d8730a670d577c1f9acb75ebb112fc8f88ea6662`；PR #10 MERGED（`206b7a688cbad3070dc3f1646111efa165f2be87`） |
 | RELEASE_COMPLETED（DEV-004 POST_MERGE_CLEANUP） | **已完成**；completed 治理 `4a5cbc2`；exact feat 已删 |
 | PLAN_APPROVED（DEV-OPS-005 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-1–3；Amendment 001；Round 2 `PLAN_APPROVED`；Amendment 002 章节编号）；人工确认 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；`workflow_mode=NORMAL`（explicit）；plan_commit `a601a3ba569b12b8fc0ae8ff913f66927381af19` |
+| CODE_REVIEW_APPROVED（DEV-OPS-005 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=3；P3 残余不阻塞） |
+| RELEASE_COMPLETED（DEV-OPS-005 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 OPEN（base=main，head=feat） |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -386,6 +393,10 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 10:28 UTC | DEV-OPS-005 | Plan Review Round 2 | 独立 Plan Reviewer：`PLAN_APPROVED`；BLOCKER=0；MUST_FIX=0；SHOULD_FIX=STRICT 对照/章节编号/progress 时间线 | 等待人工确认 |
 | 2026-08-08 10:30 UTC | DEV-OPS-005 | approved（人工 PLAN_APPROVED） | 用户确认批准 Task Plan；要求吸收 SHOULD_FIX 1–3；NORMAL 自动续跑 | 进入 PLAN_LANDING；**不得开始 DEV-005** |
 | 2026-08-08 10:31 UTC | DEV-OPS-005 | approved（PLAN_LANDING） | docs(plan) `a601a3ba569b12b8fc0ae8ff913f66927381af19`；创建 `feat/DEV-OPS-005-human-prompt-playbook-recovery-operations` | `next_action`→Developer 实施；未实施；**不得开始 DEV-005** |
+| 2026-08-08 10:40 UTC | DEV-OPS-005 | approved → in_progress | Developer 开工：Playbook + 契约测试 + README 短入口；治理回写 | 未 Git 写；**不得开始 DEV-005** |
+| 2026-08-08 10:45 UTC | DEV-OPS-005 | in_progress → tested | Playbook+契约+README 完成；Contract 28 / unit 156 / ruff / mypy 全绿 | 等待独立 Code Review；未 Git 写；**不得开始 DEV-005** |
+| 2026-08-08 10:46 UTC | DEV-OPS-005 | tested → reviewed | 独立 Code Review `CODE_REVIEW_APPROVED`；P0=0/P1=0/P2=0/P3=3 | Commit Recorder READY_FOR_HUMAN_COMMIT；进入 IMPLEMENTATION_RELEASE；**不得开始 DEV-005** |
+| 2026-08-08 10:50 UTC | DEV-OPS-005 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 OPEN | 仅 feat push；禁 push main；等待人工 Merge；**不得开始 DEV-005** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -418,9 +429,10 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-OPS-005**（`approved`）；`workflow_mode=NORMAL`（explicit）；`plan_commit=a601a3ba569b12b8fc0ae8ff913f66927381af19`；分支 `feat/DEV-OPS-005-human-prompt-playbook-recovery-operations`；计划文件 `02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md`。
-2. **立即下一动作**：**Developer** 在 feat 按已批准 Task Plan §5 白名单实施（Playbook + 契约）；**本任务期间不得开始 DEV-005 实施**。
+1. **当前**：`current_task` = **DEV-OPS-005**（`committed`）；`workflow_mode=NORMAL`（explicit）；`implementation_commit=373cd331313e02d053a6b49af11beaa7be02acbc`；PR **#11** OPEN（base=`main`，head=`feat/DEV-OPS-005-human-prompt-playbook-recovery-operations`）；`plan_commit=a601a3ba569b12b8fc0ae8ff913f66927381af19`。
+2. **立即下一动作**：`WAITING_FOR_PR_MERGE` — 等待人工 Merge PR #11；其后自动 `POST_MERGE_CLEANUP`；**本任务期间不得开始 DEV-005 实施**。
 3. **推迟的业务任务**：`DEV-005` 保持 `planned`（通用 API 壳等）；完成本 ops 任务后 `next_action` 再恢复 DEV-005 业务规划。
 4. **DEV-004**：已 `completed`（implementation `d8730a6`；committed 治理 `5246b5d`；PR #10 MERGED `206b7a6`；complete 治理 `4a5cbc2`）。
 5. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
 6. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
+7. **权威人类 Playbook（本任务）**：`03_AI_Prompts/01_项目日常操作手册.md`。

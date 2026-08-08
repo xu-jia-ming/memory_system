@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-005
 task_name: Human Prompt Playbook and Recovery Operations Manual
-status: approved
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -17,10 +17,10 @@ prerequisites:
   - "本任务为用户显式插入/覆盖：在 DEV-005 业务规划/实施之前执行；不得开始 DEV-005 业务实施"
 branch: "feat/DEV-OPS-005-human-prompt-playbook-recovery-operations"
 created_at: "2026-08-08 10:20 UTC"
-updated_at: "2026-08-08 10:31 UTC"
+updated_at: "2026-08-08 10:50 UTC"
 approval_gates:
   planning_docs: "approved；人工 PLAN_APPROVED 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；PLAN_LANDING 完成"
-  implementation_plan: "status=approved；PLAN_LANDING 完成；等待 Developer 在 feat 实施"
+  implementation_plan: "status=committed；IMPLEMENTATION_RELEASE 完成；PR #11 OPEN；WAITING_FOR_PR_MERGE"
 insertion_override:
   prior_current_task: "DEV-005"
   prior_current_task_status: "planned"
@@ -340,17 +340,17 @@ PLAN_LANDING
 
 ## 9. 验收标准
 
-- [ ] `03_AI_Prompts/01_项目日常操作手册.md` 存在，且含「我以后只需要记住什么？」+ 六模板 ID + 可检索 `规则 A`…`规则 E`
-- [ ] 手册锁定 MF-1/MF-2/MF-3：恰好两扇常规人工门；`READY_FOR_HUMAN_COMMIT` 非第三门；`START_EXISTING_TASK` planning-only；`PLAN_APPROVED` 后自动链且无第二次手工 `PLAN_LANDING` 门
-- [ ] `tests/unit/test_project_operations_playbook_contract.py` 存在且 §8 invariants 全部断言通过（含 MF/SHOULD_FIX 新增行）
-- [ ] README 发现入口已加短指针（若 Reviewer 批准取消则更新本条为 N/A，且白名单同步）；**未**编辑 `00_全局开发规则.md`
-- [ ] **未**修改 Orchestrator / agents / permissions / migrate / compose / Dockerfile / 业务 `src/**`
-- [ ] **未**开始 DEV-005 实施；DEV-005 仍为 `planned`（推迟）
-- [ ] `uv run pytest tests/unit -q` 通过
-- [ ] Ruff 通过
-- [ ] Mypy 通过
-- [ ] Review 无 P0/P1
-- [ ] 完成后 `next_action` = DEV-005 业务规划（不得实施）
+- [x] `03_AI_Prompts/01_项目日常操作手册.md` 存在，且含「我以后只需要记住什么？」+ 六模板 ID + 可检索 `规则 A`…`规则 E`
+- [x] 手册锁定 MF-1/MF-2/MF-3：恰好两扇常规人工门；`READY_FOR_HUMAN_COMMIT` 非第三门；`START_EXISTING_TASK` planning-only；`PLAN_APPROVED` 后自动链且无第二次手工 `PLAN_LANDING` 门
+- [x] `tests/unit/test_project_operations_playbook_contract.py` 存在且 §8 invariants 全部断言通过（含 MF/SHOULD_FIX 新增行）
+- [x] README 发现入口已加短指针（若 Reviewer 批准取消则更新本条为 N/A，且白名单同步）；**未**编辑 `00_全局开发规则.md`
+- [x] **未**修改 Orchestrator / agents / permissions / migrate / compose / Dockerfile / 业务 `src/**`
+- [x] **未**开始 DEV-005 实施；DEV-005 仍为 `planned`（推迟）
+- [x] `uv run pytest tests/unit -q` 通过
+- [x] Ruff 通过
+- [x] Mypy 通过
+- [x] Review 无 P0/P1（P0=0；P1=0；P2=0；P3=3 残余不阻塞）
+- [ ] 完成后 `next_action` = DEV-005 业务规划（不得实施；本轮 next_action=IMPLEMENTATION_RELEASE/PR）
 
 ---
 
@@ -431,6 +431,12 @@ release_phases:
 | 2026-08-08 10:28 UTC | Plan Review Round 2 | `PLAN_APPROVED`；MUST_FIX=0；SHOULD_FIX=STRICT对照/章节编号/progress时间线 | 未实施 | 等待人工确认 |
 | 2026-08-08 10:30 UTC | 人工 PLAN_APPROVED + Amendment 002 | status→approved；理顺 §2.1/§2.2；progress 补记 Round1/Amd001/Round2 | 未实施 | 进入 PLAN_LANDING；不得开始 DEV-005 |
 | 2026-08-08 10:31 UTC | PLAN_LANDING | docs(plan) on main；创建 feat/DEV-OPS-005-human-prompt-playbook-recovery-operations | n/a | plan_commit=a601a3ba569b12b8fc0ae8ff913f66927381af19；等待 Developer；不得开始 DEV-005 |
+| 2026-08-08 10:40 UTC | Developer 开工 | status→in_progress；开始白名单实施（Playbook+契约+README+治理回写） | 待跑 | 未 Git 写；不得开始 DEV-005 |
+| 2026-08-08 10:45 UTC | Developer implemented→tested | Playbook+契约+README 落盘；质量门禁全绿 | Contract 28 passed；unit 156 passed；ruff/mypy exit=0 | 未 Git 写；等待 Code Review；不得开始 DEV-005 |
+| 2026-08-08 10:46 UTC | Code Review | `CODE_REVIEW_APPROVED`；P0=0；P1=0；P2=0；P3=3（残余不阻塞） | n/a（Reviewer 静态交叉核对契约） | 未 Git 写；不得开始 DEV-005 |
+| 2026-08-08 10:47 UTC | Commit Recorder | `READY_FOR_HUMAN_COMMIT`（NORMAL 兼容边界标记） | n/a | 白名单 6 路径；无 Secret；建议 status→reviewed |
+| 2026-08-08 10:48 UTC | Release Operator pre-commit | status→reviewed；Review 结果回写；next_action→IMPLEMENTATION_RELEASE/PR | n/a | 即将实现 Commit；不得开始 DEV-005 |
+| 2026-08-08 10:50 UTC | IMPLEMENTATION_RELEASE | 实现 Commit + push + PR #11；docs(status) record | n/a | implementation=`373cd331313e02d053a6b49af11beaa7be02acbc`；仅 feat；不得开始 DEV-005 |
 
 ---
 
@@ -440,31 +446,37 @@ release_phases:
 
 | 文件 | 结果 |
 |---|---|
-| （实施后填写） | |
+| `03_AI_Prompts/01_项目日常操作手册.md` | 新建：文首记忆负担；六模板粘贴块；规则 A–E；NORMAL/STRICT 对照；invariants |
+| `tests/unit/test_project_operations_playbook_contract.py` | 新建：§8 + SHOULD_FIX1 静态契约（28 tests） |
+| `README.md` | 短发现入口（指向 Playbook；无全文复制） |
+| 本 Task Plan | 执行记录 / status=`committed` |
+| `02_开发管理/progress.md` | 实施态回写 + 测试结果 + reviewed → committed |
+| `02_开发管理/master_plan.md` | Phase 0 补充状态→`committed` |
 
 ### 与原计划的差异
 
-暂无。
+暂无。SHOULD_FIX 1（NORMAL vs STRICT 对照）已落入手册与契约。P3=3 残余（契约 `tests` 字面、host OR 分支偏松、对照表措辞）不阻塞本轮。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
+| Contract | `uv run pytest tests/unit/test_project_operations_playbook_contract.py -q` | **28 passed**；exit=0 |
+| Unit | `uv run pytest tests/unit -q` | **156 passed**；exit=0 |
 | Integration | N/A |  |
 | E2E | N/A |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Ruff | `uv run ruff check .` | All checks passed；exit=0 |
+| Mypy | `uv run mypy src tests scripts` | Success: 61 source files；exit=0 |
 
 ### Review 结果
 
 ```yaml
-p0: null
-p1: null
-p2: null
-p3: null
-review_report: null
+p0: 0
+p1: 0
+p2: 0
+p3: 3
+review_verdict: CODE_REVIEW_APPROVED
+review_report: "P3 residual: (1) MF-3 auto-chain test omits literal tests step; (2) host-workaround OR branch loose; (3) Human PR Review/Merge vs Human PR Merge wording. Non-blocking."
 ```
 
 ### Git 记录
@@ -472,13 +484,16 @@ review_report: null
 ```yaml
 branch: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
 plan_commit: a601a3ba569b12b8fc0ae8ff913f66927381af19
-implementation_commit: null
-implementation_commit_message: null
-pr: null
-pr_url: null
-pr_status: null
+implementation_commit: 373cd331313e02d053a6b49af11beaa7be02acbc
+implementation_commit_message: "docs(ai): add human project operations playbook and contract tests"
+pr: "#11"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/11"
+pr_status: OPEN
+pr_base: main
+pr_head: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
+status_record_committed: null
 ```
 
 ### 最终状态
 
-`approved`
+`committed`

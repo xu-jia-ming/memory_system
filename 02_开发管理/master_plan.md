@@ -63,7 +63,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | completed |
 | DEV-OPS-003 | NORMAL / STRICT 工作流模式；减少常规人工机械门禁 | 非业务：扩展 DEV-OPS-002；保留六 Subagent 与唯一 Git 写角色 | DEV-OPS-002 | completed |
 | DEV-OPS-004 | 本机 Mihomo 网络回退策略文档（AI 工作流） | 非业务：全局开发规则 + 契约测试；不改规格/业务代理 Contract | DEV-OPS-003 | completed |
-| DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 非业务：人类日常操作手册 + 契约测试；不改 Orchestrator/mode/业务 | DEV-OPS-003, DEV-OPS-004, DEV-004 | approved |
+| DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 非业务：人类日常操作手册 + 契约测试；不改 Orchestrator/mode/业务 | DEV-OPS-003, DEV-OPS-004, DEV-004 | committed |
 
 #### DEV-OPS-005 Human Prompt Playbook and Recovery Operations Manual
 
@@ -75,7 +75,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：手册与契约通过；未越权；完成后 `next_action`→DEV-005 规划；**本任务期间不得启动 DEV-005 实施**。
 - **插入说明**：**人工显式插入**于 DEV-005 业务规划/实施之前（用户覆盖先前「进入 DEV-005」的 next_action）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md`
-- **状态备注**：`planned`（等待独立 Plan Review；`workflow_mode=NORMAL`（explicit）；基线 main@`4a5cbc2`；**下一业务任务仍为 DEV-005，本任务期间推迟且不实施**）。
+- **状态备注**：`committed`（implementation `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 OPEN base=main；CODE_REVIEW_APPROVED P0/P1=0 P3=3；plan_commit `a601a3b`；`workflow_mode=NORMAL`（explicit）；WAITING_FOR_PR_MERGE；**下一业务任务仍为 DEV-005，本任务期间推迟且不实施**）。
 
 #### DEV-OPS-004 本机 Mihomo 网络回退策略（AI 面向）
 
@@ -492,8 +492,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|
 | 日期 | 2026-08-08 |
 | 原因 | **人工显式插入**非业务任务 DEV-OPS-005：人类 Prompt Playbook 与 Recovery 操作手册；覆盖先前 progress「进入 DEV-005 业务规划」next_action；不改变 Phase 0–5 业务任务目标与依赖；不改 Orchestrator / NORMAL·STRICT 实现 |
-| 受影响任务 | 新增 `DEV-OPS-005`（Phase 0 补充，现 `planned`）；DEV-005 保持 `planned` 且为本任务期间推迟的下一业务任务；**不**修改 DEV-OPS-001–004 / DEV-001–004 完成状态；**不**改变 DEV-005+ 业务范围正文 |
+| 受影响任务 | 新增 `DEV-OPS-005`（Phase 0 补充，现 `committed`）；DEV-005 保持 `planned` 且为本任务期间推迟的下一业务任务；**不**修改 DEV-OPS-001–004 / DEV-001–004 完成状态；**不**改变 DEV-005+ 业务范围正文 |
 | 是否改变技术规格 | **否** |
-| 审批 | Planner 初版；等待独立 Plan Review → `PLAN_APPROVED`；未实施 |
+| 审批 | Planner 初版；独立 Plan Review Round 2 → `PLAN_APPROVED`；人工确认；PLAN_LANDING 完成（plan_commit `a601a3b`）；Developer `tested`；Code Review `CODE_REVIEW_APPROVED`（P0/P1=0；P3=3）；IMPLEMENTATION_RELEASE：implementation `373cd33`；PR #11 OPEN |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
