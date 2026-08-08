@@ -11,6 +11,7 @@ from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, Settings
 from memory_system.settings.sources import YamlSettingsSource
 from memory_system.settings.validators import (
     validate_context,
+    validate_embedding_runtime,
     validate_memory_consolidation,
     validate_memory_retrieval,
     validate_shutdown,
@@ -318,6 +319,7 @@ class Settings(BaseSettings):
         validate_memory_consolidation(self, info)  # type: ignore[arg-type]
         validate_memory_retrieval(self, info)  # type: ignore[arg-type]
         validate_shutdown(self, info)  # type: ignore[arg-type]
+        validate_embedding_runtime(self, info)  # type: ignore[arg-type]
         return self
 
     @classmethod

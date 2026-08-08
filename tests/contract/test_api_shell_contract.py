@@ -17,9 +17,11 @@ from fastapi.testclient import TestClient
 from prometheus_client import REGISTRY, generate_latest
 
 from memory_system.api.app import create_app
+from memory_system.infrastructure.embedding.types import EmbeddingResult
 from memory_system.infrastructure.runtime import AppState
 from memory_system.observability import metrics as metrics_module
 from memory_system.settings import get_settings
+from tests.contract.helpers.tei_fake import make_finite_vector
 
 _es_mod = importlib.import_module("scripts.migrations.003_elasticsearch_memory_v1")
 MEMORY_RETRIEVAL_V1_MAPPINGS = _es_mod.MEMORY_RETRIEVAL_V1_MAPPINGS
@@ -59,7 +61,7 @@ def valid_env(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture
-def fake_app_state(valid_env: None) -> AppState:
+def fake_app_state(valid_env: None, monkeypatch: pytest.MonkeyPatch) -> AppState:
     settings = get_settings()
     redis_client = MagicMock()
     redis_client.ping = AsyncMock(return_value=True)
@@ -110,6 +112,19 @@ def fake_app_state(valid_env: None) -> AppState:
     kafka_producer.client = MagicMock()
     kafka_producer.client.bootstrap_connected = MagicMock(return_value=True)
 
+    embedding_stub = MagicMock()
+    embedding_stub.embed = AsyncMock(
+        return_value=EmbeddingResult(
+            model="BAAI/bge-m3",
+            dimension=1024,
+            vectors=[make_finite_vector(1.0)],
+        )
+    )
+    monkeypatch.setattr(
+        "memory_system.infrastructure.runtime.create_embedding_client",
+        lambda _settings, _http_client: embedding_stub,
+    )
+
     return AppState(
         settings=settings,
         redis=redis_client,
@@ -146,6 +161,27 @@ def test_health_ready_without_api_key_all_ready(client: TestClient) -> None:
     payload = response.json()
     assert payload["status"] == "ready"
     assert payload["checks"]["embedding"] == "ready"
+
+
+def test_health_ready_embedding_probe_failure_is_non_blocking(
+    monkeypatch: pytest.MonkeyPatch,
+    fake_app_state: AppState,
+) -> None:
+    failing_stub = MagicMock()
+    failing_stub.embed = AsyncMock(side_effect=RuntimeError("embedding probe failed"))
+    monkeypatch.setattr(
+        "memory_system.infrastructure.runtime.create_embedding_client",
+        lambda _settings, _http_client: failing_stub,
+    )
+
+    app = create_app(app_state=fake_app_state)
+    with TestClient(app) as test_client:
+        response = test_client.get("/health/ready")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "ready"
+    assert payload["checks"]["embedding"] == "not_ready"
 
 
 def test_metrics_without_api_key(client: TestClient) -> None:
