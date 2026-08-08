@@ -17,10 +17,10 @@ prerequisites:
   - "本任务为用户显式插入/覆盖：在 DEV-005 业务规划/实施之前执行；不得开始 DEV-005 业务实施"
 branch: "feat/DEV-OPS-005-human-prompt-playbook-recovery-operations"
 created_at: "2026-08-08 10:20 UTC"
-updated_at: "2026-08-08 10:25 UTC"
+updated_at: "2026-08-08 10:31 UTC"
 approval_gates:
-  planning_docs: "approved；人工 PLAN_APPROVED 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；进入 PLAN_LANDING"
-  implementation_plan: "status=approved；等待 PLAN_LANDING → Developer；未创建 feat（即将）"
+  planning_docs: "approved；人工 PLAN_APPROVED 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；PLAN_LANDING 完成"
+  implementation_plan: "status=approved；PLAN_LANDING 完成；等待 Developer 在 feat 实施"
 insertion_override:
   prior_current_task: "DEV-005"
   prior_current_task_status: "planned"
@@ -430,6 +430,7 @@ release_phases:
 | 2026-08-08 10:25 UTC | Planner Amendment 001 | 吸收 MF-1/MF-2/MF-3 + SHOULD_FIX 入 §1.1/§2/§2.2/§5 Step1/§8/Amendment 001；status 保持 planned | 未实施 | 未 Git 写；未开始 DEV-005；未改 Playbook 实现 |
 | 2026-08-08 10:28 UTC | Plan Review Round 2 | `PLAN_APPROVED`；MUST_FIX=0；SHOULD_FIX=STRICT对照/章节编号/progress时间线 | 未实施 | 等待人工确认 |
 | 2026-08-08 10:30 UTC | 人工 PLAN_APPROVED + Amendment 002 | status→approved；理顺 §2.1/§2.2；progress 补记 Round1/Amd001/Round2 | 未实施 | 进入 PLAN_LANDING；不得开始 DEV-005 |
+| 2026-08-08 10:31 UTC | PLAN_LANDING | docs(plan) on main；创建 feat/DEV-OPS-005-human-prompt-playbook-recovery-operations | n/a | plan_commit=a601a3ba569b12b8fc0ae8ff913f66927381af19；等待 Developer；不得开始 DEV-005 |
 
 ---
 
@@ -469,8 +470,8 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
+plan_commit: a601a3ba569b12b8fc0ae8ff913f66927381af19
 implementation_commit: null
 implementation_commit_message: null
 pr: null

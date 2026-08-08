@@ -8,13 +8,13 @@ spec_version: 9
 current_phase: Phase 0
 current_task: DEV-OPS-005
 current_task_status: approved
-current_branch: main
+current_branch: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: 4a5cbc2e9a7f5472749cc0181b7f91153b91479d
-plan_commit: null
+latest_commit: a601a3ba569b12b8fc0ae8ff913f66927381af19
+plan_commit: a601a3ba569b12b8fc0ae8ff913f66927381af19
 implementation_commit: null
 implementation_commit_message: null
 pr: null
@@ -82,7 +82,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task (deferred during DEV-OPS-005)
 deferred_business_task: DEV-005
 deferred_business_task_status: planned
-next_action: PLAN_LANDING（docs(plan) + 创建 feat）后 Developer 实施
+next_action: Developer 在 feat/DEV-OPS-005-human-prompt-playbook-recovery-operations 按已批准 Task Plan §5 白名单实施（plan_commit=a601a3ba569b12b8fc0ae8ff913f66927381af19）；不得开始 DEV-005
 insertion_override:
   prior_current_task: DEV-005
   prior_next_action: "进入 DEV-005（通用 API 壳、鉴权、Request ID、日志与指标）业务规划；本 Commit 不得开始 DEV-005 实施"
@@ -193,7 +193,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | CODE_REVIEW_APPROVED（DEV-004 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=4） |
 | RELEASE_COMPLETED（DEV-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `d8730a670d577c1f9acb75ebb112fc8f88ea6662`；PR #10 MERGED（`206b7a688cbad3070dc3f1646111efa165f2be87`） |
 | RELEASE_COMPLETED（DEV-004 POST_MERGE_CLEANUP） | **已完成**；completed 治理 `4a5cbc2`；exact feat 已删 |
-| PLAN_APPROVED（DEV-OPS-005 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-1–3；Amendment 001；Round 2 `PLAN_APPROVED`；Amendment 002 章节编号）；人工确认 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；`workflow_mode=NORMAL`（explicit）；plan_commit 待 PLAN_LANDING |
+| PLAN_APPROVED（DEV-OPS-005 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-1–3；Amendment 001；Round 2 `PLAN_APPROVED`；Amendment 002 章节编号）；人工确认 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；`workflow_mode=NORMAL`（explicit）；plan_commit `a601a3ba569b12b8fc0ae8ff913f66927381af19` |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -385,6 +385,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 10:25 UTC | DEV-OPS-005 | Amendment 001 | Planner 吸收 MF-1/MF-2/MF-3 + SHOULD_FIX 入 §2/§5/§8；status 保持 planned | 未实施、未 Git 写 |
 | 2026-08-08 10:28 UTC | DEV-OPS-005 | Plan Review Round 2 | 独立 Plan Reviewer：`PLAN_APPROVED`；BLOCKER=0；MUST_FIX=0；SHOULD_FIX=STRICT 对照/章节编号/progress 时间线 | 等待人工确认 |
 | 2026-08-08 10:30 UTC | DEV-OPS-005 | approved（人工 PLAN_APPROVED） | 用户确认批准 Task Plan；要求吸收 SHOULD_FIX 1–3；NORMAL 自动续跑 | 进入 PLAN_LANDING；**不得开始 DEV-005** |
+| 2026-08-08 10:31 UTC | DEV-OPS-005 | approved（PLAN_LANDING） | docs(plan) `a601a3ba569b12b8fc0ae8ff913f66927381af19`；创建 `feat/DEV-OPS-005-human-prompt-playbook-recovery-operations` | `next_action`→Developer 实施；未实施；**不得开始 DEV-005** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -417,8 +418,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-OPS-005**（`approved`）；`workflow_mode=NORMAL`（explicit）；`current_branch=main`；`latest_commit=4a5cbc2e9a7f5472749cc0181b7f91153b91479d`；计划文件 `02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md`。
-2. **立即下一动作**：`PLAN_LANDING` → Developer 实施 Playbook + 契约；**本任务期间不得开始 DEV-005 实施**。
+1. **当前**：`current_task` = **DEV-OPS-005**（`approved`）；`workflow_mode=NORMAL`（explicit）；`plan_commit=a601a3ba569b12b8fc0ae8ff913f66927381af19`；分支 `feat/DEV-OPS-005-human-prompt-playbook-recovery-operations`；计划文件 `02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md`。
+2. **立即下一动作**：**Developer** 在 feat 按已批准 Task Plan §5 白名单实施（Playbook + 契约）；**本任务期间不得开始 DEV-005 实施**。
 3. **推迟的业务任务**：`DEV-005` 保持 `planned`（通用 API 壳等）；完成本 ops 任务后 `next_action` 再恢复 DEV-005 业务规划。
 4. **DEV-004**：已 `completed`（implementation `d8730a6`；committed 治理 `5246b5d`；PR #10 MERGED `206b7a6`；complete 治理 `4a5cbc2`）。
 5. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
