@@ -6,37 +6,46 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-OPS-005
-current_task_status: committed
-current_branch: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
+current_task: DEV-005
+current_task_status: planned
+current_branch: main
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
-workflow_mode_for_this_task: NORMAL
-workflow_mode_source: explicit
-latest_commit: 373cd331313e02d053a6b49af11beaa7be02acbc
-plan_commit: a601a3ba569b12b8fc0ae8ff913f66927381af19
-implementation_commit: 373cd331313e02d053a6b49af11beaa7be02acbc
-implementation_commit_message: "docs(ai): add human project operations playbook and contract tests"
-pr: "#11"
-pr_url: "https://github.com/xu-jia-ming/memory_system/pull/11"
-pr_status: OPEN
-pr_base: main
-pr_head: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
-status_record_committed: null
-status_record_committed_pending: true
-previous_task: DEV-004
+current_plan_file: null
+workflow_mode_for_this_task: null
+workflow_mode_source: null
+latest_commit: 0239c28281949bedec66dbec1412197c5561a611
+plan_commit: null
+implementation_commit: null
+implementation_commit_message: null
+pr: null
+pr_url: null
+pr_status: null
+pr_base: null
+pr_head: null
+previous_task: DEV-OPS-005
 previous_task_status: completed
-previous_task_completed_at: "2026-08-08 10:07 UTC"
-previous_implementation_commit: d8730a670d577c1f9acb75ebb112fc8f88ea6662
-previous_implementation_commit_message: "feat(infra): add migration runner with mongo neo4j es kafka init"
-previous_status_record_commit_committed: 5246b5d3ba6a78c940f4469bbba2356005a41f29
-previous_status_record_commit_committed_message: "docs(status): record DEV-004 implementation commit and PR"
-previous_status_record_commit_completed: 4a5cbc2e9a7f5472749cc0181b7f91153b91479d
-previous_status_record_commit_completed_message: "docs(status): complete DEV-004 after PR merge"
-previous_pr: "#10"
+previous_task_completed_at: "2026-08-08 10:55 UTC"
+previous_implementation_commit: 373cd331313e02d053a6b49af11beaa7be02acbc
+previous_implementation_commit_message: "docs(ai): add human project operations playbook and contract tests"
+previous_status_record_commit_committed: 239218432d6b86d4f34d24c248611361df5d5069
+previous_status_record_commit_committed_message: "docs(status): record DEV-OPS-005 implementation commit and PR"
+previous_status_record_commit_completed: null  # filled after this docs(status): complete commit
+previous_status_record_commit_completed_message: "docs(status): complete DEV-OPS-005 after PR merge"
+previous_pr: "#11"
 previous_pr_status: merged
-previous_merge_commit: 206b7a688cbad3070dc3f1646111efa165f2be87
-# DEV-004 formal completion evidence
+previous_merge_commit: 0239c28281949bedec66dbec1412197c5561a611
+# DEV-OPS-005 formal completion evidence
+formal_DEV-OPS-005_status: completed
+formal_DEV-OPS-005_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
+formal_DEV-OPS-005_plan_commit: a601a3ba569b12b8fc0ae8ff913f66927381af19
+formal_DEV-OPS-005_implementation_commit: 373cd331313e02d053a6b49af11beaa7be02acbc
+formal_DEV-OPS-005_status_record_committed: 239218432d6b86d4f34d24c248611361df5d5069
+formal_DEV-OPS-005_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_DEV-OPS-005_pr: "#11"
+formal_DEV-OPS-005_pr_state: MERGED
+formal_DEV-OPS-005_merge_commit: 0239c28281949bedec66dbec1412197c5561a611
+formal_DEV-OPS-005_workflow_mode: NORMAL
+# DEV-004 formal completion evidence (retained)
 formal_DEV-004_status: completed
 formal_DEV-004_plan_file: 02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md
 formal_DEV-004_plan_commit: 5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a
@@ -81,21 +90,22 @@ step7_smoke_pr: "#8"
 step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
-# Next business task (deferred during DEV-OPS-005)
-deferred_business_task: DEV-005
-deferred_business_task_status: planned
-next_action: WAITING_FOR_PR_MERGE（PR #11 OPEN）；人工 Merge 后 POST_MERGE_CLEANUP；不得开始 DEV-005
+# Next business task
+deferred_business_task: null
+deferred_business_task_status: null
+next_action: 进入 DEV-005（通用 API 壳、鉴权、Request ID、日志与指标）业务规划；本 Commit 不得开始 DEV-005 实施
 insertion_override:
   prior_current_task: DEV-005
   prior_next_action: "进入 DEV-005（通用 API 壳、鉴权、Request ID、日志与指标）业务规划；本 Commit 不得开始 DEV-005 实施"
   override_by: "用户显式 TASK_ID=DEV-OPS-005 WORKFLOW_MODE=NORMAL(explicit)"
-  effect: "current_task=DEV-OPS-005 committed；DEV-005 推迟且本任务期间不得实施"
+  effect: "DEV-OPS-005 completed；current_task 恢复 DEV-005 planned；本 Commit 不得开始 DEV-005 实施"
   overridden_at: "2026-08-08 10:20 UTC"
+  resolved_at: "2026-08-08 10:55 UTC"
 human_plan_approved_at: "2026-08-08 10:30 UTC"
-human_plan_approved_note: "PLAN_APPROVED；吸收 Plan Reviewer SHOULD_FIX 1–3；NORMAL 自动续跑 PLAN_LANDING→…→WAITING_FOR_PR_MERGE"
+human_plan_approved_note: "PLAN_APPROVED；吸收 Plan Reviewer SHOULD_FIX 1–3；NORMAL 自动续跑 PLAN_LANDING→…→POST_MERGE_CLEANUP"
 code_review_approved_at: "2026-08-08 10:46 UTC"
 code_review_result: "CODE_REVIEW_APPROVED；P0=0；P1=0；P2=0；P3=3（残余不阻塞）"
-# Retained DEV-004 governance deviation evidence (historical; not cleared by this ops insert)
+# Retained DEV-004 governance deviation evidence (historical)
 governance_deviation:
   id: GD-DEV-004-001
   type: NON_BLOCKING_GOVERNANCE_DEVIATION
@@ -139,6 +149,7 @@ governance_deviation:
 | DEV-OPS-003-SMOKE | NORMAL workflow supervised smoke | 2026-08-08 05:05 | `3a3c7c7` | `e14d71e8955a312f7c77c6d42c8f624cf3694563` | #8 merged |
 | DEV-OPS-004 | 本机 Mihomo 网络回退策略文档 | 2026-08-08 06:18 | `14550df` | `1bc2f499d79301679f373d46c809f1f50e4dad66` | #9 merged |
 | DEV-004 | Migration Runner；ES Mapping + Alias | 2026-08-08 10:07 | `d8730a6` | `206b7a688cbad3070dc3f1646111efa165f2be87` | #10 merged |
+| DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 2026-08-08 10:53 | `373cd33` | `0239c28281949bedec66dbec1412197c5561a611` | #11 merged |
 
 ## 规格阻塞项
 
@@ -200,7 +211,8 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（DEV-004 POST_MERGE_CLEANUP） | **已完成**；completed 治理 `4a5cbc2`；exact feat 已删 |
 | PLAN_APPROVED（DEV-OPS-005 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-1–3；Amendment 001；Round 2 `PLAN_APPROVED`；Amendment 002 章节编号）；人工确认 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；`workflow_mode=NORMAL`（explicit）；plan_commit `a601a3ba569b12b8fc0ae8ff913f66927381af19` |
 | CODE_REVIEW_APPROVED（DEV-OPS-005 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=3；P3 残余不阻塞） |
-| RELEASE_COMPLETED（DEV-OPS-005 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 OPEN（base=main，head=feat） |
+| RELEASE_COMPLETED（DEV-OPS-005 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 MERGED（`0239c28281949bedec66dbec1412197c5561a611`）；committed 治理 `239218432d6b86d4f34d24c248611361df5d5069` |
+| RELEASE_COMPLETED（DEV-OPS-005 POST_MERGE_CLEANUP） | **已完成**（本轮）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -397,6 +409,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 10:45 UTC | DEV-OPS-005 | in_progress → tested | Playbook+契约+README 完成；Contract 28 / unit 156 / ruff / mypy 全绿 | 等待独立 Code Review；未 Git 写；**不得开始 DEV-005** |
 | 2026-08-08 10:46 UTC | DEV-OPS-005 | tested → reviewed | 独立 Code Review `CODE_REVIEW_APPROVED`；P0=0/P1=0/P2=0/P3=3 | Commit Recorder READY_FOR_HUMAN_COMMIT；进入 IMPLEMENTATION_RELEASE；**不得开始 DEV-005** |
 | 2026-08-08 10:50 UTC | DEV-OPS-005 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 OPEN | 仅 feat push；禁 push main；等待人工 Merge；**不得开始 DEV-005** |
+| 2026-08-08 10:53 UTC | DEV-OPS-005 | PR #11 MERGED | Merge Commit `0239c28281949bedec66dbec1412197c5561a611`；main 含 Playbook + 契约 | 等待自动 POST_MERGE_CLEANUP |
+| 2026-08-08 10:55 UTC | DEV-OPS-005 | committed → completed | POST_MERGE_CLEANUP：main docs(status): complete；删 exact feat | `current_task`→DEV-005 planned；未开始 DEV-005 实施 |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -429,10 +443,10 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-OPS-005**（`committed`）；`workflow_mode=NORMAL`（explicit）；`implementation_commit=373cd331313e02d053a6b49af11beaa7be02acbc`；PR **#11** OPEN（base=`main`，head=`feat/DEV-OPS-005-human-prompt-playbook-recovery-operations`）；`plan_commit=a601a3ba569b12b8fc0ae8ff913f66927381af19`。
-2. **立即下一动作**：`WAITING_FOR_PR_MERGE` — 等待人工 Merge PR #11；其后自动 `POST_MERGE_CLEANUP`；**本任务期间不得开始 DEV-005 实施**。
-3. **推迟的业务任务**：`DEV-005` 保持 `planned`（通用 API 壳等）；完成本 ops 任务后 `next_action` 再恢复 DEV-005 业务规划。
+1. **当前**：`current_task` = **DEV-005**（`planned`）；`current_branch=main`；`latest_commit=0239c28281949bedec66dbec1412197c5561a611`（DEV-OPS-005 merge）。
+2. **立即下一动作**：**DEV-005 业务规划**（通用 API 壳、鉴权、Request ID、日志与指标）；本 Commit 不得开始 DEV-005 实施。
+3. **DEV-OPS-005**：已 `completed`（implementation `373cd33`；committed 治理 `2392184`；PR #11 MERGED `0239c28`；POST_MERGE complete 本轮）。
 4. **DEV-004**：已 `completed`（implementation `d8730a6`；committed 治理 `5246b5d`；PR #10 MERGED `206b7a6`；complete 治理 `4a5cbc2`）。
 5. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
 6. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
-7. **权威人类 Playbook（本任务）**：`03_AI_Prompts/01_项目日常操作手册.md`。
+7. **权威人类 Playbook**：`03_AI_Prompts/01_项目日常操作手册.md`（DEV-OPS-005 交付；契约 `tests/unit/test_project_operations_playbook_contract.py`）。

@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-005
 task_name: Human Prompt Playbook and Recovery Operations Manual
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -17,16 +17,17 @@ prerequisites:
   - "本任务为用户显式插入/覆盖：在 DEV-005 业务规划/实施之前执行；不得开始 DEV-005 业务实施"
 branch: "feat/DEV-OPS-005-human-prompt-playbook-recovery-operations"
 created_at: "2026-08-08 10:20 UTC"
-updated_at: "2026-08-08 10:50 UTC"
+updated_at: "2026-08-08 10:55 UTC"
 approval_gates:
   planning_docs: "approved；人工 PLAN_APPROVED 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；PLAN_LANDING 完成"
-  implementation_plan: "status=committed；IMPLEMENTATION_RELEASE 完成；PR #11 OPEN；WAITING_FOR_PR_MERGE"
+  implementation_plan: "status=completed；PR #11 MERGED（merge 0239c28281949bedec66dbec1412197c5561a611）；implementation_commit=373cd331313e02d053a6b49af11beaa7be02acbc；status_record_committed=239218432d6b86d4f34d24c248611361df5d5069；POST_MERGE_CLEANUP 本轮；未开始 DEV-005 实施"
 insertion_override:
   prior_current_task: "DEV-005"
   prior_current_task_status: "planned"
   prior_next_action: "进入 DEV-005（通用 API 壳、鉴权、Request ID、日志与指标）业务规划；本 Commit 不得开始 DEV-005 实施"
   override_by: "用户本轮显式字段 TASK_ID=DEV-OPS-005 + WORKFLOW_MODE=NORMAL(explicit) + Orchestrator 规划轮次"
   effect: "current_task 切换为 DEV-OPS-005；DEV-005 保持 planned 且本任务期间不得启动业务实施；完成后 next_action 恢复 DEV-005 业务规划（仍不得实施至另一次显式编排）"
+  resolved_at: "2026-08-08 10:55 UTC"
 ```
 
 ### 1.1 权威源与读者
@@ -350,7 +351,7 @@ PLAN_LANDING
 - [x] Ruff 通过
 - [x] Mypy 通过
 - [x] Review 无 P0/P1（P0=0；P1=0；P2=0；P3=3 残余不阻塞）
-- [ ] 完成后 `next_action` = DEV-005 业务规划（不得实施；本轮 next_action=IMPLEMENTATION_RELEASE/PR）
+- [x] 完成后 `next_action` = DEV-005 业务规划（不得实施）
 
 ---
 
@@ -437,6 +438,8 @@ release_phases:
 | 2026-08-08 10:47 UTC | Commit Recorder | `READY_FOR_HUMAN_COMMIT`（NORMAL 兼容边界标记） | n/a | 白名单 6 路径；无 Secret；建议 status→reviewed |
 | 2026-08-08 10:48 UTC | Release Operator pre-commit | status→reviewed；Review 结果回写；next_action→IMPLEMENTATION_RELEASE/PR | n/a | 即将实现 Commit；不得开始 DEV-005 |
 | 2026-08-08 10:50 UTC | IMPLEMENTATION_RELEASE | 实现 Commit + push + PR #11；docs(status) record | n/a | implementation=`373cd331313e02d053a6b49af11beaa7be02acbc`；仅 feat；不得开始 DEV-005 |
+| 2026-08-08 10:53 UTC | 人工 Merge PR #11 | feat → main | PR **MERGED**；merge=`0239c28281949bedec66dbec1412197c5561a611` | 等待自动 POST_MERGE_CLEANUP |
+| 2026-08-08 10:55 UTC | committed → completed（POST_MERGE_CLEANUP） | main docs(status): complete；删 exact feat | Playbook + 契约已在 main | 未开始 DEV-005 实施；next_action→DEV-005 规划 |
 
 ---
 
@@ -449,9 +452,9 @@ release_phases:
 | `03_AI_Prompts/01_项目日常操作手册.md` | 新建：文首记忆负担；六模板粘贴块；规则 A–E；NORMAL/STRICT 对照；invariants |
 | `tests/unit/test_project_operations_playbook_contract.py` | 新建：§8 + SHOULD_FIX1 静态契约（28 tests） |
 | `README.md` | 短发现入口（指向 Playbook；无全文复制） |
-| 本 Task Plan | 执行记录 / status=`committed` |
-| `02_开发管理/progress.md` | 实施态回写 + 测试结果 + reviewed → committed |
-| `02_开发管理/master_plan.md` | Phase 0 补充状态→`committed` |
+| 本 Task Plan | 执行记录 / status=`completed` |
+| `02_开发管理/progress.md` | POST_MERGE completed 回写；`current_task`→DEV-005 planned |
+| `02_开发管理/master_plan.md` | Phase 0 补充状态→`completed` |
 
 ### 与原计划的差异
 
@@ -488,12 +491,16 @@ implementation_commit: 373cd331313e02d053a6b49af11beaa7be02acbc
 implementation_commit_message: "docs(ai): add human project operations playbook and contract tests"
 pr: "#11"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/11"
-pr_status: OPEN
+pr_status: MERGED
 pr_base: main
 pr_head: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
-status_record_committed: null
+merge_commit: "0239c28281949bedec66dbec1412197c5561a611"
+merged_at: "2026-08-08T10:53:39Z"
+status_record_committed: "239218432d6b86d4f34d24c248611361df5d5069"
+status_record_completed: null  # filled after this docs(status): complete commit
+feature_branch_deleted: pending  # local -d + remote --delete in this POST_MERGE_CLEANUP
 ```
 
 ### 最终状态
 
-`committed`
+`completed`（PR #11 MERGED `0239c28281949bedec66dbec1412197c5561a611`；POST_MERGE_CLEANUP；未开始 DEV-005 实施；`next_action`→DEV-005 业务规划）
