@@ -62,7 +62,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | completed |
 | DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | completed |
 | DEV-OPS-003 | NORMAL / STRICT 工作流模式；减少常规人工机械门禁 | 非业务：扩展 DEV-OPS-002；保留六 Subagent 与唯一 Git 写角色 | DEV-OPS-002 | completed |
-| DEV-OPS-004 | 本机 Mihomo 网络回退策略文档（AI 工作流） | 非业务：全局开发规则 + 契约测试；不改规格/业务代理 Contract | DEV-OPS-003 | committed |
+| DEV-OPS-004 | 本机 Mihomo 网络回退策略文档（AI 工作流） | 非业务：全局开发规则 + 契约测试；不改规格/业务代理 Contract | DEV-OPS-003 | completed |
 
 #### DEV-OPS-004 本机 Mihomo 网络回退策略（AI 面向）
 
@@ -75,7 +75,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：策略 1–8 落入全局规则；契约通过；未越权；完成后 `next_action`→DEV-004 规划；**本任务期间不得启动 DEV-004**。
 - **插入说明**：**人工显式插入**于 DEV-004 业务规划之前（用户覆盖先前「进入 DEV-004」的 next_action）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md`
-- **状态备注**：`committed`（implementation_commit `14550dfa8043eb5339b89f1c9f215ae368a6f58d`；PR #9 OPEN base=main head=feat；plan_commit `895d7aa`）；`workflow_mode=NORMAL`（explicit）；exact feat `feat/DEV-OPS-004-mihomo-network-fallback-policy`；等待人工 Merge 后 POST_MERGE_CLEANUP。
+- **状态备注**：`completed`（implementation_commit `14550dfa8043eb5339b89f1c9f215ae368a6f58d`；committed 治理 `7d2a176170939eefe8a5c933b427021068541880`；PR #9 MERGED `1bc2f499d79301679f373d46c809f1f50e4dad66`；plan_commit `895d7aa`；`workflow_mode=NORMAL`（explicit）；POST_MERGE_CLEANUP 本轮；**下一业务任务 = DEV-004**）。
 
 #### DEV-OPS-003 NORMAL / STRICT 工作流模式
 
@@ -87,7 +87,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：mode 声明；NORMAL 两门禁；STRICT 兼容；唯一 Git 写；异常 HALT；完成后 `next_action`→DEV-004；**本任务期间不得启动 DEV-004**。
 - **插入说明**：**人工显式插入**于 DEV-004 业务规划之前（用户覆盖先前「不得插入 DEV-OPS-003」的 next_action）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md`
-- **状态备注**：`completed`（implementation_commit `640616b`；committed 治理 `ec47b2a`；PR #7 MERGED `1189447d518b863d469150ead861e85fa5ca86b5`；plan_commit `d45ea2f`；complete 治理 `4e4ad19`；交付 NORMAL/STRICT 工作流模式；Step 7 受监督 NORMAL smoke **PASSED**（DEV-OPS-003-SMOKE PR #8 / merge `e14d71e` / POST_MERGE `45c74f8`）；正式任务自身提供 STRICT 正路径充分证据；正式 feat `feat/DEV-OPS-003-normal-strict-workflow-modes` 仍保留待人工删；**下一业务任务 = DEV-004**，但已被用户显式插入的 **DEV-OPS-004** 暂缓）。
+- **状态备注**：`completed`（implementation_commit `640616b`；committed 治理 `ec47b2a`；PR #7 MERGED `1189447d518b863d469150ead861e85fa5ca86b5`；plan_commit `d45ea2f`；complete 治理 `4e4ad19`；交付 NORMAL/STRICT 工作流模式；Step 7 受监督 NORMAL smoke **PASSED**（DEV-OPS-003-SMOKE PR #8 / merge `e14d71e` / POST_MERGE `45c74f8`）；正式任务自身提供 STRICT 正路径充分证据；正式 feat `feat/DEV-OPS-003-normal-strict-workflow-modes` 仍保留待人工删；**下一业务任务 = DEV-004**）。
 
 #### DEV-OPS-002 Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
 
@@ -156,7 +156,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Integration（首次成功、重复幂等、checksum 篡改失败）；ES alias/mapping 断言。
 - **验收**：`python -m scripts.migrate` 符合 §3.26/§3.32。
 - **风险**：修改已执行 Migration；与规格 Mapping 不一致。
-- **调度备注**：状态仍 `planned`；DEV-OPS-003 已 `completed`（complete 治理 `4e4ad19`）；**已被用户显式插入的 DEV-OPS-004 暂缓业务规划**；DEV-OPS-004 完成前**不得**开始 DEV-004 规划/实施；DEV-OPS-004 完成后下一动作恢复为 DEV-004 业务规划。
+- **调度备注**：状态仍 `planned`；DEV-OPS-003 / DEV-OPS-004 均已 `completed`；**下一动作 = DEV-004 业务规划**（本治理 Commit 不得开始 DEV-004 实施）。
 
 #### DEV-005 通用 API、鉴权、Request ID、日志与指标
 
@@ -458,8 +458,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|
 | 日期 | 2026-08-08 |
 | 原因 | **人工显式插入**非业务任务 DEV-OPS-004：文档化本开发主机 Mihomo 网络回退策略（AI 面向）；覆盖先前 progress「进入 DEV-004 业务规划」next_action；不改变 Phase 0–5 业务任务目标与依赖；不改规格 §3.15 Contract |
-| 受影响任务 | 新增 `DEV-OPS-004`（Phase 0 补充，现 `committed`）；DEV-004 保持 `planned` 且本任务期间不得启动；**不**修改 DEV-OPS-001/002/003 / DEV-001–003 完成状态；**不**改变 DEV-004+ 业务范围正文 |
+| 受影响任务 | 新增 `DEV-OPS-004`（Phase 0 补充，现 `completed`）；DEV-004 保持 `planned` 且为下一业务任务；**不**修改 DEV-OPS-001/002/003 / DEV-001–003 完成状态；**不**改变 DEV-004+ 业务范围正文 |
 | 是否改变技术规格 | **否** |
-| 审批 | Planner 初版；独立 Plan Review → `PLAN_APPROVED`；人工确认 approved；PLAN_LANDING 完成（plan_commit `895d7aa`）；Developer tested；CODE_REVIEW_APPROVED；IMPLEMENTATION_RELEASE（implementation `14550df`；PR #9 OPEN） |
+| 审批 | Planner 初版；独立 Plan Review → `PLAN_APPROVED`；人工确认 approved；PLAN_LANDING 完成（plan_commit `895d7aa`）；Developer tested；CODE_REVIEW_APPROVED；IMPLEMENTATION_RELEASE（implementation `14550df`；record `7d2a176`）；PR #9 MERGED `1bc2f499d79301679f373d46c809f1f50e4dad66`；POST_MERGE_CLEANUP 本轮 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

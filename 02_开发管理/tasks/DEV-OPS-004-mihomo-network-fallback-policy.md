@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-004
 task_name: Document local Mihomo network fallback policy for AI development workflows
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -16,16 +16,17 @@ prerequisites:
   - "本任务为用户显式插入/覆盖：在 DEV-004 业务规划之前执行；不得开始 DEV-004"
 branch: "feat/DEV-OPS-004-mihomo-network-fallback-policy"
 created_at: "2026-08-08 05:52 UTC"
-updated_at: "2026-08-08 06:07 UTC"
+updated_at: "2026-08-08 06:18 UTC"
 approval_gates:
   planning_docs: "PLAN_APPROVED；人工已确认 approved"
-  implementation_plan: "status=committed；IMPLEMENTATION_RELEASE 完成；PR #9 OPEN；等待人工 Merge"
+  implementation_plan: "status=completed；PR #9 MERGED（merge 1bc2f499d79301679f373d46c809f1f50e4dad66）；implementation_commit=14550df；status_record_committed=7d2a176；POST_MERGE_CLEANUP 本轮；未开始 DEV-004 实施"
 insertion_override:
   prior_current_task: "DEV-004"
   prior_current_task_status: "planned"
   prior_next_action: "进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；本 Commit 不得开始 DEV-004 实施；…"
   override_by: "用户本轮显式字段 TASK_ID=DEV-OPS-004 + Orchestrator NORMAL 规划轮次"
   effect: "current_task 切换为 DEV-OPS-004；DEV-004 保持 planned 但本任务期间不得启动；完成后 next_action 恢复 DEV-004 业务规划"
+  resolved_at: "2026-08-08 06:18 UTC"
 ```
 
 ### 1.1 环境前提（用户已验证主机事实；可写入策略正文；禁止 secrets）
@@ -416,6 +417,8 @@ release_phases:
 | 2026-08-08 06:01 UTC | approved → in_progress | 全局规则 §18 策略条款；新建契约测试；progress/master_plan 回写 | 契约进行中 | SHOULD_FIX：7890=SSH/sshd；全部分类码；working tree 澄清 |
 | 2026-08-08 06:03 UTC | in_progress → implemented → tested | 白名单 5 路径落地；质量门禁全绿 | 契约 15 passed；unit 117 passed；ruff/mypy 通过 | 未 Git 写；未开始 DEV-004；等待 Code Review |
 | 2026-08-08 06:07 UTC | tested → reviewed → committed（IMPLEMENTATION_RELEASE） | implementation commit + push feat + PR #9；本 docs(status): record | 门禁已绿 | 仅 feat；禁 push main；等待人工 Merge |
+| 2026-08-08 06:15 UTC | 人工 Merge PR #9 | feat → main | PR **MERGED**；merge=`1bc2f499d79301679f373d46c809f1f50e4dad66` | 等待自动 POST_MERGE_CLEANUP |
+| 2026-08-08 06:18 UTC | committed → completed（POST_MERGE_CLEANUP） | main docs(status): complete；删 exact feat | §18 + 契约已在 main | 未开始 DEV-004 实施；next_action→DEV-004 规划 |
 
 ---
 
@@ -467,12 +470,16 @@ implementation_commit: "14550dfa8043eb5339b89f1c9f215ae368a6f58d"
 implementation_commit_message: "docs(ai): document local mihomo network fallback for agents"
 pr: "#9"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/9"
-pr_state: "OPEN"
+pr_state: "MERGED"
 pr_base: "main"
 pr_head: "feat/DEV-OPS-004-mihomo-network-fallback-policy"
-status_record_commit: null  # filled after this docs(status): record commit
+merge_commit: "1bc2f499d79301679f373d46c809f1f50e4dad66"
+merged_at: "2026-08-08T06:15:00Z"
+status_record_commit_committed: "7d2a176170939eefe8a5c933b427021068541880"
+status_record_commit_completed: null  # filled after this docs(status): complete commit
+feature_branch_deleted: pending  # local -d + remote --delete in this POST_MERGE_CLEANUP
 ```
 
 ### 最终状态
 
-`committed`
+`completed`（PR #9 MERGED `1bc2f499d79301679f373d46c809f1f50e4dad66`；POST_MERGE_CLEANUP；未开始 DEV-004 实施；`next_action`→DEV-004 业务规划）

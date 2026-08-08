@@ -6,35 +6,45 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-OPS-004
-current_task_status: committed
-current_branch: feat/DEV-OPS-004-mihomo-network-fallback-policy
+current_task: DEV-004
+current_task_status: planned
+current_branch: main
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md
-workflow_mode_for_this_task: NORMAL
-workflow_mode_source: explicit
-latest_commit: 14550dfa8043eb5339b89f1c9f215ae368a6f58d
-plan_commit: 895d7aaccc6c194105275e0688527d780907933f
-implementation_commit: 14550dfa8043eb5339b89f1c9f215ae368a6f58d
-implementation_commit_message: "docs(ai): document local mihomo network fallback for agents"
-pr: "#9"
-pr_url: "https://github.com/xu-jia-ming/memory_system/pull/9"
-pr_status: open
-pr_base: main
-pr_head: feat/DEV-OPS-004-mihomo-network-fallback-policy
-previous_task: DEV-OPS-003
+current_plan_file: null
+workflow_mode_for_this_task: null
+workflow_mode_source: null
+latest_commit: 1bc2f499d79301679f373d46c809f1f50e4dad66
+plan_commit: null
+implementation_commit: null
+implementation_commit_message: null
+pr: null
+pr_url: null
+pr_status: null
+pr_base: null
+pr_head: null
+previous_task: DEV-OPS-004
 previous_task_status: completed
-previous_task_completed_at: "2026-08-08 05:12 UTC"
-previous_implementation_commit: 640616b3e4d9556c7d1bf2f81271ba62bc12cbe7
-previous_implementation_commit_message: "chore(cursor): add NORMAL/STRICT workflow modes and release phases"
-previous_status_record_commit_committed: ec47b2ae3f42ed32fd33a53440a831e70226db33
-previous_status_record_commit_committed_message: "docs(status): record DEV-OPS-003 implementation commit and PR"
-previous_status_record_commit_completed: 4e4ad1966e3c8cdbc015a2f7b343ed68f2c02702
-previous_status_record_commit_completed_message: "docs(status): complete DEV-OPS-003 after PR merge and smoke"
-previous_pr: "#7"
+previous_task_completed_at: "2026-08-08 06:18 UTC"
+previous_implementation_commit: 14550dfa8043eb5339b89f1c9f215ae368a6f58d
+previous_implementation_commit_message: "docs(ai): document local mihomo network fallback for agents"
+previous_status_record_commit_committed: 7d2a176170939eefe8a5c933b427021068541880
+previous_status_record_commit_committed_message: "docs(status): record DEV-OPS-004 implementation commit and PR"
+previous_status_record_commit_completed: null  # filled after this docs(status): complete commit
+previous_status_record_commit_completed_message: "docs(status): complete DEV-OPS-004 after PR merge"
+previous_pr: "#9"
 previous_pr_status: merged
-previous_merge_commit: 1189447d518b863d469150ead861e85fa5ca86b5
-# DEV-OPS-003 formal completion evidence
+previous_merge_commit: 1bc2f499d79301679f373d46c809f1f50e4dad66
+# DEV-OPS-004 formal completion evidence
+formal_DEV-OPS-004_status: completed
+formal_DEV-OPS-004_plan_file: 02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md
+formal_DEV-OPS-004_plan_commit: 895d7aaccc6c194105275e0688527d780907933f
+formal_DEV-OPS-004_implementation_commit: 14550dfa8043eb5339b89f1c9f215ae368a6f58d
+formal_DEV-OPS-004_status_record_committed: 7d2a176170939eefe8a5c933b427021068541880
+formal_DEV-OPS-004_pr: "#9"
+formal_DEV-OPS-004_pr_state: MERGED
+formal_DEV-OPS-004_merge_commit: 1bc2f499d79301679f373d46c809f1f50e4dad66
+formal_DEV-OPS-004_workflow_mode: NORMAL
+# DEV-OPS-003 formal completion evidence (retained)
 formal_DEV-OPS-003_status: completed
 formal_DEV-OPS-003_plan_file: 02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md
 formal_plan_commit: d45ea2faf3b057c9e8ca0cf8699c0a973fe2e638
@@ -56,17 +66,17 @@ step7_smoke_pr: "#8"
 step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
-# DEV-004 remains planned but must not start during DEV-OPS-004
-deferred_business_task: DEV-004
-deferred_business_task_status: planned
-next_action: WAITING_FOR_PR_MERGE（PR #9 OPEN）；人工 Merge 后 POST_MERGE_CLEANUP；不得开始 DEV-004
+# Next business task
+deferred_business_task: null
+deferred_business_task_status: null
+next_action: 进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；本 Commit 不得开始 DEV-004 实施
 insertion_override:
   overridden_current_task: "DEV-004"
   overridden_next_action: "进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；…"
   override_reason: "用户本轮显式字段 TASK_ID=DEV-OPS-004 覆盖 progress.md 先前 current_task/next_action；人工插入 DEV-OPS-004（本机 Mihomo 网络回退文档）于 DEV-004 业务规划之前"
   override_at: "2026-08-08 05:52 UTC"
-  resolved_at: null
-  note: "DEV-004 保持 planned；本任务期间与完成前均不得启动 DEV-004 规划实施以外的业务编码；DEV-OPS-003 insertion_override 已于 2026-08-08 05:12 UTC resolved"
+  resolved_at: "2026-08-08 06:18 UTC"
+  note: "DEV-OPS-004 completed；insertion_override resolved；下一动作恢复 DEV-004 业务规划（仍不得在本 Commit 开始实施）"
 ```
 ## 测试状态
 
@@ -95,6 +105,7 @@ insertion_override:
 | DEV-003 | Docker Compose、Embedding 服务与 Preflight | 2026-08-07 15:10 | `d366fb6` | `0ac80e5` | #6 merged |
 | DEV-OPS-003 | NORMAL / STRICT 工作流模式 | 2026-08-08 05:12 | `640616b` | `1189447d518b863d469150ead861e85fa5ca86b5` | #7 merged |
 | DEV-OPS-003-SMOKE | NORMAL workflow supervised smoke | 2026-08-08 05:05 | `3a3c7c7` | `e14d71e8955a312f7c77c6d42c8f624cf3694563` | #8 merged |
+| DEV-OPS-004 | 本机 Mihomo 网络回退策略文档 | 2026-08-08 06:18 | `14550df` | `1bc2f499d79301679f373d46c809f1f50e4dad66` | #9 merged |
 
 ## 规格阻塞项
 
@@ -148,7 +159,8 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（DEV-003 实现） | **已完成**；implementation_commit `d366fb6`；PR #6 merged（`0ac80e5`） |
 | PLAN_APPROVED（DEV-OPS-004 计划） | **已通过**；plan_commit `895d7aa`；`workflow_mode=NORMAL`（explicit） |
 | CODE_REVIEW_APPROVED（DEV-OPS-004 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=0） |
-| RELEASE_COMPLETED（DEV-OPS-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `14550dfa8043eb5339b89f1c9f215ae368a6f58d`；PR #9 OPEN（base=main，head=feat） |
+| RELEASE_COMPLETED（DEV-OPS-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `14550dfa8043eb5339b89f1c9f215ae368a6f58d`；PR #9 MERGED（`1bc2f499d79301679f373d46c809f1f50e4dad66`） |
+| RELEASE_COMPLETED（DEV-OPS-004 POST_MERGE_CLEANUP） | **已完成**（本轮）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -324,6 +336,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 06:01 UTC | DEV-OPS-004 | approved → in_progress | Developer 开始白名单实施：全局规则 §18 + 契约测试 | plan_commit `895d7aa`；未 Git 写；不得开始 DEV-004 |
 | 2026-08-08 06:03 UTC | DEV-OPS-004 | in_progress → implemented → tested | §18 策略（Docker/分类/健康检查/active·inactive/Never/有界重试/安全边界/working tree）；契约 15；unit 117；ruff/mypy 通过 | SHOULD_FIX 已落实（7890 SSH/sshd；全部分类；unexpected dirty）；未 Git 写；待 Code Review |
 | 2026-08-08 06:07 UTC | DEV-OPS-004 | tested → reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `14550df`；PR #9 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；等待人工 Merge；不得开始 DEV-004 |
+| 2026-08-08 06:15 UTC | DEV-OPS-004 | PR #9 MERGED | Merge Commit `1bc2f499d79301679f373d46c809f1f50e4dad66`；main 含 §18 + 契约 | 等待自动 POST_MERGE_CLEANUP |
+| 2026-08-08 06:18 UTC | DEV-OPS-004 | committed → completed | POST_MERGE_CLEANUP：docs(status): complete on main；删 exact feat；`current_task` → DEV-004 planned | 未开始 DEV-004 实施；`next_action`→DEV-004 业务规划 |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -356,8 +370,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-OPS-004**（`committed`）；计划文件 `02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md`；`workflow_mode=NORMAL`（explicit）。
-2. **立即下一动作**：**WAITING_FOR_PR_MERGE**（PR [#9](https://github.com/xu-jia-ming/memory_system/pull/9) OPEN）；人工 Merge 后 `POST_MERGE_CLEANUP`；本轮禁止开始 DEV-004。
-3. **覆盖关系**：用户显式插入 DEV-OPS-004，覆盖先前「进入 DEV-004 业务规划」；**DEV-004 保持 `planned`，本任务期间不得启动**。
+1. **当前**：`current_task` = **DEV-004**（`planned`）；尚无本任务 Plan 文件；下一业务 = Migration Runner 与基础设施初始化。
+2. **立即下一动作**：进入 **DEV-004 业务规划**（独立 Plan Review → `PLAN_APPROVED`）；**本 Commit 不得开始 DEV-004 实施**。
+3. **DEV-OPS-004**：已 `completed`（PR #9 MERGED `1bc2f499d79301679f373d46c809f1f50e4dad66`；POST_MERGE_CLEANUP）；insertion_override 已 resolved。
 4. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
-5. **DEV-OPS-004 完成后**：`next_action` 恢复为 DEV-004 业务规划（仍不得在完成 Commit 中开始 DEV-004 实施）。
+5. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
