@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-003
 task_name: Add NORMAL / STRICT workflow modes and reduce routine human gates
-status: reviewed
+status: committed
 spec_sections:
   - "非业务规格任务：扩展 DEV-OPS-002 Orchestrator/Subagent 工作流；不修改技术规格正文与业务 Contract"
 prerequisites:
@@ -15,10 +15,10 @@ prerequisites:
   - "本任务为人工显式插入：在 DEV-004 业务规划之前执行；不得开始 DEV-004"
 branch: "feat/DEV-OPS-003-normal-strict-workflow-modes"
 created_at: "2026-08-07 15:22 UTC"
-updated_at: "2026-08-08 01:15 UTC"
+updated_at: "2026-08-08 01:25 UTC"
 approval_gates:
   planning_docs: "Round 1 PLAN_REJECTED（MF-001）；Amendment 001；Round 2 Plan Reviewer = PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX SF-R2-001–002 非阻塞）；人工确认 PLAN_APPROVED 2026-08-07 15:39 UTC"
-  implementation_plan: "status=reviewed；P2 CLOSED（角色段 mode-conditional）；复审 CODE_REVIEW_APPROVED（P0=0/P1=0/P2=0/P3=2）；plan_commit=d45ea2f；Commit Recorder 边界 PASS；未 Git 写；未开始 DEV-004；STRICT 不自动 Release"
+  implementation_plan: "status=committed；IMPLEMENTATION_RELEASE 完成；implementation_commit=640616b；PR #7 OPEN；P2 CLOSED；复审 CODE_REVIEW_APPROVED（P0=0/P1=0/P2=0/P3=2）；plan_commit=d45ea2f；未开始 DEV-004；Step 7 冒烟 pending"
 insertion_override:
   prior_next_action: "进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；…不得插入 DEV-OPS-003…"
   override_by: "用户本轮显式字段 + Orchestrator 调用（TASK_ID=DEV-OPS-003）"
@@ -668,6 +668,7 @@ out_of_scope_changes:
 | 2026-08-08 01:05 UTC | Commit Recorder | 精确边界核对；输出 implementation commit 草稿 | 边界 PASS；13 路径 ⊆ §5 | `READY_FOR_HUMAN_COMMIT`；未 Git 写；须另一次显式 STRICT Release |
 | 2026-08-08 01:15 UTC | Developer P2 最小修正 | 角色段 mode-conditional 自动续跑；modes 契约新增 `test_role_section_mode_conditional_auto_continue`；commands 共享子串保留 | 见 §16 复测 | status 保持 `reviewed`（P2 fix pending re-review）；未改五命令/src/DEV-004；未 Git 写 |
 | 2026-08-08 01:20 UTC | P2 复审 + Commit Recorder | Code Reviewer 确认 P2 CLOSED；边界再核对 | CODE_REVIEW_APPROVED；P0=0 P1=0 P2=0 P3=2；契约 50 / unit 102 | `READY_FOR_HUMAN_COMMIT`；STRICT 不自动 Release；未 Git 写 |
+| 2026-08-08 01:25 UTC | Release Operator IMPLEMENTATION_RELEASE（STRICT） | 精确 13 路径 add/commit/push；PR #7 创建；本 feat 回写 committed | unit 102 / 契约 50 / ruff / mypy 已绿灯（前置） | implementation_commit=`640616b`；PR OPEN base=main head=feat；禁 push main；Step 7 冒烟仍 pending |
 ## 16. 实际执行结果
 
 ### 实际修改文件
@@ -724,11 +725,15 @@ review_report: |
 ```yaml
 branch: feat/DEV-OPS-003-normal-strict-workflow-modes
 plan_commit: d45ea2faf3b057c9e8ca0cf8699c0a973fe2e638
-implementation_commit: null
-implementation_commit_message: null
-pr: null
+implementation_commit: 640616b3e4d9556c7d1bf2f81271ba62bc12cbe7
+implementation_commit_message: "chore(cursor): add NORMAL/STRICT workflow modes and release phases"
+pr: "#7"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/7"
+pr_state: OPEN
+pr_base: main
+pr_head: feat/DEV-OPS-003-normal-strict-workflow-modes
 ```
 
 ### 最终状态
 
-`reviewed`（P2 CLOSED；复审通过；未进入 Release）
+`committed`（IMPLEMENTATION_RELEASE 完成；PR #7 OPEN；等待人工 Merge；Step 7 冒烟 pending；不得开始 DEV-004）

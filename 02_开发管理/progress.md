@@ -7,13 +7,18 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-OPS-003
-current_task_status: reviewed
+current_task_status: committed
 current_branch: feat/DEV-OPS-003-normal-strict-workflow-modes
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md
 workflow_mode_for_this_task: STRICT
-latest_commit: d45ea2faf3b057c9e8ca0cf8699c0a973fe2e638
+latest_commit: 640616b3e4d9556c7d1bf2f81271ba62bc12cbe7
 plan_commit: d45ea2faf3b057c9e8ca0cf8699c0a973fe2e638
+implementation_commit: 640616b3e4d9556c7d1bf2f81271ba62bc12cbe7
+implementation_commit_message: "chore(cursor): add NORMAL/STRICT workflow modes and release phases"
+pr: "#7"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/7"
+pr_state: OPEN
 previous_task: DEV-003
 previous_task_status: completed
 previous_task_completed_at: "2026-08-07 15:10 UTC"
@@ -28,7 +33,7 @@ previous_pr_status: merged
 previous_merge_commit: 0ac80e566fdd33c41b813803af43a0b4ca237e9b
 deferred_business_task: DEV-004
 deferred_business_task_status: planned
-next_action: P2 CLOSED；Commit Recorder 已 READY_FOR_HUMAN_COMMIT；等待人工或显式 STRICT IMPLEMENTATION_RELEASE（不得自动）；不得开始 DEV-004
+next_action: DEV-OPS-003 committed；PR #7 OPEN 等待人工 Review/Merge；Merge 后 STRICT 下人工 post-merge 清理；不得开始 DEV-004；Step 7 冒烟 pending
 insertion_override:
   overridden_next_action: "进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；…不得插入 DEV-OPS-003…"
   override_reason: "用户本轮显式字段 TASK_ID=DEV-OPS-003 覆盖 progress.md 先前 next_action；人工插入 DEV-OPS-003 于 DEV-004 业务规划之前"
@@ -98,7 +103,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | PLAN_APPROVED（DEV-OPS-002 计划） | **已通过**（Round 2）；plan Commit `261daa2`；状态 `completed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-002 实现） | **已通过**（P0=0 / P1=0 / P2=4 / P3=3；P2/P3 为 residual/backlog，不阻塞） |
 | RELEASE_COMPLETED（DEV-OPS-002 实现） | **已完成**；implementation_commit `4943757`；PR #4 merged（`5886cc6`） |
-| PLAN_APPROVED（DEV-OPS-003 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-001；Amendment 001；Round 2 Plan Reviewer = `PLAN_APPROVED`；BLOCKER 0 / MUST_FIX 0）；人工确认 2026-08-07 15:39 UTC；`plan_commit=d45ea2f`；状态 `reviewed`（`CODE_REVIEW_APPROVED`；P0=0/P1=0/P2=1/P3=2；P2 角色段最小修正 pending re-review） |
+| PLAN_APPROVED（DEV-OPS-003 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-001；Amendment 001；Round 2 Plan Reviewer = `PLAN_APPROVED`；BLOCKER 0 / MUST_FIX 0）；人工确认 2026-08-07 15:39 UTC；`plan_commit=d45ea2f`；状态 `committed`；implementation_commit=`640616b`；PR #7 OPEN；`CODE_REVIEW_APPROVED` P0=0/P1=0/P2=0/P3=2；Step 7 冒烟 pending |
 | PLAN_APPROVED（DEV-002 计划） | **已通过**（Round 2；Amendment 001）；plan_commit `ceff988` |
 | PLAN_APPROVED（DEV-003 计划） | **已通过**（Round 1 `PLAN_REJECTED`；Amendment 001；Round 2 `PLAN_APPROVED`）；plan_commit `1b63d51`；人工确认 2026-08-07 10:33 UTC |
 | CODE_REVIEW_APPROVED（DEV-002 实现） | **已通过**（P0=0 / P1=0 / P2=2 / P3=2；P2-001 由 Amendment 002 关闭；不阻塞 Release） |
@@ -266,6 +271,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-07 15:55 UTC | DEV-OPS-003 | in_progress → implemented → tested | Orchestrator/Release/Commit Recorder/permissions/cli/治理/git_workflow + 契约测试落地；49 契约 + 101 unit + ruff/mypy 通过 | Step 7 冒烟 pending；待独立 Code Review（STRICT）；未 Git 写 |
 | 2026-08-08 01:00 UTC | DEV-OPS-003 | tested → reviewed | 独立 Code Reviewer = `CODE_REVIEW_APPROVED`（P0=0/P1=0/P2=1/P3=2）；Orchestrator 复测 49/101/ruff/mypy 通过 | 下一步 Commit Recorder；STRICT 不自动 IMPLEMENTATION_RELEASE；未 Git 写 |
 | 2026-08-08 01:15 UTC | DEV-OPS-003 | reviewed（P2 fix pending re-review） | 角色段 mode-conditional 自动续跑；modes 契约新增角色段断言；commands 共享子串保留；50/102/ruff/mypy 通过 | 未改五命令/src/DEV-004；未 Git 写；不进入 Release |
+| 2026-08-08 01:25 UTC | DEV-OPS-003 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation_commit `640616b`；PR #7 OPEN（base=main，head=feat） | 仅 feat push；禁 push main；Step 7 冒烟 pending；等待人工 Merge |
 
 ## DEV-OPS-003 Git 流程（进行中；本任务自身 STRICT）
 
@@ -277,15 +283,16 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 5. 人工在 main 提交 docs(plan): add DEV-OPS-003 normal and strict workflow modes plan（d45ea2f）并 push
 6. 从 main 创建 feat/DEV-OPS-003-normal-strict-workflow-modes
 7. Developer 实施 → tested（2026-08-07 15:55 UTC）
-8. Code Review → reviewed（2026-08-08 01:00 UTC；`CODE_REVIEW_APPROVED`）；P2 角色段最小修正 pending re-review ← 当前
-9. 复审通过后：Commit Recorder → 人工/显式触发 Release Operator（IMPLEMENTATION_RELEASE；STRICT 不自动）
-10. 人工 Merge PR → 人工 post-merge 治理与清理 → completed → next_action=DEV-004
+8. Code Review → reviewed（2026-08-08；`CODE_REVIEW_APPROVED`；P2 CLOSED）
+9. Commit Recorder → READY_FOR_HUMAN_COMMIT
+10. Release Operator IMPLEMENTATION_RELEASE → committed（implementation `640616b`；PR #7 OPEN）← 当前
+11. 人工 Merge PR → 人工 post-merge 治理与清理 → completed → next_action=DEV-004
 ```
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-OPS-003**（`reviewed`；P2 fix pending re-review）；计划文件 `02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md`（含 Amendment 001 原文）。
-2. **立即下一动作**：独立 Code Review 复审 P2 修正 → 通过后 Commit Recorder / 显式 STRICT `IMPLEMENTATION_RELEASE`（**不得**自动）。**不得**开始 DEV-004。
+1. **当前**：`current_task` = **DEV-OPS-003**（`committed`）；计划文件 `02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md`（含 Amendment 001 原文）。
+2. **立即下一动作**：人工 Review/Merge PR #7；Merge 后 STRICT 下人工 post-merge `docs(status): complete` 与分支清理。**不得**开始 DEV-004。
 3. **覆盖关系**：先前 next_action 要求进入 DEV-004 且禁止插入 DEV-OPS-003；**用户显式覆盖**，人工插入 DEV-OPS-003 于 DEV-004 之前。
 4. **DEV-004**：保持 `planned`（deferred）；**本任务期间不得开始**；DEV-OPS-003 `completed` 后 `next_action` 必须回到 DEV-004 业务规划。
-5. **Git**：分支 `feat/DEV-OPS-003-normal-strict-workflow-modes`；`plan_commit=d45ea2f`；`implementation_commit=null`；未 Git 写。
+5. **Git**：分支 `feat/DEV-OPS-003-normal-strict-workflow-modes`；`plan_commit=d45ea2f`；`implementation_commit=640616b`；PR #7 OPEN。
