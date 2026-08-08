@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-004
 task_name: Document local Mihomo network fallback policy for AI development workflows
-status: approved
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -16,10 +16,10 @@ prerequisites:
   - "本任务为用户显式插入/覆盖：在 DEV-004 业务规划之前执行；不得开始 DEV-004"
 branch: "feat/DEV-OPS-004-mihomo-network-fallback-policy"
 created_at: "2026-08-08 05:52 UTC"
-updated_at: "2026-08-08 05:57 UTC"
+updated_at: "2026-08-08 06:07 UTC"
 approval_gates:
   planning_docs: "PLAN_APPROVED；人工已确认 approved"
-  implementation_plan: "status=approved；PLAN_LANDING 中；未实施业务；未创建 feat 分支（本 phase 将创建）"
+  implementation_plan: "status=committed；IMPLEMENTATION_RELEASE 完成；PR #9 OPEN；等待人工 Merge"
 insertion_override:
   prior_current_task: "DEV-004"
   prior_current_task_status: "planned"
@@ -339,15 +339,15 @@ Agent **Never**：
 
 ## 9. 验收标准
 
-- [ ] `03_AI_Prompts/00_全局开发规则.md` 含 §2 策略条款 1–8 的可执行摘要（含环境前提非机密端口/单元名）
-- [ ] **未**新增第二份 ops/runtime 代理文档（DD-001）
-- [ ] `tests/unit/test_mihomo_network_fallback_contract.py` 存在且断言通过
-- [ ] 白名单外路径无变更（`src/**`、规格、五命令、permissions、`/opt/mihomo` 未入仓）
-- [ ] 未开始 DEV-004；DEV-004 仍为 `planned`
-- [ ] `uv run pytest tests/unit -q` 通过
-- [ ] Ruff 通过
-- [ ] Mypy 通过
-- [ ] Review 无 P0/P1
+- [x] `03_AI_Prompts/00_全局开发规则.md` 含 §2 策略条款 1–8 的可执行摘要（含环境前提非机密端口/单元名）
+- [x] **未**新增第二份 ops/runtime 代理文档（DD-001）
+- [x] `tests/unit/test_mihomo_network_fallback_contract.py` 存在且断言通过
+- [x] 白名单外路径无变更（`src/**`、规格、五命令、permissions、`/opt/mihomo` 未入仓）
+- [x] 未开始 DEV-004；DEV-004 仍为 `planned`
+- [x] `uv run pytest tests/unit -q` 通过
+- [x] Ruff 通过
+- [x] Mypy 通过
+- [x] Review 无 P0/P1
 - [ ] 完成后 `next_action` = DEV-004 业务规划（不得实施）
 
 ---
@@ -413,6 +413,9 @@ release_phases:
 |---|---|---|---|---|
 | 2026-08-08 05:52 UTC | Planner 初版计划 | 创建本 Task Plan；progress/master_plan 规划态登记（插入覆盖 DEV-004） | 未实施 | 基线 main@4e4ad19 干净；未 Git 写；未开始 DEV-004 |
 | 2026-08-08 05:57 UTC | planned → approved（PLAN_LANDING） | 状态回写 approved；progress/master_plan 同步；docs(plan) on main；创建 exact feat | 未实施 | 人工 PLAN_APPROVED 已确认；不得开始 DEV-004 |
+| 2026-08-08 06:01 UTC | approved → in_progress | 全局规则 §18 策略条款；新建契约测试；progress/master_plan 回写 | 契约进行中 | SHOULD_FIX：7890=SSH/sshd；全部分类码；working tree 澄清 |
+| 2026-08-08 06:03 UTC | in_progress → implemented → tested | 白名单 5 路径落地；质量门禁全绿 | 契约 15 passed；unit 117 passed；ruff/mypy 通过 | 未 Git 写；未开始 DEV-004；等待 Code Review |
+| 2026-08-08 06:07 UTC | tested → reviewed → committed（IMPLEMENTATION_RELEASE） | implementation commit + push feat + PR #9；本 docs(status): record | 门禁已绿 | 仅 feat；禁 push main；等待人工 Merge |
 
 ---
 
@@ -422,22 +425,28 @@ release_phases:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `03_AI_Prompts/00_全局开发规则.md` | 新增 §18 本机 Mihomo 网络回退（条款 1–9；含分类码、Never、有界重试、7890 SSH/sshd 事实、working tree 澄清） |
+| `tests/unit/test_mihomo_network_fallback_contract.py` | 新建；15 项静态契约断言 |
+| `02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md` | 状态/执行记录回写 |
+| `02_开发管理/progress.md` | in_progress→tested；已知风险更正；plan_commit 回填 |
+| `02_开发管理/master_plan.md` | Phase 0 补充状态 → tested；CHANGE-007 回写 |
 
 ### 与原计划的差异
 
-暂无。
+- SHOULD_FIX 落实：7890 明确为 SSH/sshd forwarding（非空闲/非 Mihomo）；契约锁定全部失败信号短语与「不得误判为 proxy failure」；§18(9) 区分 PLAN_LANDING 白名单治理变更 vs unexpected dirty fail-closed。
+- 未新增第二份 ops 文档（符合 DD-001）。
+- 未改规格 / Compose / src / permissions / 五命令。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration | N/A |  |
-| E2E | N/A |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit | `uv run pytest tests/unit -q` | 117 passed |
+| Contract | `uv run pytest tests/unit/test_mihomo_network_fallback_contract.py -q` | 15 passed |
+| Integration | N/A | |
+| E2E | N/A | |
+| Ruff | `uv run ruff check .` | All checks passed |
+| Mypy | `uv run mypy src tests` | Success: 48 source files |
 
 ### Review 结果
 
@@ -453,11 +462,17 @@ review_report: null
 
 ```yaml
 branch: "feat/DEV-OPS-004-mihomo-network-fallback-policy"
-plan_commit: null  # PLAN_LANDING 完成后由 Release Operator 以 git rev-parse HEAD 回填（本 commit 自身）
-implementation_commit: null
-implementation_commit_message: null
+plan_commit: "895d7aaccc6c194105275e0688527d780907933f"
+implementation_commit: "14550dfa8043eb5339b89f1c9f215ae368a6f58d"
+implementation_commit_message: "docs(ai): document local mihomo network fallback for agents"
+pr: "#9"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/9"
+pr_state: "OPEN"
+pr_base: "main"
+pr_head: "feat/DEV-OPS-004-mihomo-network-fallback-policy"
+status_record_commit: null  # filled after this docs(status): record commit
 ```
 
 ### 最终状态
 
-`approved`
+`committed`
