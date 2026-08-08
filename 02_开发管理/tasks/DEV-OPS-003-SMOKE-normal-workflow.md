@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-003-SMOKE
 task_name: NORMAL workflow supervised smoke (minimal)
-status: approved
+status: committed
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: default
 # Orchestrator 未收到 WORKFLOW_MODE / MODE 显式字段 → 默认 NORMAL；本 smoke 以 NORMAL / default 执行（不得改 STRICT）
@@ -23,7 +23,7 @@ relationship_to_formal_DEV-OPS-003:
   progress_override: "规划/执行期间可临时 current_task=DEV-OPS-003-SMOKE"
   progress_restore_required: "smoke completed（或中止）后必须恢复 progress current_task=DEV-OPS-003（及正式未完成态字段）；不得开始 DEV-004"
 branch: "feat/DEV-OPS-003-SMOKE-normal-workflow"
-# 人工 PLAN_APPROVED 已确认；PLAN_LANDING 创建 exact feat
+# 人工 PLAN_APPROVED 已确认；PLAN_LANDING 已完成（plan_commit=ba0d827）；IMPLEMENTATION_RELEASE 已完成（implementation=3a3c7c7；PR #8 OPEN）
 writable_paths_exact:
   - "02_开发管理/tasks/DEV-OPS-003-SMOKE-normal-workflow.md"
   - "02_开发管理/progress.md"
@@ -31,7 +31,7 @@ writable_paths_exact:
 master_plan_registration: false
 # 用户明确：smoke 不登记正式 master_plan 项；禁止修改 02_开发管理/master_plan.md
 created_at: "2026-08-08 01:26 UTC"
-updated_at: "2026-08-08 01:30 UTC"
+updated_at: "2026-08-08 01:35 UTC"
 human_plan_approved: true
 planning_round_stop: null
 ```
@@ -64,14 +64,13 @@ planning_round_stop: null
 
 - **已存在**：main 含 DEV-OPS-003 实现（merge `1189447`）；Orchestrator / Release Operator / 契约测试已落地；正式 Task Plan `02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md`。
 - **可复用**：NORMAL 三相 Release 合同与 Orchestrator 自动续跑语义（已合并）。
-- **当前缺失**：`tests/e2e/devops003_normal_workflow_smoke.txt`（尚未创建）；本 smoke Task Plan（本文件，规划轮次新建）；真实 NORMAL 端到端冒烟尚未执行。
+- **当前缺失**：无（Developer 已创建 smoke marker；全链路 E2E 后续阶段仍 pending）。
 - **与技术规格**：无业务规格变更；无不一致需改 Contract。
-- **前置检查（2026-08-08 规划轮次只读）**：
-  - 当前分支：`main`（与 `origin/main` 同步）
-  - 工作区：干净
-  - 最近 commit 含 `1189447 Merge pull request #7 …`
-  - 正式 feat 本地/远程仍在；**禁止删除**
-  - 正式 DEV-OPS-003：**未 completed**；progress 历史字段可能仍显示 PR OPEN——smoke 结束后须恢复指向正式任务，**不得**借 smoke 标 completed
+- **前置检查（2026-08-08 Developer 轮次只读）**：
+  - 当前分支：`feat/DEV-OPS-003-SMOKE-normal-workflow`（精确匹配）
+  - `plan_commit`：`ba0d827`
+  - 正式 feat 仍在；**禁止删除**
+  - 正式 DEV-OPS-003：**未 completed**；不得借 smoke 标 completed
 
 ## 5. 实现方案
 
@@ -209,7 +208,7 @@ DEV-OPS-003-SMOKE NORMAL workflow supervised smoke marker
 - [ ] Orchestrator 声明 `workflow_mode=NORMAL` 且 `source=default`（本 smoke 未提供 WORKFLOW_MODE）
 - [ ] 仅两个人工门禁：`PLAN_APPROVED` 与人工 PR Merge；其间三相 Release 为真实自动调度（非仅 grep）
 - [ ] `PLAN_LANDING` / `IMPLEMENTATION_RELEASE` / `POST_MERGE_CLEANUP` 均出现真实 `RELEASE_COMPLETED`（含对应 phase）
-- [ ] marker 文件存在且内容恰好：`DEV-OPS-003-SMOKE NORMAL workflow supervised smoke marker`
+- [x] marker 文件存在且内容恰好：`DEV-OPS-003-SMOKE NORMAL workflow supervised smoke marker`
 - [ ] 白名单外无改动；`master_plan.md` 未改；`.cursor/**` / `src/**` 未改
 - [ ] POST_MERGE 仅删除 `feat/DEV-OPS-003-SMOKE-normal-workflow`；正式 feat 仍在
 - [ ] 正式 `DEV-OPS-003` **未**被标 `completed`；smoke 结束后 progress 恢复 `current_task=DEV-OPS-003`
@@ -275,6 +274,8 @@ out_of_scope_changes:
 |---|---|---|---|---|
 | 2026-08-08 01:26 UTC | Planner 起草 | 新建本 Task Plan；progress 规划态 → DEV-OPS-003-SMOKE | 无 | 本轮止于等待 PLAN_APPROVED；未 Git 写；未改 master_plan |
 | 2026-08-08 01:30 UTC | PLAN_LANDING | status → approved；docs(plan) 白名单两路径；创建 exact feat | 无 | 人工 PLAN_APPROVED 已确认；marker 仍未创建 |
+| 2026-08-08 01:32 UTC | Developer | approved → in_progress → implemented → tested；创建 smoke marker | 文件内容精确断言通过；可选 unit 见下 | 仅白名单三路径；未 Git 写；未改 master_plan/src/.cursor |
+| 2026-08-08 01:35 UTC | IMPLEMENTATION_RELEASE | tested → reviewed → committed；feat commit/push；PR #8 OPEN；本 record | marker 已在 implementation commit | 仅 feat；禁 push/commit main；未 merge；未删分支 |
 
 ## 14. 实际执行结果
 
@@ -282,9 +283,9 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-| `02_开发管理/tasks/DEV-OPS-003-SMOKE-normal-workflow.md` | approved（PLAN_LANDING） |
-| `02_开发管理/progress.md` | approved 态回写 |
-| `tests/e2e/devops003_normal_workflow_smoke.txt` | 尚未创建（待 Developer） |
+| `02_开发管理/tasks/DEV-OPS-003-SMOKE-normal-workflow.md` | status → committed；Git/PR 事实回写 |
+| `02_开发管理/progress.md` | committed 态回写；仍指向 smoke；正式 DEV-OPS-003 未标 completed |
+| `tests/e2e/devops003_normal_workflow_smoke.txt` | 已创建；恰好一行指定 marker 文本；已在 implementation commit |
 
 ### 与原计划的差异
 
@@ -294,21 +295,22 @@ out_of_scope_changes:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | — | PLAN_LANDING 未跑 |
-| Contract | — | PLAN_LANDING 未跑 |
+| Marker 自检 | `test -f` + 精确内容比较（恰好一行指定文本） | **passed**（bytes=58） |
+| Unit | `uv run pytest tests/unit -q` | **102 passed**（0.66s） |
+| Contract | — | 本 Developer 轮次未改契约源；未强制重跑 |
 | Integration | N/A | — |
-| E2E | 受监督 NORMAL 全链路 | **pending**（PLAN_LANDING 后待 Developer） |
-| Ruff | — | N/A（无 Python 实现变更预期） |
+| E2E | 受监督 NORMAL 全链路 | marker 已落盘；IMPLEMENTATION_RELEASE 完成；等待人工 PR merge |
+| Ruff | — | N/A（无 Python 实现变更） |
 | Mypy | — | N/A |
 
 ### Review 结果
 
 ```yaml
-p0: null
-p1: null
-p2: null
-p3: null
-review_report: null
+p0: 0
+p1: 0
+p2: 0
+p3: 0
+review_report: CODE_REVIEW_APPROVED
 plan_review: PLAN_APPROVED（人工已确认）
 ```
 
@@ -316,12 +318,15 @@ plan_review: PLAN_APPROVED（人工已确认）
 
 ```yaml
 branch: feat/DEV-OPS-003-SMOKE-normal-workflow
-plan_commit: pending_PLAN_LANDING
-implementation_commit: null
-implementation_commit_message: null
-smoke_pr: null
+plan_commit: ba0d827
+implementation_commit: 3a3c7c72f3c0a2ec12e39f0d89dc477154fde30b
+implementation_commit_message: "test(e2e): add DEV-OPS-003 NORMAL workflow smoke marker"
+smoke_pr: "#8"
+smoke_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/8"
+smoke_pr_state: OPEN
+status_record_commit: null  # filled after this docs(status): record commit
 ```
 
 ### 最终状态
 
-`approved`（PLAN_LANDING 进行中；随后 Developer 仅创建 smoke marker）
+`committed`（IMPLEMENTATION_RELEASE 完成；PR #8 OPEN；WAITING_FOR_PR_MERGE；未 merge；正式 DEV-OPS-003 未 completed）
