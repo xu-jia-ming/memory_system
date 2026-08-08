@@ -8,13 +8,13 @@ spec_version: 9
 current_phase: Phase 0
 current_task: DEV-004
 current_task_status: approved
-current_branch: main
+current_branch: feat/DEV-004-migration-runner-es-mapping-alias
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: d5db474ea7b11c05ff9d0a137c3f9c16f3d8dd50
-plan_commit: null
+latest_commit: 5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a
+plan_commit: 5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a
 implementation_commit: null
 implementation_commit_message: null
 pr: null
@@ -70,7 +70,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: null
 deferred_business_task_status: null
-next_action: PLAN_LANDING（docs(plan) on main → 创建 feat/DEV-004-migration-runner-es-mapping-alias）→ Developer
+next_action: Developer 在 feat/DEV-004-migration-runner-es-mapping-alias 按已批准 Task Plan §5 白名单实施（plan_commit=5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a）
 insertion_override: null
 human_plan_approved_at: "2026-08-08 07:46 UTC"
 human_plan_approved_note: "PLAN_APPROVED；吸收 Plan Reviewer SHOULD_FIX 1–5 为 Amendment 001；NORMAL 自动续跑"
@@ -337,6 +337,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 06:18 UTC | DEV-OPS-004 | committed → completed | POST_MERGE_CLEANUP：docs(status): complete on main；删 exact feat；`current_task` → DEV-004 planned | 未开始 DEV-004 实施；`next_action`→DEV-004 业务规划 |
 | 2026-08-08 07:39 UTC | DEV-004 | planned（Planner 初版） | 创建 Task Plan `DEV-004-migration-runner-es-mapping-alias.md`；master_plan CHANGE-008；progress 规划态回写 | 未实施、未 Git 写、未建分支；`next_action=计划审查`；不得开始 DEV-005/006 |
 | 2026-08-08 07:46 UTC | DEV-004 | planned → approved | 人工 PLAN_APPROVED；Plan Reviewer BLOCKER/MUST_FIX=0；Amendment 001 吸收 SHOULD_FIX | 等待 Release Operator PLAN_LANDING；不得实施直至 feat 就绪 |
+| 2026-08-08 07:47 UTC | DEV-004 | approved（PLAN_LANDING） | docs(plan) `5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a`；创建 `feat/DEV-004-migration-runner-es-mapping-alias` | `next_action`→Developer 实施；未实施 |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -369,8 +370,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-004**（`approved`）；计划文件 `02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md`；`workflow_mode=NORMAL`（explicit）。
-2. **立即下一动作**：**PLAN_LANDING** → Developer（吸收 Amendment 001 / SHOULD_FIX 1–5）→ Code Review → Commit Recorder → IMPLEMENTATION_RELEASE → WAITING_FOR_PR_MERGE。
+1. **当前**：`current_task` = **DEV-004**（`approved`）；计划文件 `02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md`；`workflow_mode=NORMAL`（explicit）；`plan_commit=5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a`；分支 `feat/DEV-004-migration-runner-es-mapping-alias`。
+2. **立即下一动作**：**Developer** 在 feat 按已批准 Task Plan §5 白名单实施（吸收 Amendment 001 / SHOULD_FIX 1–5）→ Code Review → Commit Recorder → IMPLEMENTATION_RELEASE → WAITING_FOR_PR_MERGE。
 3. **DEV-OPS-004**：已 `completed`（PR #9 MERGED；POST_MERGE complete `d5db474`）。
 4. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
 5. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。

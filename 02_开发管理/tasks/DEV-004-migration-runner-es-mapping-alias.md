@@ -35,7 +35,7 @@ created_at: "2026-08-08 07:39 UTC"
 updated_at: "2026-08-08 07:39 UTC"
 approval_gates:
   planning_docs: "PLAN_APPROVED（Plan Reviewer + 人工确认 2026-08-08）"
-  implementation_plan: "status=approved；等待 PLAN_LANDING（docs(plan) on main → feat 分支）"
+  implementation_plan: "status=approved；PLAN_LANDING 完成；等待 Developer 在 feat 实施"
 ```
 
 ## 2. 任务目标
@@ -417,7 +417,7 @@ out_of_scope_changes:
   - "DEV-005 / DEV-006 任何实现"
   - "修改五命令、规格、Settings Contract、versions.lock.env"
   - "业务 Document 写入与 Retrieval/Extraction"
-this_round: "仅创建/更新 Task Plan + progress/master_plan 规划态；禁止 Git 写、禁止建分支、禁止实施"
+this_round: "PLAN_LANDING 完成；plan_commit 已落盘；feat 已创建；等待 Developer 实施"
 ```
 
 ## 13. Plan Amendment
@@ -444,6 +444,7 @@ this_round: "仅创建/更新 Task Plan + progress/master_plan 规划态；禁�
 |---|---|---|---|---|
 | 2026-08-08 07:39 UTC | 规划 | 创建本 Task Plan；更新 progress/master_plan | n/a | 仅 planned；未实施 |
 | 2026-08-08 07:46 UTC | 人工批准 | status→approved；Amendment 001 吸收 SHOULD_FIX 1–5 | n/a | 等待 PLAN_LANDING |
+| 2026-08-08 07:47 UTC | PLAN_LANDING | docs(plan) on main；创建 feat/DEV-004-migration-runner-es-mapping-alias | n/a | plan_commit=5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a |
 
 ## 15. 实际执行结果
 
@@ -481,12 +482,12 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/DEV-004-migration-runner-es-mapping-alias
+plan_commit: 5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`planned`
+`approved`
