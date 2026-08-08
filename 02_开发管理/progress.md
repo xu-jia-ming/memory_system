@@ -7,14 +7,14 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-OPS-004
-current_task_status: approved
+current_task_status: tested
 current_branch: feat/DEV-OPS-004-mihomo-network-fallback-policy
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: null  # PLAN_LANDING 完成后回填 plan_commit
-plan_commit: null  # PLAN_LANDING 完成后以 git rev-parse HEAD 回填
+latest_commit: 895d7aaccc6c194105275e0688527d780907933f
+plan_commit: 895d7aaccc6c194105275e0688527d780907933f
 previous_task: DEV-OPS-003
 previous_task_status: completed
 previous_task_completed_at: "2026-08-08 05:12 UTC"
@@ -52,7 +52,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # DEV-004 remains planned but must not start during DEV-OPS-004
 deferred_business_task: DEV-004
 deferred_business_task_status: planned
-next_action: PLAN_LANDING 完成 → Developer 实施 DEV-OPS-004（全局规则 + 契约测试）；不得开始 DEV-004
+next_action: Code Review（DEV-OPS-004 tested）；通过后 Commit Recorder → IMPLEMENTATION_RELEASE；不得开始 DEV-004
 insertion_override:
   overridden_current_task: "DEV-004"
   overridden_next_action: "进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；…"
@@ -65,14 +65,15 @@ insertion_override:
 
 | 测试层级 | 状态 | 最近命令 | 最近结果 |
 |---|---|---|---|
-| Unit | passed | `uv run pytest tests/unit -q` | 102 passed（DEV-OPS-003-SMOKE Developer 轮次复跑；无业务变更） |
+| Unit | passed | `uv run pytest tests/unit -q` | 117 passed（DEV-OPS-004；含 mihomo 契约 15） |
 | Contract（业务） | passed | `uv run pytest tests/contract` | 12 passed（含 compose config 8 + env example 4；本任务未改） |
-| Contract（Cursor 工作流） | passed | `uv run pytest tests/unit/test_cursor_orchestrator_contract.py tests/unit/test_cursor_workflow_modes_contract.py tests/unit/test_cursor_commands_contract.py -q` | 50 passed |
+| Contract（Cursor 工作流） | passed | `uv run pytest tests/unit/test_cursor_orchestrator_contract.py tests/unit/test_cursor_workflow_modes_contract.py tests/unit/test_cursor_commands_contract.py -q` | 50 passed（既有；本任务未改五命令） |
+| Contract（Mihomo 网络回退） | passed | `uv run pytest tests/unit/test_mihomo_network_fallback_contract.py -q` | 15 passed（DEV-OPS-004 新建） |
 | Integration | passed | `uv run pytest tests/integration/test_preflight_linux_host.py` | 2 passed / 2 skipped（DEV-003；本任务未改） |
 | TEI lock validate | passed | `timeout 600 ./scripts/lock_tei_images.sh` | CPU+GPU 1.9.3（GPU `--gpus all` 修复后；DEV-003） |
 | E2E | passed（DEV-OPS-003 Step 7） | DEV-OPS-003-SMOKE NORMAL 受监督全链路 | **PASSED**：默认 NORMAL；两人工门（PLAN_APPROVED + PR Merge）；三相 Release 真实执行；PR #8 MERGED（`e14d71e`）；POST_MERGE `45c74f8`；STRICT 正路径证据=正式 DEV-OPS-003 自身 |
 | Ruff | passed | `uv run ruff check .` | All checks passed |
-| Mypy | passed | `uv run mypy src tests` | Success: 47 source files |
+| Mypy | passed | `uv run mypy src tests` | Success: 48 source files |
 | UI discovery（§9 / OI-OPS-005 延续） | passed（DEV-OPS-002） | 人工 `/` 菜单 | 七项均可发现：`/orchestrate-task`、`/planner`、`/plan-reviewer`、`/developer`、`/code-reviewer`、`/commit-recorder`、`/release-operator`（2026-08-07 02:40 UTC） |
 | E2E 冒烟（§9） | passed（DEV-OPS-002） | 受监督完整编排链路 | PR #3；`0891cd5`；测试 PR 已关闭（未 merge）；E2E 分支保留 |
 
@@ -112,7 +113,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 - 所有依赖和基础设施版本必须按技术规格锁定（含 `[build-system]` 的 `uv_build`）。
 - DEV-OPS-001：Cursor Commands 为 beta；不得假设未证实的参数替换或自动角色切换。
 - DEV-OPS-002：Subagent 继承父工具；IDE `permissions.json` 无硬 deny；`git push` 前缀与 `--force` 区分未证实为硬保证；结束标记无官方结构化协议。
-- 本开发主机：宿主机侧外部网络经 Mihomo mixed proxy `127.0.0.1:17890`（`mihomo.service`）；`7890` 为既有 SSH forwarding占用、不得改用。Docker daemon 已永久代理至 `17890`。规格 §3.15 / Compose `PROXY__HTTP_URL` 业务字面仍为 `7890`（Contract 不因本机环境改写）。权威 AI 回退策略见待实施任务 DEV-OPS-004 → `03_AI_Prompts/00_全局开发规则.md`。
+- 本开发主机：宿主机侧外部网络经 Mihomo mixed proxy `127.0.0.1:17890`（`mihomo.service`）；`7890` 为既有 SSH/sshd forwarding listener（非空闲、非 Mihomo），AI 不得占用/修改/停止/干扰。Docker daemon 已永久代理至 `17890`。宿主机工具（如 `uv`）经 `17890`，不得误写为经 `7890`。规格 §3.15 / Compose `PROXY__HTTP_URL` 业务字面仍为 `7890`（Contract 不因本机环境改写）。权威 AI 回退策略见 `03_AI_Prompts/00_全局开发规则.md` §18（DEV-OPS-004）。
 
 ## 双口令门禁
 
@@ -310,6 +311,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 | DEV-OPS-003 | completed（治理落盘） | `docs(status): complete DEV-OPS-003 after PR merge and smoke`（`4e4ad19`） | `main`==`origin/main`；工作区曾干净 |
 | 2026-08-08 05:52 UTC | DEV-OPS-004 | planned（人工插入覆盖） | 用户显式覆盖先前「进入 DEV-004 业务规划」；创建 Task Plan；master_plan CHANGE-007 登记 | 未实施、未 Git 写、未创建分支；**不得开始 DEV-004**；等待独立 Plan Review |
 | 2026-08-08 05:57 UTC | DEV-OPS-004 | planned → approved | PLAN_LANDING：docs(plan) on main；创建 exact feat `feat/DEV-OPS-004-mihomo-network-fallback-policy` | 人工 PLAN_APPROVED 已确认；未实施；**不得开始 DEV-004** |
+| 2026-08-08 06:01 UTC | DEV-OPS-004 | approved → in_progress | Developer 开始白名单实施：全局规则 §18 + 契约测试 | plan_commit `895d7aa`；未 Git 写；不得开始 DEV-004 |
+| 2026-08-08 06:03 UTC | DEV-OPS-004 | in_progress → implemented → tested | §18 策略（Docker/分类/健康检查/active·inactive/Never/有界重试/安全边界/working tree）；契约 15；unit 117；ruff/mypy 通过 | SHOULD_FIX 已落实（7890 SSH/sshd；全部分类；unexpected dirty）；未 Git 写；待 Code Review |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -342,8 +345,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-OPS-004**（`approved`）；计划文件 `02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md`；`workflow_mode=NORMAL`（explicit）。
-2. **立即下一动作**：PLAN_LANDING 完成后 → **Developer 实施**（全局开发规则 + 契约测试）；本轮禁止开始 DEV-004。
+1. **当前**：`current_task` = **DEV-OPS-004**（`tested`）；计划文件 `02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md`；`workflow_mode=NORMAL`（explicit）。
+2. **立即下一动作**：**Code Review**；通过后 Commit Recorder → IMPLEMENTATION_RELEASE；本轮禁止开始 DEV-004。
 3. **覆盖关系**：用户显式插入 DEV-OPS-004，覆盖先前「进入 DEV-004 业务规划」；**DEV-004 保持 `planned`，本任务期间不得启动**。
 4. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
 5. **DEV-OPS-004 完成后**：`next_action` 恢复为 DEV-004 业务规划（仍不得在完成 Commit 中开始 DEV-004 实施）。
