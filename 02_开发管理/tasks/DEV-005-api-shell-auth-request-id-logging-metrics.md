@@ -574,6 +574,7 @@ out_of_scope_changes:
 | 2026-08-08 11:20 UTC | 规划 | 创建 Task Plan；progress/master_plan 规划态 | 未实施 | 无 |
 | 2026-08-08 11:35 UTC | 实施 | API 壳、鉴权、Request ID、structlog、Prometheus、Health、entrypoint | Unit 30 / Contract 12 / ruff / mypy 全绿 | Integration 可选跳过（无运行中 API） |
 | 2026-08-08 19:45 UTC | P1 修复 | `metrics.py` 注册 `kafka_consumer_lag` Gauge 并加入 `ALL_METRICS`；contract 断言 `ALL_METRICS` 含该指标 | Contract 12 / ruff / mypy 全绿 | 无 series 时不强制 scrape 文本出现 |
+| 2026-08-08 19:50 UTC | IMPLEMENTATION_RELEASE | 实现 Commit + push feat + PR #12；本 docs(status): record | 门禁已绿 | implementation=`d32ddc70b5b8b772e9f27a84988b778c226dd2c5`；仅 feat；等待人工 Merge |
 
 ## 16. 实际执行结果
 
@@ -621,10 +622,19 @@ review_report: null
 ```yaml
 branch: feat/DEV-005-api-shell-auth-request-id-logging-metrics
 plan_commit: 2548c9a5f99c833e6347b93484c562e86f25f605
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: d32ddc70b5b8b772e9f27a84988b778c226dd2c5
+implementation_commit_message: "feat(api): add fastapi shell auth observability and health endpoints"
+pr: "#12"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/12"
+pr_state: OPEN
+pr_base: main
+pr_head: feat/DEV-005-api-shell-auth-request-id-logging-metrics
+status_record_commit_committed: null  # record commit SHA filled after push
+status_record_commit_committed_message: "docs(status): record DEV-005 implementation commit and PR"
+status_record_commit_completed: null  # filled after docs(status): complete commit
+feature_branch_deleted: pending
 ```
 
 ### 最终状态
 
-`tested`
+`committed`（PR #12 OPEN；等待人工 Merge；`next_action`→WAITING_FOR_PR_MERGE）

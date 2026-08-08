@@ -7,21 +7,24 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-005
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/DEV-005-api-shell-auth-request-id-logging-metrics
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-005-api-shell-auth-request-id-logging-metrics.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: bf537d8
+latest_commit: d32ddc7
 plan_commit: 2548c9a5f99c833e6347b93484c562e86f25f605
-implementation_commit: null
-implementation_commit_message: null
-pr: null
-pr_url: null
-pr_status: null
-pr_base: null
-pr_head: null
+implementation_commit: d32ddc70b5b8b772e9f27a84988b778c226dd2c5
+implementation_commit_message: "feat(api): add fastapi shell auth observability and health endpoints"
+pr: "#12"
+pr_url: https://github.com/xu-jia-ming/memory_system/pull/12
+pr_status: OPEN
+pr_base: main
+pr_head: feat/DEV-005-api-shell-auth-request-id-logging-metrics
+status_record_commit_committed: null  # record commit SHA filled after push
+status_record_commit_committed_message: "docs(status): record DEV-005 implementation commit and PR"
+status_record_commit_completed: null
 previous_task: DEV-OPS-005
 previous_task_status: completed
 previous_task_completed_at: "2026-08-08 10:55 UTC"
@@ -93,9 +96,9 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: null
 deferred_business_task_status: null
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/DEV-005-api-shell-auth-request-id-logging-metrics
-next_action: 独立 Code Review DEV-005
+next_action: WAITING_FOR_PR_MERGE（人工 Merge PR #12）
 human_plan_approved_at: "2026-08-08 11:26 UTC"
 human_plan_approved_note: "PLAN_APPROVED；Plan Reviewer SF-001–SF-008 为非阻塞；NORMAL 自动续跑"
 insertion_override:
@@ -418,6 +421,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 11:20 UTC | DEV-005 | planned（Planner 初版） | 创建 Task Plan `DEV-005-api-shell-auth-request-id-logging-metrics.md`；master_plan CHANGE-010；progress 规划态回写 | 未实施、未 Git 写、未建分支；`next_action=计划审查`；不得开始 DEV-006/STM/Retrieval |
 | 2026-08-08 11:35 UTC | DEV-005 | approved → in_progress → tested | FastAPI 壳、鉴权、Request ID、structlog、Prometheus、Health；entrypoint 接线；Unit 18 + Contract 12；ruff/mypy 全绿 | 等待独立 Code Review；未 Git 写 |
 | 2026-08-08 19:45 UTC | DEV-005 | tested（P1 修复） | P1-001：`kafka_consumer_lag` Gauge 注册并加入 `ALL_METRICS`；Contract 12 / ruff / mypy 全绿 | 等待 Code Review 复审；未 Git 写 |
+| 2026-08-08 19:50 UTC | DEV-005 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `d32ddc70b5b8b772e9f27a84988b778c226dd2c5`；PR #12 OPEN | 仅 feat push；禁 push main；等待人工 Merge |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
