@@ -6,56 +6,54 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-OPS-003
-current_task_status: committed
+current_task: DEV-004
+current_task_status: planned
 current_branch: main
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md
-workflow_mode_for_this_task: STRICT
-workflow_mode_source: task_plan
-# smoke DEV-OPS-003-SMOKE 已 completed（PR #8 MERGED e14d71e8955a312f7c77c6d42c8f624cf3694563）；Step 7 冒烟完成
-# 正式 DEV-OPS-003：PR #7 MERGED（1189447）但仍尚未 completed；正式 feat 保留待正式收尾
-# 不得开始 DEV-004；不得修改 master_plan.md（本 smoke 未改）
-smoke_task_completed: DEV-OPS-003-SMOKE
-smoke_status: completed
-smoke_pr: "#8"
-smoke_pr_state: MERGED
-smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
-smoke_feat_deleted: feat/DEV-OPS-003-SMOKE-normal-workflow
-formal_DEV-OPS-003_status: "PR #7 MERGED (1189447)；尚未 completed；Step 7 smoke 已完成；待正式 POST_MERGE / completed 收尾"
-formal_DEV-OPS-003_plan_file: 02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md
-formal_feat_branch_do_not_delete: feat/DEV-OPS-003-normal-strict-workflow-modes
-formal_feat_retained: true
-latest_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
-plan_commit: d45ea2faf3b057c9e8ca0cf8699c0a973fe2e638
-implementation_commit: 640616b3e4d9556c7d1bf2f81271ba62bc12cbe7
-pr: "#7"
-pr_url: "https://github.com/xu-jia-ming/memory_system/pull/7"
-pr_state: MERGED
-merge_commit: 1189447
-formal_pr: "#7"
-formal_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/7"
-formal_pr_state: MERGED
-formal_merge_commit: 1189447
-formal_implementation_commit: 640616b3e4d9556c7d1bf2f81271ba62bc12cbe7
-formal_plan_commit: d45ea2faf3b057c9e8ca0cf8699c0a973fe2e638
-previous_task: DEV-OPS-003-SMOKE
+current_plan_file: null
+workflow_mode_for_this_task: null
+latest_commit: 45c74f8a988170929d003f72cedcd48b8944f7c0
+plan_commit: null
+previous_task: DEV-OPS-003
 previous_task_status: completed
-previous_task_completed_at: "2026-08-08 05:05 UTC"
-previous_implementation_commit: 3a3c7c72f3c0a2ec12e39f0d89dc477154fde30b
-previous_implementation_commit_message: "test(e2e): add DEV-OPS-003 NORMAL workflow smoke marker"
-previous_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
-previous_pr: "#8"
+previous_task_completed_at: "2026-08-08 05:12 UTC"
+previous_implementation_commit: 640616b3e4d9556c7d1bf2f81271ba62bc12cbe7
+previous_implementation_commit_message: "chore(cursor): add NORMAL/STRICT workflow modes and release phases"
+previous_status_record_commit_committed: ec47b2ae3f42ed32fd33a53440a831e70226db33
+previous_status_record_commit_committed_message: "docs(status): record DEV-OPS-003 implementation commit and PR"
+previous_status_record_commit_completed: null
+previous_status_record_commit_completed_message: "docs(status): complete DEV-OPS-003 after PR merge and smoke"
+previous_pr: "#7"
 previous_pr_status: merged
-deferred_business_task: DEV-004
-deferred_business_task_status: planned
-next_action: 正式 DEV-OPS-003 POST_MERGE_CLEANUP / completed 收尾（正式 feat 仍保留）；不得开始 DEV-004
-master_plan_touched: false
+previous_merge_commit: 1189447d518b863d469150ead861e85fa5ca86b5
+# DEV-OPS-003 formal completion evidence
+formal_DEV-OPS-003_status: completed
+formal_DEV-OPS-003_plan_file: 02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md
+formal_plan_commit: d45ea2faf3b057c9e8ca0cf8699c0a973fe2e638
+formal_implementation_commit: 640616b3e4d9556c7d1bf2f81271ba62bc12cbe7
+formal_status_record_committed: ec47b2ae3f42ed32fd33a53440a831e70226db33
+formal_pr: "#7"
+formal_pr_state: MERGED
+formal_merge_commit: 1189447d518b863d469150ead861e85fa5ca86b5
+formal_workflow_mode: STRICT
+formal_feat_retained_pending_cleanup: feat/DEV-OPS-003-normal-strict-workflow-modes
+# Step 7 smoke evidence
+step7_smoke_task: DEV-OPS-003-SMOKE
+step7_smoke_verdict: PASSED
+step7_workflow_mode: NORMAL
+step7_workflow_mode_source: default
+step7_two_human_gates_validated: true
+step7_smoke_pr: "#8"
+step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
+step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
+step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
+next_action: 进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；本 Commit 不得开始 DEV-004 实施；正式 feat feat/DEV-OPS-003-normal-strict-workflow-modes 删除待人工
 insertion_override:
   overridden_next_action: "进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；…不得插入 DEV-OPS-003…"
   override_reason: "用户本轮显式字段 TASK_ID=DEV-OPS-003 覆盖 progress.md 先前 next_action；人工插入 DEV-OPS-003 于 DEV-004 业务规划之前"
   override_at: "2026-08-07 15:22 UTC"
-  note: "不得开始 DEV-004；正式 DEV-OPS-003 completed 后 next_action 必须回到 DEV-004 业务规划；smoke 已完成不代替正式 completed"
+  resolved_at: "2026-08-08 05:12 UTC"
+  note: "DEV-OPS-003 completed；next_action 已恢复 DEV-004 业务规划；本状态 Commit 不得开始 DEV-004 实施"
 ```
 
 ## 测试状态
@@ -67,7 +65,7 @@ insertion_override:
 | Contract（Cursor 工作流） | passed | `uv run pytest tests/unit/test_cursor_orchestrator_contract.py tests/unit/test_cursor_workflow_modes_contract.py tests/unit/test_cursor_commands_contract.py -q` | 50 passed |
 | Integration | passed | `uv run pytest tests/integration/test_preflight_linux_host.py` | 2 passed / 2 skipped（DEV-003；本任务未改） |
 | TEI lock validate | passed | `timeout 600 ./scripts/lock_tei_images.sh` | CPU+GPU 1.9.3（GPU `--gpus all` 修复后；DEV-003） |
-| E2E | passed（DEV-OPS-003-SMOKE） | 受监督 NORMAL 全链路冒烟 | PR #8 MERGED（`e14d71e`）；三相 Release 真实执行；正式 DEV-OPS-003 未 completed；正式 feat 保留 |
+| E2E | passed（DEV-OPS-003 Step 7） | DEV-OPS-003-SMOKE NORMAL 受监督全链路 | **PASSED**：默认 NORMAL；两人工门（PLAN_APPROVED + PR Merge）；三相 Release 真实执行；PR #8 MERGED（`e14d71e`）；POST_MERGE `45c74f8`；STRICT 正路径证据=正式 DEV-OPS-003 自身 |
 | Ruff | passed | `uv run ruff check .` | All checks passed |
 | Mypy | passed | `uv run mypy src tests` | Success: 47 source files |
 | UI discovery（§9 / OI-OPS-005 延续） | passed（DEV-OPS-002） | 人工 `/` 菜单 | 七项均可发现：`/orchestrate-task`、`/planner`、`/plan-reviewer`、`/developer`、`/code-reviewer`、`/commit-recorder`、`/release-operator`（2026-08-07 02:40 UTC） |
@@ -82,6 +80,7 @@ insertion_override:
 | DEV-OPS-002 | Cursor Orchestrator、Subagents 与 Release Automation | 2026-08-07 07:11 | `4943757` | `5886cc6` | #4 merged |
 | DEV-002 | 配置系统与 `.env.example` | 2026-08-07 09:44 | `f55732c` | `7fba544` | #5 merged |
 | DEV-003 | Docker Compose、Embedding 服务与 Preflight | 2026-08-07 15:10 | `d366fb6` | `0ac80e5` | #6 merged |
+| DEV-OPS-003 | NORMAL / STRICT 工作流模式 | 2026-08-08 05:12 | `640616b` | `1189447d518b863d469150ead861e85fa5ca86b5` | #7 merged |
 | DEV-OPS-003-SMOKE | NORMAL workflow supervised smoke | 2026-08-08 05:05 | `3a3c7c7` | `e14d71e8955a312f7c77c6d42c8f624cf3694563` | #8 merged |
 
 ## 规格阻塞项
@@ -121,11 +120,13 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | PLAN_APPROVED（DEV-OPS-002 计划） | **已通过**（Round 2）；plan Commit `261daa2`；状态 `completed` |
 | CODE_REVIEW_APPROVED（DEV-OPS-002 实现） | **已通过**（P0=0 / P1=0 / P2=4 / P3=3；P2/P3 为 residual/backlog，不阻塞） |
 | RELEASE_COMPLETED（DEV-OPS-002 实现） | **已完成**；implementation_commit `4943757`；PR #4 merged（`5886cc6`） |
-| PLAN_APPROVED（DEV-OPS-003 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-001；Amendment 001；Round 2 Plan Reviewer = `PLAN_APPROVED`；BLOCKER 0 / MUST_FIX 0）；人工确认 2026-08-07 15:39 UTC；`plan_commit=d45ea2f`；implementation_commit=`640616b`；PR #7 **MERGED**（`1189447`）；正式任务**尚未 completed**；Step 7 冒烟 = DEV-OPS-003-SMOKE |
+| PLAN_APPROVED（DEV-OPS-003 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-001；Amendment 001；Round 2 `PLAN_APPROVED`）；人工确认 2026-08-07 15:39 UTC；`plan_commit=d45ea2f`；implementation=`640616b`；record=`ec47b2a`；PR #7 **MERGED**（`1189447`）；Step 7 smoke **PASSED**；状态 **`completed`**（completed 治理 Commit 待本 docs(status) 落盘） |
+| CODE_REVIEW_APPROVED（DEV-OPS-003 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3 残余；P2 已 CLOSED） |
+| RELEASE_COMPLETED（DEV-OPS-003 IMPLEMENTATION_RELEASE） | **已完成**（STRICT）；implementation `640616b`；PR #7 MERGED |
 | PLAN_APPROVED（DEV-OPS-003-SMOKE 计划） | **已通过**；人工确认；plan_commit `ba0d827` |
-| CODE_REVIEW_APPROVED（DEV-OPS-003-SMOKE 实现） | **已通过**（P0=0 / P1=0）；READY_FOR_HUMAN_COMMIT |
+| CODE_REVIEW_APPROVED（DEV-OPS-003-SMOKE 实现） | **已通过**（P0=0 / P1=0） |
 | RELEASE_COMPLETED（DEV-OPS-003-SMOKE IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `3a3c7c7`；PR #8 MERGED（`e14d71e8955a312f7c77c6d42c8f624cf3694563`） |
-| RELEASE_COMPLETED（DEV-OPS-003-SMOKE POST_MERGE_CLEANUP） | **已完成**；smoke completed；`current_task` 恢复 DEV-OPS-003；正式 feat 保留；不得开始 DEV-004 |
+| RELEASE_COMPLETED（DEV-OPS-003-SMOKE POST_MERGE_CLEANUP） | **已完成**；smoke completed governance `45c74f8`；smoke feat 已删；正式 feat 保留 |
 | PLAN_APPROVED（DEV-002 计划） | **已通过**（Round 2；Amendment 001）；plan_commit `ceff988` |
 | PLAN_APPROVED（DEV-003 计划） | **已通过**（Round 1 `PLAN_REJECTED`；Amendment 001；Round 2 `PLAN_APPROVED`）；plan_commit `1b63d51`；人工确认 2026-08-07 10:33 UTC |
 | CODE_REVIEW_APPROVED（DEV-002 实现） | **已通过**（P0=0 / P1=0 / P2=2 / P3=2；P2-001 由 Amendment 002 关闭；不阻塞 Release） |
@@ -300,42 +301,41 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 01:32 UTC | DEV-OPS-003-SMOKE | approved → in_progress → implemented → tested | Developer 创建 `tests/e2e/devops003_normal_workflow_smoke.txt`（恰好一行 marker）；白名单三路径；marker 自检通过 | 未 Git 写；未改 master_plan；正式 DEV-OPS-003 未 completed；待 Code Review |
 | 2026-08-08 01:35 UTC | DEV-OPS-003-SMOKE | tested → reviewed → committed | IMPLEMENTATION_RELEASE：implementation `3a3c7c7`；PR #8 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；未 merge；正式 feat 未删 |
 | 2026-08-08 05:05 UTC | DEV-OPS-003-SMOKE | committed → completed | POST_MERGE_CLEANUP：PR #8 MERGED（`e14d71e`）；docs(status): complete on main；仅删 smoke feat | progress 恢复 `current_task=DEV-OPS-003`；正式未 completed；正式 feat 保留；未开始 DEV-004 |
+| 2026-08-08 05:12 UTC | DEV-OPS-003 | committed → completed | 正式治理回写：PR #7 MERGED / Step 7 PASSED / STRICT 证据充分；同步 Task Plan / progress / master_plan | 本轮未 Git 写；正式 feat 仍保留待人工删；`next_action`→DEV-004 规划；本 Commit 不得开始 DEV-004 |
 
-## DEV-OPS-003 Git 流程（正式任务；PR #7 MERGED；尚未 completed；Step 7 smoke 已完成）
+## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
 ```text
 1. 独立 Plan Review Round 1 → PLAN_REJECTED（MF-001）
 2. Planner Amendment 001
 3. 独立 Plan Review Round 2 → PLAN_APPROVED
 4. 人工确认 PLAN_APPROVED → approved（2026-08-07 15:39 UTC）
-5. 人工在 main 提交 docs(plan): add DEV-OPS-003 normal and strict workflow modes plan（d45ea2f）并 push
+5. 人工在 main 提交 docs(plan)（d45ea2f）并 push
 6. 从 main 创建 feat/DEV-OPS-003-normal-strict-workflow-modes
-7. Developer 实施 → tested（2026-08-07 15:55 UTC）
-8. Code Review → reviewed（2026-08-08；`CODE_REVIEW_APPROVED`；P2 CLOSED）
+7. Developer 实施 → tested
+8. Code Review → reviewed（P2 CLOSED）
 9. Commit Recorder → READY_FOR_HUMAN_COMMIT
-10. Release Operator IMPLEMENTATION_RELEASE → committed（implementation `640616b`；PR #7）
-11. 人工 Merge PR #7 → main（Merge `1189447`）← 已完成
-12. 正式 completed / post-merge 治理 ← 尚未；不得借 smoke 标 completed
-13. Step 7 冒烟 = DEV-OPS-003-SMOKE ← 已 completed（PR #8 MERGED e14d71e）；progress 已恢复 current_task=DEV-OPS-003
+10. 显式 RELEASE_APPROVED → IMPLEMENTATION_RELEASE（640616b；PR #7；record ec47b2a）
+11. 人工 Merge PR #7 → main（1189447）
+12. Step 7 = DEV-OPS-003-SMOKE NORMAL smoke → PASSED（PR #8 / e14d71e / POST_MERGE 45c74f8）
+13. 正式 completed 治理准备（本轮）→ 待人工 docs(status): complete DEV-OPS-003 after PR merge and smoke
+14. 正式 feat 删除 ← 仍待人工；next_action=DEV-004 规划
 ```
 
-## DEV-OPS-003-SMOKE Git 流程（已完成；NORMAL / default；PR #8 MERGED）
+## DEV-OPS-003-SMOKE Git 流程（已完成；NORMAL / default；两人工门验证）
 
 ```text
-0. Planner 起草 Task Plan + progress 规划态
-1. 独立 Plan Review → 人工 PLAN_APPROVED
-2. 自动 PLAN_LANDING：main docs(plan) ba0d827 + feat/DEV-OPS-003-SMOKE-normal-workflow ← 已完成
-3. Developer：tests/e2e/devops003_normal_workflow_smoke.txt ← 已完成（tested）
-4. Code Review → Commit Recorder → 自动 IMPLEMENTATION_RELEASE → PR #8 ← 已完成（implementation 3a3c7c7）
-5. 人工 Merge PR #8 → main（Merge e14d71e8955a312f7c77c6d42c8f624cf3694563）← 已完成
-6. 自动 POST_MERGE_CLEANUP：docs(status): complete on main；仅删 smoke feat ← 本步
-7. smoke completed；progress 恢复 → DEV-OPS-003；正式 feat 保留；未改 master_plan；未开始 DEV-004
+1. 人工 PLAN_APPROVED（门禁 #1）
+2. 自动 PLAN_LANDING → Developer → Code Review → Commit Recorder → IMPLEMENTATION_RELEASE → PR #8
+   （无中间人工 Git/Release 批准门）
+3. WAITING_FOR_PR_MERGE → 人工 Merge PR #8（门禁 #2）
+4. 自动 POST_MERGE_CLEANUP（无再一次批准）→ smoke completed；删 smoke feat；恢复 current_task=DEV-OPS-003
 ```
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-OPS-003**（正式；`committed` / PR #7 MERGED；**尚未 completed**）；计划文件 `02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md`。
-2. **立即下一动作**：正式 DEV-OPS-003 POST_MERGE / completed 收尾；**正式 feat `feat/DEV-OPS-003-normal-strict-workflow-modes` 仍保留**。
-3. **smoke**：DEV-OPS-003-SMOKE **completed**（PR #8 MERGED `e14d71e8955a312f7c77c6d42c8f624cf3694563`；Step 7 冒烟已完成）。
-4. **master_plan**：本 smoke **未修改** `02_开发管理/master_plan.md`。
-5. **DEV-004**：保持 `planned`（deferred）；**不得开始**。
+1. **当前**：`current_task` = **DEV-004**（`planned`）；**本治理 Commit 不得开始** DEV-004 规划/实施以外的业务编码。
+2. **立即下一动作**：人工在 `main` 提交 `docs(status): complete DEV-OPS-003 after PR merge and smoke` 并 push；随后可进入 DEV-004 业务规划。
+3. **正式 feat**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工。
+4. **Step 7**：NORMAL smoke **PASSED**；NORMAL 两人工门模型已验证；STRICT 正路径证据=正式 DEV-OPS-003 自身。
+5. **smoke marker**：`tests/e2e/devops003_normal_workflow_smoke.txt` 保留在 main 作为证据。

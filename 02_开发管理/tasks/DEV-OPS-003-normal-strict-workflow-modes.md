@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-003
 task_name: Add NORMAL / STRICT workflow modes and reduce routine human gates
-status: committed
+status: completed
 spec_sections:
   - "非业务规格任务：扩展 DEV-OPS-002 Orchestrator/Subagent 工作流；不修改技术规格正文与业务 Contract"
 prerequisites:
@@ -15,10 +15,10 @@ prerequisites:
   - "本任务为人工显式插入：在 DEV-004 业务规划之前执行；不得开始 DEV-004"
 branch: "feat/DEV-OPS-003-normal-strict-workflow-modes"
 created_at: "2026-08-07 15:22 UTC"
-updated_at: "2026-08-08 01:25 UTC"
+updated_at: "2026-08-08 05:12 UTC"
 approval_gates:
   planning_docs: "Round 1 PLAN_REJECTED（MF-001）；Amendment 001；Round 2 Plan Reviewer = PLAN_APPROVED（BLOCKER 0 / MUST_FIX 0 / SHOULD_FIX SF-R2-001–002 非阻塞）；人工确认 PLAN_APPROVED 2026-08-07 15:39 UTC"
-  implementation_plan: "status=committed；IMPLEMENTATION_RELEASE 完成；implementation_commit=640616b；PR #7 OPEN；P2 CLOSED；复审 CODE_REVIEW_APPROVED（P0=0/P1=0/P2=0/P3=2）；plan_commit=d45ea2f；未开始 DEV-004；Step 7 冒烟 pending"
+  implementation_plan: "status=completed；PR #7 MERGED（merge 1189447）；implementation_commit=640616b；status_record_committed=ec47b2a；Step 7 NORMAL smoke PASSED（DEV-OPS-003-SMOKE PR #8）；STRICT 正路径证据充分；正式 feat 仍保留待人工删；未开始 DEV-004"
 insertion_override:
   prior_next_action: "进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；…不得插入 DEV-OPS-003…"
   override_by: "用户本轮显式字段 + Orchestrator 调用（TASK_ID=DEV-OPS-003）"
@@ -562,9 +562,9 @@ Release Operator 仍是唯一 Git 写角色，但按 `RELEASE_PHASE` 收窄允�
 - [x] permissions/cli 显式含 `git fetch`；remote-delete 口径符合 SF-004
 - [x] `uv run ruff check .` 通过
 - [x] `uv run mypy src tests` 通过
-- [ ] Code Review 无 P0/P1
+- [x] Code Review 无 P0/P1
 - [x] **未**创建或实施 DEV-004
-- [ ] `completed` 后 `next_action` 回到 DEV-004 业务规划
+- [x] `completed` 后 `next_action` 回到 DEV-004 业务规划
 
 ## 10. 风险与阻塞项
 
@@ -669,6 +669,9 @@ out_of_scope_changes:
 | 2026-08-08 01:15 UTC | Developer P2 最小修正 | 角色段 mode-conditional 自动续跑；modes 契约新增 `test_role_section_mode_conditional_auto_continue`；commands 共享子串保留 | 见 §16 复测 | status 保持 `reviewed`（P2 fix pending re-review）；未改五命令/src/DEV-004；未 Git 写 |
 | 2026-08-08 01:20 UTC | P2 复审 + Commit Recorder | Code Reviewer 确认 P2 CLOSED；边界再核对 | CODE_REVIEW_APPROVED；P0=0 P1=0 P2=0 P3=2；契约 50 / unit 102 | `READY_FOR_HUMAN_COMMIT`；STRICT 不自动 Release；未 Git 写 |
 | 2026-08-08 01:25 UTC | Release Operator IMPLEMENTATION_RELEASE（STRICT） | 精确 13 路径 add/commit/push；PR #7 创建；本 feat 回写 committed | unit 102 / 契约 50 / ruff / mypy 已绿灯（前置） | implementation_commit=`640616b`；PR OPEN base=main head=feat；禁 push main；Step 7 冒烟仍 pending |
+| 2026-08-08 | 人工 Merge PR #7 | feat → main | PR **MERGED**；merge=`1189447d518b863d469150ead861e85fa5ca86b5` | 正式 feat 仍保留（STRICT 不自动 POST_MERGE）；正式 status 仍 committed |
+| 2026-08-08 | Step 7 受监督 NORMAL smoke（DEV-OPS-003-SMOKE） | 独立 smoke Task；默认 NORMAL；真实三相 Release | 见 §16 Step 7 | PR #8 MERGED `e14d71e…`；POST_MERGE_CLEANUP `45c74f8…`；smoke feat 已删；正式 feat 保留 |
+| 2026-08-08 05:12 UTC | 正式 completed 治理准备 | status=`committed` → `completed`；同步 progress / master_plan；记录 Step 7 PASSED | 未跑（治理 only） | 本轮**未** Git 写；正式 feat **未**删；未开始 DEV-004；待人工 `docs(status): complete DEV-OPS-003 after PR merge and smoke` |
 ## 16. 实际执行结果
 
 ### 实际修改文件
@@ -693,8 +696,8 @@ out_of_scope_changes:
 ### 与原计划的差异
 
 - 未修改可选 Agent（planner/plan-reviewer/developer/code-reviewer）：合同测试不要求额外对齐。
-- Step 7 受监督冒烟：未执行（pending；契约-only 不计 E2E）。
 - P2 最小修正：未改 commands contract 共享子串策略；仅角色段语义澄清 + modes 契约收紧。
+- Step 7：以独立 smoke Task `DEV-OPS-003-SMOKE` 执行（不改 `master_plan.md`）；正式任务自身 STRICT 正路径已充分，未再跑完整 STRICT 冒烟。
 
 ### 测试结果
 
@@ -704,7 +707,35 @@ out_of_scope_changes:
 | Unit（全量） | `uv run pytest tests/unit -q` | 102 passed |
 | Ruff | `uv run ruff check .` | All checks passed |
 | Mypy | `uv run mypy src tests` | Success: 47 source files |
-| E2E 冒烟（Step 7） | — | **pending**（未伪造） |
+| E2E 冒烟（Step 7） | DEV-OPS-003-SMOKE NORMAL 受监督全链路 | **PASSED**（见下） |
+
+### Step 7 受监督冒烟（最终）
+
+```yaml
+verdict: PASSED
+smoke_task: DEV-OPS-003-SMOKE
+workflow_mode: NORMAL
+workflow_mode_source: default
+human_gates_validated:
+  - PLAN_APPROVED
+  - Human PR Merge (#8)
+no_intermediate_git_release_gates: true
+plan_landing: RELEASE_COMPLETED (plan_commit ba0d827)
+implementation_release: RELEASE_COMPLETED (implementation 3a3c7c7; PR #8)
+waiting_for_pr_merge: paused_then_human_merged
+post_merge_cleanup: RELEASE_COMPLETED
+smoke_pr: "#8"
+smoke_pr_state: MERGED
+smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
+smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
+smoke_feat_deleted: feat/DEV-OPS-003-SMOKE-normal-workflow
+marker_retained_on_main: tests/e2e/devops003_normal_workflow_smoke.txt
+strict_real_path_evidence: |
+  正式 DEV-OPS-003 自身 STRICT 执行已覆盖显式人工门禁
+  （无自动 PLAN_LANDING/POST_MERGE；显式 Release）；判定充分，未另跑完整 STRICT smoke。
+ui_discovery: |
+  未在本任务单独重跑 UI 菜单冒烟；沿用 DEV-OPS-002 已记录 passed（不宣称本轮复测）。
+```
 
 ### Review 结果
 
@@ -712,28 +743,35 @@ out_of_scope_changes:
 p0: 0
 p1: 0
 p2: 0
-p3: 2
+p3: 1
 verdict: CODE_REVIEW_APPROVED
 review_report: |
-  先前 P2 CLOSED（2026-08-08 复审）：角色段「不得自动切换」= 不得变身/兼任；
-  自动调用 = mode-conditional（NORMAL 唯一成功标记+门禁；STRICT 禁续跑；异常 HALT）。
-  P3 残余：Step 7 冒烟 pending；CHANGE-006 卫生（非阻塞）。
+  先前 P2 CLOSED（角色段 mode-conditional）。
+  P3 残余（更新）：CHANGE-006 卫生文案曾滞后（非阻塞）；Step 7 冒烟原 pending 现已 PASSED。
+  UI discovery 本轮未单独复测（不伪造为本轮 passed）。
 ```
 
 ### Git 记录
 
 ```yaml
-branch: feat/DEV-OPS-003-normal-strict-workflow-modes
+branch: feat/DEV-OPS-003-normal-strict-workflow-modes  # 正式 feat 仍保留（待人工删）
 plan_commit: d45ea2faf3b057c9e8ca0cf8699c0a973fe2e638
 implementation_commit: 640616b3e4d9556c7d1bf2f81271ba62bc12cbe7
 implementation_commit_message: "chore(cursor): add NORMAL/STRICT workflow modes and release phases"
+status_record_commit_committed: ec47b2ae3f42ed32fd33a53440a831e70226db33
+status_record_commit_committed_message: "docs(status): record DEV-OPS-003 implementation commit and PR"
 pr: "#7"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/7"
-pr_state: OPEN
+pr_state: MERGED
 pr_base: main
 pr_head: feat/DEV-OPS-003-normal-strict-workflow-modes
+merge_commit: 1189447d518b863d469150ead861e85fa5ca86b5
+status_record_commit_completed: null  # 待人工 docs(status): complete DEV-OPS-003 after PR merge and smoke
+step7_smoke_pr: "#8"
+step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
+step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 ```
 
 ### 最终状态
 
-`committed`（IMPLEMENTATION_RELEASE 完成；PR #7 OPEN；等待人工 Merge；Step 7 冒烟 pending；不得开始 DEV-004）
+`completed`（PR #7 MERGED；Step 7 NORMAL smoke PASSED；STRICT 正路径证据充分；正式 feat 仍保留待人工清理；`status_record_commit_completed=null` 直至本治理 Commit 落盘；未开始 DEV-004；`next_action`→DEV-004 业务规划）

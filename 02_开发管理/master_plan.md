@@ -61,7 +61,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | completed |
 | DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | completed |
-| DEV-OPS-003 | NORMAL / STRICT 工作流模式；减少常规人工机械门禁 | 非业务：扩展 DEV-OPS-002；保留六 Subagent 与唯一 Git 写角色 | DEV-OPS-002 | committed |
+| DEV-OPS-003 | NORMAL / STRICT 工作流模式；减少常规人工机械门禁 | 非业务：扩展 DEV-OPS-002；保留六 Subagent 与唯一 Git 写角色 | DEV-OPS-002 | completed |
 
 #### DEV-OPS-003 NORMAL / STRICT 工作流模式
 
@@ -73,7 +73,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：mode 声明；NORMAL 两门禁；STRICT 兼容；唯一 Git 写；异常 HALT；完成后 `next_action`→DEV-004；**本任务期间不得启动 DEV-004**。
 - **插入说明**：**人工显式插入**于 DEV-004 业务规划之前（用户覆盖先前「不得插入 DEV-OPS-003」的 next_action）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-003-normal-strict-workflow-modes.md`
-- **状态备注**：`committed`（2026-08-08 01:25 UTC IMPLEMENTATION_RELEASE；implementation_commit `640616b`；PR #7 OPEN base=main head=`feat/DEV-OPS-003-normal-strict-workflow-modes`；`CODE_REVIEW_APPROVED` P0=0/P1=0/P2=0/P3=2；plan_commit `d45ea2f`；Step 7 冒烟 pending；等待人工 Merge；STRICT 人工 post-merge；**本任务期间不得启动 DEV-004**）。
+- **状态备注**：`completed`（implementation_commit `640616b`；committed 治理 `ec47b2a`；PR #7 MERGED `1189447d518b863d469150ead861e85fa5ca86b5`；plan_commit `d45ea2f`；交付 NORMAL/STRICT 工作流模式；Step 7 受监督 NORMAL smoke **PASSED**（DEV-OPS-003-SMOKE PR #8 / merge `e14d71e` / POST_MERGE `45c74f8`）；正式任务自身提供 STRICT 正路径充分证据；正式 feat `feat/DEV-OPS-003-normal-strict-workflow-modes` 仍保留待人工删；`status_record_commit_completed=null` 直至 docs(status) complete 落盘；**下一业务任务 = DEV-004**）。
 
 #### DEV-OPS-002 Cursor Orchestrator、可复用 Subagents 与受控 Release Automation
 
@@ -142,7 +142,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Integration（首次成功、重复幂等、checksum 篡改失败）；ES alias/mapping 断言。
 - **验收**：`python -m scripts.migrate` 符合 §3.26/§3.32。
 - **风险**：修改已执行 Migration；与规格 Mapping 不一致。
-- **调度备注**：状态仍 `planned`；**因用户显式插入 DEV-OPS-003 而暂缓启动**；不得在 DEV-OPS-003 完成前开始 DEV-004 规划/实施。
+- **调度备注**：状态仍 `planned`；DEV-OPS-003 已 `completed`（治理 Commit 待落盘）；**下一动作 = DEV-004 业务规划**；本状态回写 Commit **不得**开始 DEV-004 实施。
 
 #### DEV-005 通用 API、鉴权、Request ID、日志与指标
 
@@ -434,8 +434,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|
 | 日期 | 2026-08-07 |
 | 原因 | **人工显式插入**非业务任务 DEV-OPS-003：NORMAL/STRICT 工作流模式，减少常规机械人工门禁；覆盖先前 progress「不得插入 DEV-OPS-003 / 立即 DEV-004」next_action；不改变 Phase 0–5 业务任务目标与依赖 |
-| 受影响任务 | 新增 `DEV-OPS-003`（Phase 0 补充，现 `committed`）；DEV-004 保持 `planned` 但**延后至 DEV-OPS-003 completed 之后**；**不**修改 DEV-OPS-001/002 / DEV-001–003 完成状态；**不**改变 DEV-004+ 业务范围正文 |
+| 受影响任务 | 新增 `DEV-OPS-003`（Phase 0 补充，现 `completed`）；DEV-004 保持 `planned` 且为下一业务任务；**不**修改 DEV-OPS-001/002 / DEV-001–003 完成状态；**不**改变 DEV-004+ 业务范围正文 |
 | 是否改变技术规格 | **否** |
-| 审批 | Round 1 `PLAN_REJECTED`（MF-001）；Amendment 001；Round 2 Plan Reviewer = `PLAN_APPROVED`（BLOCKER 0 / MUST_FIX 0）；人工确认 2026-08-07 15:39 UTC；plan_commit `d45ea2f`；Developer 落地后 `tested`；`CODE_REVIEW_APPROVED` → `reviewed`（P2 CLOSED）；2026-08-08 01:25 UTC `IMPLEMENTATION_RELEASE` → `committed`；implementation_commit `640616b`；PR #7 OPEN |
+| 审批 | Round 1 `PLAN_REJECTED`（MF-001）；Amendment 001；Round 2 `PLAN_APPROVED`；人工确认 2026-08-07 15:39 UTC；plan_commit `d45ea2f`；implementation `640616b`；record `ec47b2a`；PR #7 MERGED `1189447`；Step 7 NORMAL smoke PASSED（PR #8 / `e14d71e` / POST_MERGE `45c74f8`）；正式 `completed`（2026-08-08 05:12 UTC 治理准备） |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
