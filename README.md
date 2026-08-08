@@ -105,6 +105,14 @@ cp .env.example .env
 3. Restore `versions.lock.env` from Git if digest update was bad
 4. `rm -rf .runtime/`
 
+## Human operations playbook
+
+会话历史不可用时，人类日常粘贴 / 恢复 / 失败处置入口：
+
+`03_AI_Prompts/01_项目日常操作手册.md`
+
+（六模板与规则 A–E；勿在本 README 复制全文。）
+
 ## Specification
 
 Authoritative design document:
