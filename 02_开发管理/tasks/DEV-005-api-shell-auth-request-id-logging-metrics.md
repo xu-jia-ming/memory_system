@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-005
 task_name: 通用 API 壳、鉴权、Request ID、日志与指标
-status: approved
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -490,15 +490,15 @@ Developer 更新本 Plan 执行记录与 `progress.md`；本规划轮次仅 `pla
 
 ## 11. 验收标准
 
-- [ ] 白名单文件齐套；黑名单无触碰
-- [ ] `uv run python -m memory_system.entrypoints.api` 在合法 test env 下可启动（人工或测试验证）；非法 env 非零退出
-- [ ] `GET /health/live`、`GET /health/ready`、`GET /internal/metrics` 行为符合 §8
-- [ ] 鉴权：401 `invalid_api_key`；Admin 路由 403 `forbidden`；常量时间实现存在
-- [ ] 错误包络与 `validation_error` 契约测试通过
-- [ ] structlog JSON 输出含最小字段；敏感信息断言通过
-- [ ] Prometheus 指标名与 §3.27 一致；`http_*` 有样本
-- [ ] `uv run pytest` 相关测试全绿；`uv run ruff check .`；`uv run mypy src tests scripts` 通过
-- [ ] 未开始 DEV-006 / STM / RET 业务实现
+- [x] 白名单文件齐套；黑名单无触碰
+- [x] `uv run python -m memory_system.entrypoints.api` 在合法 test env 下可启动（人工或测试验证）；非法 env 非零退出
+- [x] `GET /health/live`、`GET /health/ready`、`GET /internal/metrics` 行为符合 §8
+- [x] 鉴权：401 `invalid_api_key`；Admin 路由 403 `forbidden`；常量时间实现存在
+- [x] 错误包络与 `validation_error` 契约测试通过
+- [x] structlog JSON 输出含最小字段；敏感信息断言通过
+- [x] Prometheus 指标名与 §3.27 一致；`http_*` 有样本
+- [x] `uv run pytest` 相关测试全绿；`uv run ruff check .`；`uv run mypy src tests scripts` 通过
+- [x] 未开始 DEV-006 / STM / RET 业务实现
 - [ ] Review 无 P0/P1
 
 ## 12. 风险与阻塞项
@@ -572,6 +572,8 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-08 11:20 UTC | 规划 | 创建 Task Plan；progress/master_plan 规划态 | 未实施 | 无 |
+| 2026-08-08 11:35 UTC | 实施 | API 壳、鉴权、Request ID、structlog、Prometheus、Health、entrypoint | Unit 30 / Contract 12 / ruff / mypy 全绿 | Integration 可选跳过（无运行中 API） |
+| 2026-08-08 19:45 UTC | P1 修复 | `metrics.py` 注册 `kafka_consumer_lag` Gauge 并加入 `ALL_METRICS`；contract 断言 `ALL_METRICS` 含该指标 | Contract 12 / ruff / mypy 全绿 | 无 series 时不强制 scrape 文本出现 |
 
 ## 16. 实际执行结果
 
@@ -579,7 +581,15 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-| （实施前为空） | |
+| `src/memory_system/api/**` | 已创建（app、middleware、errors、routes） |
+| `src/memory_system/infrastructure/runtime.py` | 已创建 |
+| `src/memory_system/infrastructure/security/api_key.py` | 已创建 |
+| `src/memory_system/observability/**` | 已创建 |
+| `src/memory_system/entrypoints/api.py` | 已修改（Uvicorn 启动） |
+| `tests/unit/test_api_key_security.py` 等 | 已创建/修订 |
+| `tests/contract/test_api_shell_contract.py` | 已创建 |
+| `tests/integration/test_api_readiness.py` | 已创建（可选） |
+| `README.md` | 已更新 memory-api 本地启动说明 |
 
 ### 与原计划的差异
 
@@ -589,12 +599,12 @@ out_of_scope_changes:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | | |
-| Contract | | |
-| Integration | | |
-| E2E | | |
-| Ruff | | |
-| Mypy | | |
+| Unit | `uv run pytest tests/unit/test_api_key_security.py tests/unit/test_error_envelope.py tests/unit/test_request_id.py tests/unit/test_entrypoints_import.py -q` | PASS (18) |
+| Contract | `uv run pytest tests/contract/test_api_shell_contract.py -q` | PASS (12) |
+| Integration | `uv run pytest tests/integration/test_api_readiness.py -q` | 可选；未阻塞 |
+| E2E | — | N/A |
+| Ruff | `uv run ruff check .` | PASS |
+| Mypy | `uv run mypy src tests scripts` | PASS |
 
 ### Review 结果
 
@@ -609,12 +619,12 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/DEV-005-api-shell-auth-request-id-logging-metrics
+plan_commit: 2548c9a5f99c833e6347b93484c562e86f25f605
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`planned`
+`tested`
