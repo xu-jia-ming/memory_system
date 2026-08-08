@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-005
 task_name: Human Prompt Playbook and Recovery Operations Manual
-status: reviewed
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -17,10 +17,10 @@ prerequisites:
   - "本任务为用户显式插入/覆盖：在 DEV-005 业务规划/实施之前执行；不得开始 DEV-005 业务实施"
 branch: "feat/DEV-OPS-005-human-prompt-playbook-recovery-operations"
 created_at: "2026-08-08 10:20 UTC"
-updated_at: "2026-08-08 10:48 UTC"
+updated_at: "2026-08-08 10:50 UTC"
 approval_gates:
   planning_docs: "approved；人工 PLAN_APPROVED 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；PLAN_LANDING 完成"
-  implementation_plan: "status=reviewed；CODE_REVIEW_APPROVED（P0=0/P1=0/P2=0/P3=3 残余不阻塞）；Commit Recorder READY_FOR_HUMAN_COMMIT；进入 IMPLEMENTATION_RELEASE"
+  implementation_plan: "status=committed；IMPLEMENTATION_RELEASE 完成；PR #11 OPEN；WAITING_FOR_PR_MERGE"
 insertion_override:
   prior_current_task: "DEV-005"
   prior_current_task_status: "planned"
@@ -436,6 +436,7 @@ release_phases:
 | 2026-08-08 10:46 UTC | Code Review | `CODE_REVIEW_APPROVED`；P0=0；P1=0；P2=0；P3=3（残余不阻塞） | n/a（Reviewer 静态交叉核对契约） | 未 Git 写；不得开始 DEV-005 |
 | 2026-08-08 10:47 UTC | Commit Recorder | `READY_FOR_HUMAN_COMMIT`（NORMAL 兼容边界标记） | n/a | 白名单 6 路径；无 Secret；建议 status→reviewed |
 | 2026-08-08 10:48 UTC | Release Operator pre-commit | status→reviewed；Review 结果回写；next_action→IMPLEMENTATION_RELEASE/PR | n/a | 即将实现 Commit；不得开始 DEV-005 |
+| 2026-08-08 10:50 UTC | IMPLEMENTATION_RELEASE | 实现 Commit + push + PR #11；docs(status) record | n/a | implementation=`373cd331313e02d053a6b49af11beaa7be02acbc`；仅 feat；不得开始 DEV-005 |
 
 ---
 
@@ -448,9 +449,9 @@ release_phases:
 | `03_AI_Prompts/01_项目日常操作手册.md` | 新建：文首记忆负担；六模板粘贴块；规则 A–E；NORMAL/STRICT 对照；invariants |
 | `tests/unit/test_project_operations_playbook_contract.py` | 新建：§8 + SHOULD_FIX1 静态契约（28 tests） |
 | `README.md` | 短发现入口（指向 Playbook；无全文复制） |
-| 本 Task Plan | 执行记录 / status=`reviewed` |
-| `02_开发管理/progress.md` | 实施态回写 + 测试结果 + reviewed |
-| `02_开发管理/master_plan.md` | Phase 0 补充状态→`reviewed` |
+| 本 Task Plan | 执行记录 / status=`committed` |
+| `02_开发管理/progress.md` | 实施态回写 + 测试结果 + reviewed → committed |
+| `02_开发管理/master_plan.md` | Phase 0 补充状态→`committed` |
 
 ### 与原计划的差异
 
@@ -483,13 +484,16 @@ review_report: "P3 residual: (1) MF-3 auto-chain test omits literal tests step; 
 ```yaml
 branch: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
 plan_commit: a601a3ba569b12b8fc0ae8ff913f66927381af19
-implementation_commit: null
+implementation_commit: 373cd331313e02d053a6b49af11beaa7be02acbc
 implementation_commit_message: "docs(ai): add human project operations playbook and contract tests"
-pr: null
-pr_url: null
-pr_status: null
+pr: "#11"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/11"
+pr_status: OPEN
+pr_base: main
+pr_head: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
+status_record_committed: null
 ```
 
 ### 最终状态
 
-`reviewed`
+`committed`

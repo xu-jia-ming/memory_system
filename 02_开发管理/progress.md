@@ -7,21 +7,23 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-OPS-005
-current_task_status: reviewed
+current_task_status: committed
 current_branch: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: 0d5d565d0f133a0216000c53a3699465dbc9ee74
+latest_commit: 373cd331313e02d053a6b49af11beaa7be02acbc
 plan_commit: a601a3ba569b12b8fc0ae8ff913f66927381af19
-implementation_commit: null
+implementation_commit: 373cd331313e02d053a6b49af11beaa7be02acbc
 implementation_commit_message: "docs(ai): add human project operations playbook and contract tests"
-pr: null
-pr_url: null
-pr_status: null
-pr_base: null
-pr_head: null
+pr: "#11"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/11"
+pr_status: OPEN
+pr_base: main
+pr_head: feat/DEV-OPS-005-human-prompt-playbook-recovery-operations
+status_record_committed: null
+status_record_committed_pending: true
 previous_task: DEV-004
 previous_task_status: completed
 previous_task_completed_at: "2026-08-08 10:07 UTC"
@@ -82,12 +84,12 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task (deferred during DEV-OPS-005)
 deferred_business_task: DEV-005
 deferred_business_task_status: planned
-next_action: IMPLEMENTATION_RELEASE（push/PR）；等待人工 PR Merge；不得开始 DEV-005
+next_action: WAITING_FOR_PR_MERGE（PR #11 OPEN）；人工 Merge 后 POST_MERGE_CLEANUP；不得开始 DEV-005
 insertion_override:
   prior_current_task: DEV-005
   prior_next_action: "进入 DEV-005（通用 API 壳、鉴权、Request ID、日志与指标）业务规划；本 Commit 不得开始 DEV-005 实施"
   override_by: "用户显式 TASK_ID=DEV-OPS-005 WORKFLOW_MODE=NORMAL(explicit)"
-  effect: "current_task=DEV-OPS-005 reviewed；DEV-005 推迟且本任务期间不得实施"
+  effect: "current_task=DEV-OPS-005 committed；DEV-005 推迟且本任务期间不得实施"
   overridden_at: "2026-08-08 10:20 UTC"
 human_plan_approved_at: "2026-08-08 10:30 UTC"
 human_plan_approved_note: "PLAN_APPROVED；吸收 Plan Reviewer SHOULD_FIX 1–3；NORMAL 自动续跑 PLAN_LANDING→…→WAITING_FOR_PR_MERGE"
@@ -198,6 +200,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（DEV-004 POST_MERGE_CLEANUP） | **已完成**；completed 治理 `4a5cbc2`；exact feat 已删 |
 | PLAN_APPROVED（DEV-OPS-005 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-1–3；Amendment 001；Round 2 `PLAN_APPROVED`；Amendment 002 章节编号）；人工确认 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；`workflow_mode=NORMAL`（explicit）；plan_commit `a601a3ba569b12b8fc0ae8ff913f66927381af19` |
 | CODE_REVIEW_APPROVED（DEV-OPS-005 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=3；P3 残余不阻塞） |
+| RELEASE_COMPLETED（DEV-OPS-005 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 OPEN（base=main，head=feat） |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -393,6 +396,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 10:40 UTC | DEV-OPS-005 | approved → in_progress | Developer 开工：Playbook + 契约测试 + README 短入口；治理回写 | 未 Git 写；**不得开始 DEV-005** |
 | 2026-08-08 10:45 UTC | DEV-OPS-005 | in_progress → tested | Playbook+契约+README 完成；Contract 28 / unit 156 / ruff / mypy 全绿 | 等待独立 Code Review；未 Git 写；**不得开始 DEV-005** |
 | 2026-08-08 10:46 UTC | DEV-OPS-005 | tested → reviewed | 独立 Code Review `CODE_REVIEW_APPROVED`；P0=0/P1=0/P2=0/P3=3 | Commit Recorder READY_FOR_HUMAN_COMMIT；进入 IMPLEMENTATION_RELEASE；**不得开始 DEV-005** |
+| 2026-08-08 10:50 UTC | DEV-OPS-005 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 OPEN | 仅 feat push；禁 push main；等待人工 Merge；**不得开始 DEV-005** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -425,8 +429,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-OPS-005**（`reviewed`）；`workflow_mode=NORMAL`（explicit）；`plan_commit=a601a3ba569b12b8fc0ae8ff913f66927381af19`；分支 `feat/DEV-OPS-005-human-prompt-playbook-recovery-operations`；计划文件 `02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md`。
-2. **立即下一动作**：`IMPLEMENTATION_RELEASE`（实现 Commit + push + PR）；其后 `WAITING_FOR_PR_MERGE`；**本任务期间不得开始 DEV-005 实施**。
+1. **当前**：`current_task` = **DEV-OPS-005**（`committed`）；`workflow_mode=NORMAL`（explicit）；`implementation_commit=373cd331313e02d053a6b49af11beaa7be02acbc`；PR **#11** OPEN（base=`main`，head=`feat/DEV-OPS-005-human-prompt-playbook-recovery-operations`）；`plan_commit=a601a3ba569b12b8fc0ae8ff913f66927381af19`。
+2. **立即下一动作**：`WAITING_FOR_PR_MERGE` — 等待人工 Merge PR #11；其后自动 `POST_MERGE_CLEANUP`；**本任务期间不得开始 DEV-005 实施**。
 3. **推迟的业务任务**：`DEV-005` 保持 `planned`（通用 API 壳等）；完成本 ops 任务后 `next_action` 再恢复 DEV-005 业务规划。
 4. **DEV-004**：已 `completed`（implementation `d8730a6`；committed 治理 `5246b5d`；PR #10 MERGED `206b7a6`；complete 治理 `4a5cbc2`）。
 5. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
