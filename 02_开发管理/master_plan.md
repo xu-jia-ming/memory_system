@@ -150,13 +150,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### DEV-004 Migration Runner 与基础设施初始化
 
-- **目标**：`scripts/migrate.py` + `001`–`004`；Mongo `infra_schema_migrations`；**唯一**创建 ES 版本化 Index、Mapping、Alias；Neo4j/Kafka/Mongo 初始化幂等。
-- **非目标**：业务 Document 写入；Retrieval/Extraction 逻辑。
-- **变更文件**：`scripts/migrate.py`、`scripts/migrations/001_*.py`–`004_*.py`、相关测试。
-- **测试**：Integration（首次成功、重复幂等、checksum 篡改失败）；ES alias/mapping 断言。
-- **验收**：`python -m scripts.migrate` 符合 §3.26/§3.32。
-- **风险**：修改已执行 Migration；与规格 Mapping 不一致。
-- **调度备注**：状态仍 `planned`；DEV-OPS-003 / DEV-OPS-004 均已 `completed`；**下一动作 = DEV-004 业务规划**（本治理 Commit 不得开始 DEV-004 实施）。
+- **目标**：`scripts/migrate.py` + `001`–`004`；Mongo `infra_schema_migrations`；**唯一**创建 ES 版本化 Index、Mapping、Alias；Neo4j/Kafka/Mongo 初始化幂等；闭合 Dockerfile COPY 与 `init-infra` `x-app-env` 缺口。
+- **非目标**：业务 Document 写入；Retrieval/Extraction；DEV-005/006；已执行 Migration 改写；v1→v2 蓝绿数据迁移。
+- **变更文件（精确白名单见 Task Plan §6）**：`scripts/migrate.py`、`scripts/migrations/001_initial_mongodb.py`–`004_initial_kafka_topics.py`、`Dockerfile`、`compose.yaml`（仅 init-infra env）、`README.md`、相关 unit/contract/integration 测试；治理三文件。
+- **测试**：Unit（checksum/顺序/Mapping 常量）；Contract（路径与 init-infra）；Integration（首次成功、重复幂等、checksum 篡改失败；ES alias/mapping 断言）。
+- **验收**：`python -m scripts.migrate` 符合 §3.26/§3.32.2；`compose.sh … run --rm init-infra` 可成功。
+- **风险**：修改已执行 Migration；与规格 Mapping 不一致；Settings 全量 required_env 对 init-infra 仍生效。
+- **计划文件**：`02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md`
+- **状态备注**：`planned`（Planner 初版 2026-08-08 07:39 UTC；`workflow_mode=NORMAL` explicit；等待独立 Plan Review；**不得实施**）。
 
 #### DEV-005 通用 API、鉴权、Request ID、日志与指标
 
@@ -461,5 +462,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | 新增 `DEV-OPS-004`（Phase 0 补充，现 `completed`）；DEV-004 保持 `planned` 且为下一业务任务；**不**修改 DEV-OPS-001/002/003 / DEV-001–003 完成状态；**不**改变 DEV-004+ 业务范围正文 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner 初版；独立 Plan Review → `PLAN_APPROVED`；人工确认 approved；PLAN_LANDING 完成（plan_commit `895d7aa`）；Developer tested；CODE_REVIEW_APPROVED；IMPLEMENTATION_RELEASE（implementation `14550df`；record `7d2a176`）；PR #9 MERGED `1bc2f499d79301679f373d46c809f1f50e4dad66`；POST_MERGE_CLEANUP 本轮 |
+
+### CHANGE-008
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-08 |
+| 原因 | 登记 DEV-004 初版 Task Plan：Migration Runner、`001`–`004`、ES Mapping/Alias 唯一创建方；闭合 Dockerfile COPY 与 init-infra `x-app-env`；细化白/黑名单、幂等/顺序/失败重试与测试策略 |
+| 受影响任务 | DEV-004（`planned`）；**不**修改 DEV-001–003 / DEV-OPS-* 完成状态；**不**开始 DEV-005/006；**不**改变后续业务任务范围正文 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner 初版；等待独立 Plan Review；`plan_commit=null`；未实施、未 Git 写 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

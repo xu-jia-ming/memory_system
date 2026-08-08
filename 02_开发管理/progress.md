@@ -7,13 +7,13 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-004
-current_task_status: planned
+current_task_status: approved
 current_branch: main
 target_default_branch: main
-current_plan_file: null
-workflow_mode_for_this_task: null
-workflow_mode_source: null
-latest_commit: 1bc2f499d79301679f373d46c809f1f50e4dad66
+current_plan_file: 02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md
+workflow_mode_for_this_task: NORMAL
+workflow_mode_source: explicit
+latest_commit: d5db474ea7b11c05ff9d0a137c3f9c16f3d8dd50
 plan_commit: null
 implementation_commit: null
 implementation_commit_message: null
@@ -29,7 +29,7 @@ previous_implementation_commit: 14550dfa8043eb5339b89f1c9f215ae368a6f58d
 previous_implementation_commit_message: "docs(ai): document local mihomo network fallback for agents"
 previous_status_record_commit_committed: 7d2a176170939eefe8a5c933b427021068541880
 previous_status_record_commit_committed_message: "docs(status): record DEV-OPS-004 implementation commit and PR"
-previous_status_record_commit_completed: null  # filled after this docs(status): complete commit
+previous_status_record_commit_completed: d5db474ea7b11c05ff9d0a137c3f9c16f3d8dd50
 previous_status_record_commit_completed_message: "docs(status): complete DEV-OPS-004 after PR merge"
 previous_pr: "#9"
 previous_pr_status: merged
@@ -40,6 +40,7 @@ formal_DEV-OPS-004_plan_file: 02_开发管理/tasks/DEV-OPS-004-mihomo-network-f
 formal_DEV-OPS-004_plan_commit: 895d7aaccc6c194105275e0688527d780907933f
 formal_DEV-OPS-004_implementation_commit: 14550dfa8043eb5339b89f1c9f215ae368a6f58d
 formal_DEV-OPS-004_status_record_committed: 7d2a176170939eefe8a5c933b427021068541880
+formal_DEV-OPS-004_status_record_completed: d5db474ea7b11c05ff9d0a137c3f9c16f3d8dd50
 formal_DEV-OPS-004_pr: "#9"
 formal_DEV-OPS-004_pr_state: MERGED
 formal_DEV-OPS-004_merge_commit: 1bc2f499d79301679f373d46c809f1f50e4dad66
@@ -69,14 +70,10 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: null
 deferred_business_task_status: null
-next_action: 进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；本 Commit 不得开始 DEV-004 实施
-insertion_override:
-  overridden_current_task: "DEV-004"
-  overridden_next_action: "进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；…"
-  override_reason: "用户本轮显式字段 TASK_ID=DEV-OPS-004 覆盖 progress.md 先前 current_task/next_action；人工插入 DEV-OPS-004（本机 Mihomo 网络回退文档）于 DEV-004 业务规划之前"
-  override_at: "2026-08-08 05:52 UTC"
-  resolved_at: "2026-08-08 06:18 UTC"
-  note: "DEV-OPS-004 completed；insertion_override resolved；下一动作恢复 DEV-004 业务规划（仍不得在本 Commit 开始实施）"
+next_action: PLAN_LANDING（docs(plan) on main → 创建 feat/DEV-004-migration-runner-es-mapping-alias）→ Developer
+insertion_override: null
+human_plan_approved_at: "2026-08-08 07:46 UTC"
+human_plan_approved_note: "PLAN_APPROVED；吸收 Plan Reviewer SHOULD_FIX 1–5 为 Amendment 001；NORMAL 自动续跑"
 ```
 ## 测试状态
 
@@ -338,6 +335,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 06:07 UTC | DEV-OPS-004 | tested → reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `14550df`；PR #9 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；等待人工 Merge；不得开始 DEV-004 |
 | 2026-08-08 06:15 UTC | DEV-OPS-004 | PR #9 MERGED | Merge Commit `1bc2f499d79301679f373d46c809f1f50e4dad66`；main 含 §18 + 契约 | 等待自动 POST_MERGE_CLEANUP |
 | 2026-08-08 06:18 UTC | DEV-OPS-004 | committed → completed | POST_MERGE_CLEANUP：docs(status): complete on main；删 exact feat；`current_task` → DEV-004 planned | 未开始 DEV-004 实施；`next_action`→DEV-004 业务规划 |
+| 2026-08-08 07:39 UTC | DEV-004 | planned（Planner 初版） | 创建 Task Plan `DEV-004-migration-runner-es-mapping-alias.md`；master_plan CHANGE-008；progress 规划态回写 | 未实施、未 Git 写、未建分支；`next_action=计划审查`；不得开始 DEV-005/006 |
+| 2026-08-08 07:46 UTC | DEV-004 | planned → approved | 人工 PLAN_APPROVED；Plan Reviewer BLOCKER/MUST_FIX=0；Amendment 001 吸收 SHOULD_FIX | 等待 Release Operator PLAN_LANDING；不得实施直至 feat 就绪 |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -370,8 +369,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-004**（`planned`）；尚无本任务 Plan 文件；下一业务 = Migration Runner 与基础设施初始化。
-2. **立即下一动作**：进入 **DEV-004 业务规划**（独立 Plan Review → `PLAN_APPROVED`）；**本 Commit 不得开始 DEV-004 实施**。
-3. **DEV-OPS-004**：已 `completed`（PR #9 MERGED `1bc2f499d79301679f373d46c809f1f50e4dad66`；POST_MERGE_CLEANUP）；insertion_override 已 resolved。
+1. **当前**：`current_task` = **DEV-004**（`approved`）；计划文件 `02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md`；`workflow_mode=NORMAL`（explicit）。
+2. **立即下一动作**：**PLAN_LANDING** → Developer（吸收 Amendment 001 / SHOULD_FIX 1–5）→ Code Review → Commit Recorder → IMPLEMENTATION_RELEASE → WAITING_FOR_PR_MERGE。
+3. **DEV-OPS-004**：已 `completed`（PR #9 MERGED；POST_MERGE complete `d5db474`）。
 4. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
 5. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
