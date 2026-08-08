@@ -4,11 +4,12 @@ Python monorepo for the Memory System MVP (API + extraction worker + consolidati
 
 ## Status
 
-**Phase 0 infrastructure (DEV-003)** delivers Docker Compose topology, TEI Embedding deployment, and Linux host Preflight.
+**Phase 0 infrastructure** delivers Docker Compose topology, TEI Embedding deployment, Linux host Preflight, and the versioned Migration Runner.
 
 - **Available**: `scripts/compose.sh` (唯一 Compose 入口), `scripts/start_embedding.sh`, `scripts/lock_tei_images.sh`, `scripts/preflight/check_linux_host.sh`, `versions.env` / `versions.lock.env`, multi-stage `Dockerfile`, full §3.3 Compose stack.
+- **Migration Runner (DEV-004)**: `python -m scripts.migrate`（亦为 `init-infra` 唯一入口）幂等初始化 Mongo / Neo4j / Elasticsearch Mapping+Alias / Kafka Topic；记录写入 `infra_schema_migrations`。
 - **Configuration**: `.env.example` + `configs/` (DEV-002).
-- **Not yet available**: Migration Runner (`scripts/migrate.py`, DEV-004), FastAPI application shell (DEV-005), TEI Embedding Client (DEV-006).
+- **Not yet available**: FastAPI application shell (DEV-005), TEI Embedding Client (DEV-006).
 
 **禁止**在脚本、CI 或文档示例中直接调用裸 `docker compose`；一律经 `./scripts/compose.sh`。
 
@@ -40,7 +41,7 @@ Quality gates:
 ```bash
 uv run pytest tests/unit tests/contract tests/integration
 uv run ruff check .
-uv run mypy src tests
+uv run mypy src tests scripts
 ```
 
 ## Standard startup (§3.17)
@@ -68,8 +69,9 @@ cp .env.example .env
 # 6. Start embedding only (writes .runtime/embedding.env)
 ./scripts/start_embedding.sh auto
 
-# 7. Initialize infrastructure (Migration Runner: DEV-004)
+# 7. Initialize infrastructure (Migration Runner)
 ./scripts/compose.sh --embedding=current run --rm init-infra
+# Equivalent local entrypoint (same implementation): python -m scripts.migrate
 
 # 8. Start application containers
 ./scripts/compose.sh --embedding=current up -d \

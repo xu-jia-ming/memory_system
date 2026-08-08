@@ -196,6 +196,15 @@ def test_init_infra_command_and_one_shot() -> None:
     assert init_infra.get("restart") == "no"
 
 
+def test_init_infra_app_env_injection_aligned_with_apps() -> None:
+    """DEV-004: init-infra must receive the same x-app-env as application services."""
+    config = _run_compose_config("--embedding=cpu")
+    services = config["services"]
+    _assert_app_env_injection("init-infra", services["init-infra"])
+    for name in APP_SERVICES:
+        _assert_app_env_injection(name, services[name])
+
+
 def test_test_stack_project_name_and_volume_isolation() -> None:
     config = _run_compose_config("--stack=test", "--embedding=none")
     assert config.get("name") == "memory-system-test"

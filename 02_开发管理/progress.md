@@ -7,7 +7,7 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-004
-current_task_status: approved
+current_task_status: reviewed
 current_branch: feat/DEV-004-migration-runner-es-mapping-alias
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md
@@ -70,24 +70,36 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: null
 deferred_business_task_status: null
-next_action: Developer 在 feat/DEV-004-migration-runner-es-mapping-alias 按已批准 Task Plan §5 白名单实施（plan_commit=5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a）
+next_action: Commit Recorder → IMPLEMENTATION_RELEASE → PR（DEV-004 reviewed；CODE_REVIEW_APPROVED）
 insertion_override: null
 human_plan_approved_at: "2026-08-08 07:46 UTC"
 human_plan_approved_note: "PLAN_APPROVED；吸收 Plan Reviewer SHOULD_FIX 1–5 为 Amendment 001；NORMAL 自动续跑"
+governance_deviation:
+  id: GD-DEV-004-001
+  type: NON_BLOCKING_GOVERNANCE_DEVIATION
+  audited_at: "2026-08-08 09:48 UTC"
+  human_accepted_at: "2026-08-08 09:52 UTC"
+  human_acceptance: GOVERNANCE_DEVIATION_ACCEPTED
+  violations:
+    - GD-001
+    - GD-002
+  remediation: "Governance record only; no test re-run; no status revert; no implementation rollback"
+  future_rule: "Acceptance does not relax fail-closed; future failures require report + authorization"
+  ready_for_code_review: true
 ```
 ## 测试状态
 
 | 测试层级 | 状态 | 最近命令 | 最近结果 |
 |---|---|---|---|
-| Unit | passed | `uv run pytest tests/unit -q` | 117 passed（DEV-OPS-004；含 mihomo 契约 15） |
-| Contract（业务） | passed | `uv run pytest tests/contract` | 12 passed（含 compose config 8 + env example 4；本任务未改） |
+| Unit | passed | `uv run pytest tests/unit -q` | **128 passed**（DEV-004 recovery；exit=0） |
+| Contract（业务） | passed | `uv run pytest tests/contract -q` | **17 passed**（含 migrate paths + compose；exit=0） |
 | Contract（Cursor 工作流） | passed | `uv run pytest tests/unit/test_cursor_orchestrator_contract.py tests/unit/test_cursor_workflow_modes_contract.py tests/unit/test_cursor_commands_contract.py -q` | 50 passed（既有；本任务未改五命令） |
-| Contract（Mihomo 网络回退） | passed | `uv run pytest tests/unit/test_mihomo_network_fallback_contract.py -q` | 15 passed（DEV-OPS-004 新建） |
-| Integration | passed | `uv run pytest tests/integration/test_preflight_linux_host.py` | 2 passed / 2 skipped（DEV-003；本任务未改） |
+| Contract（Mihomo 网络回退） | passed | `uv run pytest tests/unit/test_mihomo_network_fallback_contract.py -q` | 15 passed（DEV-OPS-004；本任务未改） |
+| Integration | passed | `uv run pytest tests/integration/test_migrate_infra.py -v` | **1 passed**（79s；compose test 栈；exit=0） |
 | TEI lock validate | passed | `timeout 600 ./scripts/lock_tei_images.sh` | CPU+GPU 1.9.3（GPU `--gpus all` 修复后；DEV-003） |
 | E2E | passed（DEV-OPS-003 Step 7） | DEV-OPS-003-SMOKE NORMAL 受监督全链路 | **PASSED**：默认 NORMAL；两人工门（PLAN_APPROVED + PR Merge）；三相 Release 真实执行；PR #8 MERGED（`e14d71e`）；POST_MERGE `45c74f8`；STRICT 正路径证据=正式 DEV-OPS-003 自身 |
-| Ruff | passed | `uv run ruff check .` | All checks passed |
-| Mypy | passed | `uv run mypy src tests` | Success: 48 source files |
+| Ruff | passed | `uv run ruff check .` | All checks passed（DEV-004） |
+| Mypy | passed | `uv run mypy src tests scripts` | Success: 60 source files（DEV-004） |
 | UI discovery（§9 / OI-OPS-005 延续） | passed（DEV-OPS-002） | 人工 `/` 菜单 | 七项均可发现：`/orchestrate-task`、`/planner`、`/plan-reviewer`、`/developer`、`/code-reviewer`、`/commit-recorder`、`/release-operator`（2026-08-07 02:40 UTC） |
 | E2E 冒烟（§9） | passed（DEV-OPS-002） | 受监督完整编排链路 | PR #3；`0891cd5`；测试 PR 已关闭（未 merge）；E2E 分支保留 |
 
@@ -338,6 +350,9 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 07:39 UTC | DEV-004 | planned（Planner 初版） | 创建 Task Plan `DEV-004-migration-runner-es-mapping-alias.md`；master_plan CHANGE-008；progress 规划态回写 | 未实施、未 Git 写、未建分支；`next_action=计划审查`；不得开始 DEV-005/006 |
 | 2026-08-08 07:46 UTC | DEV-004 | planned → approved | 人工 PLAN_APPROVED；Plan Reviewer BLOCKER/MUST_FIX=0；Amendment 001 吸收 SHOULD_FIX | 等待 Release Operator PLAN_LANDING；不得实施直至 feat 就绪 |
 | 2026-08-08 07:47 UTC | DEV-004 | approved（PLAN_LANDING） | docs(plan) `5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a`；创建 `feat/DEV-004-migration-runner-es-mapping-alias` | `next_action`→Developer 实施；未实施 |
+| 2026-08-08 09:20 UTC | DEV-004 | in_progress → tested | 白名单实现完成；SAFE_RESIDUAL_CLEANUP；Stage6 host-proxy build；Stage7 init-infra；Stage8 integration；ruff/mypy/unit/contract 全绿 | 等待独立 Code Review；未 Git 写；未 READY 前不得 Commit |
+| 2026-08-08 09:48 UTC | DEV-004 | tested（保持） | 独立治理审计 GD-DEV-004-001：NON_BLOCKING（GD-001 Stage6b→6c；GD-002 Stage7→6d→7） | 要求 Amendment 002 + progress 记录后方可 Code Review |
+| 2026-08-08 09:55 UTC | DEV-004 | tested → reviewed | 独立 Code Review `CODE_REVIEW_APPROVED`；P0=0/P1=0/P2=0/P3=4 | Commit Recorder → IMPLEMENTATION_RELEASE；未 Git 写 |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -370,7 +385,11 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-004**（`approved`）；计划文件 `02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md`；`workflow_mode=NORMAL`（explicit）；`plan_commit=5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a`；分支 `feat/DEV-004-migration-runner-es-mapping-alias`。
+1. **当前**：`current_task` = **DEV-004**（`tested`）；计划文件 `02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md`；`workflow_mode=NORMAL`（explicit）；`plan_commit=5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a`；分支 `feat/DEV-004-migration-runner-es-mapping-alias`。
+2. **立即下一动作**：**独立 Code Review** → Commit Recorder → `IMPLEMENTATION_RELEASE` → WAITING_FOR_PR_MERGE。
+3. **DEV-OPS-004**：已 `completed`（PR #9 MERGED；POST_MERGE complete `d5db474`）。
+4. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
+5. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
 2. **立即下一动作**：**Developer** 在 feat 按已批准 Task Plan §5 白名单实施（吸收 Amendment 001 / SHOULD_FIX 1–5）→ Code Review → Commit Recorder → IMPLEMENTATION_RELEASE → WAITING_FOR_PR_MERGE。
 3. **DEV-OPS-004**：已 `completed`（PR #9 MERGED；POST_MERGE complete `d5db474`）。
 4. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
