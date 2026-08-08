@@ -7,14 +7,21 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-OPS-004
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/DEV-OPS-004-mihomo-network-fallback-policy
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: 895d7aaccc6c194105275e0688527d780907933f
+latest_commit: 14550dfa8043eb5339b89f1c9f215ae368a6f58d
 plan_commit: 895d7aaccc6c194105275e0688527d780907933f
+implementation_commit: 14550dfa8043eb5339b89f1c9f215ae368a6f58d
+implementation_commit_message: "docs(ai): document local mihomo network fallback for agents"
+pr: "#9"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/9"
+pr_status: open
+pr_base: main
+pr_head: feat/DEV-OPS-004-mihomo-network-fallback-policy
 previous_task: DEV-OPS-003
 previous_task_status: completed
 previous_task_completed_at: "2026-08-08 05:12 UTC"
@@ -52,7 +59,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # DEV-004 remains planned but must not start during DEV-OPS-004
 deferred_business_task: DEV-004
 deferred_business_task_status: planned
-next_action: Code Review（DEV-OPS-004 tested）；通过后 Commit Recorder → IMPLEMENTATION_RELEASE；不得开始 DEV-004
+next_action: WAITING_FOR_PR_MERGE（PR #9 OPEN）；人工 Merge 后 POST_MERGE_CLEANUP；不得开始 DEV-004
 insertion_override:
   overridden_current_task: "DEV-004"
   overridden_next_action: "进入 DEV-004（Migration Runner 与基础设施初始化）业务规划；…"
@@ -139,6 +146,9 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（DEV-002 实现） | **已完成**；implementation_commit `f55732c`；PR #5 merged（`7fba544`） |
 | CODE_REVIEW_APPROVED（DEV-003 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=2；P2-001 Verdict A 接受偏差；GPU lock 修复后复审） |
 | RELEASE_COMPLETED（DEV-003 实现） | **已完成**；implementation_commit `d366fb6`；PR #6 merged（`0ac80e5`） |
+| PLAN_APPROVED（DEV-OPS-004 计划） | **已通过**；plan_commit `895d7aa`；`workflow_mode=NORMAL`（explicit） |
+| CODE_REVIEW_APPROVED（DEV-OPS-004 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=0） |
+| RELEASE_COMPLETED（DEV-OPS-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `14550dfa8043eb5339b89f1c9f215ae368a6f58d`；PR #9 OPEN（base=main，head=feat） |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -313,6 +323,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 05:57 UTC | DEV-OPS-004 | planned → approved | PLAN_LANDING：docs(plan) on main；创建 exact feat `feat/DEV-OPS-004-mihomo-network-fallback-policy` | 人工 PLAN_APPROVED 已确认；未实施；**不得开始 DEV-004** |
 | 2026-08-08 06:01 UTC | DEV-OPS-004 | approved → in_progress | Developer 开始白名单实施：全局规则 §18 + 契约测试 | plan_commit `895d7aa`；未 Git 写；不得开始 DEV-004 |
 | 2026-08-08 06:03 UTC | DEV-OPS-004 | in_progress → implemented → tested | §18 策略（Docker/分类/健康检查/active·inactive/Never/有界重试/安全边界/working tree）；契约 15；unit 117；ruff/mypy 通过 | SHOULD_FIX 已落实（7890 SSH/sshd；全部分类；unexpected dirty）；未 Git 写；待 Code Review |
+| 2026-08-08 06:07 UTC | DEV-OPS-004 | tested → reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `14550df`；PR #9 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；等待人工 Merge；不得开始 DEV-004 |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -345,8 +356,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-OPS-004**（`tested`）；计划文件 `02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md`；`workflow_mode=NORMAL`（explicit）。
-2. **立即下一动作**：**Code Review**；通过后 Commit Recorder → IMPLEMENTATION_RELEASE；本轮禁止开始 DEV-004。
+1. **当前**：`current_task` = **DEV-OPS-004**（`committed`）；计划文件 `02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md`；`workflow_mode=NORMAL`（explicit）。
+2. **立即下一动作**：**WAITING_FOR_PR_MERGE**（PR [#9](https://github.com/xu-jia-ming/memory_system/pull/9) OPEN）；人工 Merge 后 `POST_MERGE_CLEANUP`；本轮禁止开始 DEV-004。
 3. **覆盖关系**：用户显式插入 DEV-OPS-004，覆盖先前「进入 DEV-004 业务规划」；**DEV-004 保持 `planned`，本任务期间不得启动**。
 4. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
 5. **DEV-OPS-004 完成后**：`next_action` 恢复为 DEV-004 业务规划（仍不得在完成 Commit 中开始 DEV-004 实施）。

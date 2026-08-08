@@ -62,7 +62,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-001 | Cursor Agent 工作流自动化（项目级 Slash Commands） | 非业务：对齐治理与 `03_AI_Prompts` 角色流程 | DEV-001 | completed |
 | DEV-OPS-002 | Cursor Orchestrator、可复用 Subagents 与受控 Release Automation | 非业务：扩展 DEV-OPS-001；官方 Subagents / permissions | DEV-OPS-001 | completed |
 | DEV-OPS-003 | NORMAL / STRICT 工作流模式；减少常规人工机械门禁 | 非业务：扩展 DEV-OPS-002；保留六 Subagent 与唯一 Git 写角色 | DEV-OPS-002 | completed |
-| DEV-OPS-004 | 本机 Mihomo 网络回退策略文档（AI 工作流） | 非业务：全局开发规则 + 契约测试；不改规格/业务代理 Contract | DEV-OPS-003 | tested |
+| DEV-OPS-004 | 本机 Mihomo 网络回退策略文档（AI 工作流） | 非业务：全局开发规则 + 契约测试；不改规格/业务代理 Contract | DEV-OPS-003 | committed |
 
 #### DEV-OPS-004 本机 Mihomo 网络回退策略（AI 面向）
 
@@ -75,7 +75,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：策略 1–8 落入全局规则；契约通过；未越权；完成后 `next_action`→DEV-004 规划；**本任务期间不得启动 DEV-004**。
 - **插入说明**：**人工显式插入**于 DEV-004 业务规划之前（用户覆盖先前「进入 DEV-004」的 next_action）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md`
-- **状态备注**：`tested`（plan_commit `895d7aa`；Developer 实施完成；契约 15 / unit 117 / ruff / mypy 通过；等待 Code Review）；`workflow_mode=NORMAL`（explicit）；exact feat `feat/DEV-OPS-004-mihomo-network-fallback-policy`。
+- **状态备注**：`committed`（implementation_commit `14550dfa8043eb5339b89f1c9f215ae368a6f58d`；PR #9 OPEN base=main head=feat；plan_commit `895d7aa`）；`workflow_mode=NORMAL`（explicit）；exact feat `feat/DEV-OPS-004-mihomo-network-fallback-policy`；等待人工 Merge 后 POST_MERGE_CLEANUP。
 
 #### DEV-OPS-003 NORMAL / STRICT 工作流模式
 
@@ -458,8 +458,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|
 | 日期 | 2026-08-08 |
 | 原因 | **人工显式插入**非业务任务 DEV-OPS-004：文档化本开发主机 Mihomo 网络回退策略（AI 面向）；覆盖先前 progress「进入 DEV-004 业务规划」next_action；不改变 Phase 0–5 业务任务目标与依赖；不改规格 §3.15 Contract |
-| 受影响任务 | 新增 `DEV-OPS-004`（Phase 0 补充，现 `tested`）；DEV-004 保持 `planned` 且本任务期间不得启动；**不**修改 DEV-OPS-001/002/003 / DEV-001–003 完成状态；**不**改变 DEV-004+ 业务范围正文 |
+| 受影响任务 | 新增 `DEV-OPS-004`（Phase 0 补充，现 `committed`）；DEV-004 保持 `planned` 且本任务期间不得启动；**不**修改 DEV-OPS-001/002/003 / DEV-001–003 完成状态；**不**改变 DEV-004+ 业务范围正文 |
 | 是否改变技术规格 | **否** |
-| 审批 | Planner 初版；独立 Plan Review → `PLAN_APPROVED`；人工确认 approved；PLAN_LANDING 完成（plan_commit `895d7aa`）；Developer tested；等待 Code Review |
+| 审批 | Planner 初版；独立 Plan Review → `PLAN_APPROVED`；人工确认 approved；PLAN_LANDING 完成（plan_commit `895d7aa`）；Developer tested；CODE_REVIEW_APPROVED；IMPLEMENTATION_RELEASE（implementation `14550df`；PR #9 OPEN） |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

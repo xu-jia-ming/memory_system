@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-004
 task_name: Document local Mihomo network fallback policy for AI development workflows
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -16,10 +16,10 @@ prerequisites:
   - "本任务为用户显式插入/覆盖：在 DEV-004 业务规划之前执行；不得开始 DEV-004"
 branch: "feat/DEV-OPS-004-mihomo-network-fallback-policy"
 created_at: "2026-08-08 05:52 UTC"
-updated_at: "2026-08-08 06:03 UTC"
+updated_at: "2026-08-08 06:07 UTC"
 approval_gates:
   planning_docs: "PLAN_APPROVED；人工已确认 approved"
-  implementation_plan: "status=tested；PLAN_LANDING 已成功；Developer 实施完成；等待 Code Review"
+  implementation_plan: "status=committed；IMPLEMENTATION_RELEASE 完成；PR #9 OPEN；等待人工 Merge"
 insertion_override:
   prior_current_task: "DEV-004"
   prior_current_task_status: "planned"
@@ -347,7 +347,7 @@ Agent **Never**：
 - [x] `uv run pytest tests/unit -q` 通过
 - [x] Ruff 通过
 - [x] Mypy 通过
-- [ ] Review 无 P0/P1
+- [x] Review 无 P0/P1
 - [ ] 完成后 `next_action` = DEV-004 业务规划（不得实施）
 
 ---
@@ -415,6 +415,7 @@ release_phases:
 | 2026-08-08 05:57 UTC | planned → approved（PLAN_LANDING） | 状态回写 approved；progress/master_plan 同步；docs(plan) on main；创建 exact feat | 未实施 | 人工 PLAN_APPROVED 已确认；不得开始 DEV-004 |
 | 2026-08-08 06:01 UTC | approved → in_progress | 全局规则 §18 策略条款；新建契约测试；progress/master_plan 回写 | 契约进行中 | SHOULD_FIX：7890=SSH/sshd；全部分类码；working tree 澄清 |
 | 2026-08-08 06:03 UTC | in_progress → implemented → tested | 白名单 5 路径落地；质量门禁全绿 | 契约 15 passed；unit 117 passed；ruff/mypy 通过 | 未 Git 写；未开始 DEV-004；等待 Code Review |
+| 2026-08-08 06:07 UTC | tested → reviewed → committed（IMPLEMENTATION_RELEASE） | implementation commit + push feat + PR #9；本 docs(status): record | 门禁已绿 | 仅 feat；禁 push main；等待人工 Merge |
 
 ---
 
@@ -462,10 +463,16 @@ review_report: null
 ```yaml
 branch: "feat/DEV-OPS-004-mihomo-network-fallback-policy"
 plan_commit: "895d7aaccc6c194105275e0688527d780907933f"
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: "14550dfa8043eb5339b89f1c9f215ae368a6f58d"
+implementation_commit_message: "docs(ai): document local mihomo network fallback for agents"
+pr: "#9"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/9"
+pr_state: "OPEN"
+pr_base: "main"
+pr_head: "feat/DEV-OPS-004-mihomo-network-fallback-policy"
+status_record_commit: null  # filled after this docs(status): record commit
 ```
 
 ### 最终状态
 
-`tested`
+`committed`
