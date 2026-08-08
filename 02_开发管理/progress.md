@@ -7,24 +7,26 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-005
-current_task_status: committed
-current_branch: feat/DEV-005-api-shell-auth-request-id-logging-metrics
+current_task_status: completed
+current_branch: main
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-005-api-shell-auth-request-id-logging-metrics.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: d32ddc7
+latest_commit: a68d951c50eaeab66f589e5eff5c55d6611f3f43
 plan_commit: 2548c9a5f99c833e6347b93484c562e86f25f605
 implementation_commit: d32ddc70b5b8b772e9f27a84988b778c226dd2c5
 implementation_commit_message: "feat(api): add fastapi shell auth observability and health endpoints"
 pr: "#12"
 pr_url: https://github.com/xu-jia-ming/memory_system/pull/12
-pr_status: OPEN
+pr_status: MERGED
 pr_base: main
 pr_head: feat/DEV-005-api-shell-auth-request-id-logging-metrics
-status_record_commit_committed: null  # record commit SHA filled after push
+merge_commit: a68d951c50eaeab66f589e5eff5c55d6611f3f43
+merged_at: "2026-08-08T12:00:08Z"
+status_record_commit_committed: 76a91ce8b0281c03f6587a8ade19c02bc1952c91
 status_record_commit_committed_message: "docs(status): record DEV-005 implementation commit and PR"
-status_record_commit_completed: null
+status_record_commit_completed: null  # pending this docs(status): complete commit SHA
 previous_task: DEV-OPS-005
 previous_task_status: completed
 previous_task_completed_at: "2026-08-08 10:55 UTC"
@@ -48,6 +50,17 @@ formal_DEV-OPS-005_pr: "#11"
 formal_DEV-OPS-005_pr_state: MERGED
 formal_DEV-OPS-005_merge_commit: 0239c28281949bedec66dbec1412197c5561a611
 formal_DEV-OPS-005_workflow_mode: NORMAL
+# DEV-005 formal completion evidence
+formal_DEV-005_status: completed
+formal_DEV-005_plan_file: 02_开发管理/tasks/DEV-005-api-shell-auth-request-id-logging-metrics.md
+formal_DEV-005_plan_commit: 2548c9a5f99c833e6347b93484c562e86f25f605
+formal_DEV-005_implementation_commit: d32ddc70b5b8b772e9f27a84988b778c226dd2c5
+formal_DEV-005_status_record_committed: 76a91ce8b0281c03f6587a8ade19c02bc1952c91
+formal_DEV-005_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_DEV-005_pr: "#12"
+formal_DEV-005_pr_state: MERGED
+formal_DEV-005_merge_commit: a68d951c50eaeab66f589e5eff5c55d6611f3f43
+formal_DEV-005_workflow_mode: NORMAL
 # DEV-004 formal completion evidence (retained)
 formal_DEV-004_status: completed
 formal_DEV-004_plan_file: 02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md
@@ -96,9 +109,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: null
 deferred_business_task_status: null
-current_task_status: committed
-current_branch: feat/DEV-005-api-shell-auth-request-id-logging-metrics
-next_action: WAITING_FOR_PR_MERGE（人工 Merge PR #12）
+next_action: DEV-005 completed；等待用户显式指定下一任务
 human_plan_approved_at: "2026-08-08 11:26 UTC"
 human_plan_approved_note: "PLAN_APPROVED；Plan Reviewer SF-001–SF-008 为非阻塞；NORMAL 自动续跑"
 insertion_override:
@@ -157,6 +168,7 @@ governance_deviation:
 | DEV-OPS-004 | 本机 Mihomo 网络回退策略文档 | 2026-08-08 06:18 | `14550df` | `1bc2f499d79301679f373d46c809f1f50e4dad66` | #9 merged |
 | DEV-004 | Migration Runner；ES Mapping + Alias | 2026-08-08 10:07 | `d8730a6` | `206b7a688cbad3070dc3f1646111efa165f2be87` | #10 merged |
 | DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 2026-08-08 10:53 | `373cd33` | `0239c28281949bedec66dbec1412197c5561a611` | #11 merged |
+| DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | 2026-08-08 12:00 | `d32ddc7` | `a68d951c50eaeab66f589e5eff5c55d6611f3f43` | #12 merged |
 
 ## 规格阻塞项
 
@@ -220,6 +232,8 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | CODE_REVIEW_APPROVED（DEV-OPS-005 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=3；P3 残余不阻塞） |
 | RELEASE_COMPLETED（DEV-OPS-005 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 MERGED（`0239c28281949bedec66dbec1412197c5561a611`）；committed 治理 `239218432d6b86d4f34d24c248611361df5d5069` |
 | RELEASE_COMPLETED（DEV-OPS-005 POST_MERGE_CLEANUP） | **已完成**（本轮）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
+| RELEASE_COMPLETED（DEV-005 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `d32ddc70b5b8b772e9f27a84988b778c226dd2c5`；PR #12 MERGED（`a68d951c50eaeab66f589e5eff5c55d6611f3f43`）；committed 治理 `76a91ce8b0281c03f6587a8ade19c02bc1952c91` |
+| RELEASE_COMPLETED（DEV-005 POST_MERGE_CLEANUP） | **已完成**（本轮）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -422,6 +436,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 11:35 UTC | DEV-005 | approved → in_progress → tested | FastAPI 壳、鉴权、Request ID、structlog、Prometheus、Health；entrypoint 接线；Unit 18 + Contract 12；ruff/mypy 全绿 | 等待独立 Code Review；未 Git 写 |
 | 2026-08-08 19:45 UTC | DEV-005 | tested（P1 修复） | P1-001：`kafka_consumer_lag` Gauge 注册并加入 `ALL_METRICS`；Contract 12 / ruff / mypy 全绿 | 等待 Code Review 复审；未 Git 写 |
 | 2026-08-08 19:50 UTC | DEV-005 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `d32ddc70b5b8b772e9f27a84988b778c226dd2c5`；PR #12 OPEN | 仅 feat push；禁 push main；等待人工 Merge |
+| 2026-08-08 12:00 UTC | DEV-005 | PR #12 MERGED | Merge Commit `a68d951c50eaeab66f589e5eff5c55d6611f3f43`；main 含 API 壳 + 鉴权 + 可观测性 | 等待 POST_MERGE_CLEANUP |
+| 2026-08-08 12:05 UTC | DEV-005 | committed → completed | POST_MERGE_CLEANUP：main docs(status): complete；删 exact feat | `next_action`→等待用户显式指定下一任务；**不得启动 DEV-006** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -454,10 +470,11 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-005**（`planned`）；`current_branch=main`；`latest_commit=bf537d8`；`current_plan_file=02_开发管理/tasks/DEV-005-api-shell-auth-request-id-logging-metrics.md`；`workflow_mode=NORMAL`（explicit）。
-2. **立即下一动作**：**独立 Plan Review**（`next_action=计划审查`）；本 Commit 不得开始 DEV-005 实施。
-3. **DEV-OPS-005**：已 `completed`（implementation `373cd33`；committed 治理 `2392184`；PR #11 MERGED `0239c28`；POST_MERGE complete 本轮）。
-4. **DEV-004**：已 `completed`（implementation `d8730a6`；committed 治理 `5246b5d`；PR #10 MERGED `206b7a6`；complete 治理 `4a5cbc2`）。
-5. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
-6. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
-7. **权威人类 Playbook**：`03_AI_Prompts/01_项目日常操作手册.md`（DEV-OPS-005 交付；契约 `tests/unit/test_project_operations_playbook_contract.py`）。
+1. **当前**：`current_task` = **DEV-005**（`completed`）；`current_branch=main`；`latest_commit=a68d951`；`current_plan_file=02_开发管理/tasks/DEV-005-api-shell-auth-request-id-logging-metrics.md`；`workflow_mode=NORMAL`（explicit）。
+2. **立即下一动作**：**DEV-005 completed；等待用户显式指定下一任务**（`next_action`）；**不得自动启动 DEV-006 规划或实施**。
+3. **DEV-005**：已 `completed`（implementation `d32ddc7`；committed 治理 `76a91ce`；PR #12 MERGED `a68d951`；complete 治理待本 docs(status) 落盘）。
+4. **DEV-OPS-005**：已 `completed`（implementation `373cd33`；committed 治理 `2392184`；PR #11 MERGED `0239c28`；POST_MERGE complete 本轮）。
+5. **DEV-004**：已 `completed`（implementation `d8730a6`；committed 治理 `5246b5d`；PR #10 MERGED `206b7a6`；complete 治理 `4a5cbc2`）。
+6. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
+7. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
+8. **权威人类 Playbook**：`03_AI_Prompts/01_项目日常操作手册.md`（DEV-OPS-005 交付；契约 `tests/unit/test_project_operations_playbook_contract.py`）。

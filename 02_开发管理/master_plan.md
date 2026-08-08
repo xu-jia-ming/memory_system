@@ -52,7 +52,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | completed |
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | completed |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | completed |
-| DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | planned |
+| DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | completed |
 | DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003 | planned |
 
 ### Phase 0 补充：开发工作流自动化（非业务规格）
@@ -181,7 +181,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：§3.7/§3.16（边界）/§3.21/§3.23/§3.25/§3.26（Readiness Migration 只读）/§3.27；ruff/mypy/pytest 全绿；未越权黑名单。
 - **风险**：Health URL 规格未写明（§8.5 冻结）；DEV-001 部分 `__init__.py` 未落盘；Lifespan 范围膨胀；entrypoint 测试需修订。
 - **计划文件**：`02_开发管理/tasks/DEV-005-api-shell-auth-request-id-logging-metrics.md`
-- **状态备注**：`planned`（Planner 初版 2026-08-08）；`workflow_mode=NORMAL`（explicit）；**下一动作 = 计划审查**；本 Commit 不得开始 DEV-005 实施。
+- **状态备注**：`completed`（plan_commit `2548c9a`；implementation_commit `d32ddc7`；committed 治理 `76a91ce`；PR #12 MERGED `a68d951c50eaeab66f589e5eff5c55d6611f3f43`；`workflow_mode=NORMAL`（explicit）；POST_MERGE_CLEANUP 本轮；**等待用户显式指定下一任务**；**不得自动启动 DEV-006**）。
 
 #### DEV-006 TEI Embedding Client + Token Budget
 
@@ -504,8 +504,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|
 | 日期 | 2026-08-08 |
 | 原因 | 登记 DEV-005 初版 Task Plan：FastAPI 应用壳、鉴权、Request ID、structlog、Prometheus、Liveness/Readiness 结构；细化白/黑名单、§8 行为合同、测试策略与 NORMAL 三相 Git 计划 |
-| 受影响任务 | DEV-005（`planned`）；**不**修改 DEV-001–004 / DEV-OPS-* 完成状态；**不**开始 DEV-006/STM/Retrieval 实施；**不**改变后续业务任务范围正文 |
+| 受影响任务 | DEV-005（`completed`）；**不**修改 DEV-001–004 / DEV-OPS-* 完成状态；**不**开始 DEV-006/STM/Retrieval 实施；**不**改变后续业务任务范围正文 |
 | 是否改变技术规格 | **否**（Health 路径为工程冻结，见 Task Plan §8.5；不扩展业务 API Contract） |
-| 审批 | Planner 初版；待独立 Plan Review；本 Commit 不得实施 |
+| 审批 | Planner 初版；独立 Plan Review → `PLAN_APPROVED`；人工确认；PLAN_LANDING 完成（plan_commit `2548c9a`）；Developer `tested`；Code Review `CODE_REVIEW_APPROVED`（P0/P1=0）；IMPLEMENTATION_RELEASE（implementation `d32ddc7`；record `76a91ce`）；PR #12 MERGED `a68d951c50eaeab66f589e5eff5c55d6611f3f43`；POST_MERGE_CLEANUP 本轮 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

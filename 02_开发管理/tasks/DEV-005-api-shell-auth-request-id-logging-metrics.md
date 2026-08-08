@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-005
 task_name: 通用 API 壳、鉴权、Request ID、日志与指标
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -575,6 +575,7 @@ out_of_scope_changes:
 | 2026-08-08 11:35 UTC | 实施 | API 壳、鉴权、Request ID、structlog、Prometheus、Health、entrypoint | Unit 30 / Contract 12 / ruff / mypy 全绿 | Integration 可选跳过（无运行中 API） |
 | 2026-08-08 19:45 UTC | P1 修复 | `metrics.py` 注册 `kafka_consumer_lag` Gauge 并加入 `ALL_METRICS`；contract 断言 `ALL_METRICS` 含该指标 | Contract 12 / ruff / mypy 全绿 | 无 series 时不强制 scrape 文本出现 |
 | 2026-08-08 19:50 UTC | IMPLEMENTATION_RELEASE | 实现 Commit + push feat + PR #12；本 docs(status): record | 门禁已绿 | implementation=`d32ddc70b5b8b772e9f27a84988b778c226dd2c5`；仅 feat；等待人工 Merge |
+| 2026-08-08 12:05 UTC | POST_MERGE_CLEANUP | PR #12 MERGED；main docs(status): complete；删 exact feat | — | merge=`a68d951c50eaeab66f589e5eff5c55d6611f3f43`；committed 治理 `76a91ce8b0281c03f6587a8ade19c02bc1952c91` |
 
 ## 16. 实际执行结果
 
@@ -626,15 +627,17 @@ implementation_commit: d32ddc70b5b8b772e9f27a84988b778c226dd2c5
 implementation_commit_message: "feat(api): add fastapi shell auth observability and health endpoints"
 pr: "#12"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/12"
-pr_state: OPEN
+pr_state: MERGED
 pr_base: main
 pr_head: feat/DEV-005-api-shell-auth-request-id-logging-metrics
-status_record_commit_committed: null  # record commit SHA filled after push
+merge_commit: a68d951c50eaeab66f589e5eff5c55d6611f3f43
+merged_at: "2026-08-08T12:00:08Z"
+status_record_commit_committed: 76a91ce8b0281c03f6587a8ade19c02bc1952c91
 status_record_commit_committed_message: "docs(status): record DEV-005 implementation commit and PR"
-status_record_commit_completed: null  # filled after docs(status): complete commit
-feature_branch_deleted: pending
+status_record_commit_completed: null  # filled after this docs(status): complete commit
+feature_branch_deleted: pending  # local -d + remote --delete in this POST_MERGE_CLEANUP
 ```
 
 ### 最终状态
 
-`committed`（PR #12 OPEN；等待人工 Merge；`next_action`→WAITING_FOR_PR_MERGE）
+`completed`（PR #12 MERGED `a68d951c50eaeab66f589e5eff5c55d6611f3f43`；POST_MERGE_CLEANUP 本轮；**不得启动 DEV-006**；`next_action`→等待用户显式指定下一任务）
