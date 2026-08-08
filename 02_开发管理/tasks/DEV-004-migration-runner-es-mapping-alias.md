@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-004
 task_name: Migration Runner and Elasticsearch Mapping / Alias initialization
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -32,10 +32,10 @@ prerequisites:
   - "实施编码前须 PLAN_APPROVED；本轮仅规划，不得实施"
 branch: "feat/DEV-004-migration-runner-es-mapping-alias"
 created_at: "2026-08-08 07:39 UTC"
-updated_at: "2026-08-08 09:20 UTC"
+updated_at: "2026-08-08 10:10 UTC"
 approval_gates:
   planning_docs: "PLAN_APPROVED（Plan Reviewer + 人工确认 2026-08-08）"
-  implementation_plan: "status=tested；串行验证 PASS；等待独立 Code Review"
+  implementation_plan: "status=completed；PR #10 MERGED（merge 206b7a688cbad3070dc3f1646111efa165f2be87）；implementation_commit=d8730a6；status_record_committed=5246b5d；POST_MERGE_CLEANUP 本轮；未开始 DEV-005 实施"
 ```
 
 ## 2. 任务目标
@@ -513,6 +513,8 @@ future_rule: >
 | 2026-08-08 09:48 UTC | 治理审计 | GD-DEV-004-001 独立审计：NON_BLOCKING_GOVERNANCE_DEVIATION（GD-001 Stage6b→6c；GD-002 Stage7→6d→7） | n/a | 要求治理记录后方可 Code Review |
 | 2026-08-08 09:52 UTC | 人工接受偏差 | `GOVERNANCE_DEVIATION_ACCEPTED`；Amendment 002 落盘 | n/a | 不否定最终验证；不放宽未来 fail-closed；READY_FOR_CODE_REVIEW 恢复有效 |
 | 2026-08-08 09:58 UTC | tested → reviewed → committed（IMPLEMENTATION_RELEASE） | implementation commit + push feat + PR #10；本 docs(status): record | 门禁已绿 | 仅 feat；禁 push main；等待人工 Merge |
+| 2026-08-08 10:07 UTC | 人工 Merge PR #10 | feat → main | PR **MERGED**；merge=`206b7a688cbad3070dc3f1646111efa165f2be87` | 等待自动 POST_MERGE_CLEANUP |
+| 2026-08-08 10:10 UTC | committed → completed（POST_MERGE_CLEANUP） | main docs(status): complete；删 exact feat | Migration Runner + ES Mapping/Alias 已在 main | 未开始 DEV-005 实施；next_action→DEV-005 规划 |
 
 ## 15. 实际执行结果
 
@@ -577,12 +579,16 @@ implementation_commit: d8730a670d577c1f9acb75ebb112fc8f88ea6662
 implementation_commit_message: "feat(infra): add migration runner with mongo neo4j es kafka init"
 pr: "#10"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/10"
-pr_state: "OPEN"
+pr_state: "MERGED"
 pr_base: "main"
 pr_head: "feat/DEV-004-migration-runner-es-mapping-alias"
-status_record_commit_committed: null  # filled after this docs(status): record commit
+merge_commit: "206b7a688cbad3070dc3f1646111efa165f2be87"
+merged_at: "2026-08-08T10:07:35Z"
+status_record_commit_committed: "5246b5d3ba6a78c940f4469bbba2356005a41f29"
+status_record_commit_completed: null  # filled after this docs(status): complete commit
+feature_branch_deleted: pending  # local -d + remote --delete in this POST_MERGE_CLEANUP
 ```
 
 ### 最终状态
 
-`committed`（PR #10 OPEN；等待人工 Merge）
+`completed`（PR #10 MERGED `206b7a688cbad3070dc3f1646111efa165f2be87`；POST_MERGE_CLEANUP；未开始 DEV-005 实施；`next_action`→DEV-005 业务规划）

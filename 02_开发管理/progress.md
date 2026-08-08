@@ -6,35 +6,46 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-004
-current_task_status: committed
-current_branch: feat/DEV-004-migration-runner-es-mapping-alias
+current_task: DEV-005
+current_task_status: planned
+current_branch: main
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md
-workflow_mode_for_this_task: NORMAL
-workflow_mode_source: explicit
-latest_commit: d8730a670d577c1f9acb75ebb112fc8f88ea6662
-plan_commit: 5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a
-implementation_commit: d8730a670d577c1f9acb75ebb112fc8f88ea6662
-implementation_commit_message: "feat(infra): add migration runner with mongo neo4j es kafka init"
-pr: "#10"
-pr_url: "https://github.com/xu-jia-ming/memory_system/pull/10"
-pr_status: OPEN
-pr_base: main
-pr_head: feat/DEV-004-migration-runner-es-mapping-alias
-previous_task: DEV-OPS-004
+current_plan_file: null
+workflow_mode_for_this_task: null
+workflow_mode_source: null
+latest_commit: 206b7a688cbad3070dc3f1646111efa165f2be87
+plan_commit: null
+implementation_commit: null
+implementation_commit_message: null
+pr: null
+pr_url: null
+pr_status: null
+pr_base: null
+pr_head: null
+previous_task: DEV-004
 previous_task_status: completed
-previous_task_completed_at: "2026-08-08 06:18 UTC"
-previous_implementation_commit: 14550dfa8043eb5339b89f1c9f215ae368a6f58d
-previous_implementation_commit_message: "docs(ai): document local mihomo network fallback for agents"
-previous_status_record_commit_committed: 7d2a176170939eefe8a5c933b427021068541880
-previous_status_record_commit_committed_message: "docs(status): record DEV-OPS-004 implementation commit and PR"
-previous_status_record_commit_completed: d5db474ea7b11c05ff9d0a137c3f9c16f3d8dd50
-previous_status_record_commit_completed_message: "docs(status): complete DEV-OPS-004 after PR merge"
-previous_pr: "#9"
+previous_task_completed_at: "2026-08-08 10:07 UTC"
+previous_implementation_commit: d8730a670d577c1f9acb75ebb112fc8f88ea6662
+previous_implementation_commit_message: "feat(infra): add migration runner with mongo neo4j es kafka init"
+previous_status_record_commit_committed: 5246b5d3ba6a78c940f4469bbba2356005a41f29
+previous_status_record_commit_committed_message: "docs(status): record DEV-004 implementation commit and PR"
+previous_status_record_commit_completed: null  # filled after this docs(status): complete commit
+previous_status_record_commit_completed_message: "docs(status): complete DEV-004 after PR merge"
+previous_pr: "#10"
 previous_pr_status: merged
-previous_merge_commit: 1bc2f499d79301679f373d46c809f1f50e4dad66
-# DEV-OPS-004 formal completion evidence
+previous_merge_commit: 206b7a688cbad3070dc3f1646111efa165f2be87
+# DEV-004 formal completion evidence
+formal_DEV-004_status: completed
+formal_DEV-004_plan_file: 02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md
+formal_DEV-004_plan_commit: 5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a
+formal_DEV-004_implementation_commit: d8730a670d577c1f9acb75ebb112fc8f88ea6662
+formal_DEV-004_status_record_committed: 5246b5d3ba6a78c940f4469bbba2356005a41f29
+formal_DEV-004_pr: "#10"
+formal_DEV-004_pr_state: MERGED
+formal_DEV-004_merge_commit: 206b7a688cbad3070dc3f1646111efa165f2be87
+formal_DEV-004_workflow_mode: NORMAL
+formal_DEV-004_governance_deviation: GD-DEV-004-001
+# DEV-OPS-004 formal completion evidence (retained)
 formal_DEV-OPS-004_status: completed
 formal_DEV-OPS-004_plan_file: 02_开发管理/tasks/DEV-OPS-004-mihomo-network-fallback-policy.md
 formal_DEV-OPS-004_plan_commit: 895d7aaccc6c194105275e0688527d780907933f
@@ -70,7 +81,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: null
 deferred_business_task_status: null
-next_action: WAITING_FOR_PR_MERGE（DEV-004 PR #10；人工 Merge 后 POST_MERGE_CLEANUP）
+next_action: 进入 DEV-005（通用 API 壳、鉴权、Request ID、日志与指标）业务规划；本 Commit 不得开始 DEV-005 实施
 insertion_override: null
 human_plan_approved_at: "2026-08-08 07:46 UTC"
 human_plan_approved_note: "PLAN_APPROVED；吸收 Plan Reviewer SHOULD_FIX 1–5 为 Amendment 001；NORMAL 自动续跑"
@@ -115,6 +126,7 @@ governance_deviation:
 | DEV-OPS-003 | NORMAL / STRICT 工作流模式 | 2026-08-08 05:12 | `640616b` | `1189447d518b863d469150ead861e85fa5ca86b5` | #7 merged |
 | DEV-OPS-003-SMOKE | NORMAL workflow supervised smoke | 2026-08-08 05:05 | `3a3c7c7` | `e14d71e8955a312f7c77c6d42c8f624cf3694563` | #8 merged |
 | DEV-OPS-004 | 本机 Mihomo 网络回退策略文档 | 2026-08-08 06:18 | `14550df` | `1bc2f499d79301679f373d46c809f1f50e4dad66` | #9 merged |
+| DEV-004 | Migration Runner；ES Mapping + Alias | 2026-08-08 10:07 | `d8730a6` | `206b7a688cbad3070dc3f1646111efa165f2be87` | #10 merged |
 
 ## 规格阻塞项
 
@@ -169,7 +181,11 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | PLAN_APPROVED（DEV-OPS-004 计划） | **已通过**；plan_commit `895d7aa`；`workflow_mode=NORMAL`（explicit） |
 | CODE_REVIEW_APPROVED（DEV-OPS-004 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=0） |
 | RELEASE_COMPLETED（DEV-OPS-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `14550dfa8043eb5339b89f1c9f215ae368a6f58d`；PR #9 MERGED（`1bc2f499d79301679f373d46c809f1f50e4dad66`） |
-| RELEASE_COMPLETED（DEV-OPS-004 POST_MERGE_CLEANUP） | **已完成**（本轮）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
+| RELEASE_COMPLETED（DEV-OPS-004 POST_MERGE_CLEANUP） | **已完成**；completed 治理 `d5db474`；exact feat 已删 |
+| PLAN_APPROVED（DEV-004 计划） | **已通过**；plan_commit `5c2274f`；Amendment 001–002（含 GD-DEV-004-001）；`workflow_mode=NORMAL`（explicit） |
+| CODE_REVIEW_APPROVED（DEV-004 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=4） |
+| RELEASE_COMPLETED（DEV-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `d8730a670d577c1f9acb75ebb112fc8f88ea6662`；PR #10 MERGED（`206b7a688cbad3070dc3f1646111efa165f2be87`） |
+| RELEASE_COMPLETED（DEV-004 POST_MERGE_CLEANUP） | **已完成**（本轮）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -354,6 +370,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 09:48 UTC | DEV-004 | tested（保持） | 独立治理审计 GD-DEV-004-001：NON_BLOCKING（GD-001 Stage6b→6c；GD-002 Stage7→6d→7） | 要求 Amendment 002 + progress 记录后方可 Code Review |
 | 2026-08-08 09:55 UTC | DEV-004 | tested → reviewed | 独立 Code Review `CODE_REVIEW_APPROVED`；P0=0/P1=0/P2=0/P3=4 | Commit Recorder → IMPLEMENTATION_RELEASE；未 Git 写 |
 | 2026-08-08 09:58 UTC | DEV-004 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `d8730a6`；PR #10 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；等待人工 Merge |
+| 2026-08-08 10:07 UTC | DEV-004 | PR #10 MERGED | Merge Commit `206b7a688cbad3070dc3f1646111efa165f2be87`；main 含 Migration Runner + ES Mapping/Alias | 等待自动 POST_MERGE_CLEANUP |
+| 2026-08-08 10:10 UTC | DEV-004 | committed → completed | POST_MERGE_CLEANUP：main docs(status): complete；删 exact feat | `current_task`→DEV-005 planned；未开始 DEV-005 实施 |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -386,8 +404,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-004**（`committed`）；计划文件 `02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md`；`workflow_mode=NORMAL`（explicit）；`plan_commit=5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a`；`implementation_commit=d8730a670d577c1f9acb75ebb112fc8f88ea6662`；分支 `feat/DEV-004-migration-runner-es-mapping-alias`；PR #10 OPEN。
-2. **立即下一动作**：**WAITING_FOR_PR_MERGE**（人工 Merge PR #10）→ POST_MERGE_CLEANUP。
-3. **DEV-OPS-004**：已 `completed`（PR #9 MERGED；POST_MERGE complete `d5db474`）。
+1. **当前**：`current_task` = **DEV-005**（`planned`）；`current_branch=main`；`latest_commit=206b7a688cbad3070dc3f1646111efa165f2be87`（DEV-004 merge）。
+2. **立即下一动作**：**DEV-005 业务规划**（通用 API 壳、鉴权、Request ID、日志与指标）；本 Commit 不得开始 DEV-005 实施。
+3. **DEV-004**：已 `completed`（implementation `d8730a6`；committed 治理 `5246b5d`；PR #10 MERGED `206b7a6`；POST_MERGE complete 本轮）。
 4. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
 5. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。

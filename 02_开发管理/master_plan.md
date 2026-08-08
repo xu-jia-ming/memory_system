@@ -51,7 +51,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-001 | 项目骨架、依赖与质量工具 | §3.4, §3.5, §3.2, §3.28 | 无 | completed |
 | DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | completed |
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | completed |
-| DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | planned |
+| DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | completed |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | planned |
 | DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003 | planned |
 
@@ -157,7 +157,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：`python -m scripts.migrate` 符合 §3.26/§3.32.2；`compose.sh … run --rm init-infra` 可成功。
 - **风险**：修改已执行 Migration；与规格 Mapping 不一致；Settings 全量 required_env 对 init-infra 仍生效。
 - **计划文件**：`02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md`
-- **状态备注**：`planned`（Planner 初版 2026-08-08 07:39 UTC；`workflow_mode=NORMAL` explicit；等待独立 Plan Review；**不得实施**）。
+- **状态备注**：`completed`（plan_commit `5c2274f`；implementation_commit `d8730a6`；committed 治理 `5246b5d`；PR #10 MERGED `206b7a688cbad3070dc3f1646111efa165f2be87`；`workflow_mode=NORMAL`（explicit）；GD-DEV-004-001 已记录；POST_MERGE_CLEANUP 本轮；**下一业务任务 = DEV-005**）。
 
 #### DEV-005 通用 API、鉴权、Request ID、日志与指标
 
@@ -469,8 +469,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|
 | 日期 | 2026-08-08 |
 | 原因 | 登记 DEV-004 初版 Task Plan：Migration Runner、`001`–`004`、ES Mapping/Alias 唯一创建方；闭合 Dockerfile COPY 与 init-infra `x-app-env`；细化白/黑名单、幂等/顺序/失败重试与测试策略 |
-| 受影响任务 | DEV-004（`planned`）；**不**修改 DEV-001–003 / DEV-OPS-* 完成状态；**不**开始 DEV-005/006；**不**改变后续业务任务范围正文 |
+| 受影响任务 | DEV-004（`completed`）；**不**修改 DEV-001–003 / DEV-OPS-* 完成状态；**不**开始 DEV-005/006 实施；**不**改变后续业务任务范围正文 |
 | 是否改变技术规格 | **否** |
-| 审批 | Planner 初版；等待独立 Plan Review；`plan_commit=null`；未实施、未 Git 写 |
+| 审批 | Planner 初版；独立 Plan Review → `PLAN_APPROVED`；人工确认 approved；PLAN_LANDING 完成（plan_commit `5c2274f`）；Developer tested；GD-DEV-004-001 治理记录；CODE_REVIEW_APPROVED；IMPLEMENTATION_RELEASE（implementation `d8730a6`；record `5246b5d`）；PR #10 MERGED `206b7a688cbad3070dc3f1646111efa165f2be87`；POST_MERGE_CLEANUP 本轮 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
