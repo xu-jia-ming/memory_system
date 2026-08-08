@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-006
 task_name: TEI Embedding Client + Token Budget（共享）
-status: approved
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -20,10 +20,10 @@ prerequisites:
   - "实施编码前须 PLAN_APPROVED；本轮仅规划，不得实施"
 branch: "feat/DEV-006-tei-embedding-client-token-budget"
 created_at: "2026-08-08 20:06 UTC"
-updated_at: "2026-08-08 20:30 UTC"
+updated_at: "2026-08-08 20:52 UTC"
 approval_gates:
   planning_docs: "Round 1 PLAN_REJECTED（MF-001/MF-002）；Amendment 001 已吸收；等待 Round 2 Plan Review → PLAN_APPROVED"
-  implementation_plan: "status=planned；Round 2 PLAN_APPROVED 前不得实施或 PLAN_LANDING"
+  implementation_plan: "status=tested；Round 2 PLAN_APPROVED；plan_commit=2557ef4"
 ```
 
 ## 2. 任务目标
@@ -514,6 +514,7 @@ out_of_scope_changes:
 |---|---|---|---|---|
 | 2026-08-08 20:06 UTC | 规划 | 创建 Task Plan；progress/master_plan 规划态 | 未实施 | 无 |
 | 2026-08-08 20:30 UTC | Amendment 001 | 吸收 Round 1 MF-001/MF-002；修订 §3/§5/§6/§7/§10/§12/§14 | 未实施 | status 保持 planned；等待 Round 2 |
+| 2026-08-08 20:45 UTC | 实施 | 白名单 §6 全量实现：`infrastructure/embedding/**`、`check_embedding` embed 探针、`validate_embedding_runtime`、Contract/Unit/Integration 测试 | `ruff`/`mypy`/Unit+Contract 全绿；Integration 本地 TEI 健康超时 skip | `validate_embedding_runtime` 直接读 `settings` 属性（未改 `_SettingsValidationInfo`）；`test_api_shell_contract` patch `runtime.create_embedding_client` |
 
 ## 16. 实际执行结果
 
@@ -521,22 +522,39 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-| — | 规划轮未实施 |
+| `src/memory_system/infrastructure/embedding/__init__.py` | 创建 |
+| `src/memory_system/infrastructure/embedding/types.py` | 创建 |
+| `src/memory_system/infrastructure/embedding/errors.py` | 创建 |
+| `src/memory_system/infrastructure/embedding/batching.py` | 创建 |
+| `src/memory_system/infrastructure/embedding/tei_client.py` | 创建 |
+| `src/memory_system/infrastructure/embedding/factory.py` | 创建 |
+| `src/memory_system/infrastructure/runtime.py` | 修改 `check_embedding` embed 探针 |
+| `src/memory_system/settings/validators.py` | 新增 `validate_embedding_runtime` |
+| `src/memory_system/settings/models.py` | MF-001：一行 `validate_embedding_runtime` + import |
+| `tests/fixtures/embedding_consistency_texts.json` | 创建（22 条） |
+| `tests/contract/helpers/tei_fake.py` | 创建 Fake TEI Transport |
+| `tests/contract/test_tei_embedding_client_contract.py` | 创建 §8.7 Contract |
+| `tests/unit/test_embedding_batching.py` | 创建 |
+| `tests/unit/test_tei_embedding_client_unit.py` | 创建 |
+| `tests/integration/test_tei_embedding_client_integration.py` | 创建 CPU/GPU Integration |
+| `tests/unit/test_settings_validation.py` | 追加 budget/mode 校验 |
+| `tests/contract/test_api_shell_contract.py` | MF-002：embed 探针 mock + 非阻塞断言 |
 
 ### 与原计划的差异
 
-暂无。
+- Integration CPU 测试在本环境 `start_embedding.sh cpu` 后 300s 内 TEI `/health` 未就绪，4 项均 `pytest.skip`（显式 reason）；发布前须在 TEI 就绪环境重跑。
+- 未使用 `@pytest.mark.integration`（`pyproject.toml` 黑名单，未注册 marker）。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | — | 未运行 |
-| Contract | — | 未运行 |
-| Integration | — | 未运行 |
+| Unit | `uv run pytest tests/unit -q` | 通过（含 batching、TEI client、settings validation） |
+| Contract | `uv run pytest tests/contract -q` | 通过（含 Fake TEI §8.7、api_shell MF-002） |
+| Integration | `uv run pytest tests/integration/test_tei_embedding_client_integration.py -q` | 4 skipped（TEI health timeout）；实现已就位 |
 | E2E | — | N/A |
-| Ruff | — | 未运行 |
-| Mypy | — | 未运行 |
+| Ruff | `uv run ruff check .` | 通过 |
+| Mypy | `uv run mypy src tests scripts` | 通过（91 files） |
 
 ### Review 结果
 
@@ -551,12 +569,15 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/DEV-006-tei-embedding-client-token-budget
+plan_commit: 2557ef4f7f2db5ecbbd81ca7ec80e5688366c54f
+implementation_commit: 197069a578d19f349c31b5be56ae56fdbc48aa7b
+implementation_commit_message: "feat(embedding): add TEI client token budget and contract tests"
+pr: "#13"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/13"
+pr_status: OPEN
 ```
 
 ### 最终状态
 
-`planned`
+`committed`

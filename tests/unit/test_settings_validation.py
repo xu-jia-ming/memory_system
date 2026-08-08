@@ -207,3 +207,33 @@ def test_yaml_override_can_trigger_validation_failure(
 
     with pytest.raises(ValidationError):
         get_settings()
+
+
+def test_embedding_runtime_budget_must_match_cpu_mode(
+    monkeypatch: pytest.MonkeyPatch,
+    valid_env: None,
+) -> None:
+    monkeypatch.setenv("EMBEDDING_EFFECTIVE_RUNTIME_MODE", "cpu")
+    monkeypatch.setenv("EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET", "16384")
+    with pytest.raises(ValidationError):
+        get_settings()
+
+
+def test_embedding_runtime_budget_must_match_gpu_mode(
+    monkeypatch: pytest.MonkeyPatch,
+    valid_env: None,
+) -> None:
+    monkeypatch.setenv("EMBEDDING_EFFECTIVE_RUNTIME_MODE", "gpu")
+    monkeypatch.setenv("EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET", "4096")
+    with pytest.raises(ValidationError):
+        get_settings()
+
+
+def test_embedding_runtime_budget_matches_configured_mode(
+    monkeypatch: pytest.MonkeyPatch,
+    valid_env: None,
+) -> None:
+    monkeypatch.setenv("EMBEDDING_EFFECTIVE_RUNTIME_MODE", "gpu")
+    monkeypatch.setenv("EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET", "16384")
+    settings = get_settings()
+    assert settings.embedding.gpu.client_total_token_budget == 16384

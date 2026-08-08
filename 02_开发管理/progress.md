@@ -7,21 +7,21 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-006
-current_task_status: planned
-current_branch: main
+current_task_status: committed
+current_branch: feat/DEV-006-tei-embedding-client-token-budget
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: b340f3fd15086db560a01b54d01b5f08695d1e47
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
-pr: null
-pr_url: null
-pr_status: null
-pr_base: null
-pr_head: null
+latest_commit: 197069a578d19f349c31b5be56ae56fdbc48aa7b
+plan_commit: 2557ef4f7f2db5ecbbd81ca7ec80e5688366c54f
+implementation_commit: 197069a578d19f349c31b5be56ae56fdbc48aa7b
+implementation_commit_message: "feat(embedding): add TEI client token budget and contract tests"
+pr: "#13"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/13"
+pr_status: OPEN
+pr_base: main
+pr_head: feat/DEV-006-tei-embedding-client-token-budget
 merge_commit: null
 merged_at: null
 status_record_commit_committed: null
@@ -109,8 +109,10 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: null
 deferred_business_task_status: null
-current_task_status: approved
-next_action: PLAN_LANDING（DEV-006 Round 2 PLAN_APPROVED）
+plan_commit: 2557ef4f7f2db5ecbbd81ca7ec80e5688366c54f
+current_task_status: committed
+current_branch: feat/DEV-006-tei-embedding-client-token-budget
+next_action: "等待人工 Merge PR #13；Merge 后 POST_MERGE_CLEANUP"
 human_plan_approved_at: "2026-08-08 20:13 UTC"
 human_plan_approved_note: "PLAN_APPROVED；吸收 MF-001 方案 A + MF-002；Amendment 001；Round 2 PLAN_APPROVED" Round 2
 human_plan_approved_at: null
@@ -441,6 +443,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 12:05 UTC | DEV-005 | committed → completed | POST_MERGE_CLEANUP：main docs(status): complete；删 exact feat | `next_action`→等待用户显式指定下一任务；**不得启动 DEV-006** |
 | 2026-08-08 20:06 UTC | DEV-006 | planned（Planner 初版） | 创建 Task Plan `DEV-006-tei-embedding-client-token-budget.md`；master_plan CHANGE-011；progress 规划态回写 | 未实施、未 Git 写、未建分支；`next_action=计划审查`；不得开始 STM/EXT/RET 实施 |
 | 2026-08-08 20:30 UTC | DEV-006 | planned（Amendment 001） | Round 1 `PLAN_REJECTED`（MF-001/MF-002）；吸收方案 A + api_shell 必改；修订 §3/§5/§6/§7/§10/§14 | 未实施、未 Git 写；status 保持 planned；`next_action=计划审查 Round 2` |
+| 2026-08-08 20:45 UTC | DEV-006 | tested | TEI EmbeddingClient + token budget + embed 探针；Unit/Contract 全绿；Integration skip（TEI health timeout） | `next_action=Code Review`；未 Git 写 |
+| 2026-08-08 20:52 UTC | DEV-006 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `197069a578d19f349c31b5be56ae56fdbc48aa7b`；PR #13 OPEN | 仅 feat push；禁 push main；等待人工 Merge |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -473,9 +477,9 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-006**（`planned`）；`current_branch=main`；`latest_commit=b340f3f`；`current_plan_file=02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md`；`workflow_mode=NORMAL`（explicit）。
-2. **立即下一动作**：**计划审查 Round 2**（`next_action`）；独立 Plan Reviewer 复审 Amendment 001 → `PLAN_APPROVED`；**不得实施、不得 Git 写、不得建 feat 分支**。
-3. **DEV-006**：`planned`；Round 1 `PLAN_REJECTED`（MF-001/MF-002）；Amendment 001 已吸收；前置 DEV-003/005 completed；TEI Compose/脚本已就绪；等待 Round 2 Plan Review。
+1. **当前**：`current_task` = **DEV-006**（`committed`）；`current_branch=feat/DEV-006-tei-embedding-client-token-budget`；`plan_commit=2557ef4`；`implementation_commit=197069a`；`workflow_mode=NORMAL`（explicit）。
+2. **立即下一动作**：**等待人工 Merge PR #13**；Merge 后执行 `POST_MERGE_CLEANUP`。
+3. **DEV-006**：`committed`；PR #13 OPEN；Unit+Contract 225 passed；Integration 4 skipped（本地 TEI 300s 健康超时）；ruff/mypy 通过。
 4. **DEV-005**：已 `completed`（implementation `d32ddc7`；committed 治理 `76a91ce`；complete 治理 `b340f3f`；PR #12 MERGED `a68d951`）。
 5. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
 6. **权威人类 Playbook**：`03_AI_Prompts/01_项目日常操作手册.md`（DEV-OPS-005 交付；契约 `tests/unit/test_project_operations_playbook_contract.py`）。

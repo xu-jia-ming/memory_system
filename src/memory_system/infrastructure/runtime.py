@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib
+import math
 from dataclasses import dataclass
 from typing import Any
 from urllib.parse import urlparse
@@ -14,6 +15,7 @@ from elasticsearch import AsyncElasticsearch
 from neo4j import AsyncDriver, AsyncGraphDatabase
 from pymongo import AsyncMongoClient
 
+from memory_system.infrastructure.embedding.factory import create_embedding_client
 from memory_system.settings.models import Settings
 
 _es_mapping_mod = importlib.import_module("scripts.migrations.003_elasticsearch_memory_v1")
@@ -202,18 +204,23 @@ async def check_migrations(state: AppState) -> str:
         return "not_ready"
 
 
+_EMBEDDING_PROBE_TEXT = "health probe"
+
+
 async def check_embedding(state: AppState) -> str:
     try:
-        base_url = state.settings.embedding.base_url.rstrip("/")
-        response = await state.http_client.get(
-            f"{base_url}/health",
-            timeout=state.settings.embedding_http_client.read_timeout_seconds,
-        )
-        if response.status_code == 200:
-            return "ready"
+        client = create_embedding_client(state.settings, state.http_client)
+        result = await client.embed([_EMBEDDING_PROBE_TEXT])
+        if len(result.vectors) != 1:
+            return "not_ready"
+        vector = result.vectors[0]
+        if len(vector) != 1024:
+            return "not_ready"
+        if not all(math.isfinite(value) for value in vector):
+            return "not_ready"
+        return "ready"
     except Exception:
         return "not_ready"
-    return "not_ready"
 
 
 async def collect_readiness_checks(state: AppState) -> dict[str, str]:

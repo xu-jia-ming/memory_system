@@ -221,6 +221,30 @@ def validate_memory_retrieval(settings: object, info: ValidationInfo) -> None:
         )
 
 
+def validate_embedding_runtime(settings: object, info: ValidationInfo) -> None:
+    _ = info
+    embedding = getattr(settings, "embedding", None)
+    runtime_mode = getattr(settings, "embedding_effective_runtime_mode", None)
+    client_budget = getattr(settings, "embedding_client_total_token_budget", None)
+    if embedding is None or runtime_mode is None or client_budget is None:
+        return
+
+    if runtime_mode == "cpu":
+        expected_budget = embedding.cpu.client_total_token_budget
+    elif runtime_mode == "gpu":
+        expected_budget = embedding.gpu.client_total_token_budget
+    else:
+        raise ValueError(
+            "embedding_effective_runtime_mode must be 'cpu' or 'gpu'"
+        )
+
+    if client_budget != expected_budget:
+        raise ValueError(
+            "embedding_client_total_token_budget must match the configured budget "
+            f"for embedding_effective_runtime_mode={runtime_mode!r}"
+        )
+
+
 def validate_shutdown(settings: object, info: ValidationInfo) -> None:
     shutdown = info.data.get("shutdown")
     context = info.data.get("context")
