@@ -1,22 +1,31 @@
-"""Entrypoint for the memory-api process.
-
-Safe to import. Runtime startup is not available until later Phase 0 tasks
-wire settings (DEV-002) and the API shell (DEV-005).
-"""
+"""Entrypoint for the memory-api process."""
 
 from __future__ import annotations
 
 import sys
 
+import uvicorn
+
+from memory_system.api import create_app
+from memory_system.settings import get_settings
+
 
 def main() -> int:
-    """Run memory-api. Returns a non-zero exit code while the process is not ready."""
-    print(
-        "memory-api is not ready: configuration (DEV-002) and API wiring "
-        "(DEV-005) are not yet implemented; refusing to start.",
-        file=sys.stderr,
+    """Run memory-api with Uvicorn."""
+    try:
+        settings = get_settings()
+    except Exception as exc:
+        print(f"memory-api failed to load settings: {exc}", file=sys.stderr)
+        return 1
+
+    app = create_app(settings=settings)
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=8000,
+        timeout_graceful_shutdown=settings.shutdown.memory_api_timeout_seconds,
     )
-    return 1
+    return 0
 
 
 if __name__ == "__main__":
