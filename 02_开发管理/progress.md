@@ -6,14 +6,14 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-006
-current_task_status: planned
+current_task: DEV-003-002
+current_task_status: approved
 current_branch: main
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md
+current_plan_file: 02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: b340f3fd15086db560a01b54d01b5f08695d1e47
+latest_commit: 2557ef4f7f2db5ecbbd81ca7ec80e5688366c54f
 plan_commit: null
 implementation_commit: null
 implementation_commit_message: null
@@ -27,18 +27,18 @@ merged_at: null
 status_record_commit_committed: null
 status_record_commit_committed_message: null
 status_record_commit_completed: null
-previous_task: DEV-005
-previous_task_status: completed
-previous_task_completed_at: "2026-08-08 12:05 UTC"
-previous_implementation_commit: d32ddc70b5b8b772e9f27a84988b778c226dd2c5
-previous_implementation_commit_message: "feat(api): add fastapi shell auth observability and health endpoints"
-previous_status_record_commit_committed: 76a91ce8b0281c03f6587a8ade19c02bc1952c91
-previous_status_record_commit_committed_message: "docs(status): record DEV-005 implementation commit and PR"
-previous_status_record_commit_completed: b340f3fd15086db560a01b54d01b5f08695d1e47
-previous_status_record_commit_completed_message: "docs(status): complete DEV-005 after PR merge"
-previous_pr: "#12"
-previous_pr_status: merged
-previous_merge_commit: a68d951c50eaeab66f589e5eff5c55d6611f3f43
+previous_task: DEV-006
+previous_task_status: paused
+previous_task_completed_at: null
+previous_implementation_commit: null
+previous_implementation_commit_message: null
+previous_status_record_commit_committed: null
+previous_status_record_commit_committed_message: null
+previous_status_record_commit_completed: null
+previous_status_record_commit_completed_message: null
+previous_pr: "#13"
+previous_pr_status: NOT_READY_FOR_PR_MERGE
+previous_merge_commit: null
 # DEV-OPS-005 formal completion evidence
 formal_DEV-OPS-005_status: completed
 formal_DEV-OPS-005_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
@@ -107,23 +107,29 @@ step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
-deferred_business_task: null
-deferred_business_task_status: null
-current_task_status: approved
-next_action: PLAN_LANDING（DEV-006 Round 2 PLAN_APPROVED）
-human_plan_approved_at: "2026-08-08 20:13 UTC"
-human_plan_approved_note: "PLAN_APPROVED；吸收 MF-001 方案 A + MF-002；Amendment 001；Round 2 PLAN_APPROVED" Round 2
-human_plan_approved_at: null
-human_plan_approved_note: null
+deferred_business_task: DEV-006
+deferred_business_task_status: PAUSED
+deferred_business_task_note: "PR #13 NOT_READY_FOR_PR_MERGE；TEI CPU 8g warm-up OOM exit=137 阻塞 §8.8；Amendment 002 已单独备份"
+next_action: PLAN_LANDING（DEV-003-002 PLAN_APPROVED）
+human_plan_approved_at: "2026-08-08 15:18 UTC"
+human_plan_approved_note: "PLAN_APPROVED；独立 Plan Review 通过"
 insertion_override:
-  prior_current_task: DEV-005
-  prior_next_action: "DEV-005 completed；等待用户显式指定下一任务"
-  override_by: "用户显式 TASK_ID=DEV-006 WORKFLOW_MODE=NORMAL(explicit)"
-  effect: "DEV-005 completed；current_task=DEV-006 planned；本 Commit 不得开始 DEV-006 实施"
-  overridden_at: "2026-08-08 20:06 UTC"
+  prior_current_task: DEV-006
+  prior_current_task_status: paused
+  prior_next_action: "DEV-006 PAUSED；PR #13 NOT_READY_FOR_PR_MERGE"
+  override_by: "用户显式 NEW_UNPLANNED_FEATURE：TEI CPU memory contract blocking DEV-006 §8.8"
+  effect: "current_task=DEV-003-002 planned；DEV-006 保持 PAUSED；本 Commit 不得实施、不得 Git 写、不得触碰 DEV-006 feat 分支"
+  overridden_at: "2026-08-08 14:52 UTC"
   resolved_at: null
-code_review_approved_at: "2026-08-08 10:46 UTC"
-code_review_result: "CODE_REVIEW_APPROVED；P0=0；P1=0；P2=0；P3=3（残余不阻塞）"
+# DEV-006 historical gates (paused; not current_task)
+dev_006_paused:
+  plan_file: 02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md
+  pr: "#13"
+  pr_status: NOT_READY_FOR_PR_MERGE
+  human_plan_approved_at: "2026-08-08 20:13 UTC"
+  human_plan_approved_note: "PLAN_APPROVED Round 2；MF-001/MF-002；Amendment 001"
+  code_review_approved_at: "2026-08-08 10:46 UTC"
+  code_review_result: "CODE_REVIEW_APPROVED；P0=0；P1=0；P2=0；P3=3（残余不阻塞）"
 # Retained DEV-004 governance deviation evidence (historical)
 governance_deviation:
   id: GD-DEV-004-001
@@ -173,7 +179,7 @@ governance_deviation:
 
 ## 规格阻塞项
 
-无。OI-010（Build Backend）已于 2026-08-06 人工决议为 `uv_build`，规格 §3.5 已同步，**不再阻塞**。
+**DEV-006 §8.8 Integration（CPU 真实 TEI）**：spec-compliant `mem_limit=8g` 下 TEI warm-up OOMKilled exit=137；由 **DEV-003-002** 闭合 Preflight/诊断缺口后恢复。16g `docker update` 未授权，非 release evidence。
 
 ## 实施前置条件
 
@@ -196,6 +202,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 - DEV-OPS-001：Cursor Commands 为 beta；不得假设未证实的参数替换或自动角色切换。
 - DEV-OPS-002：Subagent 继承父工具；IDE `permissions.json` 无硬 deny；`git push` 前缀与 `--force` 区分未证实为硬保证；结束标记无官方结构化协议。
 - 本开发主机：宿主机侧外部网络经 Mihomo mixed proxy `127.0.0.1:17890`（`mihomo.service`）；`7890` 为既有 SSH/sshd forwarding listener（非空闲、非 Mihomo），AI 不得占用/修改/停止/干扰。Docker daemon 已永久代理至 `17890`。宿主机工具（如 `uv`）经 `17890`，不得误写为经 `7890`。规格 §3.15 / Compose `PROXY__HTTP_URL` 业务字面仍为 `7890`（Contract 不因本机环境改写）。权威 AI 回退策略见 `03_AI_Prompts/00_全局开发规则.md` §18（DEV-OPS-004）。
+- **DEV-003-002**：TEI CPU `mem_limit=8g` warm-up OOM（exit 137）阻塞 DEV-006 §8.8；Preflight Check 13 MemTotal 代理不足；若实测 8g 不可行须 Spec-OI，禁止未授权 16g workaround 入库。
 
 ## 双口令门禁
 
@@ -441,6 +448,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 12:05 UTC | DEV-005 | committed → completed | POST_MERGE_CLEANUP：main docs(status): complete；删 exact feat | `next_action`→等待用户显式指定下一任务；**不得启动 DEV-006** |
 | 2026-08-08 20:06 UTC | DEV-006 | planned（Planner 初版） | 创建 Task Plan `DEV-006-tei-embedding-client-token-budget.md`；master_plan CHANGE-011；progress 规划态回写 | 未实施、未 Git 写、未建分支；`next_action=计划审查`；不得开始 STM/EXT/RET 实施 |
 | 2026-08-08 20:30 UTC | DEV-006 | planned（Amendment 001） | Round 1 `PLAN_REJECTED`（MF-001/MF-002）；吸收方案 A + api_shell 必改；修订 §3/§5/§6/§7/§10/§14 | 未实施、未 Git 写；status 保持 planned；`next_action=计划审查 Round 2` |
+| 2026-08-08 14:52 UTC | DEV-003-002 | planned（Planner 初版） | 创建 Task Plan `02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md`；master_plan CHANGE-012；progress 插入覆盖 DEV-006 PAUSED | 未实施、未 Git 写、未建分支；`next_action=计划审查`；**不得触碰 DEV-006 feat / PR #13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -473,9 +481,9 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-006**（`planned`）；`current_branch=main`；`latest_commit=b340f3f`；`current_plan_file=02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md`；`workflow_mode=NORMAL`（explicit）。
-2. **立即下一动作**：**计划审查 Round 2**（`next_action`）；独立 Plan Reviewer 复审 Amendment 001 → `PLAN_APPROVED`；**不得实施、不得 Git 写、不得建 feat 分支**。
-3. **DEV-006**：`planned`；Round 1 `PLAN_REJECTED`（MF-001/MF-002）；Amendment 001 已吸收；前置 DEV-003/005 completed；TEI Compose/脚本已就绪；等待 Round 2 Plan Review。
-4. **DEV-005**：已 `completed`（implementation `d32ddc7`；committed 治理 `76a91ce`；complete 治理 `b340f3f`；PR #12 MERGED `a68d951`）。
+1. **当前**：`current_task` = **DEV-003-002**（`approved`）；`current_branch=main`；`latest_commit=2557ef4`；`current_plan_file=02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md`；`workflow_mode=NORMAL`（explicit）。
+2. **立即下一动作**：**PLAN_LANDING**（`next_action`）；Release Operator `docs(plan)` on `main` → 创建 `feat/DEV-003-002-tei-cpu-memory-contract-validation`。
+3. **DEV-003-002**：闭合 DEV-003 Check 13 / §3.18 #12 TEI CPU 8g 运行时探针；采集 warm-up peak vs steady-state 证据；**不得**改 `mem_limit` 非 8g。
+4. **DEV-006**：`PAUSED`（`deferred_business_task`）；PR #13 `NOT_READY_FOR_PR_MERGE`；恢复条件见 Task Plan §15；**不得**触碰 feat 分支直至 DEV-003-002 completed。
 5. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
 6. **权威人类 Playbook**：`03_AI_Prompts/01_项目日常操作手册.md`（DEV-OPS-005 交付；契约 `tests/unit/test_project_operations_playbook_contract.py`）。

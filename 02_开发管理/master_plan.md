@@ -51,9 +51,10 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-001 | 项目骨架、依赖与质量工具 | §3.4, §3.5, §3.2, §3.28 | 无 | completed |
 | DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | completed |
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | completed |
+| DEV-003-002 | TEI CPU Memory Contract Validation（Preflight Hardening） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003 | approved |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | completed |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | completed |
-| DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003 | planned |
+| DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003, DEV-003-002 | paused |
 
 ### Phase 0 补充：开发工作流自动化（非业务规格）
 
@@ -149,6 +150,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **计划文件**：`02_开发管理/tasks/DEV-002-config-system-env-example.md`
 - **状态备注**：`completed`（plan_commit `ceff988`；implementation_commit `f55732c`；治理 committed `8c9f9de`；PR #5 merged `7fba54427ead5bcbde4a5e4141d83bec0e7f7477`；`status_record_commit_completed=null`；下一步 docs(status) complete + **立即 DEV-003**）。
 
+#### DEV-003-002 TEI CPU Memory Contract Validation（Preflight Hardening）
+
+- **目标**：闭合 DEV-003 P2-001 残余：Preflight Check 13 以 TEI CPU 8g 运行时探针验证 §3.18 #12；采集 warm-up peak vs steady-state RSS 证据；`start_embedding.sh` OOM/health fail-closed；解除 DEV-006 §8.8 Integration 发布阻塞。
+- **非目标**：改 `mem_limit` 非 8g（须 Spec-OI）；DEV-006 业务代码/feat 分支；`src/memory_system/**`；16g 未授权实验入库。
+- **关键设计决策**：Check 13a 保留 MemTotal 快检；Check 13b 新增 spec-compliant 运行时探针；`measure_tei_memory.sh` 输出 JSON 证据；若 8g 实测不可行 → HALT + Spec-OI，禁止 AI 提限。
+- **变更文件（预期）**：`scripts/diagnostics/measure_tei_memory.sh`；`scripts/preflight/lib_tei_probe.sh`；`scripts/preflight/check_linux_host.sh`；`scripts/start_embedding.sh`；相关 unit/contract/integration 测试；`README.md`；本任务开发管理回写。
+- **测试**：Unit（probe 逻辑）；Contract（`mem_limit: 8g` 静态）；Integration（模型缓存命中时真实探针）。
+- **验收**：§15 DEV-006 恢复条件 R1–R4 可满足或触发 Spec-OI；**不得**触碰 DEV-006 feat。
+- **插入说明**：**人工显式插入**于 DEV-006 实施/PR 恢复之前（TEI CPU OOM 阻塞 §8.8）。
+- **计划文件**：`02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md`
+- **状态备注**：`approved`（`workflow_mode=NORMAL`（explicit）；`main` @ `2557ef4`；**阻塞 DEV-006**；PR #13 NOT_READY_FOR_PR_MERGE；`PLAN_APPROVED`）。
+
 #### DEV-003 Docker Compose、Embedding、Preflight
 
 - **目标**：`compose*.yaml`、`versions.env`/`versions.lock.env`、`compose.sh`（唯一 Wrapper，`--embedding=none|cpu|gpu|current`，`--stack=dev|test`）、`start_embedding.sh`（`cpu`/`gpu`/`auto` → `.runtime/embedding.env`）、`lock_tei_images.sh`（TEI 1.9.3 Digest 锁）、`preflight/check_linux_host.sh`（§3.18 全文：GPU-first `auto`、硬失败/Warning 表、Digest 诊断）、多阶段 `Dockerfile`；§3.3 全拓扑；三应用容器 §7.6 确定性 `required_env_keys()` 注入（`env_file` + `environment:`，禁止隐式继承）。
@@ -192,7 +205,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：§2.2.6、§3.10.6、§8 行为合同；ruff/mypy/pytest 全绿；供 EXT-007 与 RET-* 复用。
 - **风险**：TEI `/tokenize` 响应格式对齐；Integration 首次模型下载耗时；GPU Cosine 0.999 可能需人工验收；禁止运行时热切换与降阈值。
 - **计划文件**：`02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md`
-- **状态备注**：`planned`（用户显式 `TASK_ID=DEV-006`；`workflow_mode=NORMAL`（explicit）；`main` @ `b340f3f`；**未实施、未 Git 写**；`next_action=计划审查`；**不得开始 STM/EXT/RET 实施**）。
+- **状态备注**：`paused`（用户显式 `TASK_ID=DEV-006`；`workflow_mode=NORMAL`（explicit）；PR #13 NOT_READY_FOR_PR_MERGE；Amendment 002 已单独备份；**阻塞于 DEV-003-002**（TEI CPU 8g warm-up OOM）；**不得**在 DEV-003-002 完成前恢复 §8.8 Integration）。
 
 ---
 
@@ -519,5 +532,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | DEV-006（`planned`）；**不**修改 DEV-001–005 / DEV-OPS-* 完成状态；**不**开始 STM/EXT/RET 实施；**不**改变后续业务任务范围正文 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner 初版；等待独立 Plan Review → `PLAN_APPROVED` |
+
+### CHANGE-012
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-08 |
+| 原因 | **人工显式插入** DEV-003 follow-up DEV-003-002：TEI CPU `mem_limit=8g` warm-up OOM（exit 137）阻塞 DEV-006 §8.8 Integration；闭合 DEV-003 Preflight Check 13（P2-001 Verdict A）与 §3.18 #12 字面差距；不改规格 8g Contract |
+| 受影响任务 | 新增 `DEV-003-002`（`approved`）；DEV-006 改为 `paused` 并增加前置 `DEV-003-002`；**不**修改 DEV-001–005 / DEV-OPS-* 完成状态；**不**改变 STM/EXT/RET 业务范围 |
+| 是否改变技术规格 | **否**（若实测 8g 不足则走 Spec-OI，本 CHANGE 不预批准提限） |
+| 审批 | Planner 初版；独立 Plan Review → `PLAN_APPROVED`（2026-08-08） |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
