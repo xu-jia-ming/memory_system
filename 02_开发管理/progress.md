@@ -7,21 +7,21 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-004
-current_task_status: reviewed
+current_task_status: committed
 current_branch: feat/DEV-004-migration-runner-es-mapping-alias
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: 5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a
+latest_commit: d8730a670d577c1f9acb75ebb112fc8f88ea6662
 plan_commit: 5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a
-implementation_commit: null
-implementation_commit_message: null
-pr: null
-pr_url: null
-pr_status: null
-pr_base: null
-pr_head: null
+implementation_commit: d8730a670d577c1f9acb75ebb112fc8f88ea6662
+implementation_commit_message: "feat(infra): add migration runner with mongo neo4j es kafka init"
+pr: "#10"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/10"
+pr_status: OPEN
+pr_base: main
+pr_head: feat/DEV-004-migration-runner-es-mapping-alias
 previous_task: DEV-OPS-004
 previous_task_status: completed
 previous_task_completed_at: "2026-08-08 06:18 UTC"
@@ -70,7 +70,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: null
 deferred_business_task_status: null
-next_action: Commit Recorder → IMPLEMENTATION_RELEASE → PR（DEV-004 reviewed；CODE_REVIEW_APPROVED）
+next_action: WAITING_FOR_PR_MERGE（DEV-004 PR #10；人工 Merge 后 POST_MERGE_CLEANUP）
 insertion_override: null
 human_plan_approved_at: "2026-08-08 07:46 UTC"
 human_plan_approved_note: "PLAN_APPROVED；吸收 Plan Reviewer SHOULD_FIX 1–5 为 Amendment 001；NORMAL 自动续跑"
@@ -353,6 +353,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 09:20 UTC | DEV-004 | in_progress → tested | 白名单实现完成；SAFE_RESIDUAL_CLEANUP；Stage6 host-proxy build；Stage7 init-infra；Stage8 integration；ruff/mypy/unit/contract 全绿 | 等待独立 Code Review；未 Git 写；未 READY 前不得 Commit |
 | 2026-08-08 09:48 UTC | DEV-004 | tested（保持） | 独立治理审计 GD-DEV-004-001：NON_BLOCKING（GD-001 Stage6b→6c；GD-002 Stage7→6d→7） | 要求 Amendment 002 + progress 记录后方可 Code Review |
 | 2026-08-08 09:55 UTC | DEV-004 | tested → reviewed | 独立 Code Review `CODE_REVIEW_APPROVED`；P0=0/P1=0/P2=0/P3=4 | Commit Recorder → IMPLEMENTATION_RELEASE；未 Git 写 |
+| 2026-08-08 09:58 UTC | DEV-004 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `d8730a6`；PR #10 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；等待人工 Merge |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -385,12 +386,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-004**（`tested`）；计划文件 `02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md`；`workflow_mode=NORMAL`（explicit）；`plan_commit=5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a`；分支 `feat/DEV-004-migration-runner-es-mapping-alias`。
-2. **立即下一动作**：**独立 Code Review** → Commit Recorder → `IMPLEMENTATION_RELEASE` → WAITING_FOR_PR_MERGE。
-3. **DEV-OPS-004**：已 `completed`（PR #9 MERGED；POST_MERGE complete `d5db474`）。
-4. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
-5. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
-2. **立即下一动作**：**Developer** 在 feat 按已批准 Task Plan §5 白名单实施（吸收 Amendment 001 / SHOULD_FIX 1–5）→ Code Review → Commit Recorder → IMPLEMENTATION_RELEASE → WAITING_FOR_PR_MERGE。
+1. **当前**：`current_task` = **DEV-004**（`committed`）；计划文件 `02_开发管理/tasks/DEV-004-migration-runner-es-mapping-alias.md`；`workflow_mode=NORMAL`（explicit）；`plan_commit=5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a`；`implementation_commit=d8730a670d577c1f9acb75ebb112fc8f88ea6662`；分支 `feat/DEV-004-migration-runner-es-mapping-alias`；PR #10 OPEN。
+2. **立即下一动作**：**WAITING_FOR_PR_MERGE**（人工 Merge PR #10）→ POST_MERGE_CLEANUP。
 3. **DEV-OPS-004**：已 `completed`（PR #9 MERGED；POST_MERGE complete `d5db474`）。
 4. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。
 5. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。

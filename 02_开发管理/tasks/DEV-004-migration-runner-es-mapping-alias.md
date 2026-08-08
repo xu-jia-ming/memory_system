@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-004
 task_name: Migration Runner and Elasticsearch Mapping / Alias initialization
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -512,6 +512,7 @@ future_rule: >
 | 2026-08-08 08:50–09:20 UTC | 实施+恢复验证 | 白名单实现；清场；host-network+17890 build-arg（/tmp override）；Kafka major 预检修复；README COPY | ruff/mypy/unit/contract/integration 全绿 | Stop All 旧结果作废；本轮串行 exit=0 才计 PASS |
 | 2026-08-08 09:48 UTC | 治理审计 | GD-DEV-004-001 独立审计：NON_BLOCKING_GOVERNANCE_DEVIATION（GD-001 Stage6b→6c；GD-002 Stage7→6d→7） | n/a | 要求治理记录后方可 Code Review |
 | 2026-08-08 09:52 UTC | 人工接受偏差 | `GOVERNANCE_DEVIATION_ACCEPTED`；Amendment 002 落盘 | n/a | 不否定最终验证；不放宽未来 fail-closed；READY_FOR_CODE_REVIEW 恢复有效 |
+| 2026-08-08 09:58 UTC | tested → reviewed → committed（IMPLEMENTATION_RELEASE） | implementation commit + push feat + PR #10；本 docs(status): record | 门禁已绿 | 仅 feat；禁 push main；等待人工 Merge |
 
 ## 15. 实际执行结果
 
@@ -572,10 +573,16 @@ governance_deviation_reviewed: GD-DEV-004-001
 ```yaml
 branch: feat/DEV-004-migration-runner-es-mapping-alias
 plan_commit: 5c2274fb2da77e7eaf1ab5df248fcf8a64a95d9a
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: d8730a670d577c1f9acb75ebb112fc8f88ea6662
+implementation_commit_message: "feat(infra): add migration runner with mongo neo4j es kafka init"
+pr: "#10"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/10"
+pr_state: "OPEN"
+pr_base: "main"
+pr_head: "feat/DEV-004-migration-runner-es-mapping-alias"
+status_record_commit_committed: null  # filled after this docs(status): record commit
 ```
 
 ### 最终状态
 
-`tested`
+`committed`（PR #10 OPEN；等待人工 Merge）
