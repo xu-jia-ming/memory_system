@@ -6,6 +6,10 @@
     "git log",
     "git branch",
     "git rev-parse",
+    "git fetch",
+    "git switch",
+    "git checkout",
+    "git pull",
     "git add",
     "git commit",
     "git push",
@@ -17,9 +21,10 @@
       "Never run git push --force, git push -f, or git push --force-with-lease.",
       "Never run git reset --hard, git clean -fd, or git branch -D.",
       "Never run git merge, git rebase, or gh pr merge.",
-      "Never delete remote branches or tags.",
+      "Do not delete remote branches or tags, except when acting as Release Operator in POST_MERGE_CLEANUP after the task PR is verified MERGED, and only git push origin --delete <exact planned feature branch> (never unrelated branches/tags; never git branch -D).",
       "Never read .env, .env.local, or any .env* secret files.",
       "Never commit directly to main for implementation changes.",
+      "IMPLEMENTATION_RELEASE must never git push origin main or commit on main; docs(status): record stays on the feature branch only.",
       "Release Operator must verify each shell command exit code; non-zero means stop."
     ]
   }

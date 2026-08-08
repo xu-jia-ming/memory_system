@@ -1,4 +1,13 @@
-"""Static contract tests for Cursor Orchestrator, Subagents, and release permissions."""
+"""Static contract tests for Cursor Orchestrator, Subagents, and release permissions.
+
+DEV-OPS-003 intentional revisions (see Task Plan §8):
+- Auto-call-next-role is mode-conditional: STRICT forbids; NORMAL allows only after
+  successful end-marker validation; failure paths still forbid auto-continue.
+- manual_gates_unchanged: do not relax review/test/whitelist; NORMAL mechanical
+  status advances are Release-fact-driven.
+- Release phases add PLAN_LANDING / POST_MERGE_CLEANUP; IMPLEMENTATION_RELEASE
+  permanently forbids git push origin main (MF-001 / DD-006).
+"""
 
 from __future__ import annotations
 
@@ -32,6 +41,8 @@ FRONTMATTER_FIELDS: tuple[str, ...] = (
     "is_background",
 )
 
+# Rationale (DEV-OPS-003): replace unconditional "不得自动调用下一角色" with
+# mode-conditional + fail-closed failure-path patterns.
 ORCHESTRATOR_FAIL_CLOSED_PATTERNS: tuple[str, ...] = (
     "不得猜测",
     "不得冒充",
@@ -40,7 +51,7 @@ ORCHESTRATOR_FAIL_CLOSED_PATTERNS: tuple[str, ...] = (
     r"成功.*失败.*同时",
     "非零退出",
     "无法解析",
-    "不得自动调用下一角色",
+    r"失败路径仍「不得自动调用下一角色」|不得自动调用下一角色",
 )
 
 RELEASE_OPERATOR_REQUIRED_SUBSTRINGS: tuple[str, ...] = (
@@ -52,6 +63,9 @@ RELEASE_OPERATOR_REQUIRED_SUBSTRINGS: tuple[str, ...] = (
     "gh pr view --json",
     "RELEASE_OPERATOR_FAILED",
     "RELEASE_COMPLETED",
+    "PLAN_LANDING",
+    "IMPLEMENTATION_RELEASE",
+    "POST_MERGE_CLEANUP",
 )
 
 RELEASE_OPERATOR_FORBIDDEN_SUBSTRINGS: tuple[str, ...] = (
@@ -118,10 +132,18 @@ WRITABLE_SCOPE_CONTRACT_RULES: tuple[dict[str, str], ...] = (
         ),
         "description": "conflict or unknown intersection triggers halt",
     },
+    # Rationale (DEV-OPS-003): NORMAL may advance mechanical status via Release facts;
+    # must not relax review/test/whitelist/fail-closed or approved human gate.
     {
         "rule_id": "manual_gates_unchanged",
-        "pattern": r"不放宽.*approved.*reviewed.*committed.*completed",
-        "description": "manual status gates remain unchanged",
+        "pattern": (
+            r"不放宽.*审查.*测试.*白名单"
+            r"|不放宽.*approved.*reviewed.*committed.*completed"
+        ),
+        "description": (
+            "do not relax review/test/whitelist; NORMAL mechanical advances "
+            "are Release-fact-driven"
+        ),
     },
 )
 
@@ -198,6 +220,35 @@ def test_orchestrator_fail_closed_substrings() -> None:
         assert re.search(pattern, text), f"orchestrate-task missing pattern: {pattern!r}"
 
 
+def test_orchestrator_mode_conditional_auto_continue() -> None:
+    """NORMAL may auto-continue after success; STRICT forbids; failures never auto-continue."""
+    text = _read_orchestrator()
+    assert "WORKFLOW_MODE" in text
+    assert "NORMAL" in text
+    assert "STRICT" in text
+    assert "默认" in text and "NORMAL" in text
+    assert "workflow_mode=" in text
+    assert re.search(r"STRICT[\s\S]*不得自动调用下一角色", text)
+    assert re.search(
+        r"唯一成功标记[\s\S]*自动调用下一|成功标记[\s\S]*自动调用下一映射角色",
+        text,
+    )
+    assert "失败路径仍「不得自动调用下一角色」" in text or re.search(
+        r"失败[\s\S]*不得自动调用下一角色", text
+    )
+
+
+def test_orchestrator_never_performs_git_writes() -> None:
+    text = _read_orchestrator()
+    assert re.search(
+        r"Orchestrator.*永不执行[\s\S]*git add|自身永不执行[\s\S]*git add",
+        text,
+    )
+    assert "git commit" in text
+    assert "git push" in text
+    assert "Release Operator" in text
+
+
 def test_orchestrator_does_not_self_approve() -> None:
     text = _read_orchestrator()
     assert "唯一角色 = Orchestrator" in text
@@ -244,6 +295,7 @@ def test_release_operator_exit_code_and_fact_substrings() -> None:
     for forbidden in RELEASE_OPERATOR_FORBIDDEN_SUBSTRINGS:
         assert forbidden in text, f"release-operator must forbid {forbidden!r}"
     assert "不是安全边界" in text
+    assert "phase=" in text or "phase=<RELEASE_PHASE>" in text
 
 
 def test_permissions_and_cli_files_exist_with_key_policies() -> None:
@@ -259,9 +311,21 @@ def test_permissions_and_cli_files_exist_with_key_policies() -> None:
     assert "git" not in allowlist
     assert "git status" in allowlist
     assert "git push" in allowlist
+    assert "git fetch" in allowlist
+    assert "git switch" in allowlist
+    assert "git pull" in allowlist
+    assert "git branch" in allowlist
+
+    block = "\n".join(permissions["autoRun"]["block_instructions"])
+    assert "POST_MERGE_CLEANUP" in block
+    assert "git push origin --delete" in block
+    assert "Never delete remote branches or tags." not in block
 
     cli = json.loads(CLI_PATH.read_text(encoding="utf-8"))
+    allow = cli["permissions"]["allow"]
+    assert any("git fetch" in item for item in allow)
     deny = cli["permissions"]["deny"]
     assert any("Read(.env*)" in item for item in deny)
     assert any("git push --force" in item for item in deny)
     assert any("git merge" in item for item in deny)
+    assert any("gh pr merge" in item for item in deny)

@@ -16,7 +16,13 @@ is_background: false
 
 不得自动切换到下一角色。不得兼任 Planner、Plan Reviewer、Developer、Code Reviewer 或 Release Operator。不得合并为超级 Agent。不得再启动更深一层 Subagent。
 
-本 Subagent **不是**已提交；结束标记仅表示人工可提交核对已完成。
+本 Subagent **不是**已提交；结束标记 `READY_FOR_HUMAN_COMMIT` 表示 boundary 核对与 commit message 草稿已就绪。
+
+### 与工作流模式的关系
+
+- **NORMAL**：该标记语义为「boundary 已核对、message 草稿就绪」；**不阻止** Orchestrator 在成功校验后自动调度 Release Operator `RELEASE_PHASE=IMPLEMENTATION_RELEASE`。不要求再一次人工 Git 批准口令。
+- **STRICT** / 五命令降级路径：仍可作为显式人工或编排触发 Release 的前置；须人工或新一轮显式调用才进入 Release Operator。
+- **仍禁止 Git 写**：本角色永不执行 `git add` / `commit` / `push`。
 
 ## 必读文件
 
@@ -44,11 +50,11 @@ is_background: false
 
 ## 允许修改范围
 
-**默认只读**。仅在人工提交**之后**且计划允许时，才可回写**已真实存在**的 Commit Hash。
+**默认只读**。仅在真实 Commit Hash 已存在且计划允许时，才可回写**已真实存在**的 Commit Hash（通常由 Release Operator 执行写与事实回写）。
 
 ## 阶段验证
 
-核对测试记录、Diff 范围、Conventional Commit 草稿；明确必须由人工或 Release Operator（门禁满足后）执行 Git 写。
+核对测试记录、Diff 范围、Conventional Commit 草稿；明确必须由 Release Operator（门禁满足后；NORMAL 可自动调度）或 STRICT/五命令下的人工路径执行 Git 写。
 
 ## 结束标记
 

@@ -16,4 +16,10 @@ alwaysApply: true
 - 不得自动 Push、Merge、Rebase 或 Force Push。
 - 不得提交 Secret、真实用户数据、模型缓存或数据库数据。
 - 发现规格冲突或需要改变 Contract 时必须停止并报告。
-- **Release Operator 窄例外（DEV-OPS-002）**：仅 Release Operator Subagent 可在全部门禁满足后对当前功能分支执行受控 `git add`（仅限 Task Plan 白名单精确路径）、`git commit`、`git push`（禁止 force）、`gh pr create` / `gh pr view`；永久禁止 `git merge`、`gh pr merge`、`git rebase`、`git push --force`、`git reset --hard`、`git clean -fd`、`git branch -D`、删分支、直接向 `main` 写实现 Commit；`.cursor/permissions.json` 不是安全边界，真实门禁为运行时状态、路径白名单、命令解析与每条 shell 退出码检查。
+- **Release Operator 窄例外（DEV-OPS-002/003）**：仅 Release Operator Subagent 是唯一 Git 写角色；Orchestrator 及其他角色不得执行 Git 写。按已批准 Task Plan 的 `RELEASE_PHASE` 收窄命令集：
+  - `PLAN_LANDING`（仅 NORMAL）：main 上 `docs(plan)` commit/push、`git pull --ff-only`、从更新后的 main 创建 exact feat 分支。
+  - `IMPLEMENTATION_RELEASE`（NORMAL 与 STRICT；DD-006）：仅功能分支 `git add`（白名单精确路径）/ `commit` / `push origin <feat>`（禁止 force）/ `gh pr create` / `gh pr view`；可选同 feat 上 `docs(status): record`；**永久禁止**本 phase `git push origin main`、在 `main` 上 commit/add、将 record 自动推到 main。
+  - `POST_MERGE_CLEANUP`（仅 NORMAL；PR 已验证 MERGED）：`git fetch`、ff-only 更新 main、`docs(status): complete` commit/push main；**仅** exact planned feat 允许 `git branch -d` 与 `git push origin --delete`（禁止 `-D`、禁止未 MERGED 时删除、禁止删无关分支/tags）。
+  - STRICT 误调 `PLAN_LANDING` / `POST_MERGE_CLEANUP` → FAIL。
+  - 永久禁止：`git merge`（内容合并）、`gh pr merge`、`git rebase`、`git push --force`、`git reset --hard`、`git clean -fd`、`git branch -D`、直接向 `main` 写**实现** Commit。
+  - `.cursor/permissions.json` 不是安全边界；真实门禁为运行时状态、路径白名单、命令解析与每条 shell 退出码检查。
