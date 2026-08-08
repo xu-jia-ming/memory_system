@@ -10,10 +10,10 @@ current_task: DEV-005
 current_task_status: planned
 current_branch: main
 target_default_branch: main
-current_plan_file: null
-workflow_mode_for_this_task: null
-workflow_mode_source: null
-latest_commit: 0239c28281949bedec66dbec1412197c5561a611
+current_plan_file: 02_开发管理/tasks/DEV-005-api-shell-auth-request-id-logging-metrics.md
+workflow_mode_for_this_task: NORMAL
+workflow_mode_source: explicit
+latest_commit: bf537d8
 plan_commit: null
 implementation_commit: null
 implementation_commit_message: null
@@ -93,7 +93,10 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: null
 deferred_business_task_status: null
-next_action: 进入 DEV-005（通用 API 壳、鉴权、Request ID、日志与指标）业务规划；本 Commit 不得开始 DEV-005 实施
+current_task_status: approved
+next_action: PLAN_LANDING（DEV-005 approved；等待 Release Operator docs(plan) on main → feat 分支）
+human_plan_approved_at: "2026-08-08 11:26 UTC"
+human_plan_approved_note: "PLAN_APPROVED；Plan Reviewer SF-001–SF-008 为非阻塞；NORMAL 自动续跑"
 insertion_override:
   prior_current_task: DEV-005
   prior_next_action: "进入 DEV-005（通用 API 壳、鉴权、Request ID、日志与指标）业务规划；本 Commit 不得开始 DEV-005 实施"
@@ -411,6 +414,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 10:50 UTC | DEV-OPS-005 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 OPEN | 仅 feat push；禁 push main；等待人工 Merge；**不得开始 DEV-005** |
 | 2026-08-08 10:53 UTC | DEV-OPS-005 | PR #11 MERGED | Merge Commit `0239c28281949bedec66dbec1412197c5561a611`；main 含 Playbook + 契约 | 等待自动 POST_MERGE_CLEANUP |
 | 2026-08-08 10:55 UTC | DEV-OPS-005 | committed → completed | POST_MERGE_CLEANUP：main docs(status): complete；删 exact feat | `current_task`→DEV-005 planned；未开始 DEV-005 实施 |
+| 2026-08-08 11:20 UTC | DEV-005 | planned（Planner 初版） | 创建 Task Plan `DEV-005-api-shell-auth-request-id-logging-metrics.md`；master_plan CHANGE-010；progress 规划态回写 | 未实施、未 Git 写、未建分支；`next_action=计划审查`；不得开始 DEV-006/STM/Retrieval |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -443,8 +447,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-005**（`planned`）；`current_branch=main`；`latest_commit=0239c28281949bedec66dbec1412197c5561a611`（DEV-OPS-005 merge）。
-2. **立即下一动作**：**DEV-005 业务规划**（通用 API 壳、鉴权、Request ID、日志与指标）；本 Commit 不得开始 DEV-005 实施。
+1. **当前**：`current_task` = **DEV-005**（`planned`）；`current_branch=main`；`latest_commit=bf537d8`；`current_plan_file=02_开发管理/tasks/DEV-005-api-shell-auth-request-id-logging-metrics.md`；`workflow_mode=NORMAL`（explicit）。
+2. **立即下一动作**：**独立 Plan Review**（`next_action=计划审查`）；本 Commit 不得开始 DEV-005 实施。
 3. **DEV-OPS-005**：已 `completed`（implementation `373cd33`；committed 治理 `2392184`；PR #11 MERGED `0239c28`；POST_MERGE complete 本轮）。
 4. **DEV-004**：已 `completed`（implementation `d8730a6`；committed 治理 `5246b5d`；PR #10 MERGED `206b7a6`；complete 治理 `4a5cbc2`）。
 5. **正式 feat（DEV-OPS-003）**：`feat/DEV-OPS-003-normal-strict-workflow-modes` **仍保留**，删除待人工（与本任务无关）。

@@ -174,13 +174,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### DEV-005 通用 API、鉴权、Request ID、日志与指标
 
-- **目标**：FastAPI 应用壳；**创建并实现** `api/dependencies.py`、`middleware.py`、`error_handlers.py`（DEV-001 仅保留 `api/__init__.py` 与 `api/routes/__init__.py`）；`X-API-Key` constant-time；统一错误包络；Request ID；structlog JSON；`/internal/metrics`；liveness；readiness 结构（完整探针可随后续客户端补全，本任务不宣称 §3.16 全部完成）。
-- **非目标**：STM/Retrieval 业务路由实现；OpenTelemetry。
-- **变更文件**：上述 api 具名模块、`entrypoints/api.py` 接线、`observability/`、`infrastructure/security/`。
-- **测试**：Unit/Contract（鉴权 401、错误形状、Request ID 回传）；敏感日志断言。
-- **验收**：符合 §3.21/§3.23/§3.27。
-- **风险**：非 constant-time 比较；日志泄漏。
-- **调度备注**：状态仍 `planned`；DEV-OPS-005 已 `completed`；**下一动作 = DEV-005 业务规划**（本治理 Commit 不得开始 DEV-005 实施）。
+- **目标**：FastAPI 应用壳 + Lifespan（§3.7）；**创建并实现** `api/dependencies.py`、`middleware.py`、`error_handlers.py`、`routes/health.py`、`routes/internal_metrics.py`（仓库当前无 `api/` 目录）；`X-API-Key` 常量时间比较；统一错误包络（§3.23）；Request ID 中间件；structlog JSON（§3.27）；`GET /internal/metrics`（Admin Key）；`GET /health/live` 与 `GET /health/ready`（路径 §8.5 工程冻结）；Readiness 阻塞项含 Redis/Mongo/Neo4j/ES+Mapping/Migration/Kafka Producer，Embedding 非阻塞；Uvicorn `--timeout-graceful-shutdown 450`。
+- **非目标**：STM/Retrieval/Extraction 业务路由；DEV-006 TEI Client；OpenTelemetry；修改 settings/compose/migrate；Worker entrypoint 启动。
+- **变更文件（白名单）**：`src/memory_system/api/**`（本任务枚举）、`observability/`、`infrastructure/security/`、`infrastructure/runtime.py`、`entrypoints/api.py`、相关 unit/contract 测试、`test_entrypoints_import.py` 修订、可选 `test_api_readiness.py`、最小 `README.md`。
+- **测试**：Unit（api_key、error envelope、request_id）；Contract（TestClient 鉴权 401/403、metrics、health、validation_error、敏感日志）；可选 Integration（compose.test Readiness）。
+- **验收**：§3.7/§3.16（边界）/§3.21/§3.23/§3.25/§3.26（Readiness Migration 只读）/§3.27；ruff/mypy/pytest 全绿；未越权黑名单。
+- **风险**：Health URL 规格未写明（§8.5 冻结）；DEV-001 部分 `__init__.py` 未落盘；Lifespan 范围膨胀；entrypoint 测试需修订。
+- **计划文件**：`02_开发管理/tasks/DEV-005-api-shell-auth-request-id-logging-metrics.md`
+- **状态备注**：`planned`（Planner 初版 2026-08-08）；`workflow_mode=NORMAL`（explicit）；**下一动作 = 计划审查**；本 Commit 不得开始 DEV-005 实施。
 
 #### DEV-006 TEI Embedding Client + Token Budget
 
@@ -496,5 +497,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | 新增 `DEV-OPS-005`（Phase 0 补充，现 `completed`）；DEV-005 保持 `planned` 且为下一业务任务；**不**修改 DEV-OPS-001–004 / DEV-001–004 完成状态；**不**改变 DEV-005+ 业务范围正文 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner 初版；独立 Plan Review Round 2 → `PLAN_APPROVED`；人工确认；PLAN_LANDING 完成（plan_commit `a601a3b`）；Developer `tested`；Code Review `CODE_REVIEW_APPROVED`（P0/P1=0；P3=3）；IMPLEMENTATION_RELEASE（implementation `373cd33`；record `2392184`）；PR #11 MERGED `0239c28281949bedec66dbec1412197c5561a611`；POST_MERGE_CLEANUP 本轮 |
+
+### CHANGE-010
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-08 |
+| 原因 | 登记 DEV-005 初版 Task Plan：FastAPI 应用壳、鉴权、Request ID、structlog、Prometheus、Liveness/Readiness 结构；细化白/黑名单、§8 行为合同、测试策略与 NORMAL 三相 Git 计划 |
+| 受影响任务 | DEV-005（`planned`）；**不**修改 DEV-001–004 / DEV-OPS-* 完成状态；**不**开始 DEV-006/STM/Retrieval 实施；**不**改变后续业务任务范围正文 |
+| 是否改变技术规格 | **否**（Health 路径为工程冻结，见 Task Plan §8.5；不扩展业务 API Contract） |
+| 审批 | Planner 初版；待独立 Plan Review；本 Commit 不得实施 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
