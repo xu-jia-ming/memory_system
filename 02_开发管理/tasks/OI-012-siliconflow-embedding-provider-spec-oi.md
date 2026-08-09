@@ -5,7 +5,7 @@
 ```yaml
 task_id: OI-012
 task_name: "SiliconFlow Embedding Provider Spec-OI (MVP Minimal Pivot)"
-status: planned
+status: committed
 task_class: Spec-OI
 open_issue_id: OI-012
 spec_sections:
@@ -33,7 +33,8 @@ plan_review:
   amendment_001: "Amendment 001 — Plan Remediation Round 1（已吸收；Amendment 002 部分 supersede）"
   amendment_002: "Amendment 002 — MVP_SIMPLIFICATION（用户显式 directive）"
   round_2: "PLAN_REJECTED（MUST_FIX=1；SHOULD_FIX=4）→ Amendment 002.1"
-  amendment_002_1: "Amendment 002.1 — MF-1 HEAD SHA + SF-1～4"
+  amendment_002_1: "Amendment 002.1 — MF-1 HEAD SHA + SF-1～4（已吸收）"
+  round_3: "PLAN_APPROVED（BLOCKER=0；MUST_FIX=0）"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 insertion_reason: "NEW_UNPLANNED_FEATURE：MVP 默认 Embedding pivot 至 SiliconFlow BAAI/bge-m3；最小 Spec-OI + 单一下游 DEV-007"
@@ -397,16 +398,16 @@ acceptance_gate:
 
 ## 9. 验收标准
 
-- [ ] Amendment 002/002.1 已吸收；scope = **minimal MVP pivot**
-- [ ] git HEAD SHA = **`c8c03db4b984a1e65b7d2d46b392f87a938c8eec`**（无混缀）
-- [ ] §5.4 M1–M11 写入规格（Phase A 后）
-- [ ] §5.5 DEFERRED 清单完整；**无** DEV-008/009
-- [ ] **单一** downstream **DEV-007** 定义含 whitelist/blacklist
-- [ ] DEV-006 = **PAUSED/SUPERSEDED_FOR_MVP**；PR #13 = **DO_NOT_MERGE**（仅记录）
-- [ ] Retry = **1 + 2 = max 3 HTTP attempts**（非 Amendment 001 的 4）
-- [ ] **无** local tokenizer proposal；**无** §3.3/§3.18 大规模改写
-- [ ] master_plan **最小** retarget（非 B1–B9 全量）
-- [ ] **未** PLAN_LANDING；**未**改 `src/**`；**未**碰 DEV-006 feat
+- [x] Amendment 002/002.1 已吸收；scope = **minimal MVP pivot**
+- [x] git HEAD SHA = **`c8c03db4b984a1e65b7d2d46b392f87a938c8eec`**（无混缀）
+- [x] §5.4 M1–M11 写入规格（Phase A 后；§3.10.0）
+- [x] §5.5 DEFERRED 清单完整；**无** DEV-008/009
+- [x] **单一** downstream **DEV-007** 定义含 whitelist/blacklist
+- [x] DEV-006 = **PAUSED/SUPERSEDED_FOR_MVP**；PR #13 = **DO_NOT_MERGE**（仅记录）
+- [x] Retry = **1 + 2 = max 3 HTTP attempts**（非 Amendment 001 的 4）
+- [x] **无** local tokenizer proposal；**无** §3.3/§3.18 大规模改写
+- [x] master_plan **最小** retarget（非 B1–B9 全量）
+- [x] **未** PLAN_LANDING；**未**改 `src/**`；**未**碰 DEV-006 feat
 - [ ] Review 无 P0/P1
 
 ---
@@ -517,6 +518,11 @@ status: pending_plan_review
 | 2026-08-09 05:45 UTC | Amendment 001 | MF-1～3 + SF-1～6 | 无 | 待 Round 2 |
 | 2026-08-09 06:00 UTC | Amendment 002 | MVP 简化；单一 DEV-007；DEFERRED 清单；retry=3 | 无 | **不 PLAN_LANDING**；待 Round 2 审查 |
 | 2026-08-09 06:15 UTC | Amendment 002.1 | MF-1 HEAD SHA 修正；SF-1～4 | 无 | **不 PLAN_LANDING**；待 Round 2 复审 |
+| 2026-08-09 06:52 UTC | Round 3 PLAN_APPROVED | Amendment 002 MVP Simplification；BLOCKER=0；MUST_FIX=0 | 无 | 进入 Developer 实施 |
+| 2026-08-09 06:55 UTC | Phase A Spec | §3.1/§2.2.14/§3.8/§3.10.0/§2.2.6 最小 pivot | grep 一致性 | 未改 §3.3/§3.18 |
+| 2026-08-09 06:55 UTC | Phase B 治理 | open_issues OI-012 resolved；master_plan/progress 回写 | 无 | `plan_commit=e122c8a` |
+| 2026-08-09 07:00 UTC | Code Review | P0=0；P1=0；CODE_REVIEW_APPROVED | grep 一致性复核 | 无 |
+| 2026-08-09 07:05 UTC | IMPLEMENTATION_RELEASE | docs(spec) + docs(governance) 双 commit；PR 创建 | 无 | `plan_commit=e122c8a` 可追溯 |
 
 ---
 
@@ -526,15 +532,19 @@ status: pending_plan_review
 
 | 文件 | 结果 |
 |---|---|
-| — | 规划轮未实施 |
+| `01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md` | §3.1/§2.2.14/§3.8/§3.10.0/§2.2.6 最小 pivot |
+| `02_开发管理/open_issues.md` | OI-012 → resolved + Amendment 002.1 决议 |
+| `02_开发管理/master_plan.md` | DEV-006 SUPERSEDED；DEV-007 §2.2.14；OI-012 tested |
+| `02_开发管理/progress.md` | in_progress → tested；plan_commit=e122c8a |
+| `02_开发管理/tasks/OI-012-siliconflow-embedding-provider-spec-oi.md` | 本计划回写 |
 
 ### 与原计划的差异
 
-Amendment 002 将 scope 从「全架构 pivot + DEV-007/008/009」缩减为「最小 Spec-OI + 单一 DEV-007」。
+无 scope 偏差；严格按 Amendment 002/002.1 最小 pivot 实施。
 
 ### 测试结果
 
-未运行（Spec-OI 规划轮）。
+Spec-OI 无代码测试；grep 一致性验证通过（默认 siliconflow、batch limits、retry=3、无 DEV-008/009）。
 
 ### Review 结果
 
@@ -543,21 +553,24 @@ p0: 0
 p1: 0
 review_report: null
 plan_review_round_1: "PLAN_REJECTED（MUST_FIX=3）"
-amendment_002: "pending_plan_review"
-amendment_002_1: "pending_plan_review"
+amendment_002: "absorbed"
+amendment_002_1: "absorbed"
 plan_review_round_2: "PLAN_REJECTED（MUST_FIX=1；SHOULD_FIX=4）"
+plan_review_round_3: "PLAN_APPROVED（BLOCKER=0；MUST_FIX=0）"
+code_review: CODE_REVIEW_APPROVED
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/OI-012-siliconflow-embedding-provider-spec-oi
+plan_commit: e122c8ab840720a4f86cffda5a58e5f9e6f34944
+implementation_commit: null
 ```
 
 ### 最终状态
 
-`planned`
+`committed`
 
 ---
 

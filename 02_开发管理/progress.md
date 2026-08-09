@@ -7,21 +7,21 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: OI-012
-current_task_status: approved
-current_branch: main
+current_task_status: committed
+current_branch: feat/OI-012-siliconflow-embedding-provider-spec-oi
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
-formal_OI-012_status: planned
+formal_OI-012_status: committed
 tooling_status: VALID
 runtime_contract_status: PASS
-dev006_dependency_status: SUPERSEDED_FOR_MVP_PENDING_OI012
+dev006_dependency_status: SUPERSEDED_FOR_MVP_OI012_TESTED
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/OI-012-siliconflow-embedding-provider-spec-oi.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 latest_commit: c8c03db4b984a1e65b7d2d46b392f87a938c8eec
-plan_commit: bda5018a712766a5981f8e1a19940132a56de536
-implementation_commit: 131a2e994690adb4b06b4d0fa299b229e88ca7d3
+plan_commit: e122c8ab840720a4f86cffda5a58e5f9e6f34944
+implementation_commit: null
 implementation_commit_message: "feat(tei-probe): land bge-m3 cpu mem_limit 12g contract"
 pr: "#15"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/15"
@@ -132,12 +132,12 @@ step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: DEV-007
-deferred_business_task_status: BLOCKED_ON_OI012
-deferred_business_task_note: "单一 downstream DEV-007（SiliconFlow MVP consolidated）；DEV-006 PAUSED/SUPERSEDED_FOR_MVP；PR #13 OPEN/DO_NOT_MERGE；OI-012 Amendment 002 minimal Spec-OI 须 PLAN_APPROVED；本轮不 PLAN_LANDING"
-next_action: PLAN_LANDING
+deferred_business_task_status: BLOCKED_ON_OI012_MERGE
+deferred_business_task_note: "单一 downstream DEV-007（SiliconFlow MVP consolidated）；DEV-006 PAUSED/SUPERSEDED_FOR_MVP；PR #13 OPEN/DO_NOT_MERGE；OI-012 committed；待 PR Merge"
+next_action: 等待 PR Merge
 human_plan_approved_at: "2026-08-09 06:52 UTC"
-human_plan_approved_note: "PLAN_APPROVED Amendment 002 MVP Simplification; BLOCKER=0; MUST_FIX=0"
-oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4）"
+human_plan_approved_note: "PLAN_APPROVED Amendment 002 MVP Simplification Round 3; BLOCKER=0; MUST_FIX=0"
+oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
 insertion_override:
   prior_current_task: DEV-006
   prior_current_task_status: paused
@@ -204,7 +204,7 @@ governance_deviation:
 
 ## 规格阻塞项
 
-**OI-012（Amendment 002/002.1）**：最小 MVP Spec-OI 规划态；`latest_commit=c8c03db4b984a1e65b7d2d46b392f87a938c8eec`；`next_action=计划审查`；**本轮不 PLAN_LANDING**。
+**OI-012（Amendment 002/002.1）**：最小 MVP Spec-OI **已 committed**（Phase A 规格 pivot + Phase B 治理）；`plan_commit=e122c8ab840720a4f86cffda5a58e5f9e6f34944`；`next_action=等待 PR Merge`。
 
 **DEV-006 / PR #13**：**PAUSED / SUPERSEDED_FOR_MVP**；PR #13 **OPEN / DO_NOT_MERGE**；PR 处置 deferred 至 DEV-007 Integration 验证后。
 
@@ -221,7 +221,7 @@ governance_deviation:
 
 ## 规格歧义
 
-见 `02_开发管理/open_issues.md`。OI-010、**OI-011** 为 `resolved`；**OI-012** 为 `open`（规划态 Task Plan 已创建）。未解决项不得自行解释为新 Contract。
+见 `02_开发管理/open_issues.md`。OI-010、**OI-011**、**OI-012** 为 `resolved`；未解决项不得自行解释为新 Contract。
 
 DEV-OPS-001 产品/流程未决项见其 Task Plan §12.2（OI-OPS-001–005）；**不**写入规格 Contract。
 
@@ -493,6 +493,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-09 02:42 UTC | OI-011 | committed → completed | PR #15 MERGED 至 main（Merge Commit `7cc020a`）；`RUNTIME_CONTRACT_STATUS=PASS`；`dev006_dependency_status=READY_FOR_RESUME_AFTER_OI011_MERGE` | POST_MERGE_CLEANUP 本轮；**不得 Merge PR #13** |
 | 2026-08-09 06:00 UTC | OI-012 | Amendment 002 MVP_SIMPLIFICATION | 缩减为最小 Spec-OI；单一 DEV-007；DEFERRED 清单；retry=3；不 PLAN_LANDING | 无 | 待 Round 2 计划审查 |
 | 2026-08-09 06:15 UTC | OI-012 | Amendment 002.1 | MF-1 HEAD SHA 修正；SF-1 master_plan spec_sections；SF-2 local_tei fail-fast；SF-3 batch limits；SF-4 §11 git plan | 无 | 待 Round 2 复审 |
+| 2026-08-09 06:52 UTC | OI-012 | Round 3 PLAN_APPROVED | Amendment 002 MVP Simplification；BLOCKER=0；MUST_FIX=0 | 无 | 进入 Developer 实施 |
+| 2026-08-09 06:55 UTC | OI-012 | approved → in_progress → tested | Phase A 规格最小 pivot（§3.1/§2.2.14/§3.8/§3.10.0/§2.2.6）；Phase B 治理（open_issues/master_plan/progress）；无代码测试 | grep 一致性验证 | `plan_commit=e122c8a`；`next_action=代码审查` |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -525,7 +527,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **OI-012**：`planned`（Amendment 002/002.1 MVP 最小 pivot）；`next_action=计划审查`；**不 PLAN_LANDING** 本轮。
+1. **OI-012**：`committed`（Amendment 002/002.1 MVP 最小 pivot 已实施）；`next_action=等待 PR Merge`。
 2. **DEV-007**：单一 downstream SiliconFlow MVP（blocked on OI-012）。
 3. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**。
 4. **OI-011**：`completed`（TEI 12g 保留；本 MVP 不修改）。
