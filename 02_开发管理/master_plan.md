@@ -79,7 +79,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **关键修复**：仅在 `tests/unit/test_compose_wrapper_contract.py` 对 `scripts/preflight/lib_tei_probe.sh` 与 `scripts/diagnostics/measure_tei_memory.sh` 做 exact-path/exact-purpose allowlist；禁止删测/skip/全局放宽。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md`
 - **插入说明**：用户显式 NEW_UNPLANNED_FEATURE；`workflow_mode=NORMAL`（explicit）。
-- **状态备注**：`approved`（Plan Reviewer PLAN_APPROVED；BLOCKER=0 MUST_FIX=0；人工确认）；待 PLAN_LANDING；未实施。
+- **状态备注**：`approved`（Plan Reviewer PLAN_APPROVED；BLOCKER=0 MUST_FIX=0；人工确认）；PLAN_LANDING 完成（plan_commit `09b045be1429716eab184e4565beb30cf2856b28`；feat `feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001`）；等待 Developer 实施。
 
 #### DEV-OPS-005 Human Prompt Playbook and Recovery Operations Manual
 

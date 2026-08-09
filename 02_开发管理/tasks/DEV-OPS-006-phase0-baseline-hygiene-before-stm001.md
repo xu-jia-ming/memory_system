@@ -18,10 +18,10 @@ prerequisites:
   - "本任务为用户显式 NEW_UNPLANNED_FEATURE：进入 STM-001 前最小 hygiene；不得实现 STM-001"
 branch: "feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001"
 created_at: "2026-08-09 10:42 UTC"
-updated_at: "2026-08-09 10:42 UTC"
+updated_at: "2026-08-09 12:29 UTC"
 approval_gates:
-  planning_docs: "PLAN_APPROVED（Plan Reviewer BLOCKER=0 MUST_FIX=0；人工确认 PLAN_APPROVED）"
-  implementation_plan: "status=approved；待 PLAN_LANDING；未实施"
+  planning_docs: "PLAN_APPROVED（Plan Reviewer BLOCKER=0 MUST_FIX=0；人工确认 PLAN_APPROVED）；PLAN_LANDING 完成"
+  implementation_plan: "status=approved；PLAN_LANDING 完成；等待 Developer 在 feat 实施"
 insertion_override:
   prior_current_task: "DEV-007"
   prior_current_task_status: "completed"
@@ -318,7 +318,7 @@ planned
 → completed (POST_MERGE_CLEANUP)
 ```
 
-`current_task_status` = **approved**（Plan Reviewer + 人工 `PLAN_APPROVED`）；`next_action` = **PLAN_LANDING**。
+`current_task_status` = **approved**（Plan Reviewer + 人工 `PLAN_APPROVED`；PLAN_LANDING 完成）；`next_action` = **Developer 实施**。
 
 ---
 
@@ -343,6 +343,7 @@ planned
 |---|---|---|---|---|
 | 2026-08-09 10:42 UTC | Planner 初版 | 创建本 Task Plan；progress/master_plan 规划态登记 | 只读：unit 失败用例确认；contract 47 passed；215 unit collected | 分类 A；未实施；未 Git 写；未启 TEI |
 | 2026-08-09 12:25 UTC | Plan Review + 人工 PLAN_APPROVED | status→approved；吸收 SHOULD_FIX（存在性断言 + drift 基于实测） | n/a | BLOCKER=0 MUST_FIX=0；待 PLAN_LANDING |
+| 2026-08-09 12:29 UTC | PLAN_LANDING | docs(plan) on main；创建 feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001 | n/a | plan_commit=09b045be1429716eab184e4565beb30cf2856b28；等待 Developer；不得实现 STM-001 |
 
 ---
 
@@ -382,12 +383,12 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001
+plan_commit: 09b045be1429716eab184e4565beb30cf2856b28
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`approved`（待 PLAN_LANDING）
+`approved`（PLAN_LANDING 完成；等待 Developer 实施）

@@ -10,7 +10,7 @@ phase0_readiness: PASS
 stm_001_entry_gate: GO_FOR_STM_001
 current_task: DEV-OPS-006
 current_task_status: approved
-current_branch: main
+current_branch: feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -24,14 +24,14 @@ workflow_mode_source: explicit
 # DEV-OPS-006 planning evidence（本轮；未实施）
 formal_DEV-OPS-006_status: approved
 formal_DEV-OPS-006_plan_file: 02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md
-formal_DEV-OPS-006_plan_commit: null
+formal_DEV-OPS-006_plan_commit: 09b045be1429716eab184e4565beb30cf2856b28
 formal_DEV-OPS-006_implementation_commit: null
 formal_DEV-OPS-006_pr: null
 formal_DEV-OPS-006_workflow_mode: NORMAL
 formal_DEV-OPS-006_root_cause_classification: A
 formal_DEV-OPS-006_note: "Phase 0 baseline hygiene before STM-001；exact allowlist OI-011 probe paths；不得实现 STM-001"
 # Verified main HEAD at planning time（DOC_CODE_DRIFT hygiene target；实施完成后再与 post-merge HEAD 对齐）
-latest_commit: 524786aa52f3ac79b5e9a26e46f36b93545d7c55
+latest_commit: 09b045be1429716eab184e4565beb30cf2856b28
 planning_baseline_head: 524786aa52f3ac79b5e9a26e46f36b93545d7c55
 planning_unit_collect: 215
 planning_unit_known_failure: "tests/unit/test_compose_wrapper_contract.py::test_no_bare_docker_compose_outside_wrapper (1 failed; PRE_EXISTING_WARNING)"
@@ -161,9 +161,9 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 deferred_business_task: STM-001
 deferred_business_task_status: not_started
 deferred_business_task_note: "DEV-OPS-006 hygiene 完成后方可规划；本任务期间不得实现 STM-001"
-next_action: PLAN_LANDING（docs(plan) on main + 创建 feat 分支）
-human_plan_approved_at: null
-human_plan_approved_note: null
+next_action: Developer 在 feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001 按已批准 Task Plan §5 白名单实施（plan_commit=09b045be1429716eab184e4565beb30cf2856b28）；不得实现 STM-001；不得触碰 DEV-006/PR#13
+human_plan_approved_at: "2026-08-09"
+human_plan_approved_note: "人工确认 PLAN_APPROVED；PLAN_LANDING 完成"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
 insertion_override:
   prior_current_task: DEV-007
@@ -232,7 +232,7 @@ governance_deviation:
 
 ## 规格阻塞项
 
-**DEV-OPS-006（当前）**：**planned** — Phase 0 baseline hygiene（compose-wrapper allowlist + progress DOC_CODE_DRIFT）；分类 A；等待 Plan Review / `PLAN_APPROVED`；完成后才进入 STM-001 规划。
+**DEV-OPS-006（当前）**：**approved** — Phase 0 baseline hygiene（compose-wrapper allowlist + progress DOC_CODE_DRIFT）；分类 A；`plan_commit=09b045be1429716eab184e4565beb30cf2856b28`；分支 `feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001`；等待 Developer 实施；完成后才进入 STM-001 规划。
 
 **OI-012（Amendment 002/002.1）**：**completed**（PR #16 MERGED `003fb43e24ab5bb5d2401342a0f466fcbe22ce26`）。
 
@@ -300,6 +300,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（DEV-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `d8730a670d577c1f9acb75ebb112fc8f88ea6662`；PR #10 MERGED（`206b7a688cbad3070dc3f1646111efa165f2be87`） |
 | RELEASE_COMPLETED（DEV-004 POST_MERGE_CLEANUP） | **已完成**；completed 治理 `4a5cbc2`；exact feat 已删 |
 | PLAN_APPROVED（DEV-OPS-005 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-1–3；Amendment 001；Round 2 `PLAN_APPROVED`；Amendment 002 章节编号）；人工确认 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；`workflow_mode=NORMAL`（explicit）；plan_commit `a601a3ba569b12b8fc0ae8ff913f66927381af19` |
+| PLAN_APPROVED（DEV-OPS-006 计划） | **已通过**（Plan Reviewer BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；`workflow_mode=NORMAL`（explicit）；plan_commit `09b045be1429716eab184e4565beb30cf2856b28`；PLAN_LANDING 完成 |
 | CODE_REVIEW_APPROVED（DEV-OPS-005 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=3；P3 残余不阻塞） |
 | RELEASE_COMPLETED（DEV-OPS-005 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 MERGED（`0239c28281949bedec66dbec1412197c5561a611`）；committed 治理 `239218432d6b86d4f34d24c248611361df5d5069` |
 | RELEASE_COMPLETED（DEV-OPS-005 POST_MERGE_CLEANUP） | **已完成**（本轮）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
@@ -534,6 +535,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-09 16:20 UTC | DEV-007 | approved → in_progress → tested | SiliconFlow client MVP 实施完成；U1–U6/C1–C17 通过；ruff/mypy/env check 通过 | unit+contract 261 passed（1 main 既有 compose wrapper 失败） | `next_action=Code Review`；未 commit；integration opt-in 未跑 |
 | 2026-08-09 08:24 UTC | DEV-007 | committed → completed | PR #17 MERGED（`b7916ea`）；POST_MERGE docs(status) complete；HEAD 后续含 `524786a` record SHA | main 同步；SiliconFlow MVP 在 main | `next_action` 曾为等待下一任务 |
 | 2026-08-09 10:42 UTC | DEV-OPS-006 | planned（Planner 初版） | 创建 Task Plan `DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md`；master_plan CHANGE-019；progress 规划态回写 | 只读诊断：分类 **A**；contract 47 passed；unit 215 collected / 1 fail | `next_action=计划审查`；**不得实现 STM-001**；**不得触碰 DEV-006/PR#13** |
+| 2026-08-09 12:29 UTC | DEV-OPS-006 | approved（PLAN_LANDING） | docs(plan) `09b045be1429716eab184e4565beb30cf2856b28`；创建 `feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001` | n/a | `next_action`→Developer 实施；未实施；**不得实现 STM-001**；**不得触碰 DEV-006/PR#13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -566,7 +568,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **DEV-OPS-006**（当前）：`planned` — Phase 0 Baseline Hygiene Before STM-001；`next_action=计划审查`；分类 **A**（OI-011 probe exact allowlist）；**不得实施**直至 `PLAN_APPROVED`。
+1. **DEV-OPS-006**（当前）：`approved` — Phase 0 Baseline Hygiene Before STM-001；`plan_commit=09b045be1429716eab184e4565beb30cf2856b28`；分支 `feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001`；分类 **A**；`next_action`→**Developer 实施**；**不得实现 STM-001**；**不得触碰 DEV-006/PR#13**。
 2. **STM-001**：可规划（待 DEV-OPS-006 completed）；本轮不得实现。
 3. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；DEV-OPS-006 不得触碰。
 4. **DEV-007 / OI-012 / OI-011**：`completed`（保留）。
