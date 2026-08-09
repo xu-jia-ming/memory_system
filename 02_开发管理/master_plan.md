@@ -232,12 +232,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### DEV-007 SiliconFlow Embedding Client MVP
 
-- **目标**：单一 consolidated 任务 — `SiliconFlowEmbeddingClient`（httpx）；`EmbeddingClient` + factory；Settings（`embedding_provider=siliconflow` default、`SILICONFLOW_API_KEY`）；mocked contract tests（M10）；opt-in integration gate dim=1024（M11）。
-- **非目标**：TEI refactor/429/compose；STM/EXT/RET；PR #13；local tokenizer；large metrics。
-- **前置**：OI-012 **completed**（PR #16 MERGED `003fb43`）。
-- **计划文件**：（待 Planner 创建 `DEV-007-siliconflow-embedding-client-mvp.md`）
-- **规格章节**：§2.2.6、§2.2.14、§3.8、§3.10（OI-012 已修订最小 Contract）。
-- **状态备注**：`planned`（Amendment 002 取代 DEV-008/009 占位；**OI-012 前置已满足，可进入规划**）。
+- **目标**：单一 consolidated 任务 — 在 main **从零创建** `EmbeddingClient` Protocol + `SiliconFlowEmbeddingClient`（httpx；`POST /v1/embeddings`；batch≤32；retry≤3）；`create_embedding_client` factory；Settings 最小 pivot（`embedding_provider=siliconflow` default、`SILICONFLOW_API_KEY` 条件必填）；mocked contract tests（M10 全矩阵）；opt-in integration `dim==1024`（M11）。
+- **非目标**：TEI refactor/429/compose/preflight；合并 PR #13 `TEIEmbeddingClient`；STM/EXT/RET 接线；local HF tokenizer；Readiness embed 探针升级；ES mapping 变更。
+- **关键设计决策**：main 无 embedding 代码（DEV-006 未 merge）；`local_tei` factory **fail-closed**（`NotImplementedError`）；`SILICONFLOW_API_KEY` **不**入全局 `required_env_keys()`（条件 validator）；bge-m3 输出维度 **Integration 验证**（UNKNOWN_FROM_OFFICIAL_DOCS）；**Amendment 001**：无本地精确 token 计数；输入长度由 API `400` fail-fast；`embedding_max_input_tokens` **不**用于 SiliconFlow 客户端校验。
+- **前置**：OI-012 **completed**（PR #16 MERGED `003fb43`）；DEV-002/004/005 completed。
+- **计划文件**：`02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mvp.md`
+- **规格章节**：§2.2.6、§2.2.14、§3.8、§3.10（OI-012 M1–M11）。
+- **分支**：`feat/DEV-007-siliconflow-embedding-client-mvp`
+- **状态备注**：`planned`（Planner 初版 2026-08-09；**Amendment 001** 输入校验简化 2026-08-09；`next_action=计划审查`；**不得实施直至 PLAN_APPROVED**）。
 
 ---
 
@@ -604,5 +606,25 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | OI-012（planned，Amendment 002）；DEV-006（paused/SUPERSEDED_FOR_MVP）；DEV-007（planned consolidated）；**移除** DEV-008/009 占位；EXT-007/RET-001/RET-002/v0.1.0-bootstrap 最小 retarget |
 | 是否改变技术规格 | **是（预期，最小）**：默认 provider SiliconFlow；TEI optional 叙事 |
 | 审批 | Amendment 002 pending plan review；**本轮不 PLAN_LANDING** |
+
+### CHANGE-016
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-09 |
+| 原因 | 登记 **DEV-007** 初版 Task Plan：SiliconFlow Embedding Client MVP（Protocol + Client + Settings + mocked tests + opt-in integration）；OI-012 完成后单一 downstream 实施任务 |
+| 受影响任务 | DEV-007（`planned`）；**不**修改 DEV-006/PR #13；**不**开始实施直至 `PLAN_APPROVED` |
+| 是否改变技术规格 | **否**（对齐 OI-012 已 merge 的最小 Contract） |
+| 审批 | Planner 初版；等待独立 Plan Review → `PLAN_APPROVED` |
+
+### CHANGE-017
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-09 |
+| 原因 | **DEV-007 Amendment 001**（Input Validation Simplification）：移除字符 guard / 本地 token 计数合同；超长输入交由 SiliconFlow API `400` fail-fast；U7 移出必测矩阵 |
+| 受影响任务 | DEV-007（`planned`；Amendment 001 待 Plan Review） |
+| 是否改变技术规格 | **否**（简化客户端校验策略；对齐 OI-012 已 merge Contract） |
+| 审批 | Amendment 001 pending plan review |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
