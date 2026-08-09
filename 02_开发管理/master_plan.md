@@ -51,7 +51,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-001 | 项目骨架、依赖与质量工具 | §3.4, §3.5, §3.2, §3.28 | 无 | completed |
 | DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | completed |
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | completed |
-| DEV-003-002 | TEI CPU Memory Contract Validation（Preflight Hardening） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003 | approved |
+| DEV-003-002 | TEI CPU Memory Contract Validation（Preflight Hardening） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003 | completed |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | completed |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | completed |
 | DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003, DEV-003-002 | paused |
@@ -152,15 +152,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### DEV-003-002 TEI CPU Memory Contract Validation（Preflight Hardening）
 
-- **目标**：闭合 DEV-003 P2-001 残余：Preflight Check 13 以 TEI CPU 8g 运行时探针验证 §3.18 #12；采集 warm-up peak vs steady-state RSS 证据；`start_embedding.sh` OOM/health fail-closed；解除 DEV-006 §8.8 Integration 发布阻塞。
+- **目标**：交付 TEI CPU runtime validation tooling（MODEL 2）；Preflight Check 13b、`measure_tei_memory.sh`、fail-closed startup；**不**表示 8g contract validated successfully。
 - **非目标**：改 `mem_limit` 非 8g（须 Spec-OI）；DEV-006 业务代码/feat 分支；`src/memory_system/**`；16g 未授权实验入库。
-- **关键设计决策**：Check 13a 保留 MemTotal 快检；Check 13b 新增 spec-compliant 运行时探针；`measure_tei_memory.sh` 输出 JSON 证据；若 8g 实测不可行 → HALT + Spec-OI，禁止 AI 提限。
-- **变更文件（预期）**：`scripts/diagnostics/measure_tei_memory.sh`；`scripts/preflight/lib_tei_probe.sh`；`scripts/preflight/check_linux_host.sh`；`scripts/start_embedding.sh`；相关 unit/contract/integration 测试；`README.md`；本任务开发管理回写。
-- **测试**：Unit（probe 逻辑）；Contract（`mem_limit: 8g` 静态）；Integration（模型缓存命中时真实探针）。
-- **验收**：§15 DEV-006 恢复条件 R1–R4 可满足或触发 Spec-OI；**不得**触碰 DEV-006 feat。
+- **关键设计决策**：三态分离 `TOOLING_STATUS=VALID` / `RUNTIME_CONTRACT_STATUS=SPEC_RUNTIME_CONTRACT_CONFLICT` / `DEV006_DEPENDENCY_STATUS=BLOCKED`；Layer A/B 测试分层；默认 CI 不含 runtime_contract_gate。
+- **变更文件（预期）**：`scripts/diagnostics/measure_tei_memory.sh`；`scripts/preflight/lib_tei_probe.sh`；`scripts/preflight/check_linux_host.sh`；`scripts/start_embedding.sh`；相关 unit/contract/runtime_contract_gate 测试；`README.md`；本任务开发管理回写。
+- **测试**：Layer A mock；Layer B reference gate（独立）；Contract（`mem_limit: 8g` 静态）。
+- **验收**：DEV-003-002 `completed`；DEV-006 仅 R1 满足；R2–R4 待 Spec-OI 后新 contract validation。
 - **插入说明**：**人工显式插入**于 DEV-006 实施/PR 恢复之前（TEI CPU OOM 阻塞 §8.8）。
 - **计划文件**：`02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md`
-- **状态备注**：`approved`（`workflow_mode=NORMAL`（explicit）；`main` @ `2557ef4`；**阻塞 DEV-006**；PR #13 NOT_READY_FOR_PR_MERGE；`PLAN_APPROVED`）。
+- **状态备注**：`completed`（plan_commit `7172e91`；implementation_commit `715e985`；PR #14 merged `4d894cc`；`TOOLING_STATUS=VALID`；`RUNTIME_CONTRACT_STATUS=SPEC_RUNTIME_CONTRACT_CONFLICT`；DEV-006 R1 satisfied，R2–R4 BLOCKED pending Spec-OI）。
 
 #### DEV-003 Docker Compose、Embedding、Preflight
 
@@ -205,7 +205,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：§2.2.6、§3.10.6、§8 行为合同；ruff/mypy/pytest 全绿；供 EXT-007 与 RET-* 复用。
 - **风险**：TEI `/tokenize` 响应格式对齐；Integration 首次模型下载耗时；GPU Cosine 0.999 可能需人工验收；禁止运行时热切换与降阈值。
 - **计划文件**：`02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md`
-- **状态备注**：`paused`（用户显式 `TASK_ID=DEV-006`；`workflow_mode=NORMAL`（explicit）；PR #13 NOT_READY_FOR_PR_MERGE；Amendment 002 已单独备份；**阻塞于 DEV-003-002**（TEI CPU 8g warm-up OOM）；**不得**在 DEV-003-002 完成前恢复 §8.8 Integration）。
+- **状态备注**：`paused`（PR #13 OPEN；`NOT_READY_FOR_PR_MERGE`；DEV-003-002 **completed**（R1 satisfied）；R2–R4 **BLOCKED** pending Spec-OI new runtime memory contract；**不得**恢复 §8.8 Integration until Spec-OI）。
 
 ---
 

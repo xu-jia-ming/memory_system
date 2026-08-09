@@ -6,25 +6,28 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-003-002
-current_task_status: halted_spec_oi_candidate
-current_branch: feat/DEV-003-002-tei-cpu-memory-contract-validation
-formal_DEV-003-002_status: halted_spec_oi_candidate
+current_task: DEV-006
+current_task_status: paused
+current_branch: main
+formal_DEV-003-002_status: completed
+tooling_status: VALID
+runtime_contract_status: SPEC_RUNTIME_CONTRACT_CONFLICT
+dev006_dependency_status: BLOCKED
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md
+current_plan_file: 02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: 2557ef4f7f2db5ecbbd81ca7ec80e5688366c54f
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
-pr: null
-pr_url: null
-pr_status: null
-pr_base: null
-pr_head: null
-merge_commit: null
-merged_at: null
+latest_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
+plan_commit: 7172e918647c1853d0982ce979b299920d96a0cb
+implementation_commit: 715e985e4e4fee35a3b12f4517af445081b2c5d7
+implementation_commit_message: "feat(tei-probe): deliver CPU 8g runtime validation tooling (MODEL 2)"
+pr: "#14"
+pr_url: https://github.com/xu-jia-ming/memory_system/pull/14
+pr_status: MERGED
+pr_base: main
+pr_head: feat/DEV-003-002-tei-cpu-memory-contract-validation
+merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
+merged_at: "2026-08-09T01:23:22Z"
 status_record_commit_committed: null
 status_record_commit_committed_message: null
 status_record_commit_completed: null
@@ -111,7 +114,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 deferred_business_task: DEV-006
 deferred_business_task_status: PAUSED
 deferred_business_task_note: "PR #13 NOT_READY_FOR_PR_MERGE；TEI CPU 8g warm-up OOM exit=137 阻塞 §8.8；Amendment 002 已单独备份"
-next_action: 人工 Spec-OI 决策（DEV-003-002 runtime probe OOM @ 8g；ORCHESTRATOR_HALTED）
+next_action: Spec-OI planning from clean main（DEV-006 R2–R4 blocked；不得启动 implementation）
 human_plan_approved_at: "2026-08-08 15:18 UTC"
 human_plan_approved_note: "PLAN_APPROVED；独立 Plan Review 通过"
 insertion_override:
@@ -482,9 +485,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **当前**：`current_task` = **DEV-003-002**（`approved`）；`current_branch=main`；`latest_commit=2557ef4`；`current_plan_file=02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md`；`workflow_mode=NORMAL`（explicit）。
-2. **立即下一动作**：**PLAN_LANDING**（`next_action`）；Release Operator `docs(plan)` on `main` → 创建 `feat/DEV-003-002-tei-cpu-memory-contract-validation`。
-3. **DEV-003-002**：闭合 DEV-003 Check 13 / §3.18 #12 TEI CPU 8g 运行时探针；采集 warm-up peak vs steady-state 证据；**不得**改 `mem_limit` 非 8g。
-4. **DEV-006**：`PAUSED`（`deferred_business_task`）；PR #13 `NOT_READY_FOR_PR_MERGE`；恢复条件见 Task Plan §15；**不得**触碰 feat 分支直至 DEV-003-002 completed。
-5. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18（契约 `tests/unit/test_mihomo_network_fallback_contract.py`）。
-6. **权威人类 Playbook**：`03_AI_Prompts/01_项目日常操作手册.md`（DEV-OPS-005 交付；契约 `tests/unit/test_project_operations_playbook_contract.py`）。
+1. **DEV-003-002**：`completed`（PR #14 merged `4d894cc`）；`TOOLING_STATUS=VALID`；`RUNTIME_CONTRACT_STATUS=SPEC_RUNTIME_CONTRACT_CONFLICT`（**非** 8g validated successfully）。
+2. **DEV-006**：`PAUSED`；PR #13 `OPEN` / `NOT_READY_FOR_PR_MERGE`；R1 satisfied；R2–R4 **BLOCKED** pending Spec-OI。
+3. **立即下一动作**：从 clean `main` 启动 **Spec-OI planning**（memory contract characterization）；**不得**在本轮自动实施 Spec-OI 或恢复 DEV-006 §8.8。
+4. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18。
+5. **权威人类 Playbook**：`03_AI_Prompts/01_项目日常操作手册.md`。

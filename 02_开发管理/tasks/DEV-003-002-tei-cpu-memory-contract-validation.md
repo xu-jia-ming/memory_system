@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-003-002
 task_name: TEI CPU Memory Contract Validation（Preflight Hardening）
-status: approved
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -26,7 +26,7 @@ branch: "feat/DEV-003-002-tei-cpu-memory-contract-validation"
 created_at: "2026-08-08 14:52 UTC"
 updated_at: "2026-08-09 01:02 UTC"
 completion_model: MODEL_2
-tooling_status: pending_validation
+tooling_status: VALID
 runtime_contract_status: SPEC_RUNTIME_CONTRACT_CONFLICT
 dev006_dependency_status: BLOCKED
 ```
@@ -550,32 +550,33 @@ DEV-003-002 merge **仅满足** §15 R1。R2–R4 移至 **Spec-OI 后新 contra
 | `tests/unit/test_tei_memory_probe.py` | 创建 |
 | `tests/unit/test_preflight_tei_probe_contract.py` | 创建 |
 | `tests/contract/test_compose_config_contract.py` | mem_limit 8g 断言 |
-| `tests/integration/test_tei_cpu_memory_probe.py` | 创建 |
+| `tests/runtime_contract_gate/test_tei_cpu_runtime_contract_gate.py` | 创建 |
+| `tests/unit/test_tei_probe_mocked_paths.py` | 创建 |
 | `README.md` | TEI 探针文档 |
 
 ### 与原计划的差异
 
-- 正式 runtime validation **失败**（OOM @ 8g）；按约束 **HALT**，未进入 Code Review / Release。
-- `measure_tei_memory.sh` 退出码传播已修正（`exit "${rc}"`）。
+- Amendment 001（MODEL 2）：任务完成语义为 tooling delivered + `RUNTIME_CONTRACT_STATUS=CONFLICT`；非 8g validated successfully。
+- 正式 8g runtime probe OOM @ 138s；tooling 正确报告 conflict。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | `uv run pytest tests/unit/test_tei_memory_probe.py tests/unit/test_preflight_tei_probe_contract.py -q` | **18 passed**（含 contract 子集） |
+| Layer A Unit | `uv run pytest tests/unit/test_tei_memory_probe.py tests/unit/test_tei_probe_mocked_paths.py tests/unit/test_preflight_tei_probe_contract.py -q` | **25 passed** |
 | Contract | `uv run pytest tests/contract/test_compose_config_contract.py -q` | **passed** |
-| Integration | `test_tei_cpu_memory_probe` | **未单独重跑**（与正式 probe 同源；正式 probe 已 FAIL） |
-| Ruff | `uv run ruff check .` | **passed** |
-| Mypy | `uv run mypy src tests scripts` | **passed** |
-| 正式 8g runtime | `measure_tei_memory.sh --timeout=300` | **FAIL** OOM exit 137 |
+| Default integration | `uv run pytest tests/integration -q` | **3 passed, 3 skipped** |
+| Layer B gate | `uv run pytest tests/runtime_contract_gate -m runtime_contract_gate -q` | **2 passed** |
+| Ruff / Mypy | `uv run ruff check .` / `uv run mypy src tests scripts` | **passed** |
 
 ### Review 结果
 
 ```yaml
-p0: null
-p1: null
-review_report: null
-halt_reason: SPEC_RUNTIME_CONTRACT_CONFLICT_CANDIDATE
+p0: 0
+p1: 0
+p2: 6
+p3: 3
+review_report: CODE_REVIEW_APPROVED
 ```
 
 ### Git 记录
@@ -583,13 +584,24 @@ halt_reason: SPEC_RUNTIME_CONTRACT_CONFLICT_CANDIDATE
 ```yaml
 branch: feat/DEV-003-002-tei-cpu-memory-contract-validation
 plan_commit: 7172e918647c1853d0982ce979b299920d96a0cb
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 715e985e4e4fee35a3b12f4517af445081b2c5d7
+implementation_commit_message: "feat(tei-probe): deliver CPU 8g runtime validation tooling (MODEL 2)"
+pr: "#14"
+pr_url: https://github.com/xu-jia-ming/memory_system/pull/14
+merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
+merged_at: "2026-08-09T01:23:22Z"
 ```
 
 ### 最终状态
 
-`ORCHESTRATOR_HALTED` — `SPEC_RUNTIME_CONTRACT_CONFLICT_CANDIDATE`（待人工 Spec-OI）
+```yaml
+task_status: completed
+TOOLING_STATUS: VALID
+RUNTIME_CONTRACT_STATUS: SPEC_RUNTIME_CONTRACT_CONFLICT
+DEV006_DEPENDENCY_STATUS: BLOCKED
+```
+
+**不得**将 `completed` 解释为 8g runtime contract validated successfully。
 
 ## 15. DEV-006 恢复条件
 
