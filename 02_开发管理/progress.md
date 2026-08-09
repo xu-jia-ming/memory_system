@@ -65,7 +65,9 @@ formal_DEV-007_plan_file: 02_开发管理/tasks/DEV-007-siliconflow-embedding-cl
 formal_DEV-007_plan_commit: 69e4dece8e72acf22828ba5b81682b70ecb34e8b
 formal_DEV-007_implementation_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
 formal_DEV-007_status_record_committed: ea58d72690d2e34539cd2eb123e1fedd14c5874f
-formal_DEV-007_status_record_completed: null  # POST_MERGE_CLEANUP 本轮落盘
+formal_DEV-007_status_record_completed: ce461229fd3c997d5ebe237127d849c547462481
+status_record_commit_completed: ce461229fd3c997d5ebe237127d849c547462481
+status_record_commit_completed_message: "docs(status): complete DEV-007 after PR merge"
 formal_DEV-007_pr: "#17"
 formal_DEV-007_pr_state: MERGED
 formal_DEV-007_merge_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
