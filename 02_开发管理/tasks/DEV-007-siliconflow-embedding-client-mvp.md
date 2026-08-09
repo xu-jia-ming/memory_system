@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-007
 task_name: SiliconFlow Embedding Client MVP
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -541,7 +541,7 @@ pr_title: "feat(DEV-007): SiliconFlow embedding client MVP"
 | 2026-08-09 15:30 UTC | Amendment 001 | 输入校验简化：移除字符 guard 合同；API 400 fail-fast；U7 移出必测 | 未实施 | 无 |
 | 2026-08-09 16:00 UTC | Developer in_progress | 创建 embedding 包、SiliconFlow client、factory、settings pivot | 未跑 | 无 |
 | 2026-08-09 16:15 UTC | Developer implemented | 完成 U1–U6、C1–C17；opt-in integration；修订 VALID_ENV | 新测 54 passed | 无 |
-| 2026-08-09 16:20 UTC | Developer tested | ruff/mypy/check_env_example 通过；unit+contract 261 passed（1 项 main 既有 compose wrapper 失败，非本任务回归） | 全绿（除既有） | 未跑真实 SiliconFlow integration |
+| 2026-08-09 16:45 UTC | POST_MERGE_CLEANUP | PR #17 MERGED `b7916ea`；docs(status): complete | — | Phase 0 bootstrap 就绪 |
 
 ---
 
@@ -577,14 +577,14 @@ pr_title: "feat(DEV-007): SiliconFlow embedding client MVP"
 | ruff | `uv run ruff check .` | passed |
 | mypy | `uv run mypy src tests scripts` | 91 files, no issues |
 | env example | `uv run python scripts/check_env_example.py` | passed |
-| integration（opt-in） | 未执行（`RUN_SILICONFLOW_EMBEDDING_INTEGRATION=1` 未设） | skipped by design |
+| integration（opt-in） | 人工 evidence PASS（`PYTEST_EXIT=0`；dim=1024） | PASS |
 
 ### Review 结果
 
 ```yaml
-p0: null
-p1: null
-review_report: null
+p0: 0
+p1: 0
+review_report: CODE_REVIEW_APPROVED
 ```
 
 ### Git 记录
@@ -592,10 +592,13 @@ review_report: null
 ```yaml
 branch: feat/DEV-007-siliconflow-embedding-client-mvp
 plan_commit: 69e4dece8e72acf22828ba5b81682b70ecb34e8b
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
+implementation_commit_message: "feat(embedding): add siliconflow client, settings, and contract tests"
+status_record_commit_committed: ea58d72690d2e34539cd2eb123e1fedd14c5874f
+pr: "#17"
+merge_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
 ```
 
 ### 最终状态
 
-`tested`
+`completed`

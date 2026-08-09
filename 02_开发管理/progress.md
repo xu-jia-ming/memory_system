@@ -7,8 +7,8 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-007
-current_task_status: committed
-current_branch: feat/DEV-007-siliconflow-embedding-client-mvp
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -19,20 +19,23 @@ target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mvp.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
+formal_DEV-007_status: completed
+latest_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
 plan_commit: 69e4dece8e72acf22828ba5b81682b70ecb34e8b
 implementation_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
 implementation_commit_message: "feat(embedding): add siliconflow client, settings, and contract tests"
+status_record_commit_committed: ea58d72690d2e34539cd2eb123e1fedd14c5874f
+status_record_commit_committed_message: "docs(status): record DEV-007 implementation commit and PR"
 pr: "#17"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/17"
-pr_status: OPEN
+pr_status: MERGED
 pr_base: main
 pr_head: feat/DEV-007-siliconflow-embedding-client-mvp
-merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
-merged_at: "2026-08-09T07:02:28Z"
-status_record_commit_committed: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
-status_record_commit_committed_message: "docs(governance): close OI-012 and retarget DEV-007"
-status_record_commit_completed: a338dbc344579326a2edb0090d4562033bbab2b0
+merge_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
+merged_at: "2026-08-09T08:24:13Z"
+real_siliconflow_integration: PASS
+real_siliconflow_integration_model: "BAAI/bge-m3"
+real_siliconflow_integration_dimension: 1024
 memory_limit_decision: 12g
 cpu_tei_profile: "BAAI/bge-m3 float32 ONNX CPU mem_limit=12g"
 historical_8g_runtime_contract_status: SPEC_RUNTIME_CONTRACT_CONFLICT
@@ -57,24 +60,34 @@ formal_OI-012_pr: "#16"
 formal_OI-012_pr_state: MERGED
 formal_OI-012_merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
 formal_OI-012_workflow_mode: NORMAL
+# DEV-007 formal completion evidence
+formal_DEV-007_plan_file: 02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mvp.md
+formal_DEV-007_plan_commit: 69e4dece8e72acf22828ba5b81682b70ecb34e8b
+formal_DEV-007_implementation_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
+formal_DEV-007_status_record_committed: ea58d72690d2e34539cd2eb123e1fedd14c5874f
+formal_DEV-007_status_record_completed: null  # POST_MERGE_CLEANUP 本轮落盘
+formal_DEV-007_pr: "#17"
+formal_DEV-007_pr_state: MERGED
+formal_DEV-007_merge_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
+formal_DEV-007_workflow_mode: NORMAL
+formal_DEV-007_real_integration: PASS
+formal_DEV-007_embedding_model: "BAAI/bge-m3"
+formal_DEV-007_embedding_dimension: 1024
 # Retained DEV-003-002 completion evidence
 formal_DEV-003-002_plan_file: 02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md
 formal_DEV-003-002_plan_commit: 7172e918647c1853d0982ce979b299920d96a0cb
 formal_DEV-003-002_implementation_commit: 715e985e4e4fee35a3b12f4517af445081b2c5d7
 formal_DEV-003-002_pr: "#14"
 formal_DEV-003-002_merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
-previous_task: OI-012
+previous_task: DEV-007
 previous_task_status: completed
-previous_implementation_commit: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
-previous_implementation_commit_message: "docs(governance): close OI-012 and retarget DEV-007"
-previous_implementation_commit_spec: bd7529f455ab0c34dc03a6659e1850a5eab189f7
-previous_status_record_commit_committed: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
-previous_status_record_commit_committed_message: "docs(governance): close OI-012 and retarget DEV-007"
-previous_status_record_commit_completed: a338dbc344579326a2edb0090d4562033bbab2b0
-previous_status_record_commit_completed_message: "docs(status): complete OI-012 after PR merge"
-previous_pr: "#16"
+previous_implementation_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
+previous_implementation_commit_message: "feat(embedding): add siliconflow client, settings, and contract tests"
+previous_status_record_commit_committed: ea58d72690d2e34539cd2eb123e1fedd14c5874f
+previous_status_record_commit_committed_message: "docs(status): record DEV-007 implementation commit and PR"
+previous_pr: "#17"
 previous_pr_status: MERGED
-previous_merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
+previous_merge_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
 # DEV-OPS-005 formal completion evidence
 formal_DEV-OPS-005_status: completed
 formal_DEV-OPS-005_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
@@ -143,12 +156,10 @@ step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
-deferred_business_task: DEV-007
-deferred_business_task_status: committed
-deferred_business_task_note: "DEV-007 IMPLEMENTATION_RELEASE complete; PR #17 OPEN; awaiting human merge"
-next_action: WAITING_FOR_PR_MERGE
-real_siliconflow_integration: PASS
-real_siliconflow_integration_evidence: "human local run PYTEST_EXIT=0; test_real_siliconflow_single_and_batch_embeddings PASSED; dim=1024"
+deferred_business_task: null
+deferred_business_task_status: null
+deferred_business_task_note: null
+next_action: 等待用户显式指定下一任务（Phase 0 bootstrap 就绪；STM-001 / EXT-007 / RET-001 等可规划）
 human_plan_approved_at: "2026-08-09 15:26 UTC"
 human_plan_approved_note: "PLAN_APPROVED DEV-007 Amendment 001; BLOCKER=0; MUST_FIX=0"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
