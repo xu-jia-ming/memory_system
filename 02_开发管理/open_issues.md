@@ -226,6 +226,39 @@ status: resolved
 
 ---
 
+## OI-011
+
+```yaml
+id: OI-011
+spec_sections:
+  - "§3.10.3"
+  - "§3.10.8"
+  - "§3.18 #12"
+impact: "CPU TEI mem_limit=8g 与 BAAI/bge-m3 float32 ONNX CPU warm-up 峰值冲突；须 Spec-OI 选定新 profile-specific 固定 mem_limit 并同步 compose/preflight"
+blocks_current_task: true
+resolve_by_task: OI-011
+status: open
+task_plan: 02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md
+```
+
+**问题描述：** DEV-003-002 正式 runtime probe（§13）在 spec-compliant `mem_limit=8g` 下确认 `OOMKilled=true`、`exit_code=137`、`health_ready=false`、`rss_peak_warmup_bytes` 触顶；分类 A（container cgroup limit 不足；宿主机物理内存充足）。当前规格 §3.10.3 / §3.18 #12 / `compose.embedding.cpu.yaml` 字面 8g 与该 model-runtime profile 不可同时成立。`MEMORY_LIMIT_DECISION` 尚未经有限 characterization matrix 批准。
+
+**是否阻塞当前任务：** **是**（`current_task=OI-011`；同时阻塞 DEV-006 R2–R4 / §8.8）。
+
+**禁止行为：**
+
+- 不得将 `docker update --memory=…` 结果作为正式 evidence 或默认 Contract
+- 不得无限扫描 mem_limit / dtype / model
+- 不得在未完成 OI-011 前恢复 DEV-006 §8.8 或 Merge PR #13
+- 不得把 limit 做成无 Spec-OI 的自由 configurable 旋钮绕过可复现合同
+- 不得修改 GPU `mem_limit`（无本 OI 授权）
+
+**规划态备注（非决议）：** Round 1 Plan Review = `PLAN_REJECTED`（BLOCKER=0；MUST_FIX=4；SHOULD_FIX=4）。Task Plan **Amendment 001** / **Amendment 002** 已吸收全部 MF/SF。Round 3 = `PLAN_APPROVED`（BLOCKER=0；MUST_FIX=0；2026-08-09 人工确认）；Task Plan status=`approved`。Open Issue 本身仍为 `open`，待 OI-011 Phase A–C 完成后追加决议并 `resolved`。**不得**在未完成 characterization / Spec 修订前恢复 DEV-006 §8.8 或 Merge PR #13。
+
+**决议记录：** （空；待 OI-011 Phase A–C 完成后追加）
+
+---
+
 ## 索引
 
 | 问题 ID | 最迟解决任务 | 是否阻塞当前任务 | 状态 |
@@ -240,3 +273,4 @@ status: resolved
 | OI-008 | RET-005 | 否 | open |
 | OI-009 | STM-004 | 否 | open |
 | OI-010 | 已人工决议（uv_build） | 否 | resolved |
+| OI-011 | OI-011 | **是** | open |

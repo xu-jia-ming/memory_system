@@ -52,9 +52,10 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | completed |
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | completed |
 | DEV-003-002 | TEI CPU Memory Contract Validation（Preflight Hardening） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003 | completed |
+| OI-011 | BAAI/bge-m3 CPU TEI Memory Contract（Spec-OI） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003-002 | approved |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | completed |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | completed |
-| DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003, DEV-003-002 | paused |
+| DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003, DEV-003-002, OI-011 | paused |
 
 ### Phase 0 补充：开发工作流自动化（非业务规格）
 
@@ -160,7 +161,20 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：DEV-003-002 `completed`；DEV-006 仅 R1 满足；R2–R4 待 Spec-OI 后新 contract validation。
 - **插入说明**：**人工显式插入**于 DEV-006 实施/PR 恢复之前（TEI CPU OOM 阻塞 §8.8）。
 - **计划文件**：`02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md`
-- **状态备注**：`completed`（plan_commit `7172e91`；implementation_commit `715e985`；PR #14 merged `4d894cc`；`TOOLING_STATUS=VALID`；`RUNTIME_CONTRACT_STATUS=SPEC_RUNTIME_CONTRACT_CONFLICT`；DEV-006 R1 satisfied，R2–R4 BLOCKED pending Spec-OI）。
+- **状态备注**：`completed`（plan_commit `7172e91`；implementation_commit `715e985`；PR #14 merged `4d894cc`；`TOOLING_STATUS=VALID`；`RUNTIME_CONTRACT_STATUS=SPEC_RUNTIME_CONTRACT_CONFLICT`；DEV-006 R1 satisfied，R2–R4 BLOCKED pending **OI-011**）。
+
+#### OI-011 BAAI/bge-m3 CPU TEI Memory Contract（Spec-OI）
+
+- **目标**：对 bge-m3 float32 ONNX CPU TEI 做有限 characterization matrix（cgroup ∈ {8g,10g,12g,16g}；每档 2 clean formal runs；≤8 有效；每档 ≤1 invalid）；按 decision rule + safety margin 选定 **model-runtime-profile-specific 固定** `mem_limit`；同步规格 §3.10.3（含 SF-2）/§3.18 #8 方案 A/#12、`compose.embedding.cpu.yaml`、Check 13a 公式/13b/probe/`start_embedding`/contract；关闭 `SPEC_RUNTIME_CONTRACT_CONFLICT`。
+- **非目标**：改 DEV-006 / Merge PR #13；改 `scripts/compose.sh`；docker update 正式 evidence；无限扫描 / 20g+；改 GPU mem_limit / model / dtype；`src/memory_system/**`。
+- **关键设计决策**：唯一变量 = cgroup limit；正式注入 = characterization overlay + probe 内显式多 `-f`（**含 8g 一律 helper**；**不改 compose.sh**）；env-file 对齐 compose.sh（`.env` 必选；其余仅存在时）；Check 13a = `2+TEI_LIMIT_GIB`；MemAvailable 方案 A（公式权威 `CPU_MIN/REC=12/16+(D-8)`）；Layer B 保留 CONFLICT + 新增 PASS fixture；safety margin = `max(1.5GiB, 15%×limit)`；NON_VIABLE 含 peak≥limit；§3.10.3 fixed contract + `NON_SPEC_COMPLIANT`。
+- **变更文件（预期）**：见 Task Plan §6 白名单（含 `fixtures/**`、`start_embedding.sh` 必改；黑名单含 `compose.sh`）。
+- **测试**：Unit（多档参数/13a/#8 公式）；Contract（新 mem_limit / SF-2）；Layer B 双 fixture；真实 matrix 受监督归档。
+- **验收**：`MEMORY_LIMIT_DECISION` 落盘；规格/compose/preflight 对齐；R2–R4 技术门可满足；OI-011 resolved；**未**触碰 DEV-006 / compose.sh。
+- **插入说明**：**人工显式 NEW_UNPLANNED_FEATURE**；在 DEV-003-002 completed 之后、DEV-006 恢复之前插入。
+- **计划文件**：`02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md`
+- **绑定 OI**：`OI-011`（`02_开发管理/open_issues.md`）
+- **状态备注**：`approved`（Round 3 `PLAN_APPROVED`；BLOCKER=0；MUST_FIX=0；人工确认；Amendment 001/002 approved；PLAN_LANDING 后 Developer 实施；DEV-006 仍 PAUSED）。
 
 #### DEV-003 Docker Compose、Embedding、Preflight
 
@@ -205,7 +219,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：§2.2.6、§3.10.6、§8 行为合同；ruff/mypy/pytest 全绿；供 EXT-007 与 RET-* 复用。
 - **风险**：TEI `/tokenize` 响应格式对齐；Integration 首次模型下载耗时；GPU Cosine 0.999 可能需人工验收；禁止运行时热切换与降阈值。
 - **计划文件**：`02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md`
-- **状态备注**：`paused`（PR #13 OPEN；`NOT_READY_FOR_PR_MERGE`；DEV-003-002 **completed**（R1 satisfied）；R2–R4 **BLOCKED** pending Spec-OI new runtime memory contract；**不得**恢复 §8.8 Integration until Spec-OI）。
+- **状态备注**：`paused`（PR #13 OPEN；`NOT_READY_FOR_PR_MERGE`；DEV-003-002 **completed**（R1 satisfied）；前置新增 **OI-011**；R2–R4 **BLOCKED** pending OI-011 new runtime memory contract；**不得**恢复 §8.8 Integration until OI-011；**不得** Merge PR #13）。
 
 ---
 
@@ -542,5 +556,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | 新增 `DEV-003-002`（`approved`）；DEV-006 改为 `paused` 并增加前置 `DEV-003-002`；**不**修改 DEV-001–005 / DEV-OPS-* 完成状态；**不**改变 STM/EXT/RET 业务范围 |
 | 是否改变技术规格 | **否**（若实测 8g 不足则走 Spec-OI，本 CHANGE 不预批准提限） |
 | 审批 | Planner 初版；独立 Plan Review → `PLAN_APPROVED`（2026-08-08） |
+
+### CHANGE-013
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-09 |
+| 原因 | **人工显式 NEW_UNPLANNED_FEATURE**：基于 DEV-003-002 `RUNTIME_CONTRACT_STATUS=SPEC_RUNTIME_CONTRACT_CONFLICT`，启动 Spec-OI **OI-011**（bge-m3 CPU TEI memory contract characterization + 规格/compose/preflight 修订规划） |
+| 受影响任务 | 新增 `OI-011`（`approved`）；DEV-006 前置增加 `OI-011` 并保持 `paused`；**不**修改 DEV-001–005 / DEV-003-002 / DEV-OPS-* 完成状态；**不**改 DEV-006 计划正文 / feat / PR #13 |
+| 是否改变技术规格 | **是（预期，批准后实施）**：§3.10.3（含 SF-2）/ §3.18 #8 方案 A / §3.18 #12 CPU TEI `mem_limit` 字面及对齐文案；须 `PLAN_APPROVED` + 实施白名单后方可改规格正文 |
+| 审批 | Round 1 `PLAN_REJECTED`（MF-1～MF-4；SF-1～SF-4）；Amendment 001 已修订；Round 3：**Amendment 002**（MF-3 查表 + R2 SF-1～SF-4）；Round 3 → `PLAN_APPROVED`（BLOCKER=0；MUST_FIX=0；2026-08-09 人工确认） |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

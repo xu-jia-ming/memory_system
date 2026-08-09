@@ -6,43 +6,50 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-006
-current_task_status: paused
-current_branch: main
+current_task: OI-011
+current_task_status: approved
+current_branch: feat/OI-011-bge-m3-cpu-tei-memory-contract
 formal_DEV-003-002_status: completed
+formal_OI-011_status: approved
 tooling_status: VALID
 runtime_contract_status: SPEC_RUNTIME_CONTRACT_CONFLICT
 dev006_dependency_status: BLOCKED
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md
+current_plan_file: 02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
-plan_commit: 7172e918647c1853d0982ce979b299920d96a0cb
-implementation_commit: 715e985e4e4fee35a3b12f4517af445081b2c5d7
-implementation_commit_message: "feat(tei-probe): deliver CPU 8g runtime validation tooling (MODEL 2)"
-pr: "#14"
-pr_url: https://github.com/xu-jia-ming/memory_system/pull/14
-pr_status: MERGED
-pr_base: main
-pr_head: feat/DEV-003-002-tei-cpu-memory-contract-validation
-merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
-merged_at: "2026-08-09T01:23:22Z"
+latest_commit: 2356a850dabef83f2b1ecef4d9fa8606ccae3678
+plan_commit: null
+implementation_commit: null
+implementation_commit_message: null
+pr: null
+pr_url: null
+pr_status: null
+pr_base: null
+pr_head: null
+merge_commit: null
+merged_at: null
 status_record_commit_committed: null
 status_record_commit_committed_message: null
 status_record_commit_completed: null
-previous_task: DEV-006
-previous_task_status: paused
-previous_task_completed_at: null
-previous_implementation_commit: null
-previous_implementation_commit_message: null
+# Retained DEV-003-002 completion evidence
+formal_DEV-003-002_plan_file: 02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md
+formal_DEV-003-002_plan_commit: 7172e918647c1853d0982ce979b299920d96a0cb
+formal_DEV-003-002_implementation_commit: 715e985e4e4fee35a3b12f4517af445081b2c5d7
+formal_DEV-003-002_pr: "#14"
+formal_DEV-003-002_merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
+previous_task: DEV-003-002
+previous_task_status: completed
+previous_task_completed_at: "2026-08-09"
+previous_implementation_commit: 715e985e4e4fee35a3b12f4517af445081b2c5d7
+previous_implementation_commit_message: "feat(tei-probe): deliver CPU 8g runtime validation tooling (MODEL 2)"
 previous_status_record_commit_committed: null
 previous_status_record_commit_committed_message: null
-previous_status_record_commit_completed: null
-previous_status_record_commit_completed_message: null
-previous_pr: "#13"
-previous_pr_status: NOT_READY_FOR_PR_MERGE
-previous_merge_commit: null
+previous_status_record_commit_completed: 2356a850dabef83f2b1ecef4d9fa8606ccae3678
+previous_status_record_commit_completed_message: "docs(status): complete DEV-003-002 after PR merge"
+previous_pr: "#14"
+previous_pr_status: MERGED
+previous_merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
 # DEV-OPS-005 formal completion evidence
 formal_DEV-OPS-005_status: completed
 formal_DEV-OPS-005_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
@@ -113,17 +120,19 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: DEV-006
 deferred_business_task_status: PAUSED
-deferred_business_task_note: "PR #13 NOT_READY_FOR_PR_MERGE；TEI CPU 8g warm-up OOM exit=137 阻塞 §8.8；Amendment 002 已单独备份"
-next_action: Spec-OI planning from clean main（DEV-006 R2–R4 blocked；不得启动 implementation）
-human_plan_approved_at: "2026-08-08 15:18 UTC"
-human_plan_approved_note: "PLAN_APPROVED；独立 Plan Review 通过"
+deferred_business_task_note: "PR #13 OPEN / NOT_READY_FOR_PR_MERGE；R1 satisfied（DEV-003-002）；R2–R4 BLOCKED pending OI-011 Spec-OI；不得 Merge PR #13；不得改 DEV-006 feat"
+next_action: Developer 实施 OI-011（Phase A characterization → Spec/compose/preflight）
+human_plan_approved_at: "2026-08-09 02:00 UTC"
+human_plan_approved_note: "PLAN_APPROVED Round 3；BLOCKER=0；MUST_FIX=0；人工确认批准 OI-011"
 insertion_override:
   prior_current_task: DEV-006
   prior_current_task_status: paused
   prior_next_action: "DEV-006 PAUSED；PR #13 NOT_READY_FOR_PR_MERGE"
   override_by: "用户显式 NEW_UNPLANNED_FEATURE：TEI CPU memory contract blocking DEV-006 §8.8"
-  effect: "current_task=DEV-003-002 planned；DEV-006 保持 PAUSED；本 Commit 不得实施、不得 Git 写、不得触碰 DEV-006 feat 分支"
+  effect: "先 DEV-003-002（completed）；现 current_task=OI-011 approved；DEV-006 保持 PAUSED；PLAN_LANDING 后 Developer 实施；不得触碰 DEV-006 feat 或 Merge PR #13"
   overridden_at: "2026-08-08 14:52 UTC"
+  refreshed_at: "2026-08-09 02:00 UTC"
+  refresh_reason: "OI-011 Round 3 PLAN_APPROVED（BLOCKER=0；MUST_FIX=0）；status→approved；Amendment 001/002→approved；next_action→Developer 实施；DEV-006 仍 PAUSED"
   resolved_at: null
 # DEV-006 historical gates (paused; not current_task)
 dev_006_paused:
@@ -134,6 +143,7 @@ dev_006_paused:
   human_plan_approved_note: "PLAN_APPROVED Round 2；MF-001/MF-002；Amendment 001"
   code_review_approved_at: "2026-08-08 10:46 UTC"
   code_review_result: "CODE_REVIEW_APPROVED；P0=0；P1=0；P2=0；P3=3（残余不阻塞）"
+  resume_blocked_on: "OI-011 Spec-OI（见 OI-011 Task Plan §15 R2–R7）"
 # Retained DEV-004 governance deviation evidence (historical)
 governance_deviation:
   id: GD-DEV-004-001
@@ -183,7 +193,7 @@ governance_deviation:
 
 ## 规格阻塞项
 
-**DEV-006 §8.8 Integration（CPU 真实 TEI）**：spec-compliant `mem_limit=8g` 下 TEI warm-up OOMKilled exit=137；由 **DEV-003-002** 闭合 Preflight/诊断缺口后恢复。16g `docker update` 未授权，非 release evidence。
+**DEV-006 §8.8 Integration（CPU 真实 TEI）**：`RUNTIME_CONTRACT_STATUS=SPEC_RUNTIME_CONTRACT_CONFLICT`（8g warm-up OOMKilled exit=137；DEV-003-002 §13）。**OI-011 Spec-OI** 负责有限 characterization 与规格/compose/preflight 合同修订；完成前 DEV-006 保持 PAUSED。16g `docker update` 未授权，非 release evidence。
 
 ## 实施前置条件
 
@@ -194,7 +204,7 @@ governance_deviation:
 
 ## 规格歧义
 
-见 `02_开发管理/open_issues.md`。OI-010 为 `resolved`。未解决项不得自行解释为新 Contract。
+见 `02_开发管理/open_issues.md`。OI-010 为 `resolved`。**OI-011**（bge-m3 CPU TEI memory contract）为 `open` 且阻塞当前任务。未解决项不得自行解释为新 Contract。
 
 DEV-OPS-001 产品/流程未决项见其 Task Plan §12.2（OI-OPS-001–005）；**不**写入规格 Contract。
 
@@ -206,7 +216,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 - DEV-OPS-001：Cursor Commands 为 beta；不得假设未证实的参数替换或自动角色切换。
 - DEV-OPS-002：Subagent 继承父工具；IDE `permissions.json` 无硬 deny；`git push` 前缀与 `--force` 区分未证实为硬保证；结束标记无官方结构化协议。
 - 本开发主机：宿主机侧外部网络经 Mihomo mixed proxy `127.0.0.1:17890`（`mihomo.service`）；`7890` 为既有 SSH/sshd forwarding listener（非空闲、非 Mihomo），AI 不得占用/修改/停止/干扰。Docker daemon 已永久代理至 `17890`。宿主机工具（如 `uv`）经 `17890`，不得误写为经 `7890`。规格 §3.15 / Compose `PROXY__HTTP_URL` 业务字面仍为 `7890`（Contract 不因本机环境改写）。权威 AI 回退策略见 `03_AI_Prompts/00_全局开发规则.md` §18（DEV-OPS-004）。
-- **DEV-003-002**：TEI CPU `mem_limit=8g` warm-up OOM（exit 137）阻塞 DEV-006 §8.8；Preflight Check 13 MemTotal 代理不足；若实测 8g 不可行须 Spec-OI，禁止未授权 16g workaround 入库。
+- **OI-011 / DEV-003-002**：TEI CPU `mem_limit=8g` 与 bge-m3 float32 ONNX CPU warm-up 冲突已证实（分类 A）；Spec-OI matrix {8g,10g,12g,16g} 待批准实施；禁止 docker update 作为正式 evidence；禁止未授权 16g workaround 入库。
 
 ## 双口令门禁
 
@@ -453,6 +463,11 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-08 20:06 UTC | DEV-006 | planned（Planner 初版） | 创建 Task Plan `DEV-006-tei-embedding-client-token-budget.md`；master_plan CHANGE-011；progress 规划态回写 | 未实施、未 Git 写、未建分支；`next_action=计划审查`；不得开始 STM/EXT/RET 实施 |
 | 2026-08-08 20:30 UTC | DEV-006 | planned（Amendment 001） | Round 1 `PLAN_REJECTED`（MF-001/MF-002）；吸收方案 A + api_shell 必改；修订 §3/§5/§6/§7/§10/§14 | 未实施、未 Git 写；status 保持 planned；`next_action=计划审查 Round 2` |
 | 2026-08-08 14:52 UTC | DEV-003-002 | planned（Planner 初版） | 创建 Task Plan `02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md`；master_plan CHANGE-012；progress 插入覆盖 DEV-006 PAUSED | 未实施、未 Git 写、未建分支；`next_action=计划审查`；**不得触碰 DEV-006 feat / PR #13** |
+| 2026-08-09 | DEV-003-002 | completed | PR #14 MERGED `4d894cc`；docs(status) complete `2356a85`；`TOOLING_STATUS=VALID`；`RUNTIME_CONTRACT_STATUS=SPEC_RUNTIME_CONTRACT_CONFLICT` | DEV-006 R1 satisfied；R2–R4 BLOCKED pending Spec-OI |
+| 2026-08-09 01:30 UTC | OI-011 | planned（Planner 初版） | 创建 Task Plan `02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md`；master_plan CHANGE-013；open_issues OI-011；progress 插入覆盖刷新 | 未实施、未 Git 写、未建分支；`next_action=计划审查`；DEV-006 保持 PAUSED；**不得触碰 DEV-006 feat / Merge PR #13** |
+| 2026-08-09 01:45 UTC | OI-011 | planned（Amendment 001） | Round 1 `PLAN_REJECTED`（BLOCKER=0；MUST_FIX=4；SHOULD_FIX=4）；吸收 MF-1～MF-4 + SF-1～SF-4：§5.3 overlay+显式 `-f`、§5.7 Check 13a 公式、§5.8 MemAvailable 方案 A、§5.9 双 fixture、compose.sh 黑名单、start_embedding 必改 | 未实施、未 Git 写；status 保持 planned；`next_action=计划审查 Round 2`；DEV-006 保持 PAUSED |
+| 2026-08-09 01:55 UTC | OI-011 | planned（Amendment 002） | Round 3 remediation：MF-3 查表 `D=12→CPU_MIN=16/REC=20`（公式权威）；吸收 R2 SF-1～SF-4（单一 helper 含 8g、§3.10.3 唯一句式/`NON_SPEC_COMPLIANT`、peak≥limit NON_VIABLE、env-file 对齐 compose.sh） | 未实施、未 Git 写、未 TEI probe；status 保持 planned；`next_action=计划审查 Round 3`；DEV-006 保持 PAUSED |
+| 2026-08-09 02:00 UTC | OI-011 | approved（PLAN_LANDING） | Round 3 `PLAN_APPROVED`（BLOCKER=0；MUST_FIX=0）；人工确认；docs(plan) on main；创建 `feat/OI-011-bge-m3-cpu-tei-memory-contract`；Amendment 001/002→approved | `plan_commit` 禁 self-ref（报告给出真实 SHA）；`next_action`→Developer 实施；DEV-006 仍 PAUSED；**不得触碰 DEV-006 feat / Merge PR #13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -485,8 +500,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **DEV-003-002**：`completed`（PR #14 merged `4d894cc`）；`TOOLING_STATUS=VALID`；`RUNTIME_CONTRACT_STATUS=SPEC_RUNTIME_CONTRACT_CONFLICT`（**非** 8g validated successfully）。
-2. **DEV-006**：`PAUSED`；PR #13 `OPEN` / `NOT_READY_FOR_PR_MERGE`；R1 satisfied；R2–R4 **BLOCKED** pending Spec-OI。
-3. **立即下一动作**：从 clean `main` 启动 **Spec-OI planning**（memory contract characterization）；**不得**在本轮自动实施 Spec-OI 或恢复 DEV-006 §8.8。
+1. **OI-011**：`approved`（Round 3 `PLAN_APPROVED`；人工已确认）；Task Plan `02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md`；分支 `feat/OI-011-bge-m3-cpu-tei-memory-contract`；**立即下一动作 = Developer 实施**（Phase A characterization → Spec/compose/preflight）；DEV-006 仍 PAUSED。
+2. **DEV-003-002**：`completed`（PR #14 / `4d894cc`；complete `2356a85`）；tooling VALID；runtime CONFLICT。
+3. **DEV-006**：`PAUSED`；PR #13 `OPEN` / `NOT_READY_FOR_PR_MERGE`；R1 satisfied；R2–R4 **BLOCKED** pending OI-011；**不得 Merge PR #13**。
 4. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18。
 5. **权威人类 Playbook**：`03_AI_Prompts/01_项目日常操作手册.md`。
