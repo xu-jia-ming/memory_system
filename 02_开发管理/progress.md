@@ -7,7 +7,7 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-007
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/DEV-007-siliconflow-embedding-client-mvp
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -19,16 +19,15 @@ target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mvp.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: 5ec871e
+latest_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
 plan_commit: 69e4dece8e72acf22828ba5b81682b70ecb34e8b
-implementation_commit: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
-implementation_commit_message: "docs(governance): close OI-012 and retarget DEV-007"
-implementation_commit_spec: bd7529f455ab0c34dc03a6659e1850a5eab189f7
-pr: "#16"
-pr_url: "https://github.com/xu-jia-ming/memory_system/pull/16"
-pr_status: MERGED
+implementation_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
+implementation_commit_message: "feat(embedding): add siliconflow client, settings, and contract tests"
+pr: "#17"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/17"
+pr_status: OPEN
 pr_base: main
-pr_head: feat/OI-012-siliconflow-embedding-provider-spec-oi
+pr_head: feat/DEV-007-siliconflow-embedding-client-mvp
 merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
 merged_at: "2026-08-09T07:02:28Z"
 status_record_commit_committed: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
@@ -145,10 +144,11 @@ step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: DEV-007
-deferred_business_task_status: tested
-deferred_business_task_note: "DEV-007 mocked/contract tests green；等待 REAL_SILICONFLOW_INTEGRATION 人工授权"
-next_action: 等待人工授权 REAL_SILICONFLOW_INTEGRATION；随后 Code Review
-real_siliconflow_integration: NOT_AUTHORIZED
+deferred_business_task_status: committed
+deferred_business_task_note: "DEV-007 IMPLEMENTATION_RELEASE complete; PR #17 OPEN; awaiting human merge"
+next_action: WAITING_FOR_PR_MERGE
+real_siliconflow_integration: PASS
+real_siliconflow_integration_evidence: "human local run PYTEST_EXIT=0; test_real_siliconflow_single_and_batch_embeddings PASSED; dim=1024"
 human_plan_approved_at: "2026-08-09 15:26 UTC"
 human_plan_approved_note: "PLAN_APPROVED DEV-007 Amendment 001; BLOCKER=0; MUST_FIX=0"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
