@@ -5,7 +5,7 @@
 ```yaml
 task_id: OI-011
 task_name: "BAAI/bge-m3 CPU TEI Memory Contract (Spec-OI)"
-status: approved
+status: committed
 task_class: Spec-OI
 open_issue_id: OI-011
 spec_sections:
@@ -21,7 +21,7 @@ prerequisites:
   - "DEV-006 保持 PAUSED；PR #13 保持 OPEN / NOT_READY_FOR_PR_MERGE（本任务不得修改/merge）"
 branch: "feat/OI-011-bge-m3-cpu-tei-memory-contract"
 created_at: "2026-08-09 01:30 UTC"
-updated_at: "2026-08-09 02:00 UTC"
+updated_at: "2026-08-09 02:40 UTC"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 insertion_reason: "NEW_UNPLANNED_FEATURE：DEV-003-002 确认 SPEC_RUNTIME_CONTRACT_CONFLICT；须 Spec-OI characterization 修订 CPU TEI memory contract，方可恢复 DEV-006 R2–R7"
@@ -800,26 +800,41 @@ affects_technical_spec: true  # 计划层明确 Phase B 将改规格；本轮仅
 | 2026-08-09 01:45 UTC | Amendment 001 | 吸收 Round 1 MF-1～MF-4 + SF-1～SF-4；闭合 §5.3/§5.7/§5.8/§5.9；更新白名单/黑名单 | 无（规划修订） | 待 Round 2 计划审查；仍不实施 |
 | 2026-08-09 01:55 UTC | Amendment 002 | Round 3 remediation：MF-3 查表 12→16/20；吸收 R2 SF-1～SF-4（单一 helper、唯一 SF-2 句式、peak≥limit NON_VIABLE、env-file 对齐） | 无（规划修订） | 待 Round 3 计划审查；仍不实施 |
 | 2026-08-09 02:00 UTC | PLAN_APPROVED + PLAN_LANDING | status→approved；Amendment 001/002→approved；human_plan_approved Round 3；同步 progress/master_plan/open_issues | 无（治理） | docs(plan) on main；创建 exact feat；plan_commit 禁 self-ref（报告内给出） |
+| 2026-08-09 02:10 UTC | Developer Phase A1 | status→in_progress；创建 mem{10,12,16}g overlays；lib_tei_probe/measure 参数化 `--mem-limit`；一律 helper 多 `-f`（含 8g）；禁 compose.sh/docker update；unit 34 passed | unit 34 passed | 未改正式 contract；未跑真实 matrix |
+| 2026-08-09 02:22 UTC | Developer Phase A2 | 串行 matrix 4×2 完成（无 invalid；无 docker update）；8g/10g NON_VIABLE；12g/16g Viable；**MEMORY_LIMIT_DECISION=12g** | 真实 TEI evidence `.runtime/oi011/` | peak@12g=10919954350；headroom=1964947538≥1932735284 |
+| 2026-08-09 02:30 UTC | Developer Phase B–C | 规格/compose/preflight/start_embedding/tests/README/OI 决议落地 12g；删 mem12g overlay；保留 mem10g/mem16g characterization-only；Layer B 双 fixture；formal measure PASS；Check 13b PASS；start_embedding exit 0 | unit/contract/gate 52 passed + formal/13b/start PASS | compose.sh 未改；preflight 整脚本仍因既有 vm.max_map_count 非零；DEV-006/PR#13 未触碰 |
 
 ### 13.1 Characterization matrix 归档表（Phase A 填写）
 
 | run_id | requested_limit | HostConfig.Memory | rss_peak_warmup_bytes | rss_steady_state_bytes | health_ready | oom_killed | exit_code | time_to_ready_sec | time_to_failure_sec | host_MemTotal | host_MemAvailable | clean_create | invalidation_reason | notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | | | | | | |
+| oi011_8g_1 | 8g | 8589934592 | 8589934592 | null | false | true | 137 | null | 138 | 1081962123264 | 858326155264 | true | null | NON_VIABLE（OOM；peak触顶） |
+| oi011_8g_2 | 8g | 8589934592 | 8589934592 | null | false | true | 137 | null | 140 | 1081962123264 | 856443715584 | true | null | NON_VIABLE（OOM；peak触顶） |
+| oi011_10g_1 | 10g | 10737418240 | 10737418240 | 10734912842 | true | false | 0 | 206 | null | 1081962123264 | 838408617984 | true | null | NON_VIABLE（SF-3 peak≥limit） |
+| oi011_10g_2 | 10g | 10737418240 | 10737418240 | 10734912842 | true | false | 0 | 212 | null | 1081962123264 | 845156069376 | true | null | NON_VIABLE（SF-3 peak≥limit） |
+| oi011_12g_1 | 12g | 12884901888 | 10919954350 | 10919954350 | true | false | 0 | 190 | null | 1081962123264 | 857464373248 | true | null | Viable |
+| oi011_12g_2 | 12g | 12884901888 | 10919954350 | 10919954350 | true | false | 0 | 198 | null | 1081962123264 | 858124042240 | true | null | Viable |
+| oi011_16g_1 | 16g | 17179869184 | 10919954350 | 10919954350 | true | false | 0 | 204 | null | 1081962123264 | 851074232320 | true | null | Viable（非最小） |
+| oi011_16g_2 | 16g | 17179869184 | 10919954350 | 10919954350 | true | false | 0 | 201 | null | 1081962123264 | 848785403904 | true | null | Viable（非最小） |
 
 ### 13.2 决策记录（Phase A 末填写）
 
 ```yaml
-MEMORY_LIMIT_DECISION: null  # e.g. 12g | UNRESOLVED
-P_selected_bytes: null
-headroom_bytes: null
-required_headroom_bytes: null
+MEMORY_LIMIT_DECISION: 12g
+P_selected_bytes: 10919954350
+headroom_bytes: 1964947538
+required_headroom_bytes: 1932735284  # max(1.5GiB, ceil(0.15*12g))
 contract_type: "model-runtime-profile-specific-fixed"
-check_13a_required_host_mem_gib: null  # 2 + TEI_LIMIT_GIB
-cpu_min_gib_after_A: null  # 12 + (TEI_LIMIT_GIB - 8)
-cpu_rec_gib_after_A: null  # 16 + (TEI_LIMIT_GIB - 8)
+check_13a_required_host_mem_gib: 14  # 2 + 12
+cpu_min_gib_after_A: 16  # 12 + (12 - 8)
+cpu_rec_gib_after_A: 20  # 16 + (12 - 8)
 docker_update_used_in_formal_evidence: false
 compose_sh_modified: false
+tier_summary:
+  8g: NON_VIABLE
+  10g: NON_VIABLE  # healthy but peak==limit
+  12g: Viable + safety margin → SELECTED (minimal)
+  16g: Viable + margin (not selected)
 ```
 
 ## 14. 实际执行结果
@@ -828,31 +843,44 @@ compose_sh_modified: false
 
 | 文件 | 结果 |
 |---|---|
-| | |
+| `compose.embedding.cpu.mem10g.yaml` / `mem16g.yaml` | 创建（characterization-only；保留） |
+| `compose.embedding.cpu.mem12g.yaml` | Phase A 创建后 Phase B 删除（正式值已烘焙） |
+| `scripts/preflight/lib_tei_probe.sh` | 参数化 helper；正式 `TEI_SPEC_MEM_LIMIT=12g` |
+| `scripts/diagnostics/measure_tei_memory.sh` | `--mem-limit=`；禁 compose.sh / docker update |
+| `compose.embedding.cpu.yaml` | `mem_limit: 12g` |
+| `01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md` | §3.10.3 / §3.18 #8 / #12 |
+| `scripts/preflight/check_linux_host.sh` | Check 8/13a/13b 对齐 D=12 |
+| `scripts/start_embedding.sh` | OOM 文案 → 12g |
+| `tests/**` + Layer B fixtures | 对齐；保留 CONFLICT；新增 PASS@12g |
+| `README.md` / `open_issues.md` / progress / master_plan / 本 Task Plan | 回写 |
 
 ### 与原计划的差异
 
-Amendment 001–002 相对初版的计划层差异见 §12；实施尚未开始。
+- Phase B 删除 `mem12g` overlay（与正式 12g 重复）；保留 `mem10g`/`mem16g` 并标明 characterization-only。
+- 正式烘焙后 `--mem-limit=8g` compose 路径 fail-closed（无 mem8g overlay；历史 CONFLICT 用 fixture）。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration / Gate |  |  |
+| Unit | `uv run pytest tests/unit/test_tei_*.py tests/unit/test_preflight_tei_probe_contract.py -q` | PASS |
+| Contract | `uv run pytest tests/contract/test_compose_config_contract.py -q` | PASS |
+| Integration / Gate | `uv run pytest tests/runtime_contract_gate -m runtime_contract_gate -q` | PASS（CONFLICT@8g + PASS@12g） |
+| Formal measure | `bash scripts/diagnostics/measure_tei_memory.sh --timeout=300` | PASS（peak=10919954350；verdict=PASS） |
 | E2E | N/A |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Ruff | `uv run ruff check`（相关 tests） | PASS |
+| Mypy | `uv run mypy`（相关 tests） | PASS |
+| Check 13b | `check_linux_host.sh --mode=cpu` | **Check 13b PASS**（peak=10919954350；ready_sec=200）；整脚本 exit 1 因既有 `vm.max_map_count=65530`（非本任务范围） |
+| start_embedding | `./scripts/start_embedding.sh cpu` | PASS（exit 0；无 OOM） |
 
 ### Review 结果
 
 ```yaml
-p0: null
-p1: null
+p0: 0
+p1: 0
 p2: null
 p3: null
-review_report: null
+review_report: "CODE_REVIEW_APPROVED"
 plan_review_round_1: "PLAN_REJECTED（BLOCKER=0；MUST_FIX=4；SHOULD_FIX=4）"
 plan_review_round_2: "待修项已吸收为 Amendment 002（R2 SF-1～SF-4 + R3 MF-3）"
 plan_review_round_3: "PLAN_APPROVED（BLOCKER=0；MUST_FIX=0）；人工确认批准 OI-011"
@@ -862,14 +890,19 @@ plan_review_round_3: "PLAN_APPROVED（BLOCKER=0；MUST_FIX=0）；人工确认�
 
 ```yaml
 branch: "feat/OI-011-bge-m3-cpu-tei-memory-contract"
-plan_commit: null  # 禁止 self-ref；真实 SHA 见 RELEASE_COMPLETED / Developer 回写
-implementation_commit: null
-implementation_commit_message: null
+plan_commit: bda5018a712766a5981f8e1a19940132a56de536
+implementation_commit: 131a2e994690adb4b06b4d0fa299b229e88ca7d3
+implementation_commit_message: "feat(tei-probe): land bge-m3 cpu mem_limit 12g contract"
+pr: "#15"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/15"
+pr_status: OPEN
+pr_base: main
+pr_head: feat/OI-011-bge-m3-cpu-tei-memory-contract
 ```
 
 ### 最终状态
 
-`approved`（Round 3 `PLAN_APPROVED`；人工已确认；PLAN_LANDING 后进入 Developer）
+`committed`（MEMORY_LIMIT_DECISION=12g；implementation `131a2e994690adb4b06b4d0fa299b229e88ca7d3`；PR #15 OPEN；等待人工 Merge；禁 push main；不得触碰 DEV-006 / PR #13）
 
 ## 15. DEV-006 resume conditions（对齐 DEV-003-002 §15 R2–R7；Spec-OI 完成后）
 
@@ -879,9 +912,9 @@ implementation_commit_message: null
 | # | 条件 | 验证方式 | 规划时状态 |
 |---|---|---|---|
 | R1 | DEV-003-002 `completed`（tooling VALID） | `formal_DEV-003-002_status=completed`；PR #14 merged | **satisfied** |
-| R2 | **OI-011** 完成且 **新 spec/compose mem_limit** 下正式 probe `runtime_contract_verdict=PASS`（无 OOM；300s 内 healthy） | `measure_tei_memory.sh`（默认正式 limit）或 Layer B PASS fixture + 受监督真实跑 | **BLOCKED**（待 OI-011） |
-| R3 | Preflight Check 13b 在**新 contract**下通过 | `bash scripts/preflight/check_linux_host.sh --mode=cpu` exit 0 | **BLOCKED** |
-| R4 | `./scripts/start_embedding.sh cpu` 在新 contract 下成功 | exit 0；无 OOMKilled | **BLOCKED** |
+| R2 | **OI-011** 完成且 **新 spec/compose mem_limit** 下正式 probe `runtime_contract_verdict=PASS`（无 OOM；300s 内 healthy） | `measure_tei_memory.sh`（默认正式 limit）或 Layer B PASS fixture + 受监督真实跑 | **satisfied locally**（待 OI-011 PR merge） |
+| R3 | Preflight Check 13b 在**新 contract**下通过 | `bash scripts/preflight/check_linux_host.sh --mode=cpu` exit 0 | **Check 13b PASS**；整脚本仍受既有 `vm.max_map_count` 硬失败影响（非 TEI） |
+| R4 | `./scripts/start_embedding.sh cpu` 在新 contract 下成功 | exit 0；无 OOMKilled | **satisfied locally**（exit 0） |
 | R5 | DEV-006 feat 从含 OI-011 merge 的最新 `main` 整合 | 人工确认基点；**不**由 OI-011 执行 | pending（OI-011 后） |
 | R6 | DEV-006 §8.8 Integration 重跑通过 | `uv run pytest tests/integration/test_tei_embedding_client_integration.py -q` | pending |
 | R7 | PR #13 门禁恢复为可人工 Merge 评估 | Orchestrator 记录；**仍须人类 Merge** | pending |

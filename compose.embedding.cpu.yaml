@@ -27,7 +27,7 @@ services:
       - --json-output
     volumes:
       - embedding-model-cache:/data
-    mem_limit: 8g
+    mem_limit: 12g
     cpus: 4.0
     extra_hosts:
       - "host.docker.internal:host-gateway"

@@ -1,0 +1,5 @@
+# Characterization-only overlay (OI-011). Not loaded by compose.sh.
+# Formal CPU contract is mem_limit: 12g in compose.embedding.cpu.yaml.
+services:
+  embedding-service:
+    mem_limit: 16g

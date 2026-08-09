@@ -235,15 +235,15 @@ spec_sections:
   - "§3.10.8"
   - "§3.18 #12"
 impact: "CPU TEI mem_limit=8g 与 BAAI/bge-m3 float32 ONNX CPU warm-up 峰值冲突；须 Spec-OI 选定新 profile-specific 固定 mem_limit 并同步 compose/preflight"
-blocks_current_task: true
+blocks_current_task: false
 resolve_by_task: OI-011
-status: open
+status: resolved
 task_plan: 02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md
 ```
 
 **问题描述：** DEV-003-002 正式 runtime probe（§13）在 spec-compliant `mem_limit=8g` 下确认 `OOMKilled=true`、`exit_code=137`、`health_ready=false`、`rss_peak_warmup_bytes` 触顶；分类 A（container cgroup limit 不足；宿主机物理内存充足）。当前规格 §3.10.3 / §3.18 #12 / `compose.embedding.cpu.yaml` 字面 8g 与该 model-runtime profile 不可同时成立。`MEMORY_LIMIT_DECISION` 尚未经有限 characterization matrix 批准。
 
-**是否阻塞当前任务：** **是**（`current_task=OI-011`；同时阻塞 DEV-006 R2–R4 / §8.8）。
+**是否阻塞当前任务：** **否**（决议已落地；DEV-006 R2–R4 技术门可评估恢复，但仍须 OI-011 PR merge 后按 §15 执行；**不得**由本任务 Merge PR #13）。
 
 **禁止行为：**
 
@@ -255,7 +255,9 @@ task_plan: 02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md
 
 **规划态备注（非决议）：** Round 1 Plan Review = `PLAN_REJECTED`（BLOCKER=0；MUST_FIX=4；SHOULD_FIX=4）。Task Plan **Amendment 001** / **Amendment 002** 已吸收全部 MF/SF。Round 3 = `PLAN_APPROVED`（BLOCKER=0；MUST_FIX=0；2026-08-09 人工确认）；Task Plan status=`approved`。Open Issue 本身仍为 `open`，待 OI-011 Phase A–C 完成后追加决议并 `resolved`。**不得**在未完成 characterization / Spec 修订前恢复 DEV-006 §8.8 或 Merge PR #13。
 
-**决议记录：** （空；待 OI-011 Phase A–C 完成后追加）
+**决议记录：**
+
+- **2026-08-09**：有限 matrix `{8g,10g,12g,16g}`×2 正式 clean runs（无 docker update；probe 显式多 `-f`）。8g/10g = NON_VIABLE（8g OOM；10g peak≥limit）。12g/16g = Viable + safety margin；按最小充分原则选定 **`MEMORY_LIMIT_DECISION=12g`**（P=10919954350；headroom=1964947538≥required 1932735284）。规格 §3.10.3 改为 profile-specific fixed contract + `NON_SPEC_COMPLIANT`；§3.18 #8 方案 A → CPU_MIN/REC=16/20；Check 13a=14；compose/preflight/start_embedding/contract/Layer B PASS@12g 对齐。`status`→`resolved`。
 
 ---
 
@@ -273,4 +275,4 @@ task_plan: 02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md
 | OI-008 | RET-005 | 否 | open |
 | OI-009 | STM-004 | 否 | open |
 | OI-010 | 已人工决议（uv_build） | 否 | resolved |
-| OI-011 | OI-011 | **是** | open |
+| OI-011 | OI-011 | 否 | resolved |
