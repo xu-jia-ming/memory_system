@@ -33,7 +33,7 @@ memory_retrieval:
   elasticsearch_version: "9.4.4"
   physical_index_name: "memory_retrieval_v1"
   index_name: "memory_retrieval_current"
-  embedding_provider: "local_tei"
+  embedding_provider: "siliconflow"
   embedding_model: "BAAI/bge-m3"
   embedding_model_revision: "57aacf8560157b7c1d4f771ce1a199877aeeec74"
   embedding_dimension: 1024

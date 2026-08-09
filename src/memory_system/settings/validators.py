@@ -220,6 +220,14 @@ def validate_memory_retrieval(settings: object, info: ValidationInfo) -> None:
             "memory_retrieval stage timeouts must be <= retrieval_total_timeout_seconds"
         )
 
+    siliconflow_api_key = info.data.get("siliconflow_api_key")
+    if retrieval.embedding_provider == "siliconflow":
+        if siliconflow_api_key is None or not siliconflow_api_key.get_secret_value().strip():
+            raise ValueError(
+                "SILICONFLOW_API_KEY is required when memory_retrieval.embedding_provider "
+                "is siliconflow"
+            )
+
 
 def validate_shutdown(settings: object, info: ValidationInfo) -> None:
     shutdown = info.data.get("shutdown")
