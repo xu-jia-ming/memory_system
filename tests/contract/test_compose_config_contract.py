@@ -150,6 +150,10 @@ def test_compose_cpu_config_includes_embedding_service() -> None:
     if isinstance(env, list):
         env = {k: v for item in env if "=" in item for k, v in [item.split("=", 1)]}
     assert env.get("AUTO_TRUNCATE") == "false"
+    mem_limit = emb.get("mem_limit")
+    assert mem_limit in ("8g", 8589934592, "8589934592"), (
+        f"CPU embedding mem_limit must remain 8g, got {mem_limit!r}"
+    )
 
 
 def test_compose_gpu_config_has_gpu_reservation_and_batch_tokens() -> None:

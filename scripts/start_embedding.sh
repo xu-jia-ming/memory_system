@@ -91,8 +91,44 @@ cleanup_failed_embedding() {
 
 start_embedding_service() {
   local resolved="$1"
-  if ! "${SCRIPT_DIR}/compose.sh" --embedding="${resolved}" up -d embedding-service; then
+  if ! PROXY__HTTP_URL="" "${SCRIPT_DIR}/compose.sh" --embedding="${resolved}" up -d embedding-service; then
     return 1
+  fi
+  return 0
+}
+
+wait_for_embedding_ready() {
+  local resolved_mode="$1"
+  if [[ "${resolved_mode}" != "cpu" ]]; then
+    return 0
+  fi
+  # shellcheck disable=SC1091
+  source "${SCRIPT_DIR}/preflight/lib_tei_probe.sh"
+  local wait_rc=0
+  if ! tei_probe_wait_for_cpu_ready "${REPO_ROOT}" 300; then
+    wait_rc=$?
+  fi
+  local container_name
+  container_name="$(tei_probe_find_container)"
+  if [[ "${wait_rc}" -eq 2 ]]; then
+    cleanup_failed_embedding "${resolved_mode}"
+    if [[ -n "${container_name}" ]]; then
+      log "Recent embedding-service logs:"
+      docker logs --tail 50 "${container_name}" 2>&1 || true
+    fi
+    fail "embedding-service OOMKilled under mem_limit=8g (exit 137). Run scripts/diagnostics/measure_tei_memory.sh for evidence."
+  fi
+  if [[ "${wait_rc}" -eq 3 ]]; then
+    cleanup_failed_embedding "${resolved_mode}"
+    if [[ -n "${container_name}" ]]; then
+      log "Recent embedding-service logs:"
+      docker logs --tail 50 "${container_name}" 2>&1 || true
+    fi
+    fail "embedding-service not healthy within 300s. Run scripts/diagnostics/measure_tei_memory.sh for evidence."
+  fi
+  if [[ "${wait_rc}" -ne 0 ]]; then
+    cleanup_failed_embedding "${resolved_mode}"
+    fail "embedding-service failed readiness checks (exit ${wait_rc})."
   fi
   return 0
 }
@@ -164,9 +200,11 @@ if [[ "${MODE}" == "auto" && "${RESOLVED_MODE}" == "gpu" ]]; then
     RESOLVED_BUDGET="4096"
     write_runtime_env "${RESOLVED_MODE}" "${RESOLVED_BUDGET}"
     start_embedding_service cpu
+    wait_for_embedding_ready cpu
   fi
 else
   start_embedding_service "${RESOLVED_MODE}"
+  wait_for_embedding_ready "${RESOLVED_MODE}"
 fi
 
 log "embedding-service started with mode=${RESOLVED_MODE}"
