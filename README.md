@@ -127,6 +127,25 @@ cp .env.example .env
 | `compose.sh --embedding=none` | No TEI override |
 | `compose.sh --embedding=current` | Read `.runtime/embedding.env` |
 
+### TEI CPU memory probe (DEV-003-002)
+
+Preflight **Check 13a** only verifies host `MemTotal` (ES 2g + TEI 8g proxy). **Check 13b** runs a real TEI CPU runtime probe under `mem_limit: 8g` (up to ~300s) for `cpu` / `auto→cpu` paths. GPU / `auto→gpu` skip Check 13b.
+
+**Default merge-gate tests** (exclude `tests/runtime_contract_gate/`):
+
+```bash
+uv run pytest tests/unit tests/contract tests/integration -q
+```
+
+**Explicit reference runtime contract gate** (not default CI):
+
+```bash
+uv run pytest tests/runtime_contract_gate -m runtime_contract_gate -q
+bash scripts/diagnostics/measure_tei_memory.sh --timeout=300
+```
+
+Report fields include `runtime_contract_verdict`, model/revision/dtype, `image_digest`, warm-up peak RSS, steady-state RSS (only after healthy), `time_to_ready_sec` / `time_to_failure_sec`, `health_ready`, `oom_killed`, and `exit_code`. OOM or incomplete evidence is fail-closed on operational commands (no skip/degraded pass on CPU path).
+
 ### Rollback (DEV-003 Task Plan §13)
 
 1. `./scripts/compose.sh --embedding=current down` (no `-v`)

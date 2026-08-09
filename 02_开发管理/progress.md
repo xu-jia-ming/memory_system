@@ -7,8 +7,9 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-003-002
-current_task_status: approved
-current_branch: main
+current_task_status: halted_spec_oi_candidate
+current_branch: feat/DEV-003-002-tei-cpu-memory-contract-validation
+formal_DEV-003-002_status: halted_spec_oi_candidate
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md
 workflow_mode_for_this_task: NORMAL
@@ -110,7 +111,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 deferred_business_task: DEV-006
 deferred_business_task_status: PAUSED
 deferred_business_task_note: "PR #13 NOT_READY_FOR_PR_MERGE；TEI CPU 8g warm-up OOM exit=137 阻塞 §8.8；Amendment 002 已单独备份"
-next_action: PLAN_LANDING（DEV-003-002 PLAN_APPROVED）
+next_action: 人工 Spec-OI 决策（DEV-003-002 runtime probe OOM @ 8g；ORCHESTRATOR_HALTED）
 human_plan_approved_at: "2026-08-08 15:18 UTC"
 human_plan_approved_note: "PLAN_APPROVED；独立 Plan Review 通过"
 insertion_override:

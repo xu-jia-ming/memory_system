@@ -62,6 +62,10 @@ asyncio_default_fixture_loop_scope = "function"
 testpaths = ["tests"]
 pythonpath = ["src", "."]
 addopts = ["--strict-markers"]
+markers = [
+    "runtime_contract_gate: real TEI CPU 8g reference contract gate (not default CI)",
+    "integration: integration tests requiring infrastructure",
+]
 
 [tool.coverage.run]
 source = [

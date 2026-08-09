@@ -264,12 +264,57 @@ case "${MODE}" in
     ;;
 esac
 
-# --- Check 13: Host memory for container mem_limit (ES 2g, TEI 8g) ---
+# --- Check 13a: Host memory for container mem_limit (ES 2g, TEI 8g) ---
 host_mem_total_gib="$(awk '/^MemTotal:/ { printf "%.0f", $2 / 1024 / 1024 }' /proc/meminfo)"
 if [[ "${host_mem_total_gib}" -ge 10 ]]; then
-  pass "host MemTotal ${host_mem_total_gib} GiB supports ES 2g + TEI 8g mem_limit"
+  pass "Check 13a: host MemTotal ${host_mem_total_gib} GiB supports ES 2g + TEI 8g mem_limit"
 else
-  fail "host MemTotal ${host_mem_total_gib} GiB insufficient for ES 2g + TEI 8g mem_limit"
+  fail "Check 13a: host MemTotal ${host_mem_total_gib} GiB insufficient for ES 2g + TEI 8g mem_limit"
+fi
+
+# --- Check 13b: TEI CPU runtime probe (§3.18 #12 — real 8g cgroup validation) ---
+# Scope: TEI CPU 8g only. ES 2g remains MemTotal proxy. GPU/auto→gpu deferred (SF-004).
+# Lightweight Check 13a vs runtime probe: this step may take up to ~300s.
+# shellcheck disable=SC1091
+source "${SCRIPT_DIR}/lib_tei_probe.sh"
+
+if [[ "${PREFLIGHT_SKIP_TEI_PROBE:-}" == "1" ]]; then
+  skip "Check 13b: TEI CPU runtime probe (PREFLIGHT_SKIP_TEI_PROBE=1)"
+elif [[ "${RESOLVED_MODE:-}" == "gpu" ]]; then
+  skip "Check 13b: TEI CPU runtime probe deferred for gpu mode (SF-004)"
+elif [[ "${MODE}" == "gpu" ]]; then
+  skip "Check 13b: TEI CPU runtime probe deferred for --mode=gpu (SF-004)"
+elif [[ "${MODE}" == "auto" && "${RESOLVED_MODE:-}" == "gpu" ]]; then
+  skip "Check 13b: TEI CPU runtime probe deferred for auto→gpu (SF-004)"
+else
+  probe_report="${REPO_ROOT}/.runtime/tei_preflight_probe_report.json"
+  probe_rc=0
+  if ! tei_probe_run_cpu_validation "${REPO_ROOT}" "${probe_report}"; then
+    probe_rc=$?
+  fi
+  if [[ -f "${probe_report}" ]]; then
+    probe_summary="$(python3 - "${probe_report}" <<'PY'
+import json, sys
+with open(sys.argv[1], encoding="utf-8") as f:
+    r = json.load(f)
+print(
+    f"peak={r['rss_peak_warmup_bytes']} steady={r.get('rss_steady_state_bytes')} "
+    f"health={r['health_ready']} oom={r['oom_killed']} ready_sec={r['time_to_ready_sec']}"
+)
+PY
+)"
+  else
+    probe_summary="probe evidence incomplete"
+  fi
+  if [[ "${probe_rc}" -eq 0 ]]; then
+    pass "Check 13b: TEI CPU warm-up completed within 8g mem_limit (${probe_summary})"
+  elif [[ "${probe_rc}" -eq 2 ]]; then
+    fail "Check 13b: TEI CPU OOMKilled under mem_limit=8g (${probe_summary})"
+  elif [[ "${probe_rc}" -eq 3 ]]; then
+    fail "Check 13b: TEI CPU not healthy within 300s (${probe_summary})"
+  else
+    fail "Check 13b: TEI CPU runtime probe failed (${probe_summary})"
+  fi
 fi
 
 # --- Check 14: versions.lock.env TEI digests ---
