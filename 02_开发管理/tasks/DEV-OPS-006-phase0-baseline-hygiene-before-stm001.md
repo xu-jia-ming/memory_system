@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-006
 task_name: Phase 0 Baseline Hygiene Before STM-001
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -18,10 +18,10 @@ prerequisites:
   - "本任务为用户显式 NEW_UNPLANNED_FEATURE：进入 STM-001 前最小 hygiene；不得实现 STM-001"
 branch: "feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001"
 created_at: "2026-08-09 10:42 UTC"
-updated_at: "2026-08-09 12:40 UTC"
+updated_at: "2026-08-09 12:50 UTC"
 approval_gates:
   planning_docs: "PLAN_APPROVED（Plan Reviewer BLOCKER=0 MUST_FIX=0；人工确认 PLAN_APPROVED）；PLAN_LANDING 完成"
-  implementation_plan: "status=committed；implementation_commit=b9f049af59d0e904ebee0ce09df13cc383a91b52；PR #18 OPEN；WAITING_FOR_PR_MERGE"
+  implementation_plan: "status=completed；implementation_commit=b9f049af59d0e904ebee0ce09df13cc383a91b52；record=6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f；PR #18 MERGED（merge=3e727b3dc1a168863d7fa6e8d52a175d36de4644）；POST_MERGE_CLEANUP"
 insertion_override:
   prior_current_task: "DEV-007"
   prior_current_task_status: "completed"
@@ -249,8 +249,8 @@ uv run mypy src tests scripts
 - [x] `uv run mypy src tests scripts` 通过
 - [x] `progress.md`：`latest_commit`=真实 feat HEAD；Phase 0 completed / Phase 1 ready 叙事；unit/contract/ruff/mypy 为经命令验证的结果；无伪造
 - [x] 未触碰 forbidden paths；未操作 DEV-006/PR#13；未实现 STM-001；未启 TEI；未调真实 SiliconFlow
-- [ ] Review 无 P0/P1
-- [ ] 完成后 `next_action` = STM-001 可规划（不得在本任务实施 STM-001）
+- [x] Review 无 P0/P1
+- [x] 完成后 `next_action` = STM-001 可规划（不得在本任务实施 STM-001）
 
 ---
 
@@ -318,7 +318,7 @@ planned
 → completed (POST_MERGE_CLEANUP)
 ```
 
-`current_task_status` = **tested**（Developer 实施 + 验证完成）；`next_action` = **代码审查**。
+`current_task_status` = **completed**（POST_MERGE_CLEANUP）；`next_action` = **STM-001 可规划（READY_FOR_PLANNING；须另一次显式编排；不得启动 STM-001 实施）**。
 
 ---
 
@@ -347,6 +347,7 @@ planned
 | 2026-08-09 12:31 UTC | Developer in_progress | status→in_progress；`test_compose_wrapper_contract.py` exact-path allowlist + purpose 注释 + `test_oi011_tei_probe_allowlist_paths_exist_and_marked` | pending | 未改脚本；未启 TEI；未 Git 写 |
 | 2026-08-09 12:33 UTC | Developer tested | status in_progress→implemented→tested；progress/master_plan hygiene 回写 | unit **216 passed**；contract **47 passed**；ruff PASS；mypy PASS | 相对规划 215：+1 SHOULD_FIX 存在性断言；未 commit |
 | 2026-08-09 12:40 UTC | IMPLEMENTATION_RELEASE | implementation commit + PR #18 OPEN；docs(status): record on feat | n/a（沿用 tested 门禁） | implementation_commit=b9f049af59d0e904ebee0ce09df13cc383a91b52；WAITING_FOR_PR_MERGE；禁 push main / 禁 gh pr merge |
+| 2026-08-09 12:44 UTC | POST_MERGE_CLEANUP | PR #18 MERGED；docs(status): complete on main；删 exact feat | 沿用 verified：unit 216 / contract 47 / ruff PASS / mypy PASS | merge=3e727b3dc1a168863d7fa6e8d52a175d36de4644；record=6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f；STM-001 READY_FOR_PLANNING；不得启动 STM-001 实施 |
 
 ---
 
@@ -398,12 +399,15 @@ implementation_commit: b9f049af59d0e904ebee0ce09df13cc383a91b52
 implementation_commit_message: "test(compose): allowlist OI-011 tei probe bare compose paths"
 pr_number: 18
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/18"
-pr_state: OPEN
+pr_state: MERGED
 pr_base: main
 pr_head: feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001
-status_record_committed: null  # pending this docs(status): record commit SHA
+merge_commit: 3e727b3dc1a168863d7fa6e8d52a175d36de4644
+merged_at: "2026-08-09T12:44:26Z"
+status_record_committed: 6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f
+status_record_completed: null  # pending this docs(status): complete commit SHA
 ```
 
 ### 最终状态
 
-`committed`（PR #18 OPEN；WAITING_FOR_PR_MERGE；不得自动 merge；不得实现 STM-001）
+`completed`（PR #18 MERGED；baseline GREEN；Phase 0 completed；Phase 1 / STM-001 READY_FOR_PLANNING；next_action=STM-001 可规划；不得启动 STM-001 实施）

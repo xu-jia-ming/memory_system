@@ -69,7 +69,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-003 | NORMAL / STRICT 工作流模式；减少常规人工机械门禁 | 非业务：扩展 DEV-OPS-002；保留六 Subagent 与唯一 Git 写角色 | DEV-OPS-002 | completed |
 | DEV-OPS-004 | 本机 Mihomo 网络回退策略文档（AI 工作流） | 非业务：全局开发规则 + 契约测试；不改规格/业务代理 Contract | DEV-OPS-003 | completed |
 | DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 非业务：人类日常操作手册 + 契约测试；不改 Orchestrator/mode/业务 | DEV-OPS-003, DEV-OPS-004, DEV-004 | completed |
-| DEV-OPS-006 | Phase 0 Baseline Hygiene Before STM-001 | 非业务：unit compose-wrapper allowlist + progress DOC_CODE_DRIFT hygiene | DEV-007, OI-011 | committed |
+| DEV-OPS-006 | Phase 0 Baseline Hygiene Before STM-001 | 非业务：unit compose-wrapper allowlist + progress DOC_CODE_DRIFT hygiene | DEV-007, OI-011 | completed |
 
 #### DEV-OPS-006 Phase 0 Baseline Hygiene Before STM-001
 
@@ -79,7 +79,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **关键修复**：仅在 `tests/unit/test_compose_wrapper_contract.py` 对 `scripts/preflight/lib_tei_probe.sh` 与 `scripts/diagnostics/measure_tei_memory.sh` 做 exact-path/exact-purpose allowlist；禁止删测/skip/全局放宽。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md`
 - **插入说明**：用户显式 NEW_UNPLANNED_FEATURE；`workflow_mode=NORMAL`（explicit）。
-- **状态备注**：`committed`（implementation_commit `b9f049af59d0e904ebee0ce09df13cc383a91b52`；PR #18 OPEN https://github.com/xu-jia-ming/memory_system/pull/18；plan_commit `09b045be1429716eab184e4565beb30cf2856b28`；feat `feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001`）；WAITING_FOR_PR_MERGE；不得自动 merge；不得实现 STM-001。
+- **状态备注**：`completed`（implementation_commit `b9f049af59d0e904ebee0ce09df13cc383a91b52`；record `6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f`；PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`；plan_commit `09b045be1429716eab184e4565beb30cf2856b28`；baseline GREEN；Phase 0 completed；STM-001 READY_FOR_PLANNING；unit 216 / contract 47 / ruff PASS / mypy PASS；`workflow_mode=NORMAL`；**不得启动 STM-001 实施**）。
 
 #### DEV-OPS-005 Human Prompt Playbook and Recovery Operations Manual
 
@@ -654,8 +654,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|
 | 日期 | 2026-08-09 |
 | 原因 | 用户显式 NEW_UNPLANNED_FEATURE：**DEV-OPS-006** Phase 0 Baseline Hygiene Before STM-001（unit compose-wrapper allowlist + progress DOC_CODE_DRIFT）；根因分类 **A** |
-| 受影响任务 | 新增 `DEV-OPS-006`（现 `committed`；PR #18 OPEN）；**不**实现 STM-001；**不**触碰 DEV-006/PR #13；**不**改 TEI 12g / SiliconFlow / compose*.yaml |
+| 受影响任务 | 新增 `DEV-OPS-006`（现 `completed`；PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）；**不**实现 STM-001；**不**触碰 DEV-006/PR #13；**不**改 TEI 12g / SiliconFlow / compose*.yaml |
 | 是否改变技术规格 | **否** |
-| 审批 | Plan Reviewer PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；PLAN_LANDING 完成；CODE_REVIEW_APPROVED（P0=0 P1=0）；IMPLEMENTATION_RELEASE 完成；WAITING_FOR_PR_MERGE |
+| 审批 | Plan Reviewer PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；PLAN_LANDING 完成；CODE_REVIEW_APPROVED（P0=0 P1=0）；IMPLEMENTATION_RELEASE 完成；PR #18 MERGED；POST_MERGE_CLEANUP 本轮 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
