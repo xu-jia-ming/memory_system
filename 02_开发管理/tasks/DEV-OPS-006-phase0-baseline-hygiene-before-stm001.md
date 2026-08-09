@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-006
 task_name: Phase 0 Baseline Hygiene Before STM-001
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -18,10 +18,10 @@ prerequisites:
   - "本任务为用户显式 NEW_UNPLANNED_FEATURE：进入 STM-001 前最小 hygiene；不得实现 STM-001"
 branch: "feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001"
 created_at: "2026-08-09 10:42 UTC"
-updated_at: "2026-08-09 12:33 UTC"
+updated_at: "2026-08-09 12:40 UTC"
 approval_gates:
   planning_docs: "PLAN_APPROVED（Plan Reviewer BLOCKER=0 MUST_FIX=0；人工确认 PLAN_APPROVED）；PLAN_LANDING 完成"
-  implementation_plan: "status=tested；unit/contract/ruff/mypy 全绿；等待独立 Code Review"
+  implementation_plan: "status=committed；implementation_commit=b9f049af59d0e904ebee0ce09df13cc383a91b52；PR #18 OPEN；WAITING_FOR_PR_MERGE"
 insertion_override:
   prior_current_task: "DEV-007"
   prior_current_task_status: "completed"
@@ -346,6 +346,7 @@ planned
 | 2026-08-09 12:29 UTC | PLAN_LANDING | docs(plan) on main；创建 feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001 | n/a | plan_commit=09b045be1429716eab184e4565beb30cf2856b28；等待 Developer；不得实现 STM-001 |
 | 2026-08-09 12:31 UTC | Developer in_progress | status→in_progress；`test_compose_wrapper_contract.py` exact-path allowlist + purpose 注释 + `test_oi011_tei_probe_allowlist_paths_exist_and_marked` | pending | 未改脚本；未启 TEI；未 Git 写 |
 | 2026-08-09 12:33 UTC | Developer tested | status in_progress→implemented→tested；progress/master_plan hygiene 回写 | unit **216 passed**；contract **47 passed**；ruff PASS；mypy PASS | 相对规划 215：+1 SHOULD_FIX 存在性断言；未 commit |
+| 2026-08-09 12:40 UTC | IMPLEMENTATION_RELEASE | implementation commit + PR #18 OPEN；docs(status): record on feat | n/a（沿用 tested 门禁） | implementation_commit=b9f049af59d0e904ebee0ce09df13cc383a91b52；WAITING_FOR_PR_MERGE；禁 push main / 禁 gh pr merge |
 
 ---
 
@@ -379,11 +380,11 @@ planned
 ### Review 结果
 
 ```yaml
-p0: null
-p1: null
-p2: null
-p3: null
-review_report: null
+p0: 0
+p1: 0
+p2: 0
+p3: 0
+review_report: "CODE_REVIEW_APPROVED"
 ```
 
 ### Git 记录
@@ -393,10 +394,16 @@ branch: feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001
 plan_commit: 09b045be1429716eab184e4565beb30cf2856b28
 feat_head_at_tested: af102edef975a04298ad155fc22f60d91bb19838
 main_tip_at_tested: 09b045be1429716eab184e4565beb30cf2856b28
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: b9f049af59d0e904ebee0ce09df13cc383a91b52
+implementation_commit_message: "test(compose): allowlist OI-011 tei probe bare compose paths"
+pr_number: 18
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/18"
+pr_state: OPEN
+pr_base: main
+pr_head: feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001
+status_record_committed: null  # pending this docs(status): record commit SHA
 ```
 
 ### 最终状态
 
-`tested`（等待独立 Code Review；未 Git 写；不得实现 STM-001）
+`committed`（PR #18 OPEN；WAITING_FOR_PR_MERGE；不得自动 merge；不得实现 STM-001）
