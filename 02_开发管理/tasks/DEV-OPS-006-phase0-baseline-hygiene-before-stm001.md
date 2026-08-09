@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-006
 task_name: Phase 0 Baseline Hygiene Before STM-001
-status: approved
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -18,10 +18,10 @@ prerequisites:
   - "本任务为用户显式 NEW_UNPLANNED_FEATURE：进入 STM-001 前最小 hygiene；不得实现 STM-001"
 branch: "feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001"
 created_at: "2026-08-09 10:42 UTC"
-updated_at: "2026-08-09 12:29 UTC"
+updated_at: "2026-08-09 12:33 UTC"
 approval_gates:
   planning_docs: "PLAN_APPROVED（Plan Reviewer BLOCKER=0 MUST_FIX=0；人工确认 PLAN_APPROVED）；PLAN_LANDING 完成"
-  implementation_plan: "status=approved；PLAN_LANDING 完成；等待 Developer 在 feat 实施"
+  implementation_plan: "status=tested；unit/contract/ruff/mypy 全绿；等待独立 Code Review"
 insertion_override:
   prior_current_task: "DEV-007"
   prior_current_task_status: "completed"
@@ -242,13 +242,13 @@ uv run mypy src tests scripts
 
 ## 9. 验收标准
 
-- [ ] Root cause 按 **A** 落地：exact-path allowlist（两路径）+ purpose 注释；未删测试、未全局放宽、未改脚本语义
-- [ ] `uv run pytest tests/unit -q` 全绿（预期 215 passed）
-- [ ] `uv run pytest tests/contract -q` 全绿（预期 47 passed）
-- [ ] `uv run ruff check .` 通过
-- [ ] `uv run mypy src tests scripts` 通过
-- [ ] `progress.md`：`latest_commit`=真实 HEAD；Phase 0 completed / Phase 1 ready 叙事；unit/contract/ruff/mypy 为经命令验证的结果；无伪造
-- [ ] 未触碰 forbidden paths；未操作 DEV-006/PR#13；未实现 STM-001；未启 TEI；未调真实 SiliconFlow
+- [x] Root cause 按 **A** 落地：exact-path allowlist（两路径）+ purpose 注释；未删测试、未全局放宽、未改脚本语义
+- [x] `uv run pytest tests/unit -q` 全绿（实跑 **216 passed**；含 SHOULD_FIX 新增 1 个 allowlist 存在性/标记断言；相对规划 215 collect +1）
+- [x] `uv run pytest tests/contract -q` 全绿（实跑 **47 passed**）
+- [x] `uv run ruff check .` 通过
+- [x] `uv run mypy src tests scripts` 通过
+- [x] `progress.md`：`latest_commit`=真实 feat HEAD；Phase 0 completed / Phase 1 ready 叙事；unit/contract/ruff/mypy 为经命令验证的结果；无伪造
+- [x] 未触碰 forbidden paths；未操作 DEV-006/PR#13；未实现 STM-001；未启 TEI；未调真实 SiliconFlow
 - [ ] Review 无 P0/P1
 - [ ] 完成后 `next_action` = STM-001 可规划（不得在本任务实施 STM-001）
 
@@ -318,7 +318,7 @@ planned
 → completed (POST_MERGE_CLEANUP)
 ```
 
-`current_task_status` = **approved**（Plan Reviewer + 人工 `PLAN_APPROVED`；PLAN_LANDING 完成）；`next_action` = **Developer 实施**。
+`current_task_status` = **tested**（Developer 实施 + 验证完成）；`next_action` = **代码审查**。
 
 ---
 
@@ -344,6 +344,8 @@ planned
 | 2026-08-09 10:42 UTC | Planner 初版 | 创建本 Task Plan；progress/master_plan 规划态登记 | 只读：unit 失败用例确认；contract 47 passed；215 unit collected | 分类 A；未实施；未 Git 写；未启 TEI |
 | 2026-08-09 12:25 UTC | Plan Review + 人工 PLAN_APPROVED | status→approved；吸收 SHOULD_FIX（存在性断言 + drift 基于实测） | n/a | BLOCKER=0 MUST_FIX=0；待 PLAN_LANDING |
 | 2026-08-09 12:29 UTC | PLAN_LANDING | docs(plan) on main；创建 feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001 | n/a | plan_commit=09b045be1429716eab184e4565beb30cf2856b28；等待 Developer；不得实现 STM-001 |
+| 2026-08-09 12:31 UTC | Developer in_progress | status→in_progress；`test_compose_wrapper_contract.py` exact-path allowlist + purpose 注释 + `test_oi011_tei_probe_allowlist_paths_exist_and_marked` | pending | 未改脚本；未启 TEI；未 Git 写 |
+| 2026-08-09 12:33 UTC | Developer tested | status in_progress→implemented→tested；progress/master_plan hygiene 回写 | unit **216 passed**；contract **47 passed**；ruff PASS；mypy PASS | 相对规划 215：+1 SHOULD_FIX 存在性断言；未 commit |
 
 ---
 
@@ -353,22 +355,26 @@ planned
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `tests/unit/test_compose_wrapper_contract.py` | 修改：OI-011 两路径 exact allowlist + purpose 注释；新增 allowlist 存在性/标记断言 |
+| `02_开发管理/progress.md` | 修改：status/phase/测试表/下一任务同步真实验证结果 |
+| `02_开发管理/master_plan.md` | 修改：DEV-OPS-006 → tested；CHANGE-019 状态回写 |
+| `02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md` | 修改：执行记录 / 状态机 / 测试结果 |
 
 ### 与原计划的差异
 
-暂无。
+- Unit 实跑 **216 passed**（规划预期 215）：因吸收 SHOULD_FIX 新增 `test_oi011_tei_probe_allowlist_paths_exist_and_marked`（+1）；无 failure。
+- 未改脚本 / compose / src；分类 A 保持。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | `uv run pytest tests/unit -q` | pending implementation |
-| Contract | `uv run pytest tests/contract -q` | 规划只读：**47 passed**（实施后须复跑） |
+| Unit | `uv run pytest tests/unit -q` | **216 passed** in 4.06s；exit=0（2026-08-09 12:32 UTC） |
+| Contract | `uv run pytest tests/contract -q` | **47 passed**, 1 warning in 4.19s；exit=0 |
 | Integration | n/a | 本任务不跑 |
 | E2E | n/a | 本任务不跑 |
-| Ruff | `uv run ruff check .` | pending implementation |
-| Mypy | `uv run mypy src tests scripts` | pending implementation |
+| Ruff | `uv run ruff check .` | All checks passed；exit=0 |
+| Mypy | `uv run mypy src tests scripts` | Success: no issues found in 91 source files；exit=0 |
 
 ### Review 结果
 
@@ -385,10 +391,12 @@ review_report: null
 ```yaml
 branch: feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001
 plan_commit: 09b045be1429716eab184e4565beb30cf2856b28
+feat_head_at_tested: af102edef975a04298ad155fc22f60d91bb19838
+main_tip_at_tested: 09b045be1429716eab184e4565beb30cf2856b28
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`approved`（PLAN_LANDING 完成；等待 Developer 实施）
+`tested`（等待独立 Code Review；未 Git 写；不得实现 STM-001）

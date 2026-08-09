@@ -25,7 +25,17 @@ ALLOWED_BARE_COMPOSE_FILES = {
     REPO_ROOT / "scripts" / "compose.sh",
     # This file intentionally references the banned pattern for static scanning.
     Path(__file__).resolve(),
+    # OI-011 characterization probe helper (DEV-OPS-006 / OI-011 §5.3):
+    # exact-path exception — multi -f mem overlays must never go through compose.sh.
+    REPO_ROOT / "scripts" / "preflight" / "lib_tei_probe.sh",
+    # OI-011 characterization probe driver (DEV-OPS-006 / OI-011 §5.3):
+    # exact-path exception — usage documents lib_tei_probe.sh explicit docker compose -f chain.
+    REPO_ROOT / "scripts" / "diagnostics" / "measure_tei_memory.sh",
 }
+
+# Exact allowlisted OI-011 characterization paths (existence / marker invariant).
+OI011_TEI_PROBE_LIB = REPO_ROOT / "scripts" / "preflight" / "lib_tei_probe.sh"
+OI011_TEI_PROBE_MEASURE = REPO_ROOT / "scripts" / "diagnostics" / "measure_tei_memory.sh"
 
 
 def _iter_scan_files() -> list[Path]:
@@ -54,6 +64,19 @@ def test_no_bare_docker_compose_outside_wrapper() -> None:
         if BARE_DOCKER_COMPOSE_RE.search(text):
             violations.append(str(path.relative_to(REPO_ROOT)))
     assert not violations, f"bare 'docker compose' found outside compose.sh: {violations}"
+
+
+def test_oi011_tei_probe_allowlist_paths_exist_and_marked() -> None:
+    """Allowlist must stay tied to real OI-011 characterization helpers (anti-rot)."""
+    assert OI011_TEI_PROBE_LIB.is_file(), "lib_tei_probe.sh must exist for allowlist"
+    assert OI011_TEI_PROBE_MEASURE.is_file(), "measure_tei_memory.sh must exist for allowlist"
+    probe_text = OI011_TEI_PROBE_LIB.read_text(encoding="utf-8")
+    assert "tei_probe_compose_cpu" in probe_text
+    assert "tei_probe_build_compose_args" in probe_text
+    assert OI011_TEI_PROBE_LIB.resolve() in {p.resolve() for p in ALLOWED_BARE_COMPOSE_FILES}
+    assert OI011_TEI_PROBE_MEASURE.resolve() in {
+        p.resolve() for p in ALLOWED_BARE_COMPOSE_FILES
+    }
 
 
 def test_compose_sh_exists_and_executable() -> None:
