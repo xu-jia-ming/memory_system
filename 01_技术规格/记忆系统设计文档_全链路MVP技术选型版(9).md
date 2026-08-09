@@ -2791,7 +2791,7 @@ class EmbeddingClient(Protocol):
 }
 ```
 
-以上输出为应用内部 Contract，向量示例仅展示前三个元素；真实向量必须包含且只能包含 `1024` 个浮点数。MVP 不额外开发自定义 Embedding HTTP Wrapper。具体 `TEIEmbeddingClient` 使用 TEI 原生接口：
+以上输出为应用内部 Contract，向量示例仅展示前三个元素；真实向量必须包含且只能包含 `1024` 个浮点数。MVP 不额外开发自定义 Embedding HTTP Wrapper。业务层仅依赖 `EmbeddingClient` Protocol，不得直接依赖 SiliconFlow SDK 或 TEI SDK；MVP 默认经 `SiliconFlowEmbeddingClient`（SiliconFlow Hosted API，`httpx`，无 SDK）实现，由 `create_embedding_client` 按 `memory_retrieval.embedding_provider` 分发。SiliconFlow 托管路径的向量 L2 归一化语义：**UNKNOWN / DEV-007 规划决策**（不得猜测实现行为）。`embedding_provider=local_tei` 时保留 `TEIEmbeddingClient`，使用 TEI 原生接口：
 
 ```text
 POST http://embedding-service:80/tokenize
@@ -3316,7 +3316,9 @@ memory_retrieval:
 
     index_name: "memory_retrieval_current"
 
-    embedding_provider: "local_tei"
+    embedding_provider: "siliconflow"
+
+    # 合法枚举：siliconflow（默认）、local_tei（可选自托管；非 MVP 阻塞）
 
     embedding_model: "BAAI/bge-m3"
 
@@ -4206,11 +4208,11 @@ MVP 暂不实现：
 | LLM Provider | DeepSeek 官方 API，OpenAI ChatCompletions 兼容接口 |
 | LLM Model | Compression 与 Structured Extraction 均使用 `deepseek-v4-flash` |
 | LLM Structured Output | 非思考模式 + `response_format={"type":"json_object"}` + Pydantic Schema 校验 |
-| Embedding | Linux 本地独立 Embedding Service |
+| Embedding | **默认** SiliconFlow 托管 API；本地 TEI 为**可选**自托管（非 MVP 阻塞） |
 | Embedding Model | 开源模型 `BAAI/bge-m3`，仅使用 Dense Embedding，输出维度固定为 `1024` |
-| Embedding Engine | Hugging Face Text Embeddings Inference（TEI）`1.9.3`，镜像使用 Digest 锁定 |
-| Embedding Runtime | 默认 CPU；RTX A5000 空闲时使用 Ampere 8.6 GPU；通过 Compose Override 在启动前选择 |
-| Embedding Input Limit | 单条文本最多 `1024` Token，使用 TEI `/tokenize` 精确校验 |
+| Embedding Engine | **默认** SiliconFlow Hosted API；**可选** Hugging Face Text Embeddings Inference（TEI）`1.9.3` 自托管，镜像使用 Digest 锁定 |
+| Embedding Runtime | SiliconFlow 托管为默认路径；TEI 自托管时默认 CPU，RTX A5000 空闲时使用 Ampere 8.6 GPU；通过 Compose Override 在启动前选择 |
+| Embedding Input Limit | 单条文本最多 `1024` Token；TEI 路径使用 `/tokenize` 精确校验；SiliconFlow 路径见 §3.10.0 与 DEV-007 Contract |
 | 消息队列 | Apache Kafka，单节点 KRaft Combined Mode |
 | MongoDB 部署 | 单节点 Standalone；MVP 不使用跨文档事务和 Change Stream |
 | Elasticsearch | `9.4.4`，单节点，开发与测试环境设置 `xpack.security.enabled=false` |
@@ -4589,8 +4591,11 @@ LLM__COMPRESSION__MODEL
 LLM__EXTRACTION__MODEL
 EMBEDDING__MODEL_ID
 EMBEDDING__BASE_URL
+SILICONFLOW_API_KEY
 PROXY__HTTP_URL
 ```
+
+`SILICONFLOW_API_KEY` 通过环境变量注入，类型为 `SecretStr`；**仅当** `memory_retrieval.embedding_provider=siliconflow` 时必填。不得将 API Key 写入 YAML、代码、Dockerfile、日志或测试 Fixture。
 
 ### 3.9 DeepSeek LLM 接入方式
 
@@ -4704,6 +4709,17 @@ async generate_structured(
 8. `openai` Python SDK 在 `pyproject.toml` 中限制为 `>=2.46,<3`，实际 Patch 版本由 `uv.lock` 固定。
 
 ### 3.10 本地 Embedding 部署方式
+
+#### 3.10.0 MVP 默认 Embedding Provider Pivot（OI-012）
+
+MVP 默认 Embedding Provider 为 **SiliconFlow 托管 API**，模型 `BAAI/bge-m3`，输出维度 **1024**。Integration 门禁：实际输出 `dim≠1024` 时 **HALT**（报告；**不改** ES mapping）。本地 TEI 自托管为**可选**、**非 MVP 阻塞**；保留 OI-011 既有 TEI contract，本 OI 不修改。
+
+Provider-specific batch limits（各自 Client Contract 内分片）：
+
+- **SiliconFlow**：每 HTTP 请求 `input` 最多 **32** 条
+- **TEI**：每 HTTP 请求最多 **64** 条
+
+`SiliconFlowEmbeddingClient` 实现 Contract（**DEV-007**）摘要 **M1–M11**：保留 `EmbeddingClient` Protocol；`POST https://api.siliconflow.cn/v1/embeddings`；`httpx`（无 SDK）；`SILICONFLOW_API_KEY`（`SecretStr`）；默认 `embedding_provider=siliconflow`；429/5xx/timeout **有界重试**：**1 次初始 + 最多 2 次重试 = 最多 3 次 HTTP attempt**；400/401/403 fail-fast；空字符串零 HTTP；observability 最小集（provider、status_code、trace_id、bounded sanitized error；禁止 key/auth/全文/vectors）。SiliconFlow 向量 L2 归一化：**UNKNOWN / DEV-007 规划决策**（不得猜测）。本地 HF tokenizer 体系：**DEFERRED**（MVP 不建）。
 
 #### 3.10.1 固定选型
 
