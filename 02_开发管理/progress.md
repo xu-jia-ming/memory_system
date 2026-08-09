@@ -5,12 +5,12 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 0  # hygiene 完成后应标 Phase 0 completed / Phase 1 ready（实施阶段经验证后回写；本轮不伪造）
+current_phase: Phase 0 completed / Phase 1 (STM-001) ready
 phase0_readiness: PASS
 stm_001_entry_gate: GO_FOR_STM_001
 current_task: DEV-OPS-006
-current_task_status: approved
-current_branch: main
+current_task_status: committed
+current_branch: feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -21,20 +21,28 @@ target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-# DEV-OPS-006 planning evidence（本轮；未实施）
-formal_DEV-OPS-006_status: approved
+# DEV-OPS-006 committed evidence（IMPLEMENTATION_RELEASE；PR OPEN；等待人工 Merge）
+formal_DEV-OPS-006_status: committed
 formal_DEV-OPS-006_plan_file: 02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md
-formal_DEV-OPS-006_plan_commit: null
-formal_DEV-OPS-006_implementation_commit: null
-formal_DEV-OPS-006_pr: null
+formal_DEV-OPS-006_plan_commit: 09b045be1429716eab184e4565beb30cf2856b28
+formal_DEV-OPS-006_implementation_commit: b9f049af59d0e904ebee0ce09df13cc383a91b52
+formal_DEV-OPS-006_status_record_committed: null  # pending this docs(status): record commit SHA
+formal_DEV-OPS-006_pr: "#18"
+formal_DEV-OPS-006_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/18"
+formal_DEV-OPS-006_pr_state: OPEN
 formal_DEV-OPS-006_workflow_mode: NORMAL
 formal_DEV-OPS-006_root_cause_classification: A
 formal_DEV-OPS-006_note: "Phase 0 baseline hygiene before STM-001；exact allowlist OI-011 probe paths；不得实现 STM-001"
-# Verified main HEAD at planning time（DOC_CODE_DRIFT hygiene target；实施完成后再与 post-merge HEAD 对齐）
-latest_commit: 524786aa52f3ac79b5e9a26e46f36b93545d7c55
+# Verified at IMPLEMENTATION_RELEASE（feat HEAD = implementation commit）
+latest_commit: b9f049af59d0e904ebee0ce09df13cc383a91b52
+main_tip_at_tested: 09b045be1429716eab184e4565beb30cf2856b28
 planning_baseline_head: 524786aa52f3ac79b5e9a26e46f36b93545d7c55
+verified_unit: "216 passed (uv run pytest tests/unit -q @ 2026-08-09 12:32 UTC)"
+verified_contract: "47 passed (uv run pytest tests/contract -q @ 2026-08-09 12:32 UTC)"
+verified_ruff: "All checks passed (uv run ruff check .)"
+verified_mypy: "Success: no issues found in 91 source files (uv run mypy src tests scripts)"
 planning_unit_collect: 215
-planning_unit_known_failure: "tests/unit/test_compose_wrapper_contract.py::test_no_bare_docker_compose_outside_wrapper (1 failed; PRE_EXISTING_WARNING)"
+planning_unit_known_failure: "RESOLVED by DEV-OPS-006 allowlist + invariant (+1 test → 216)"
 planning_contract_verified: "47 passed (uv run pytest tests/contract -q @ planning)"
 # DEV-007 formal completion evidence (retained)
 formal_DEV-007_status: completed
@@ -161,9 +169,9 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 deferred_business_task: STM-001
 deferred_business_task_status: not_started
 deferred_business_task_note: "DEV-OPS-006 hygiene 完成后方可规划；本任务期间不得实现 STM-001"
-next_action: PLAN_LANDING（docs(plan) on main + 创建 feat 分支）
-human_plan_approved_at: null
-human_plan_approved_note: null
+next_action: WAITING_FOR_PR_MERGE（PR #18 OPEN）；等待人工 Merge；不得自动 merge / gh pr merge；不得实现 STM-001；不得触碰 DEV-006/PR#13
+human_plan_approved_at: "2026-08-09"
+human_plan_approved_note: "人工确认 PLAN_APPROVED；PLAN_LANDING 完成"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
 insertion_override:
   prior_current_task: DEV-007
@@ -198,16 +206,16 @@ governance_deviation:
 
 | 测试层级 | 状态 | 最近命令 | 最近结果 |
 |---|---|---|---|
-| Unit | **failing（1；DEV-OPS-006 目标修复）** | `uv run pytest tests/unit -q`（规划只读） | **215 collected**；已知 **1 failed**：`test_no_bare_docker_compose_outside_wrapper`（`lib_tei_probe.sh` + `measure_tei_memory.sh`）；其余历史行保留为 DOC_CODE_DRIFT 待 hygiene 后用实跑结果覆盖；**禁止伪造全绿** |
-| Contract（业务） | passed（规划只读复验） | `uv run pytest tests/contract -q` | **47 passed**；exit=0（2026-08-09 10:42 UTC 规划轮次） |
+| Unit | **passed** | `uv run pytest tests/unit -q` | **216 passed** in 4.06s；exit=0（2026-08-09 12:32 UTC；含 OI-011 allowlist + 存在性断言） |
+| Contract（业务） | **passed** | `uv run pytest tests/contract -q` | **47 passed**, 1 warning；exit=0（2026-08-09 12:32 UTC） |
 | Contract（Playbook DEV-OPS-005） | passed（历史） | `uv run pytest tests/unit/test_project_operations_playbook_contract.py -q` | **28 passed**（历史；计入 unit collect） |
 | Contract（Cursor 工作流） | passed（历史） | `uv run pytest tests/unit/test_cursor_orchestrator_contract.py tests/unit/test_cursor_workflow_modes_contract.py tests/unit/test_cursor_commands_contract.py -q` | 50 passed（既有） |
 | Contract（Mihomo 网络回退） | passed（历史） | `uv run pytest tests/unit/test_mihomo_network_fallback_contract.py -q` | 15 passed（DEV-OPS-004） |
 | Integration | passed（历史） | `uv run pytest tests/integration/test_migrate_infra.py -v` | **1 passed**（79s；compose test 栈） |
 | TEI lock validate | passed（历史） | `timeout 600 ./scripts/lock_tei_images.sh` | CPU+GPU 1.9.3（DEV-003） |
 | E2E | passed（DEV-OPS-003 Step 7） | DEV-OPS-003-SMOKE NORMAL 受监督全链路 | **PASSED**（PR #8 MERGED） |
-| Ruff | stale（待 DEV-OPS-006 实跑） | `uv run ruff check .` | 上次记录为 DEV-OPS-005 passed；本轮规划未声称复跑通过 |
-| Mypy | stale（待 DEV-OPS-006 实跑） | `uv run mypy src tests scripts` | 上次记录为 DEV-OPS-005 passed；本轮规划未声称复跑通过 |
+| Ruff | **passed** | `uv run ruff check .` | All checks passed；exit=0（2026-08-09 12:32 UTC） |
+| Mypy | **passed** | `uv run mypy src tests scripts` | Success: no issues found in 91 source files；exit=0（2026-08-09 12:32 UTC） |
 | UI discovery（§9 / OI-OPS-005 延续） | passed（DEV-OPS-002） | 人工 `/` 菜单 | 七项均可发现（2026-08-07 02:40 UTC） |
 | E2E 冒烟（§9） | passed（DEV-OPS-002） | 受监督完整编排链路 | PR #3；E2E 分支保留 |
 
@@ -232,7 +240,7 @@ governance_deviation:
 
 ## 规格阻塞项
 
-**DEV-OPS-006（当前）**：**planned** — Phase 0 baseline hygiene（compose-wrapper allowlist + progress DOC_CODE_DRIFT）；分类 A；等待 Plan Review / `PLAN_APPROVED`；完成后才进入 STM-001 规划。
+**DEV-OPS-006（当前）**：**committed** — Phase 0 baseline hygiene；implementation `b9f049af59d0e904ebee0ce09df13cc383a91b52`；PR [#18](https://github.com/xu-jia-ming/memory_system/pull/18) **OPEN**（base=main）；unit **216** / contract **47** / ruff / mypy 全绿；`plan_commit=09b045be1429716eab184e4565beb30cf2856b28`；分支 `feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001`；`next_action`→**WAITING_FOR_PR_MERGE**；**不得自动 merge**；**不得实现 STM-001**；**不得触碰 DEV-006/PR#13**。
 
 **OI-012（Amendment 002/002.1）**：**completed**（PR #16 MERGED `003fb43e24ab5bb5d2401342a0f466fcbe22ce26`）。
 
@@ -300,6 +308,9 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（DEV-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `d8730a670d577c1f9acb75ebb112fc8f88ea6662`；PR #10 MERGED（`206b7a688cbad3070dc3f1646111efa165f2be87`） |
 | RELEASE_COMPLETED（DEV-004 POST_MERGE_CLEANUP） | **已完成**；completed 治理 `4a5cbc2`；exact feat 已删 |
 | PLAN_APPROVED（DEV-OPS-005 计划） | **已通过**（Round 1 `PLAN_REJECTED` / MF-1–3；Amendment 001；Round 2 `PLAN_APPROVED`；Amendment 002 章节编号）；人工确认 2026-08-08 10:30 UTC；吸收 SHOULD_FIX 1–3；`workflow_mode=NORMAL`（explicit）；plan_commit `a601a3ba569b12b8fc0ae8ff913f66927381af19` |
+| PLAN_APPROVED（DEV-OPS-006 计划） | **已通过**（Plan Reviewer BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；`workflow_mode=NORMAL`（explicit）；plan_commit `09b045be1429716eab184e4565beb30cf2856b28`；PLAN_LANDING 完成 |
+| CODE_REVIEW_APPROVED（DEV-OPS-006 实现） | **已通过**（P0=0 / P1=0）；`CODE_REVIEW_APPROVED` |
+| RELEASE_COMPLETED（DEV-OPS-006 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `b9f049af59d0e904ebee0ce09df13cc383a91b52`；PR #18 OPEN（base=main；head=feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001）；等待人工 Merge |
 | CODE_REVIEW_APPROVED（DEV-OPS-005 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=3；P3 残余不阻塞） |
 | RELEASE_COMPLETED（DEV-OPS-005 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 MERGED（`0239c28281949bedec66dbec1412197c5561a611`）；committed 治理 `239218432d6b86d4f34d24c248611361df5d5069` |
 | RELEASE_COMPLETED（DEV-OPS-005 POST_MERGE_CLEANUP） | **已完成**（本轮）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
@@ -534,6 +545,9 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-09 16:20 UTC | DEV-007 | approved → in_progress → tested | SiliconFlow client MVP 实施完成；U1–U6/C1–C17 通过；ruff/mypy/env check 通过 | unit+contract 261 passed（1 main 既有 compose wrapper 失败） | `next_action=Code Review`；未 commit；integration opt-in 未跑 |
 | 2026-08-09 08:24 UTC | DEV-007 | committed → completed | PR #17 MERGED（`b7916ea`）；POST_MERGE docs(status) complete；HEAD 后续含 `524786a` record SHA | main 同步；SiliconFlow MVP 在 main | `next_action` 曾为等待下一任务 |
 | 2026-08-09 10:42 UTC | DEV-OPS-006 | planned（Planner 初版） | 创建 Task Plan `DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md`；master_plan CHANGE-019；progress 规划态回写 | 只读诊断：分类 **A**；contract 47 passed；unit 215 collected / 1 fail | `next_action=计划审查`；**不得实现 STM-001**；**不得触碰 DEV-006/PR#13** |
+| 2026-08-09 12:29 UTC | DEV-OPS-006 | approved（PLAN_LANDING） | docs(plan) `09b045be1429716eab184e4565beb30cf2856b28`；创建 `feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001` | n/a | `next_action`→Developer 实施；未实施；**不得实现 STM-001**；**不得触碰 DEV-006/PR#13** |
+| 2026-08-09 12:33 UTC | DEV-OPS-006 | approved → in_progress → tested | exact-path allowlist + SHOULD_FIX 存在性断言；progress/master_plan hygiene | unit **216 passed**；contract **47 passed**；ruff PASS；mypy PASS | `next_action`→代码审查；未 Git 写；**不得实现 STM-001**；**不得触碰 DEV-006/PR#13** |
+| 2026-08-09 12:40 UTC | DEV-OPS-006 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `b9f049af59d0e904ebee0ce09df13cc383a91b52`；PR #18 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；`next_action`→WAITING_FOR_PR_MERGE；**不得自动 merge**；**不得实现 STM-001** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -566,7 +580,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **DEV-OPS-006**（当前）：`planned` — Phase 0 Baseline Hygiene Before STM-001；`next_action=计划审查`；分类 **A**（OI-011 probe exact allowlist）；**不得实施**直至 `PLAN_APPROVED`。
-2. **STM-001**：可规划（待 DEV-OPS-006 completed）；本轮不得实现。
+1. **DEV-OPS-006**（当前）：`committed` — Phase 0 Baseline Hygiene Before STM-001；implementation `b9f049af59d0e904ebee0ce09df13cc383a91b52`；PR [#18](https://github.com/xu-jia-ming/memory_system/pull/18) **OPEN**；unit **216** / contract **47** / ruff / mypy 全绿；`plan_commit=09b045be1429716eab184e4565beb30cf2856b28`；分支 `feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001`；分类 **A**；`next_action`→**WAITING_FOR_PR_MERGE**；**不得自动 merge**；**不得实现 STM-001**；**不得触碰 DEV-006/PR#13**。
+2. **STM-001**：Phase 1 ready / 可规划（待 DEV-OPS-006 completed 后显式编排）；本轮不得实现。
 3. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；DEV-OPS-006 不得触碰。
 4. **DEV-007 / OI-012 / OI-011**：`completed`（保留）。
