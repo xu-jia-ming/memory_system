@@ -5,7 +5,7 @@
 ```yaml
 task_id: OI-012
 task_name: "SiliconFlow Embedding Provider Spec-OI (MVP Minimal Pivot)"
-status: committed
+status: completed
 task_class: Spec-OI
 open_issue_id: OI-012
 spec_sections:
@@ -522,7 +522,8 @@ status: pending_plan_review
 | 2026-08-09 06:55 UTC | Phase A Spec | §3.1/§2.2.14/§3.8/§3.10.0/§2.2.6 最小 pivot | grep 一致性 | 未改 §3.3/§3.18 |
 | 2026-08-09 06:55 UTC | Phase B 治理 | open_issues OI-012 resolved；master_plan/progress 回写 | 无 | `plan_commit=e122c8a` |
 | 2026-08-09 07:00 UTC | Code Review | P0=0；P1=0；CODE_REVIEW_APPROVED | grep 一致性复核 | 无 |
-| 2026-08-09 07:05 UTC | IMPLEMENTATION_RELEASE | docs(spec) + docs(governance) 双 commit；PR 创建 | 无 | `plan_commit=e122c8a` 可追溯 |
+| 2026-08-09 07:05 UTC | IMPLEMENTATION_RELEASE | docs(spec) `bd7529f` + docs(governance) `f4d2e61`；PR #16 OPEN | 无 | `plan_commit=e122c8a` |
+| 2026-08-09 07:02 UTC | POST_MERGE_CLEANUP | PR #16 MERGED（`003fb43`）；main docs(status): complete 本轮；删 exact feat | main 含最小 Spec-OI pivot | `next_action`→DEV-007 规划；**不得启动 DEV-007 实施** |
 
 ---
 
@@ -565,12 +566,21 @@ code_review: CODE_REVIEW_APPROVED
 ```yaml
 branch: feat/OI-012-siliconflow-embedding-provider-spec-oi
 plan_commit: e122c8ab840720a4f86cffda5a58e5f9e6f34944
-implementation_commit: null
+implementation_commit_spec: bd7529f455ab0c34dc03a6659e1850a5eab189f7
+implementation_commit: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
+pr: "#16"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/16"
+pr_status: MERGED
+merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
+merged_at: "2026-08-09T07:02:28Z"
+status_record_commit_committed: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
+status_record_commit_completed: null  # filled after docs(status): complete OI-012 after PR merge
+feature_branch_deleted: pending  # local -d + remote --delete in this POST_MERGE_CLEANUP
 ```
 
 ### 最终状态
 
-`committed`
+`completed`（PR #16 MERGED `003fb43e24ab5bb5d2401342a0f466fcbe22ce26`；POST_MERGE_CLEANUP 本轮；**不得启动 DEV-007 实施**；`next_action`→DEV-007 业务规划）
 
 ---
 

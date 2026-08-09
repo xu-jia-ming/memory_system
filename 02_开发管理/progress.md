@@ -6,33 +6,34 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: OI-012
-current_task_status: committed
-current_branch: feat/OI-012-siliconflow-embedding-provider-spec-oi
+current_task: DEV-007
+current_task_status: planned
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
-formal_OI-012_status: committed
+formal_OI-012_status: completed
 tooling_status: VALID
 runtime_contract_status: PASS
-dev006_dependency_status: SUPERSEDED_FOR_MVP_OI012_TESTED
+dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/OI-012-siliconflow-embedding-provider-spec-oi.md
+current_plan_file: null  # 待 Planner 创建 DEV-007-siliconflow-embedding-client-mvp.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: c8c03db4b984a1e65b7d2d46b392f87a938c8eec
+latest_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
 plan_commit: e122c8ab840720a4f86cffda5a58e5f9e6f34944
-implementation_commit: null
-implementation_commit_message: "feat(tei-probe): land bge-m3 cpu mem_limit 12g contract"
-pr: "#15"
-pr_url: "https://github.com/xu-jia-ming/memory_system/pull/15"
+implementation_commit: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
+implementation_commit_message: "docs(governance): close OI-012 and retarget DEV-007"
+implementation_commit_spec: bd7529f455ab0c34dc03a6659e1850a5eab189f7
+pr: "#16"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/16"
 pr_status: MERGED
 pr_base: main
-pr_head: feat/OI-011-bge-m3-cpu-tei-memory-contract
-merge_commit: 7cc020a97b0373579a91e620fcdef90976193c8c
-merged_at: "2026-08-09T02:41:59Z"
-status_record_commit_committed: 8a595b8507050f75c740b3a0629fddba61563536
-status_record_commit_committed_message: "docs(status): record OI-011 implementation commit and PR"
-status_record_commit_completed: null
+pr_head: feat/OI-012-siliconflow-embedding-provider-spec-oi
+merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
+merged_at: "2026-08-09T07:02:28Z"
+status_record_commit_committed: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
+status_record_commit_committed_message: "docs(governance): close OI-012 and retarget DEV-007"
+status_record_commit_completed: null  # filled after this docs(status): complete commit
 memory_limit_decision: 12g
 cpu_tei_profile: "BAAI/bge-m3 float32 ONNX CPU mem_limit=12g"
 historical_8g_runtime_contract_status: SPEC_RUNTIME_CONTRACT_CONFLICT
@@ -46,23 +47,35 @@ formal_OI-011_pr: "#15"
 formal_OI-011_pr_state: MERGED
 formal_OI-011_merge_commit: 7cc020a97b0373579a91e620fcdef90976193c8c
 formal_OI-011_workflow_mode: NORMAL
+# OI-012 formal completion evidence
+formal_OI-012_plan_file: 02_开发管理/tasks/OI-012-siliconflow-embedding-provider-spec-oi.md
+formal_OI-012_plan_commit: e122c8ab840720a4f86cffda5a58e5f9e6f34944
+formal_OI-012_implementation_commit_spec: bd7529f455ab0c34dc03a6659e1850a5eab189f7
+formal_OI-012_implementation_commit: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
+formal_OI-012_status_record_committed: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
+formal_OI-012_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_OI-012_pr: "#16"
+formal_OI-012_pr_state: MERGED
+formal_OI-012_merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
+formal_OI-012_workflow_mode: NORMAL
 # Retained DEV-003-002 completion evidence
 formal_DEV-003-002_plan_file: 02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md
 formal_DEV-003-002_plan_commit: 7172e918647c1853d0982ce979b299920d96a0cb
 formal_DEV-003-002_implementation_commit: 715e985e4e4fee35a3b12f4517af445081b2c5d7
 formal_DEV-003-002_pr: "#14"
 formal_DEV-003-002_merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
-previous_task: OI-011
+previous_task: OI-012
 previous_task_status: completed
-previous_implementation_commit: 131a2e994690adb4b06b4d0fa299b229e88ca7d3
-previous_implementation_commit_message: "feat(tei-probe): land bge-m3 cpu mem_limit 12g contract"
-previous_status_record_commit_committed: 8a595b8507050f75c740b3a0629fddba61563536
-previous_status_record_commit_committed_message: "docs(status): record OI-011 implementation commit and PR"
-previous_status_record_commit_completed: null
-previous_status_record_commit_completed_message: "docs(status): complete OI-011 after PR merge"
-previous_pr: "#15"
+previous_implementation_commit: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
+previous_implementation_commit_message: "docs(governance): close OI-012 and retarget DEV-007"
+previous_implementation_commit_spec: bd7529f455ab0c34dc03a6659e1850a5eab189f7
+previous_status_record_commit_committed: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
+previous_status_record_commit_committed_message: "docs(governance): close OI-012 and retarget DEV-007"
+previous_status_record_commit_completed: null  # pending this docs(status): complete commit SHA
+previous_status_record_commit_completed_message: "docs(status): complete OI-012 after PR merge"
+previous_pr: "#16"
 previous_pr_status: MERGED
-previous_merge_commit: 7cc020a97b0373579a91e620fcdef90976193c8c
+previous_merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
 # DEV-OPS-005 formal completion evidence
 formal_DEV-OPS-005_status: completed
 formal_DEV-OPS-005_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
@@ -132,9 +145,9 @@ step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: DEV-007
-deferred_business_task_status: BLOCKED_ON_OI012_MERGE
-deferred_business_task_note: "单一 downstream DEV-007（SiliconFlow MVP consolidated）；DEV-006 PAUSED/SUPERSEDED_FOR_MVP；PR #13 OPEN/DO_NOT_MERGE；OI-012 committed；待 PR Merge"
-next_action: 等待 PR Merge
+deferred_business_task_status: READY_FOR_PLANNING
+deferred_business_task_note: "单一 downstream DEV-007（SiliconFlow MVP consolidated）；OI-012 completed；DEV-006 PAUSED/SUPERSEDED_FOR_MVP；PR #13 OPEN/DO_NOT_MERGE"
+next_action: DEV-007 规划
 human_plan_approved_at: "2026-08-09 06:52 UTC"
 human_plan_approved_note: "PLAN_APPROVED Amendment 002 MVP Simplification Round 3; BLOCKER=0; MUST_FIX=0"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
@@ -201,14 +214,15 @@ governance_deviation:
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | 2026-08-08 12:00 | `d32ddc7` | `a68d951c50eaeab66f589e5eff5c55d6611f3f43` | #12 merged |
 | DEV-003-002 | TEI CPU Memory Contract Validation | 2026-08-09 01:30 | `715e985` | `4d894cc61d0fdd4e12149cd86f2ab55072deb8b5` | #14 merged |
 | OI-011 | BAAI/bge-m3 CPU TEI Memory Contract（Spec-OI） | 2026-08-09 02:42 | `131a2e9` | `7cc020a97b0373579a91e620fcdef90976193c8c` | #15 merged |
+| OI-012 | SiliconFlow Embedding Provider（Spec-OI） | 2026-08-09 07:02 | `f4d2e61` | `003fb43e24ab5bb5d2401342a0f466fcbe22ce26` | #16 merged |
 
 ## 规格阻塞项
 
-**OI-012（Amendment 002/002.1）**：最小 MVP Spec-OI **已 committed**（Phase A 规格 pivot + Phase B 治理）；`plan_commit=e122c8ab840720a4f86cffda5a58e5f9e6f34944`；`next_action=等待 PR Merge`。
+**OI-012（Amendment 002/002.1）**：**completed**（PR #16 MERGED `003fb43e24ab5bb5d2401342a0f466fcbe22ce26`；最小 MVP Spec-OI 已在 main；`next_action`→DEV-007 规划）。
 
 **DEV-006 / PR #13**：**PAUSED / SUPERSEDED_FOR_MVP**；PR #13 **OPEN / DO_NOT_MERGE**；PR 处置 deferred 至 DEV-007 Integration 验证后。
 
-**下游**：单一 **DEV-007**（SiliconFlow MVP）；**无** DEV-008/009。
+**下游**：单一 **DEV-007**（SiliconFlow MVP）；**无** DEV-008/009；**前置 OI-012 已满足，可进入规划**。
 
 **OI-011 / TEI**：已完成（12g contract 保留；本 MVP 不修改）。
 
@@ -275,6 +289,8 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（DEV-005 POST_MERGE_CLEANUP） | **已完成**（本轮）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
 | RELEASE_COMPLETED（OI-011 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `131a2e994690adb4b06b4d0fa299b229e88ca7d3`；PR #15 MERGED（`7cc020a97b0373579a91e620fcdef90976193c8c`）；committed 治理 `8a595b8507050f75c740b3a0629fddba61563536` |
 | RELEASE_COMPLETED（OI-011 POST_MERGE_CLEANUP） | **待本 docs(status): complete 落盘**；exact feat 待删 |
+| RELEASE_COMPLETED（OI-012 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `f4d2e614773f7bcdf8b45b39e3e1c438d282b410`；spec commit `bd7529f455ab0c34dc03a6659e1850a5eab189f7`；PR #16 MERGED（`003fb43e24ab5bb5d2401342a0f466fcbe22ce26`） |
+| RELEASE_COMPLETED（OI-012 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status) 落盘；exact feat 待删 |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -494,7 +510,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-09 06:00 UTC | OI-012 | Amendment 002 MVP_SIMPLIFICATION | 缩减为最小 Spec-OI；单一 DEV-007；DEFERRED 清单；retry=3；不 PLAN_LANDING | 无 | 待 Round 2 计划审查 |
 | 2026-08-09 06:15 UTC | OI-012 | Amendment 002.1 | MF-1 HEAD SHA 修正；SF-1 master_plan spec_sections；SF-2 local_tei fail-fast；SF-3 batch limits；SF-4 §11 git plan | 无 | 待 Round 2 复审 |
 | 2026-08-09 06:52 UTC | OI-012 | Round 3 PLAN_APPROVED | Amendment 002 MVP Simplification；BLOCKER=0；MUST_FIX=0 | 无 | 进入 Developer 实施 |
-| 2026-08-09 06:55 UTC | OI-012 | approved → in_progress → tested | Phase A 规格最小 pivot（§3.1/§2.2.14/§3.8/§3.10.0/§2.2.6）；Phase B 治理（open_issues/master_plan/progress）；无代码测试 | grep 一致性验证 | `plan_commit=e122c8a`；`next_action=代码审查` |
+| 2026-08-09 07:05 UTC | OI-012 | reviewed → committed | IMPLEMENTATION_RELEASE；PR #16 OPEN；docs(spec)+docs(governance) 双 commit | 无 | `plan_commit=e122c8a`；`next_action=等待 PR Merge` |
+| 2026-08-09 07:02 UTC | OI-012 | committed → completed | PR #16 MERGED（`003fb43`）；POST_MERGE_CLEANUP 本轮 | main 含最小 Spec-OI pivot | `next_action`→DEV-007 规划；feat 待删；**不得启动 DEV-007 实施** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -527,7 +544,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **OI-012**：`committed`（Amendment 002/002.1 MVP 最小 pivot 已实施）；`next_action=等待 PR Merge`。
-2. **DEV-007**：单一 downstream SiliconFlow MVP（blocked on OI-012）。
-3. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**。
+1. **DEV-007**：`planned`（SiliconFlow Embedding Client MVP）；`next_action=DEV-007 规划`；**仅规划，不得实施**。
+2. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**。
+3. **OI-012**：`completed`（PR #16 MERGED；最小 MVP Spec-OI 已在 main）。
 4. **OI-011**：`completed`（TEI 12g 保留；本 MVP 不修改）。
