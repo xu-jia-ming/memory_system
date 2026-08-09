@@ -42,6 +42,7 @@ VALID_ENV: dict[str, str] = {
     "PROXY__HTTP_URL": "",
     "EMBEDDING_EFFECTIVE_RUNTIME_MODE": "cpu",
     "EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET": "4096",
+    "SILICONFLOW_API_KEY": "sk-example-replace-me",
 }
 
 

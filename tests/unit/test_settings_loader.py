@@ -30,6 +30,7 @@ VALID_ENV: dict[str, str] = {
     "MEMORY_ADMIN_API_KEY": "dev-memory-admin-key-change-me",
     "EMBEDDING_EFFECTIVE_RUNTIME_MODE": "cpu",
     "EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET": "4096",
+    "SILICONFLOW_API_KEY": "sk-example-replace-me",
 }
 
 

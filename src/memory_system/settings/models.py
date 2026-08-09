@@ -74,7 +74,8 @@ class MemoryRetrievalSettings(BaseModel):
     elasticsearch_version: str = "9.4.4"
     physical_index_name: str = "memory_retrieval_v1"
     index_name: str = "memory_retrieval_current"
-    embedding_provider: str = "local_tei"
+    embedding_provider: Literal["siliconflow", "local_tei"] = "siliconflow"
+    siliconflow_base_url: str = "https://api.siliconflow.cn"
     embedding_model: str = "BAAI/bge-m3"
     embedding_model_revision: str = "57aacf8560157b7c1d4f771ce1a199877aeeec74"
     embedding_dimension: int = 1024
@@ -279,6 +280,7 @@ class Settings(BaseSettings):
     embedding: EmbeddingSettings
     memory_api_key: SecretStr
     memory_admin_api_key: SecretStr
+    siliconflow_api_key: SecretStr | None = None
     proxy: ProxySettings = Field(default_factory=ProxySettings)
     embedding_effective_runtime_mode: Literal["cpu", "gpu"]
     embedding_client_total_token_budget: int = Field(gt=0)
@@ -358,4 +360,5 @@ class _SettingsValidationInfo:
             "memory_retrieval": settings.memory_retrieval,
             "memory_consolidation": settings.memory_consolidation,
             "shutdown": settings.shutdown,
+            "siliconflow_api_key": settings.siliconflow_api_key,
         }

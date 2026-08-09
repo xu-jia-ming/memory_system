@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-007
 task_name: SiliconFlow Embedding Client MVP
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -21,7 +21,7 @@ prerequisites:
   - "DEV-006 PAUSED / SUPERSEDED_FOR_MVP；PR #13 OPEN / DO_NOT_MERGE — 禁止触碰"
 branch: "feat/DEV-007-siliconflow-embedding-client-mvp"
 created_at: "2026-08-09 15:20 UTC"
-updated_at: "2026-08-09 15:30 UTC"
+updated_at: "2026-08-09 16:00 UTC"
 approval_gates:
   planning_docs: "本轮 Planner 输出；等待独立 Plan Review → PLAN_APPROVED"
   implementation_plan: "status=planned；未实施；未 PLAN_LANDING"
@@ -539,6 +539,9 @@ pr_title: "feat(DEV-007): SiliconFlow embedding client MVP"
 |---|---|---|---|---|
 | 2026-08-09 15:20 UTC | Planner 初版 | 创建本 Task Plan；progress/master_plan 规划态 | 未实施 | 无 |
 | 2026-08-09 15:30 UTC | Amendment 001 | 输入校验简化：移除字符 guard 合同；API 400 fail-fast；U7 移出必测 | 未实施 | 无 |
+| 2026-08-09 16:00 UTC | Developer in_progress | 创建 embedding 包、SiliconFlow client、factory、settings pivot | 未跑 | 无 |
+| 2026-08-09 16:15 UTC | Developer implemented | 完成 U1–U6、C1–C17；opt-in integration；修订 VALID_ENV | 新测 54 passed | 无 |
+| 2026-08-09 16:20 UTC | Developer tested | ruff/mypy/check_env_example 通过；unit+contract 261 passed（1 项 main 既有 compose wrapper 失败，非本任务回归） | 全绿（除既有） | 未跑真实 SiliconFlow integration |
 
 ---
 
@@ -548,17 +551,33 @@ pr_title: "feat(DEV-007): SiliconFlow embedding client MVP"
 
 | 文件 | 结果 |
 |---|---|
-| — | 规划轮次未实施 |
+| `src/memory_system/infrastructure/embedding/**` | 创建 types/errors/retry/siliconflow_client/factory/__init__ |
+| `src/memory_system/settings/models.py` | provider 默认 siliconflow；`SILICONFLOW_API_KEY`；`siliconflow_base_url` |
+| `src/memory_system/settings/validators.py` | siliconflow 条件 key 校验 |
+| `configs/base.yaml` | `embedding_provider: siliconflow` |
+| `.env.example` | `SILICONFLOW_API_KEY` 占位 |
+| `tests/unit/test_siliconflow_embedding_client.py` | U1–U6 |
+| `tests/contract/test_siliconflow_embedding_client_contract.py` | C1–C17 |
+| `tests/contract/helpers/siliconflow_fake.py` | MockTransport 辅助 |
+| `tests/integration/test_siliconflow_embedding_client_integration.py` | opt-in M11 |
+| `tests/unit/test_settings_*.py`、`tests/contract/test_api_shell_contract.py` | VALID_ENV + key |
+| `02_开发管理/tasks/DEV-007-*.md`、`progress.md`、`master_plan.md` | 治理回写 |
 
 ### 与原计划的差异
 
-暂无。
+- 无业务语义差异；`tests/contract/helpers` 使用 `importlib` 加载以避免 mypy 双模块名（未新增 `__init__.py`）。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| — | — | 规划轮次未执行 |
+| 新测 unit+contract | `uv run pytest tests/unit/test_siliconflow_embedding_client.py tests/contract/test_siliconflow_embedding_client_contract.py -q` | 26 passed |
+| settings | `uv run pytest tests/unit/test_settings_validation.py tests/unit/test_settings_loader.py -q` | 28 passed |
+| 全 unit+contract | `uv run pytest tests/unit tests/contract -q` | 261 passed, 1 failed（`test_compose_wrapper_contract` main 既有） |
+| ruff | `uv run ruff check .` | passed |
+| mypy | `uv run mypy src tests scripts` | 91 files, no issues |
+| env example | `uv run python scripts/check_env_example.py` | passed |
+| integration（opt-in） | 未执行（`RUN_SILICONFLOW_EMBEDDING_INTEGRATION=1` 未设） | skipped by design |
 
 ### Review 结果
 
@@ -571,12 +590,12 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/DEV-007-siliconflow-embedding-client-mvp
+plan_commit: 69e4dece8e72acf22828ba5b81682b70ecb34e8b
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`planned`
+`tested`

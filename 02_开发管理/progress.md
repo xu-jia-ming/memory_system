@@ -7,8 +7,8 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: DEV-007
-current_task_status: approved
-current_branch: main
+current_task_status: tested
+current_branch: feat/DEV-007-siliconflow-embedding-client-mvp
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -20,7 +20,7 @@ current_plan_file: 02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mv
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 latest_commit: 5ec871e
-plan_commit: e122c8ab840720a4f86cffda5a58e5f9e6f34944
+plan_commit: 69e4dece8e72acf22828ba5b81682b70ecb34e8b
 implementation_commit: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
 implementation_commit_message: "docs(governance): close OI-012 and retarget DEV-007"
 implementation_commit_spec: bd7529f455ab0c34dc03a6659e1850a5eab189f7
@@ -145,11 +145,12 @@ step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: DEV-007
-deferred_business_task_status: READY_FOR_PLANNING
-deferred_business_task_note: "DEV-007 Task Plan Amendment 001（输入校验简化）；等待 Plan Review；DEV-006 PAUSED/SUPERSEDED_FOR_MVP；PR #13 OPEN/DO_NOT_MERGE"
-next_action: PLAN_LANDING → Developer 实施
-human_plan_approved_at: "2026-08-09 06:52 UTC"
-human_plan_approved_note: "PLAN_APPROVED Amendment 002 MVP Simplification Round 3; BLOCKER=0; MUST_FIX=0"
+deferred_business_task_status: tested
+deferred_business_task_note: "DEV-007 mocked/contract tests green；等待 REAL_SILICONFLOW_INTEGRATION 人工授权"
+next_action: 等待人工授权 REAL_SILICONFLOW_INTEGRATION；随后 Code Review
+real_siliconflow_integration: NOT_AUTHORIZED
+human_plan_approved_at: "2026-08-09 15:26 UTC"
+human_plan_approved_note: "PLAN_APPROVED DEV-007 Amendment 001; BLOCKER=0; MUST_FIX=0"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
 insertion_override:
   prior_current_task: DEV-006
@@ -513,7 +514,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-09 07:05 UTC | OI-012 | reviewed → committed | IMPLEMENTATION_RELEASE；PR #16 OPEN；docs(spec)+docs(governance) 双 commit | 无 | `plan_commit=e122c8a`；`next_action=等待 PR Merge` |
 | 2026-08-09 07:02 UTC | OI-012 | committed → completed | PR #16 MERGED（`003fb43`）；POST_MERGE_CLEANUP 本轮 | main 含最小 Spec-OI pivot | `next_action`→DEV-007 规划；feat 待删；**不得启动 DEV-007 实施** |
 | 2026-08-09 15:20 UTC | DEV-007 | planned（Planner 初版） | 创建 Task Plan `02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mvp.md`；master_plan CHANGE-016；progress 规划态回写 | 未实施、未 Git 写、未建 feat 分支；`next_action=计划审查`；**不得触碰 DEV-006 feat / PR #13** |
-| 2026-08-09 15:30 UTC | DEV-007 | planned（Amendment 001） | 输入校验简化：无本地 token 计数；移除字符 guard 合同；API 400 fail-fast；U7 移出必测；master_plan CHANGE-017 | 未实施、未 Git 写；`next_action=计划审查`；**不得触碰 DEV-006 feat / PR #13** |
+| 2026-08-09 16:20 UTC | DEV-007 | approved → in_progress → tested | SiliconFlow client MVP 实施完成；U1–U6/C1–C17 通过；ruff/mypy/env check 通过 | unit+contract 261 passed（1 main 既有 compose wrapper 失败） | `next_action=Code Review`；未 commit；integration opt-in 未跑 |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -546,7 +547,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **DEV-007**：`planned`（SiliconFlow Embedding Client MVP；**Amendment 001** 输入校验简化）；`current_plan_file=02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mvp.md`；`next_action=计划审查`；**仅规划，不得实施**。
+1. **DEV-007**：`tested`（SiliconFlow Embedding Client MVP；Amendment 001）；`next_action=Code Review`；feat 分支未 commit。
 2. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**。
 3. **OI-012**：`completed`（PR #16 MERGED；最小 MVP Spec-OI 已在 main）。
 4. **OI-011**：`completed`（TEI 12g 保留；本 MVP 不修改）。

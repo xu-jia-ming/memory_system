@@ -58,7 +58,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | completed |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | completed |
 | DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003, DEV-003-002, OI-011 | paused / SUPERSEDED_FOR_MVP |
-| DEV-007 | SiliconFlow Embedding Client MVP | §2.2.6, §2.2.14, §3.8, §3.10 | OI-012, DEV-002, DEV-004, DEV-005 | planned |
+| DEV-007 | SiliconFlow Embedding Client MVP | §2.2.6, §2.2.14, §3.8, §3.10 | OI-012, DEV-002, DEV-004, DEV-005 | tested |
 
 ### Phase 0 补充：开发工作流自动化（非业务规格）
 
@@ -239,7 +239,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **计划文件**：`02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mvp.md`
 - **规格章节**：§2.2.6、§2.2.14、§3.8、§3.10（OI-012 M1–M11）。
 - **分支**：`feat/DEV-007-siliconflow-embedding-client-mvp`
-- **状态备注**：`planned`（Planner 初版 2026-08-09；**Amendment 001** 输入校验简化 2026-08-09；`next_action=计划审查`；**不得实施直至 PLAN_APPROVED**）。
+- **状态备注**：`tested`（Developer 实施完成 2026-08-09；Amendment 001；U1–U6/C1–C17 mocked 通过；ruff/mypy/env check 通过；`next_action=Code Review`；未 commit）。
 
 ---
 
