@@ -5,7 +5,7 @@
 ```yaml
 task_id: OI-011
 task_name: "BAAI/bge-m3 CPU TEI Memory Contract (Spec-OI)"
-status: tested
+status: committed
 task_class: Spec-OI
 open_issue_id: OI-011
 spec_sections:
@@ -21,7 +21,7 @@ prerequisites:
   - "DEV-006 保持 PAUSED；PR #13 保持 OPEN / NOT_READY_FOR_PR_MERGE（本任务不得修改/merge）"
 branch: "feat/OI-011-bge-m3-cpu-tei-memory-contract"
 created_at: "2026-08-09 01:30 UTC"
-updated_at: "2026-08-09 02:35 UTC"
+updated_at: "2026-08-09 02:40 UTC"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 insertion_reason: "NEW_UNPLANNED_FEATURE：DEV-003-002 确认 SPEC_RUNTIME_CONTRACT_CONFLICT；须 Spec-OI characterization 修订 CPU TEI memory contract，方可恢复 DEV-006 R2–R7"
@@ -876,11 +876,11 @@ tier_summary:
 ### Review 结果
 
 ```yaml
-p0: null
-p1: null
+p0: 0
+p1: 0
 p2: null
 p3: null
-review_report: null
+review_report: "CODE_REVIEW_APPROVED"
 plan_review_round_1: "PLAN_REJECTED（BLOCKER=0；MUST_FIX=4；SHOULD_FIX=4）"
 plan_review_round_2: "待修项已吸收为 Amendment 002（R2 SF-1～SF-4 + R3 MF-3）"
 plan_review_round_3: "PLAN_APPROVED（BLOCKER=0；MUST_FIX=0）；人工确认批准 OI-011"
@@ -891,13 +891,18 @@ plan_review_round_3: "PLAN_APPROVED（BLOCKER=0；MUST_FIX=0）；人工确认�
 ```yaml
 branch: "feat/OI-011-bge-m3-cpu-tei-memory-contract"
 plan_commit: bda5018a712766a5981f8e1a19940132a56de536
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 131a2e994690adb4b06b4d0fa299b229e88ca7d3
+implementation_commit_message: "feat(tei-probe): land bge-m3 cpu mem_limit 12g contract"
+pr: "#15"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/15"
+pr_status: OPEN
+pr_base: main
+pr_head: feat/OI-011-bge-m3-cpu-tei-memory-contract
 ```
 
 ### 最终状态
 
-`tested`（MEMORY_LIMIT_DECISION=12g 已落地；formal measure PASS；待 Code Review / Commit Recorder）
+`committed`（MEMORY_LIMIT_DECISION=12g；implementation `131a2e994690adb4b06b4d0fa299b229e88ca7d3`；PR #15 OPEN；等待人工 Merge；禁 push main；不得触碰 DEV-006 / PR #13）
 
 ## 15. DEV-006 resume conditions（对齐 DEV-003-002 §15 R2–R7；Spec-OI 完成后）
 

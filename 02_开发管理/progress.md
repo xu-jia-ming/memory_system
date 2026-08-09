@@ -7,10 +7,10 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: OI-011
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/OI-011-bge-m3-cpu-tei-memory-contract
 formal_DEV-003-002_status: completed
-formal_OI-011_status: tested
+formal_OI-011_status: committed
 tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: READY_FOR_RESUME_AFTER_OI011_MERGE
@@ -18,19 +18,19 @@ target_default_branch: main
 current_plan_file: 02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: 2356a850dabef83f2b1ecef4d9fa8606ccae3678
+latest_commit: 131a2e994690adb4b06b4d0fa299b229e88ca7d3
 plan_commit: bda5018a712766a5981f8e1a19940132a56de536
-implementation_commit: null
-implementation_commit_message: null
-pr: null
-pr_url: null
-pr_status: null
-pr_base: null
-pr_head: null
+implementation_commit: 131a2e994690adb4b06b4d0fa299b229e88ca7d3
+implementation_commit_message: "feat(tei-probe): land bge-m3 cpu mem_limit 12g contract"
+pr: "#15"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/15"
+pr_status: OPEN
+pr_base: main
+pr_head: feat/OI-011-bge-m3-cpu-tei-memory-contract
 merge_commit: null
 merged_at: null
 status_record_commit_committed: null
-status_record_commit_committed_message: null
+status_record_commit_committed_message: "docs(status): record OI-011 implementation commit and PR"
 status_record_commit_completed: null
 # Retained DEV-003-002 completion evidence
 formal_DEV-003-002_plan_file: 02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md
@@ -120,8 +120,8 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
 deferred_business_task: DEV-006
 deferred_business_task_status: PAUSED
-deferred_business_task_note: "PR #13 OPEN / NOT_READY_FOR_PR_MERGE；R1 satisfied（DEV-003-002）；R2–R4 BLOCKED pending OI-011 Spec-OI；不得 Merge PR #13；不得改 DEV-006 feat"
-next_action: OI-011 READY_FOR_CODE_REVIEW（MEMORY_LIMIT_DECISION=12g；待独立 Code Review）
+deferred_business_task_note: "PR #13 OPEN / NOT_READY_FOR_PR_MERGE；R1 satisfied（DEV-003-002）；R2–R4 本地 satisfied（待 OI-011 PR #15 merge）；不得 Merge PR #13；不得改 DEV-006 feat"
+next_action: OI-011 WAITING_FOR_PR_MERGE（PR #15 OPEN；MEMORY_LIMIT_DECISION=12g；禁 push main；不得 Merge PR #13）
 human_plan_approved_at: "2026-08-09 02:00 UTC"
 human_plan_approved_note: "PLAN_APPROVED Round 3；BLOCKER=0；MUST_FIX=0；人工确认批准 OI-011"
 insertion_override:
@@ -470,6 +470,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-09 02:00 UTC | OI-011 | approved（PLAN_LANDING） | Round 3 `PLAN_APPROVED`（BLOCKER=0；MUST_FIX=0）；人工确认；docs(plan) on main；创建 `feat/OI-011-bge-m3-cpu-tei-memory-contract`；Amendment 001/002→approved | `plan_commit` 禁 self-ref（报告给出真实 SHA）；`next_action`→Developer 实施；DEV-006 仍 PAUSED；**不得触碰 DEV-006 feat / Merge PR #13** |
 | 2026-08-09 02:10 UTC | OI-011 | in_progress（Phase A1） | overlays + probe `--mem-limit` helper；unit `test_tei_memory_probe`/`test_tei_probe_mocked_paths` 34 passed；下一步 Phase A2 串行 matrix | 未改正式 mem_limit；未伪造测量；DEV-006 仍 PAUSED |
 | 2026-08-09 02:35 UTC | OI-011 | tested | matrix→`MEMORY_LIMIT_DECISION=12g`；规格/compose/preflight/start_embedding/Layer B 落地；formal measure PASS；OI resolved | 待 Code Review；未 Git 写；compose.sh 未改；DEV-006 仍 PAUSED 至 OI-011 merge |
+| 2026-08-09 02:36 UTC | OI-011 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `131a2e994690adb4b06b4d0fa299b229e88ca7d3`；PR #15 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；MEMORY_LIMIT_DECISION=12g；保留 CONFLICT@8g；**不得触碰 DEV-006 / Merge PR #13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
