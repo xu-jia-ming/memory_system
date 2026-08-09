@@ -262,6 +262,43 @@ task_plan: 02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md
 
 ---
 
+## OI-012
+
+```yaml
+id: OI-012
+spec_sections:
+  - "§2.2.6（最小 SiliconFlow 增补）"
+  - "§2.2.14 embedding_provider 默认 siliconflow"
+  - "§3.1 Embedding 默认 SiliconFlow"
+  - "§3.8 SILICONFLOW_API_KEY"
+  - "§3.10 最小 pivot 句"
+impact: "最小 MVP：默认 Embedding pivot 至 SiliconFlow BAAI/bge-m3（dim=1024）；TEI optional/non-MVP-blocking；单一 downstream DEV-007 实现"
+blocks_current_task: false
+resolve_by_task: OI-012
+downstream_dev_task: DEV-007
+status: open
+task_plan: 02_开发管理/tasks/OI-012-siliconflow-embedding-provider-spec-oi.md
+amendment: "Amendment 002 MVP_SIMPLIFICATION"
+```
+
+**问题描述：** MVP 须将默认 Embedding 从 `local_tei` pivot 至 SiliconFlow 托管 `BAAI/bge-m3`。Amendment 002 将 OI-012 **缩减为最小 Spec-OI**（架构决策记录 + 最小规格句），**不**一次性重构 embedding 架构。实现合并为 **单一 DEV-007**（取消 DEV-008/009）。官方未知：bge-m3 输出维度（Integration 须验证 dim=1024 否则 HALT）。DEV-006/PR#13：**PAUSED/SUPERSEDED_FOR_MVP** + **DO_NOT_MERGE**（决策 deferred）。
+
+**是否阻塞当前任务：** **否**（相对 OI-012 规划审查；PR#13 处置 deferred）。
+
+**禁止行为：**
+
+- 不得猜测 SiliconFlow bge-m3 输出维度（须 Integration 验证）
+- 不得 merge/rewrite PR #13 **本 MVP**
+- 不得访问 DEV-006 dirty worktree
+- 不得在本 OI 引入 local HF tokenizer 或 §3.3/§3.18 大规模改写
+- 不得让 STM/EXT/RET 直接依赖 SiliconFlow SDK
+
+**规划态备注（非决议）：** Amendment 002（2026-08-09）；`next_action=计划审查`；**本轮不 PLAN_LANDING**；DEV-006 **PAUSED/SUPERSEDED_FOR_MVP**。
+
+**决议记录：** （空；OI-012 实施后追加）
+
+---
+
 ## 索引
 
 | 问题 ID | 最迟解决任务 | 是否阻塞当前任务 | 状态 |
@@ -277,3 +314,4 @@ task_plan: 02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md
 | OI-009 | STM-004 | 否 | open |
 | OI-010 | 已人工决议（uv_build） | 否 | resolved |
 | OI-011 | OI-011 | 否 | resolved |
+| OI-012 | OI-012 | 否（PR#13 deferred） | open |

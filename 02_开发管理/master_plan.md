@@ -32,7 +32,8 @@ planned
 
 ```text
 DEV-004  → ES 版本化 Index + Mapping + Alias（唯一创建方）
-DEV-006  → TEI Embedding Client（EXT-007 与 Retrieval 共享）
+DEV-007  → SiliconFlow Embedding Client MVP（EXT-007 与 Retrieval 共享前置；OI-012 后）
+DEV-006  → TEI Embedding Client（PAUSED / SUPERSEDED_FOR_MVP；PR #13 DO_NOT_MERGE）
 EXT-007  → 仅 Retrieval Document 同步；不创建/修改 Mapping 或 Alias
 RET-001  → 仅 BM25 查询；Integration 使用 ES Fixture；不硬依赖 EXT-007
 RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
@@ -53,9 +54,11 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | completed |
 | DEV-003-002 | TEI CPU Memory Contract Validation（Preflight Hardening） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003 | completed |
 | OI-011 | BAAI/bge-m3 CPU TEI Memory Contract（Spec-OI） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003-002 | completed |
+| OI-012 | SiliconFlow Embedding Provider（Spec-OI） | §2.2.6, §2.2.14, §3.1, §3.8, §3.10 | OI-011 | planned |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | completed |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | completed |
-| DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003, DEV-003-002, OI-011 | paused |
+| DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003, DEV-003-002, OI-011 | paused / SUPERSEDED_FOR_MVP |
+| DEV-007 | SiliconFlow Embedding Client MVP | §2.2.6, §3.8, §3.10 | OI-012, DEV-002, DEV-004, DEV-005 | planned |
 
 ### Phase 0 补充：开发工作流自动化（非业务规格）
 
@@ -210,16 +213,30 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **计划文件**：`02_开发管理/tasks/DEV-005-api-shell-auth-request-id-logging-metrics.md`
 - **状态备注**：`completed`（plan_commit `2548c9a`；implementation_commit `d32ddc7`；committed 治理 `76a91ce`；PR #12 MERGED `a68d951c50eaeab66f589e5eff5c55d6611f3f43`；`workflow_mode=NORMAL`（explicit）；POST_MERGE_CLEANUP 本轮；**等待用户显式指定下一任务**；**不得自动启动 DEV-006**）。
 
+#### OI-012 SiliconFlow Embedding Provider（Spec-OI）
+
+- **目标**：**最小 MVP Spec-OI** — 默认 Embedding pivot 至 SiliconFlow 托管 `BAAI/bge-m3`；dim=1024；TEI optional/non-MVP-blocking；`SILICONFLOW_API_KEY`；hosted integration 要求；**单一** downstream **DEV-007**。
+- **非目标**：全架构 refactor；DEV-008/009；§3.3/§3.18 大改；TEI refactor；PR #13 处置；业务代码；**本轮不 PLAN_LANDING**。
+- **关键设计决策**：`EmbeddingClient` 保留；MVP MUST M1–M11（见 Task Plan §5.4）；retry max **3** HTTP attempts；无 local tokenizer。
+- **变更文件（预期）**：规格最小节（§3.1/§2.2.14/§3.8/§3.10/§2.2.6）；治理文档。
+- **测试**：OI-012 无代码测试；DEV-007 承担 mocked contract + opt-in integration。
+- **验收**：最小 spec + 治理；DEFERRED 清单；Review 无 P0/P1。
+- **计划文件**：`02_开发管理/tasks/OI-012-siliconflow-embedding-provider-spec-oi.md`
+- **规格章节**：§2.2.6、§2.2.14、§3.1、§3.8、§3.10（最小 pivot；**不含** §3.2/§3.3/§3.18 大改）。
+- **状态备注**：`planned`（Amendment 002/002.1 MVP_SIMPLIFICATION；`next_action=计划审查`）。
+
 #### DEV-006 TEI Embedding Client + Token Budget
 
-- **目标**：共享 `EmbeddingClient` Protocol + `TEIEmbeddingClient`；`POST /tokenize` + `POST /v1/embeddings`；单条 1024 Token 硬限制（`embedding_input_too_long`）；CPU/GPU `EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET` First-Fit-In-Order 分批；输出维度严格 1024；`create_embedding_client(settings, http_client)`；窄升级 `runtime.check_embedding` 为 embed 探针（仍非 Readiness 阻塞）。
-- **非目标**：ES 写入；BM25/RRF；Retrieval Warning 降级；EXT-007 索引同步；改模型/Revision/TEI 引擎/Compose/scripts；`settings/models.py` 结构变更；STM/RET/EXT 业务。
-- **变更文件（白名单）**：`src/memory_system/infrastructure/embedding/**`；`runtime.py`（仅 `check_embedding`）；`validators.py`（mode↔budget）；Contract Fake TEI + Fixture；Unit/Contract/Integration 测试；本任务开发管理回写。
-- **测试**：Unit（分批/校验）；Contract（Fake TEI，§8.7 九场景）；Integration（真实 TEI **CPU 发布阻塞**；GPU 一致性可选 skip）。
-- **验收**：§2.2.6、§3.10.6、§8 行为合同；ruff/mypy/pytest 全绿；供 EXT-007 与 RET-* 复用。
-- **风险**：TEI `/tokenize` 响应格式对齐；Integration 首次模型下载耗时；GPU Cosine 0.999 可能需人工验收；禁止运行时热切换与降阈值。
-- **计划文件**：`02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md`
-- **状态备注**：`paused`（PR #13 OPEN；`NOT_READY_FOR_PR_MERGE`；DEV-003-002 **completed**（R1 satisfied）；**OI-011 completed**（R2–R4 satisfied on main）；`dev006_dependency_status=READY_FOR_RESUME_AFTER_OI011_MERGE`；R5–R7 pending 单独恢复；**不得** Merge PR #13）。
+- **目标**：（原计划）TEIEmbeddingClient + Token Budget。
+- **状态备注**：**PAUSED / SUPERSEDED_FOR_MVP**（2026-08-09 Amendment 002）；PR #13 **OPEN / DO_NOT_MERGE**；**禁止** merge/rewrite **本 MVP**；决策 deferred 至 DEV-007 Integration 验证后。原计划：`02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md`。
+
+#### DEV-007 SiliconFlow Embedding Client MVP
+
+- **目标**：单一 consolidated 任务 — `SiliconFlowEmbeddingClient`（httpx）；`EmbeddingClient` + factory；Settings（`embedding_provider=siliconflow` default、`SILICONFLOW_API_KEY`）；mocked contract tests（M10）；opt-in integration gate dim=1024（M11）。
+- **非目标**：TEI refactor/429/compose；STM/EXT/RET；PR #13；local tokenizer；large metrics。
+- **前置**：OI-012 completed。
+- **计划文件**：（待 OI-012 merged 后 Planner 创建 `DEV-007-siliconflow-embedding-client-mvp.md`）
+- **状态备注**：`planned`（Amendment 002 取代 DEV-008/009 占位）。
 
 ---
 
@@ -333,7 +350,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | EXT-004 | Entity Alignment + Neo4j 模型基础 | §2.1.9, §2.1.10 | EXT-003, DEV-004 | planned |
 | EXT-005 | Reconciliation + 聚合门禁 | §2.1.11 | EXT-004 | planned |
 | EXT-006 | Neo4j 图谱事务写入 | §2.1.12, §2.1.13 | EXT-005 | planned |
-| EXT-007 | Retrieval Document 同步 | §2.2.3 | EXT-006, DEV-006, DEV-004 | planned |
+| EXT-007 | Retrieval Document 同步 | §2.2.3 | EXT-006, DEV-007, DEV-004 | planned |
 | EXT-008 | Extraction 管理 GET/Retry | §2.1.14 | EXT-007, DEV-005 | planned |
 | EXT-009 | Extraction E2E + 失败注入 | §2.1.15, §3.28 | EXT-008 | planned |
 
@@ -344,9 +361,9 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### EXT-007 Retrieval Document 同步
 
-- **目标**：search_text、调用 DEV-006 Embedding、Bulk upsert（`refresh=wait_for`）；作为 Extraction 完成门禁之一。
+- **目标**：search_text、经 `create_embedding_client` 调用 Embedding（**默认 SiliconFlow / DEV-007**）、Bulk upsert（`refresh=wait_for`）；作为 Extraction 完成门禁之一。
 - **非目标**：**不创建/修改** Mapping 或 Alias（缺失则失败）。
-- **前置**：EXT-006, DEV-006, DEV-004。
+- **前置**：EXT-006, **DEV-007**, DEV-004。
 - **测试**：Integration（部分 bulk 失败、Neo4j 成功后 ES 失败恢复路径按规格）。
 
 #### EXT-008 / EXT-009
@@ -359,8 +376,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| RET-001 | BM25 查询 | §2.2.7 | DEV-004, DEV-006 | planned |
-| RET-002 | Vector 召回 + RRF | §2.2.8, §2.2.9 | RET-001, DEV-006 | planned |
+| RET-001 | BM25 查询 | §2.2.7 | DEV-004, DEV-007 | planned |
+| RET-002 | Vector 召回 + RRF | §2.2.8, §2.2.9 | RET-001, DEV-007 | planned |
 | RET-003 | Neo4j 权威回读 + 一跳扩展 + MGET | §2.2.10 | RET-002 | planned |
 | RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | planned |
 | RET-005 | Retrieval API、降级/超时、统计更新 | §2.2.5, §2.2.13–2.2.15 | RET-004, DEV-005 | planned |
@@ -370,7 +387,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 - **目标**：对已存在 Alias 执行 BM25；过滤器与字段权重按规格。
 - **非目标**：创建 Mapping/Alias；Vector/RRF；硬依赖 EXT-007。
-- **前置**：**仅 DEV-004, DEV-006**（DEV-006 为共享客户端就绪；本任务查询路径可不调用 Embedding）。
+- **前置**：**DEV-004, DEV-007**（BM25 可不调用 Embedding；Vector 依赖 DEV-007，见 RET-002）。
 - **测试**：Integration —— Migration 后**直接写入固定 ES Fixture 文档**，再断言 BM25；**不**将 EXT-007 列为硬前置。
 - **E2E 协作**：与 EXT-007 的写入→可检索 放到 RET-006 / E2E-001。
 
@@ -415,7 +432,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Tag | 条件 |
 |---|---|
-| `v0.1.0-bootstrap` | Phase 0 完成（含 DEV-006） |
+| `v0.1.0-bootstrap` | Phase 0 完成（含 **DEV-007** SiliconFlow MVP；DEV-006 TEI **非** bootstrap 阻塞） |
 | `v0.2.0-short-term-memory` | STM-013 完成 |
 | `v0.3.0-memory-extraction` | EXT-009 完成 |
 | `v0.4.0-memory-retrieval` | RET-006 完成 |
@@ -566,5 +583,25 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | 新增 `OI-011`（`approved`）；DEV-006 前置增加 `OI-011` 并保持 `paused`；**不**修改 DEV-001–005 / DEV-003-002 / DEV-OPS-* 完成状态；**不**改 DEV-006 计划正文 / feat / PR #13 |
 | 是否改变技术规格 | **是（预期，批准后实施）**：§3.10.3（含 SF-2）/ §3.18 #8 方案 A / §3.18 #12 CPU TEI `mem_limit` 字面及对齐文案；须 `PLAN_APPROVED` + 实施白名单后方可改规格正文 |
 | 审批 | Round 1 `PLAN_REJECTED`（MF-1～MF-4；SF-1～SF-4）；Amendment 001 已修订；Round 3：**Amendment 002**（MF-3 查表 + R2 SF-1～SF-4）；Round 3 → `PLAN_APPROVED`（BLOCKER=0；MUST_FIX=0；2026-08-09 人工确认） |
+
+### CHANGE-014
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-09 |
+| 原因 | **人工显式 NEW_UNPLANNED_FEATURE**：MVP 默认 Embedding pivot 至 SiliconFlow；初始 OI-012 规划（后被 Amendment 002 简化） |
+| 受影响任务 | 新增 `OI-012`；DEV-006 初始 superseded 登记；DEV-007/008/009 占位（**CHANGE-015 移除 008/009**） |
+| 是否改变技术规格 | **是（预期）** |
+| 审批 | Planner 初版 + Amendment 001；**superseded partially by CHANGE-015** |
+
+### CHANGE-015
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-09 |
+| 原因 | **Amendment 002 MVP_SIMPLIFICATION**：OI-012 缩减为最小 Spec-OI；取消 DEV-008/009；**单一 DEV-007** consolidated SiliconFlow MVP；DEV-006→PAUSED/SUPERSEDED_FOR_MVP；最小 master_plan retarget |
+| 受影响任务 | OI-012（planned，Amendment 002）；DEV-006（paused/SUPERSEDED_FOR_MVP）；DEV-007（planned consolidated）；**移除** DEV-008/009 占位；EXT-007/RET-001/RET-002/v0.1.0-bootstrap 最小 retarget |
+| 是否改变技术规格 | **是（预期，最小）**：默认 provider SiliconFlow；TEI optional 叙事 |
+| 审批 | Amendment 002 pending plan review；**本轮不 PLAN_LANDING** |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

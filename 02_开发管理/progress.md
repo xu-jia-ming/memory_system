@@ -6,19 +6,20 @@
 project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
-current_task: DEV-006
-current_task_status: paused
+current_task: OI-012
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
+formal_OI-012_status: planned
 tooling_status: VALID
 runtime_contract_status: PASS
-dev006_dependency_status: READY_FOR_RESUME_AFTER_OI011_MERGE
+dev006_dependency_status: SUPERSEDED_FOR_MVP_PENDING_OI012
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md
+current_plan_file: 02_开发管理/tasks/OI-012-siliconflow-embedding-provider-spec-oi.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-latest_commit: 7cc020a97b0373579a91e620fcdef90976193c8c
+latest_commit: c8c03db4b984a1e65b7d2d46b392f87a938c8eec
 plan_commit: bda5018a712766a5981f8e1a19940132a56de536
 implementation_commit: 131a2e994690adb4b06b4d0fa299b229e88ca7d3
 implementation_commit_message: "feat(tei-probe): land bge-m3 cpu mem_limit 12g contract"
@@ -53,7 +54,6 @@ formal_DEV-003-002_pr: "#14"
 formal_DEV-003-002_merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
 previous_task: OI-011
 previous_task_status: completed
-previous_task_completed_at: "2026-08-09"
 previous_implementation_commit: 131a2e994690adb4b06b4d0fa299b229e88ca7d3
 previous_implementation_commit_message: "feat(tei-probe): land bge-m3 cpu mem_limit 12g contract"
 previous_status_record_commit_committed: 8a595b8507050f75c740b3a0629fddba61563536
@@ -131,33 +131,28 @@ step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
-deferred_business_task: DEV-006
-deferred_business_task_status: PAUSED
-deferred_business_task_note: "PR #13 OPEN / NOT_READY_FOR_PR_MERGE；R1+R2–R4 satisfied on main（OI-011 PR #15 merged）；R5–R7 pending DEV-006 单独恢复；不得 Merge PR #13；不得改 DEV-006 feat"
-next_action: DEV-006 resume 评估（OI-011 completed；MEMORY_LIMIT_DECISION=12g；RUNTIME_CONTRACT_STATUS=PASS；dev006_dependency_status=READY_FOR_RESUME_AFTER_OI011_MERGE；R5–R7 pending；不得自动 Merge PR #13）
-human_plan_approved_at: "2026-08-09 02:00 UTC"
-human_plan_approved_note: "PLAN_APPROVED Round 3；BLOCKER=0；MUST_FIX=0；人工确认批准 OI-011"
+deferred_business_task: DEV-007
+deferred_business_task_status: BLOCKED_ON_OI012
+deferred_business_task_note: "单一 downstream DEV-007（SiliconFlow MVP consolidated）；DEV-006 PAUSED/SUPERSEDED_FOR_MVP；PR #13 OPEN/DO_NOT_MERGE；OI-012 Amendment 002 minimal Spec-OI 须 PLAN_APPROVED；本轮不 PLAN_LANDING"
+next_action: PLAN_LANDING
+human_plan_approved_at: "2026-08-09 06:52 UTC"
+human_plan_approved_note: "PLAN_APPROVED Amendment 002 MVP Simplification; BLOCKER=0; MUST_FIX=0"
+oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4）"
 insertion_override:
   prior_current_task: DEV-006
   prior_current_task_status: paused
-  prior_next_action: "DEV-006 PAUSED；PR #13 NOT_READY_FOR_PR_MERGE"
-  override_by: "用户显式 NEW_UNPLANNED_FEATURE：TEI CPU memory contract blocking DEV-006 §8.8"
-  effect: "先 DEV-003-002（completed）；现 current_task=OI-011 approved；DEV-006 保持 PAUSED；PLAN_LANDING 后 Developer 实施；不得触碰 DEV-006 feat 或 Merge PR #13"
-  overridden_at: "2026-08-08 14:52 UTC"
-  refreshed_at: "2026-08-09 02:00 UTC"
-  refresh_reason: "OI-011 Round 3 PLAN_APPROVED（BLOCKER=0；MUST_FIX=0）；status→approved；Amendment 001/002→approved；next_action→Developer 实施；DEV-006 仍 PAUSED"
-  resolved_at: "2026-08-09T02:41:59Z"
-# DEV-006 historical gates (paused; current_task)
-dev_006_paused:
+  prior_next_action: "DEV-006 resume 评估（OI-011 completed）"
+  override_by: "用户显式 NEW_UNPLANNED_FEATURE → Amendment 002 MVP 最小 pivot"
+  effect: "OI-012 minimal Spec-OI；单一 DEV-007；DEV-006 SUPERSEDED_FOR_MVP；PR #13 DO_NOT_MERGE；不 PLAN_LANDING"
+  overridden_at: "2026-08-09 06:00 UTC"
+# DEV-006 / PR #13 disposition (record only)
+dev_006_disposition:
+  status: "PAUSED / SUPERSEDED_FOR_MVP"
   plan_file: 02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md
   pr: "#13"
-  pr_status: NOT_READY_FOR_PR_MERGE
-  human_plan_approved_at: "2026-08-08 20:13 UTC"
-  human_plan_approved_note: "PLAN_APPROVED Round 2；MF-001/MF-002；Amendment 001"
-  code_review_approved_at: "2026-08-08 10:46 UTC"
-  code_review_result: "CODE_REVIEW_APPROVED；P0=0；P1=0；P2=0；P3=3（残余不阻塞）"
-  oi011_dependency: SATISFIED
-  resume_blocked_on: "R5–R7（见 OI-011 Task Plan §15；OI-011 completed on main）"
+  pr_status: "OPEN / DO_NOT_MERGE"
+  pr13_decision: "deferred until DEV-007 SiliconFlow MVP integration gate validated"
+  must_not: "merge PR #13; modify DEV-006 feat; access DEV-006 dirty worktree"
 # Retained DEV-004 governance deviation evidence (historical)
 governance_deviation:
   id: GD-DEV-004-001
@@ -209,7 +204,13 @@ governance_deviation:
 
 ## 规格阻塞项
 
-**DEV-006 §8.8 Integration（CPU 真实 TEI）**：OI-011 已完成（PR #15 merged；`MEMORY_LIMIT_DECISION=12g`；`RUNTIME_CONTRACT_STATUS=PASS`）。历史 8g 证据保留为 `SPEC_RUNTIME_CONTRACT_CONFLICT`（DEV-003-002 §13；Layer B archived fixture）。DEV-006 仍 **PAUSED**；R5–R7 pending 单独恢复流程；**不得** Merge PR #13。
+**OI-012（Amendment 002/002.1）**：最小 MVP Spec-OI 规划态；`latest_commit=c8c03db4b984a1e65b7d2d46b392f87a938c8eec`；`next_action=计划审查`；**本轮不 PLAN_LANDING**。
+
+**DEV-006 / PR #13**：**PAUSED / SUPERSEDED_FOR_MVP**；PR #13 **OPEN / DO_NOT_MERGE**；PR 处置 deferred 至 DEV-007 Integration 验证后。
+
+**下游**：单一 **DEV-007**（SiliconFlow MVP）；**无** DEV-008/009。
+
+**OI-011 / TEI**：已完成（12g contract 保留；本 MVP 不修改）。
 
 ## 实施前置条件
 
@@ -220,7 +221,7 @@ governance_deviation:
 
 ## 规格歧义
 
-见 `02_开发管理/open_issues.md`。OI-010、**OI-011** 为 `resolved`。未解决项不得自行解释为新 Contract。
+见 `02_开发管理/open_issues.md`。OI-010、**OI-011** 为 `resolved`；**OI-012** 为 `open`（规划态 Task Plan 已创建）。未解决项不得自行解释为新 Contract。
 
 DEV-OPS-001 产品/流程未决项见其 Task Plan §12.2（OI-OPS-001–005）；**不**写入规格 Contract。
 
@@ -489,7 +490,9 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-09 02:10 UTC | OI-011 | in_progress（Phase A1） | overlays + probe `--mem-limit` helper；unit `test_tei_memory_probe`/`test_tei_probe_mocked_paths` 34 passed；下一步 Phase A2 串行 matrix | 未改正式 mem_limit；未伪造测量；DEV-006 仍 PAUSED |
 | 2026-08-09 02:35 UTC | OI-011 | tested | matrix→`MEMORY_LIMIT_DECISION=12g`；规格/compose/preflight/start_embedding/Layer B 落地；formal measure PASS；OI resolved | 待 Code Review；未 Git 写；compose.sh 未改；DEV-006 仍 PAUSED 至 OI-011 merge |
 | 2026-08-09 02:36 UTC | OI-011 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `131a2e994690adb4b06b4d0fa299b229e88ca7d3`；PR #15 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；MEMORY_LIMIT_DECISION=12g；保留 CONFLICT@8g；**不得触碰 DEV-006 / Merge PR #13** |
-| 2026-08-09 02:42 UTC | OI-011 | committed → completed | PR #15 MERGED 至 main（Merge Commit `7cc020a`）；`RUNTIME_CONTRACT_STATUS=PASS`；`dev006_dependency_status=READY_FOR_RESUME_AFTER_OI011_MERGE` | POST_MERGE_CLEANUP 本轮；`current_task`→DEV-006 paused；**不得 Merge PR #13** |
+| 2026-08-09 02:42 UTC | OI-011 | committed → completed | PR #15 MERGED 至 main（Merge Commit `7cc020a`）；`RUNTIME_CONTRACT_STATUS=PASS`；`dev006_dependency_status=READY_FOR_RESUME_AFTER_OI011_MERGE` | POST_MERGE_CLEANUP 本轮；**不得 Merge PR #13** |
+| 2026-08-09 06:00 UTC | OI-012 | Amendment 002 MVP_SIMPLIFICATION | 缩减为最小 Spec-OI；单一 DEV-007；DEFERRED 清单；retry=3；不 PLAN_LANDING | 无 | 待 Round 2 计划审查 |
+| 2026-08-09 06:15 UTC | OI-012 | Amendment 002.1 | MF-1 HEAD SHA 修正；SF-1 master_plan spec_sections；SF-2 local_tei fail-fast；SF-3 batch limits；SF-4 §11 git plan | 无 | 待 Round 2 复审 |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -522,8 +525,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **DEV-006**：`PAUSED`；PR #13 `OPEN` / `NOT_READY_FOR_PR_MERGE`；OI-011 dependency **SATISFIED**；R1+R2–R4 satisfied on main；R5–R7 pending 单独恢复；**下一动作 = DEV-006 resume 评估**；**不得 Merge PR #13**。
-2. **OI-011**：`completed`（PR #15 / `7cc020a`；`MEMORY_LIMIT_DECISION=12g`；`RUNTIME_CONTRACT_STATUS=PASS`；historical 8g `SPEC_RUNTIME_CONTRACT_CONFLICT` 保留）。
-3. **DEV-003-002**：`completed`（PR #14 / `4d894cc`；complete `2356a85`）；tooling VALID。
-4. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18。
-5. **权威人类 Playbook**：`03_AI_Prompts/01_项目日常操作手册.md`。
+1. **OI-012**：`planned`（Amendment 002/002.1 MVP 最小 pivot）；`next_action=计划审查`；**不 PLAN_LANDING** 本轮。
+2. **DEV-007**：单一 downstream SiliconFlow MVP（blocked on OI-012）。
+3. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**。
+4. **OI-011**：`completed`（TEI 12g 保留；本 MVP 不修改）。
