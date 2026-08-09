@@ -1,4 +1,4 @@
-"""Contract tests for Preflight Check 13b TEI CPU runtime probe (DEV-003-002)."""
+"""Contract tests for Preflight Check 13a/13b TEI CPU runtime probe (OI-011)."""
 
 from __future__ import annotations
 
@@ -9,6 +9,12 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PREFLIGHT_SH = REPO_ROOT / "scripts" / "preflight" / "check_linux_host.sh"
+LIB_PROBE = REPO_ROOT / "scripts" / "preflight" / "lib_tei_probe.sh"
+SPEC = (
+    REPO_ROOT
+    / "01_技术规格"
+    / "记忆系统设计文档_全链路MVP技术选型版(9).md"
+)
 
 
 def test_preflight_script_documents_check_13b() -> None:
@@ -16,6 +22,25 @@ def test_preflight_script_documents_check_13b() -> None:
     assert "Check 13b" in text
     assert "TEI CPU runtime probe" in text
     assert "Check 13a" in text
+    assert "TEI_LIMIT_GIB=12" in text
+    assert "REQUIRED_HOST_MEM_GIB" in text
+
+
+def test_preflight_and_probe_formal_limit_aligned() -> None:
+    preflight = PREFLIGHT_SH.read_text(encoding="utf-8")
+    probe = LIB_PROBE.read_text(encoding="utf-8")
+    assert "TEI_LIMIT_GIB=12" in preflight
+    assert 'TEI_SPEC_MEM_LIMIT="12g"' in probe
+    assert "TEI_SPEC_MEM_LIMIT_BYTES=12884901888" in probe
+
+
+def test_spec_sf2_and_memavailable_formula_language() -> None:
+    text = SPEC.read_text(encoding="utf-8")
+    assert "NON_SPEC_COMPLIANT" in text
+    assert "mem_limit: 12g" in text
+    assert "minimum_available_memory_gib: 16" in text
+    assert "recommended_available_memory_gib: 20" in text
+    assert "可以通过环境变量调低" not in text
 
 
 def test_preflight_skip_tei_probe_env_skips_check_13b() -> None:
@@ -33,6 +58,9 @@ def test_preflight_skip_tei_probe_env_skips_check_13b() -> None:
     output = result.stdout + result.stderr
     assert "Check 13b" in output
     assert "PREFLIGHT_SKIP_TEI_PROBE=1" in output
+    assert "TEI 12g" in output or "TEI ${TEI_LIMIT_GIB}g" in PREFLIGHT_SH.read_text(
+        encoding="utf-8"
+    )
 
 
 def test_preflight_gpu_mode_skips_check_13b() -> None:

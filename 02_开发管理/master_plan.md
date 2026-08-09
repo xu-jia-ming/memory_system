@@ -52,7 +52,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | completed |
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | completed |
 | DEV-003-002 | TEI CPU Memory Contract Validation（Preflight Hardening） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003 | completed |
-| OI-011 | BAAI/bge-m3 CPU TEI Memory Contract（Spec-OI） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003-002 | approved |
+| OI-011 | BAAI/bge-m3 CPU TEI Memory Contract（Spec-OI） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003-002 | tested |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | completed |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | completed |
 | DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003, DEV-003-002, OI-011 | paused |
@@ -174,7 +174,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **插入说明**：**人工显式 NEW_UNPLANNED_FEATURE**；在 DEV-003-002 completed 之后、DEV-006 恢复之前插入。
 - **计划文件**：`02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md`
 - **绑定 OI**：`OI-011`（`02_开发管理/open_issues.md`）
-- **状态备注**：`approved`（Round 3 `PLAN_APPROVED`；BLOCKER=0；MUST_FIX=0；人工确认；Amendment 001/002 approved；PLAN_LANDING 后 Developer 实施；DEV-006 仍 PAUSED）。
+- **状态备注**：`tested`（`MEMORY_LIMIT_DECISION=12g`；matrix 8×有效 runs；规格/compose/preflight 对齐；formal measure PASS；Layer B CONFLICT@8g+PASS@12g；待 Code Review；DEV-006 仍 PAUSED 至 OI-011 merge）。
 
 #### DEV-003 Docker Compose、Embedding、Preflight
 

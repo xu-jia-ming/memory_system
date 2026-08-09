@@ -7,19 +7,19 @@ project: Memory System MVP
 spec_version: 9
 current_phase: Phase 0
 current_task: OI-011
-current_task_status: approved
+current_task_status: tested
 current_branch: feat/OI-011-bge-m3-cpu-tei-memory-contract
 formal_DEV-003-002_status: completed
-formal_OI-011_status: approved
+formal_OI-011_status: tested
 tooling_status: VALID
-runtime_contract_status: SPEC_RUNTIME_CONTRACT_CONFLICT
-dev006_dependency_status: BLOCKED
+runtime_contract_status: PASS
+dev006_dependency_status: READY_FOR_RESUME_AFTER_OI011_MERGE
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 latest_commit: 2356a850dabef83f2b1ecef4d9fa8606ccae3678
-plan_commit: null
+plan_commit: bda5018a712766a5981f8e1a19940132a56de536
 implementation_commit: null
 implementation_commit_message: null
 pr: null
@@ -121,7 +121,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 deferred_business_task: DEV-006
 deferred_business_task_status: PAUSED
 deferred_business_task_note: "PR #13 OPEN / NOT_READY_FOR_PR_MERGE；R1 satisfied（DEV-003-002）；R2–R4 BLOCKED pending OI-011 Spec-OI；不得 Merge PR #13；不得改 DEV-006 feat"
-next_action: Developer 实施 OI-011（Phase A characterization → Spec/compose/preflight）
+next_action: OI-011 READY_FOR_CODE_REVIEW（MEMORY_LIMIT_DECISION=12g；待独立 Code Review）
 human_plan_approved_at: "2026-08-09 02:00 UTC"
 human_plan_approved_note: "PLAN_APPROVED Round 3；BLOCKER=0；MUST_FIX=0；人工确认批准 OI-011"
 insertion_override:
@@ -468,6 +468,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-09 01:45 UTC | OI-011 | planned（Amendment 001） | Round 1 `PLAN_REJECTED`（BLOCKER=0；MUST_FIX=4；SHOULD_FIX=4）；吸收 MF-1～MF-4 + SF-1～SF-4：§5.3 overlay+显式 `-f`、§5.7 Check 13a 公式、§5.8 MemAvailable 方案 A、§5.9 双 fixture、compose.sh 黑名单、start_embedding 必改 | 未实施、未 Git 写；status 保持 planned；`next_action=计划审查 Round 2`；DEV-006 保持 PAUSED |
 | 2026-08-09 01:55 UTC | OI-011 | planned（Amendment 002） | Round 3 remediation：MF-3 查表 `D=12→CPU_MIN=16/REC=20`（公式权威）；吸收 R2 SF-1～SF-4（单一 helper 含 8g、§3.10.3 唯一句式/`NON_SPEC_COMPLIANT`、peak≥limit NON_VIABLE、env-file 对齐 compose.sh） | 未实施、未 Git 写、未 TEI probe；status 保持 planned；`next_action=计划审查 Round 3`；DEV-006 保持 PAUSED |
 | 2026-08-09 02:00 UTC | OI-011 | approved（PLAN_LANDING） | Round 3 `PLAN_APPROVED`（BLOCKER=0；MUST_FIX=0）；人工确认；docs(plan) on main；创建 `feat/OI-011-bge-m3-cpu-tei-memory-contract`；Amendment 001/002→approved | `plan_commit` 禁 self-ref（报告给出真实 SHA）；`next_action`→Developer 实施；DEV-006 仍 PAUSED；**不得触碰 DEV-006 feat / Merge PR #13** |
+| 2026-08-09 02:10 UTC | OI-011 | in_progress（Phase A1） | overlays + probe `--mem-limit` helper；unit `test_tei_memory_probe`/`test_tei_probe_mocked_paths` 34 passed；下一步 Phase A2 串行 matrix | 未改正式 mem_limit；未伪造测量；DEV-006 仍 PAUSED |
+| 2026-08-09 02:35 UTC | OI-011 | tested | matrix→`MEMORY_LIMIT_DECISION=12g`；规格/compose/preflight/start_embedding/Layer B 落地；formal measure PASS；OI resolved | 待 Code Review；未 Git 写；compose.sh 未改；DEV-006 仍 PAUSED 至 OI-011 merge |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -500,8 +502,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **OI-011**：`approved`（Round 3 `PLAN_APPROVED`；人工已确认）；Task Plan `02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md`；分支 `feat/OI-011-bge-m3-cpu-tei-memory-contract`；**立即下一动作 = Developer 实施**（Phase A characterization → Spec/compose/preflight）；DEV-006 仍 PAUSED。
-2. **DEV-003-002**：`completed`（PR #14 / `4d894cc`；complete `2356a85`）；tooling VALID；runtime CONFLICT。
-3. **DEV-006**：`PAUSED`；PR #13 `OPEN` / `NOT_READY_FOR_PR_MERGE`；R1 satisfied；R2–R4 **BLOCKED** pending OI-011；**不得 Merge PR #13**。
+1. **OI-011**：`tested`（`MEMORY_LIMIT_DECISION=12g`；formal measure/Check 13b PASS）；**下一动作 = 独立 Code Review**；DEV-006 仍 PAUSED 至 OI-011 merge。
+2. **DEV-003-002**：`completed`（PR #14 / `4d894cc`；complete `2356a85`）；tooling VALID。
+3. **DEV-006**：`PAUSED`；PR #13 `OPEN` / `NOT_READY_FOR_PR_MERGE`；R2–R4 技术证据已在 OI-011 本地验证；恢复仍须 OI-011 merge + §15；**不得 Merge PR #13**。
 4. **权威 Mihomo 策略**：`03_AI_Prompts/00_全局开发规则.md` §18。
 5. **权威人类 Playbook**：`03_AI_Prompts/01_项目日常操作手册.md`。

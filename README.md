@@ -127,9 +127,11 @@ cp .env.example .env
 | `compose.sh --embedding=none` | No TEI override |
 | `compose.sh --embedding=current` | Read `.runtime/embedding.env` |
 
-### TEI CPU memory probe (DEV-003-002)
+### TEI CPU memory contract (OI-011)
 
-Preflight **Check 13a** only verifies host `MemTotal` (ES 2g + TEI 8g proxy). **Check 13b** runs a real TEI CPU runtime probe under `mem_limit: 8g` (up to ~300s) for `cpu` / `auto→cpu` paths. GPU / `auto→gpu` skip Check 13b.
+Formal CPU TEI `mem_limit` is **12g** (model-runtime-profile-specific fixed contract for `BAAI/bge-m3` float32 ONNX CPU). Overrides below 12g are `NON_SPEC_COMPLIANT`.
+
+Preflight **Check 8** CPU MemAvailable: min **16** GiB / rec **20** GiB (`12/16 + (D-8)`, D=12). **Check 13a** verifies host `MemTotal >= 14` (ES 2g + TEI 12g). **Check 13b** runs a real TEI CPU runtime probe under formal `mem_limit: 12g` (up to ~300s) for `cpu` / `auto→cpu` paths. GPU / `auto→gpu` skip Check 13b.
 
 **Default merge-gate tests** (exclude `tests/runtime_contract_gate/`):
 
@@ -137,14 +139,16 @@ Preflight **Check 13a** only verifies host `MemTotal` (ES 2g + TEI 8g proxy). **
 uv run pytest tests/unit tests/contract tests/integration -q
 ```
 
-**Explicit reference runtime contract gate** (not default CI):
+**Explicit reference runtime contract gate** (not default CI; dual fixtures: historical CONFLICT@8g + approved PASS@12g):
 
 ```bash
 uv run pytest tests/runtime_contract_gate -m runtime_contract_gate -q
 bash scripts/diagnostics/measure_tei_memory.sh --timeout=300
+# Optional characterization (not loaded by compose.sh):
+# bash scripts/diagnostics/measure_tei_memory.sh --mem-limit=10g|16g --timeout=300
 ```
 
-Report fields include `runtime_contract_verdict`, model/revision/dtype, `image_digest`, warm-up peak RSS, steady-state RSS (only after healthy), `time_to_ready_sec` / `time_to_failure_sec`, `health_ready`, `oom_killed`, and `exit_code`. OOM or incomplete evidence is fail-closed on operational commands (no skip/degraded pass on CPU path).
+Report fields include `runtime_contract_verdict`, model/revision/dtype, `image_digest`, warm-up peak RSS, steady-state RSS (only after healthy), `time_to_ready_sec` / `time_to_failure_sec`, `health_ready`, `oom_killed`, `exit_code`, plus audit `run_id` / `requested_limit` / `invalidation_reason`. OOM or incomplete evidence is fail-closed on operational commands (no skip/degraded pass on CPU path). Never use `docker update` as formal evidence.
 
 ### Rollback (DEV-003 Task Plan §13)
 

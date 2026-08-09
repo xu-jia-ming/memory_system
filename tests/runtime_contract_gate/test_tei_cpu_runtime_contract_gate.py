@@ -1,6 +1,8 @@
-"""Layer B: reference runtime contract gate (DEV-003-002 Amendment 001).
+"""Layer B: reference runtime contract gate (DEV-003-002 + OI-011).
 
-Not part of default merge-gate CI. Validates archived §13 evidence semantics.
+Not part of default merge-gate CI. Validates:
+- historical CONFLICT@8g fixture (preserved)
+- approved PASS@12g fixture (OI-011 MEMORY_LIMIT_DECISION)
 """
 
 from __future__ import annotations
@@ -13,9 +15,9 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LIB_PROBE = REPO_ROOT / "scripts" / "preflight" / "lib_tei_probe.sh"
-ARCHIVED_FIXTURE = (
-    Path(__file__).resolve().parent / "fixtures" / "archived_conflict_evidence_v1.json"
-)
+FIXTURES = Path(__file__).resolve().parent / "fixtures"
+ARCHIVED_CONFLICT = FIXTURES / "archived_conflict_evidence_v1.json"
+APPROVED_PASS = FIXTURES / "approved_pass_evidence_v1.json"
 RUNTIME_REPORT = REPO_ROOT / ".runtime" / "tei_memory_report.json"
 REQUIRED_SCHEMA_FIELDS = frozenset(
     {
@@ -69,8 +71,8 @@ def _bash_validate(path: Path) -> subprocess.CompletedProcess[str]:
 
 @pytest.mark.runtime_contract_gate
 def test_archived_conflict_evidence_schema_and_verdict() -> None:
-    """§13 formal probe evidence (upgraded fixture) — CONFLICT is expected and valid."""
-    report = json.loads(ARCHIVED_FIXTURE.read_text(encoding="utf-8"))
+    """Historical 8g CONFLICT fixture must remain CONFLICT (OI-011 MF-4)."""
+    report = json.loads(ARCHIVED_CONFLICT.read_text(encoding="utf-8"))
     _validate_schema(report)
     assert report["runtime_contract_verdict"] == "SPEC_RUNTIME_CONTRACT_CONFLICT"
     assert report["oom_killed"] is True
@@ -79,22 +81,44 @@ def test_archived_conflict_evidence_schema_and_verdict() -> None:
     assert report["spec_mem_limit_bytes"] == 8589934592
     assert report["rss_peak_warmup_bytes"] == 8589934592
 
-    result = _bash_validate(ARCHIVED_FIXTURE)
+    result = _bash_validate(ARCHIVED_CONFLICT)
+    assert result.returncode == 0, result.stderr or result.stdout
+
+
+@pytest.mark.runtime_contract_gate
+def test_approved_pass_evidence_at_12g_contract() -> None:
+    """OI-011 approved PASS fixture at formal mem_limit=12g."""
+    report = json.loads(APPROVED_PASS.read_text(encoding="utf-8"))
+    _validate_schema(report)
+    assert report["runtime_contract_verdict"] == "PASS"
+    assert report["oom_killed"] is False
+    assert report["health_ready"] is True
+    assert report["spec_mem_limit_bytes"] == 12884901888
+    assert report["container_mem_limit_bytes"] == 12884901888
+    assert report["rss_peak_warmup_bytes"] < 12884901888
+    assert report["rss_steady_state_bytes"] is not None
+    assert report["time_to_ready_sec"] is not None
+    assert report["time_to_ready_sec"] <= 300
+
+    result = _bash_validate(APPROVED_PASS)
     assert result.returncode == 0, result.stderr or result.stdout
 
 
 @pytest.mark.runtime_contract_gate
 def test_runtime_report_or_fixture_satisfies_layer_b_without_rerun() -> None:
-    """Prefer §13 archived JSON; fixture suffices when on-disk report lacks new schema."""
+    """Prefer on-disk PASS@12g report; otherwise approved PASS fixture."""
     if RUNTIME_REPORT.exists():
         report = json.loads(RUNTIME_REPORT.read_text(encoding="utf-8"))
         if REQUIRED_SCHEMA_FIELDS <= set(report):
             _validate_schema(report)
-            if report.get("runtime_contract_verdict") == "SPEC_RUNTIME_CONTRACT_CONFLICT":
-                assert report.get("oom_killed") is True
+            if report.get("runtime_contract_verdict") == "PASS":
+                assert report.get("spec_mem_limit_bytes") == 12884901888
+                assert report.get("oom_killed") is False
                 result = _bash_validate(RUNTIME_REPORT)
                 assert result.returncode == 0, result.stderr
                 return
-    # On-disk report predates Amendment schema — fixture is authoritative for Layer B.
-    report = json.loads(ARCHIVED_FIXTURE.read_text(encoding="utf-8"))
-    assert report["runtime_contract_verdict"] == "SPEC_RUNTIME_CONTRACT_CONFLICT"
+            if report.get("runtime_contract_verdict") == "SPEC_RUNTIME_CONTRACT_CONFLICT":
+                # Stale CONFLICT report must not erase PASS fixture gate.
+                pass
+    report = json.loads(APPROVED_PASS.read_text(encoding="utf-8"))
+    assert report["runtime_contract_verdict"] == "PASS"

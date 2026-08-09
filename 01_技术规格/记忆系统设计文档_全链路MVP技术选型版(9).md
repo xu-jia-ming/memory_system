@@ -4878,11 +4878,11 @@ services:
       - --json-output
     volumes:
       - embedding-model-cache:/data
-    mem_limit: 8g
+    mem_limit: 12g
     cpus: 4.0
 ```
 
-CPU 参数是开发默认值，可以通过环境变量调低，但不得改变模型、Revision、Pooling、Normalize、维度或单条输入上限。
+CPU TEI `mem_limit: 12g` 是 **model-runtime-profile-specific fixed contract**，仅适用于当前 MVP CPU profile（`BAAI/bge-m3` @ 规格冻结 Revision、`dtype=float32`、ONNX CPU、pinned TEI digest）。模型、Revision、Pooling、Normalize、维度与单条输入上限不得改变。任何低于该正式 contract 的 override（含环境变量、临时 compose overlay、手工 `docker update` 等）均为 **`NON_SPEC_COMPLIANT`**（unsupported），不得视为规格合规。
 
 #### 3.10.4 RTX A5000 GPU 模式
 
@@ -5572,8 +5572,10 @@ Preflight 至少检查：
 ```yaml
 preflight:
   cpu_mode:
-    minimum_available_memory_gib: 12
-    recommended_available_memory_gib: 16
+    # D = TEI CPU mem_limit GiB（当前 formal contract D=12）
+    # CPU_MIN = 12 + (D - 8); CPU_REC = 16 + (D - 8)
+    minimum_available_memory_gib: 16
+    recommended_available_memory_gib: 20
 
   gpu_mode:
     minimum_available_memory_gib: 8
@@ -5583,7 +5585,7 @@ preflight:
 9. 低于当前模式的 `minimum_available_memory_gib` 时硬失败；达到 Minimum 但低于 Recommended 时输出 Warning；达到 Recommended 时通过。该门槛覆盖 TEI、Elasticsearch、MongoDB、Kafka、Neo4j、Redis 和应用容器的开发环境共同开销。
 10. `cpu` 模式不要求 NVIDIA 环境，并使用 CPU 内存门槛。`gpu` 模式必须检查 NVIDIA Driver、Container Toolkit、RTX A5000 可见性和空闲显存，并使用 GPU 内存门槛。
 11. `auto` 模式必须先评估 GPU 可用性：GPU 条件满足且宿主机满足 GPU Minimum 时选择 GPU；否则再检查 CPU 门槛并选择 CPU。GPU 与 CPU 门槛都不满足时硬失败，不得启动部分基础设施。
-12. Preflight 必须确认 Docker 能为 Elasticsearch 提供 `2g` Memory Limit、为所选 TEI 模式提供 `8g` Memory Limit；无法满足时硬失败。
+12. Preflight 必须确认 Docker 能为 Elasticsearch 提供 `2g` Memory Limit、为所选 TEI CPU 模式提供 `12g` Memory Limit（GPU TEI 仍为 `8g`，见 §3.10.4）；无法满足时硬失败。Check 13a 使用 `required_host_mem_gib = 2 + TEI_LIMIT_GIB`（当前 CPU = 14）；Check 13b 在正式 CPU `mem_limit` 下做真实 warm-up 探针。
 13. Preflight 必须校验 `versions.lock.env` 存在、TEI 镜像包含 `@sha256:`、最终有效运行模式和客户端 Token 预算一致。
 14. 所有检查必须输出机器可读的退出码：硬失败返回非零；仅存在 Warning 时返回 `0`。
 

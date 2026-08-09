@@ -17,8 +17,13 @@ MODE="auto"
 HARD_FAILURES=0
 WARNINGS=0
 
-CPU_MIN_GIB=12
-CPU_REC_GIB=16
+# OI-011: TEI_LIMIT_GIB must match compose.embedding.cpu.yaml / lib_tei_probe TEI_SPEC_MEM_LIMIT.
+TEI_LIMIT_GIB=12
+ES_LIMIT_GIB=2
+REQUIRED_HOST_MEM_GIB=$((ES_LIMIT_GIB + TEI_LIMIT_GIB))
+# §3.18 #8 方案 A: CPU_MIN/REC = 12/16 + (D - 8)
+CPU_MIN_GIB=$((12 + TEI_LIMIT_GIB - 8))
+CPU_REC_GIB=$((16 + TEI_LIMIT_GIB - 8))
 GPU_MIN_GIB=8
 GPU_REC_GIB=12
 GPU_FREE_MIB_MIN=8192
@@ -264,16 +269,16 @@ case "${MODE}" in
     ;;
 esac
 
-# --- Check 13a: Host memory for container mem_limit (ES 2g, TEI 8g) ---
+# --- Check 13a: Host MemTotal proxy for container mem_limit sum (ES 2g + TEI Dg) ---
 host_mem_total_gib="$(awk '/^MemTotal:/ { printf "%.0f", $2 / 1024 / 1024 }' /proc/meminfo)"
-if [[ "${host_mem_total_gib}" -ge 10 ]]; then
-  pass "Check 13a: host MemTotal ${host_mem_total_gib} GiB supports ES 2g + TEI 8g mem_limit"
+if [[ "${host_mem_total_gib}" -ge "${REQUIRED_HOST_MEM_GIB}" ]]; then
+  pass "Check 13a: host MemTotal ${host_mem_total_gib} GiB supports ES ${ES_LIMIT_GIB}g + TEI ${TEI_LIMIT_GIB}g mem_limit (required ${REQUIRED_HOST_MEM_GIB})"
 else
-  fail "Check 13a: host MemTotal ${host_mem_total_gib} GiB insufficient for ES 2g + TEI 8g mem_limit"
+  fail "Check 13a: host MemTotal ${host_mem_total_gib} GiB insufficient for ES ${ES_LIMIT_GIB}g + TEI ${TEI_LIMIT_GIB}g mem_limit (required ${REQUIRED_HOST_MEM_GIB})"
 fi
 
-# --- Check 13b: TEI CPU runtime probe (§3.18 #12 — real 8g cgroup validation) ---
-# Scope: TEI CPU 8g only. ES 2g remains MemTotal proxy. GPU/auto→gpu deferred (SF-004).
+# --- Check 13b: TEI CPU runtime probe (§3.18 #12 — real formal cgroup validation) ---
+# Scope: TEI CPU formal mem_limit only. ES 2g remains MemTotal proxy. GPU/auto→gpu deferred (SF-004).
 # Lightweight Check 13a vs runtime probe: this step may take up to ~300s.
 # shellcheck disable=SC1091
 source "${SCRIPT_DIR}/lib_tei_probe.sh"
@@ -307,9 +312,9 @@ PY
     probe_summary="probe evidence incomplete"
   fi
   if [[ "${probe_rc}" -eq 0 ]]; then
-    pass "Check 13b: TEI CPU warm-up completed within 8g mem_limit (${probe_summary})"
+    pass "Check 13b: TEI CPU warm-up completed within ${TEI_SPEC_MEM_LIMIT} mem_limit (${probe_summary})"
   elif [[ "${probe_rc}" -eq 2 ]]; then
-    fail "Check 13b: TEI CPU OOMKilled under mem_limit=8g (${probe_summary})"
+    fail "Check 13b: TEI CPU OOMKilled under mem_limit=${TEI_SPEC_MEM_LIMIT} (${probe_summary})"
   elif [[ "${probe_rc}" -eq 3 ]]; then
     fail "Check 13b: TEI CPU not healthy within 300s (${probe_summary})"
   else

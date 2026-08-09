@@ -116,7 +116,7 @@ wait_for_embedding_ready() {
       log "Recent embedding-service logs:"
       docker logs --tail 50 "${container_name}" 2>&1 || true
     fi
-    fail "embedding-service OOMKilled under mem_limit=8g (exit 137). Run scripts/diagnostics/measure_tei_memory.sh for evidence."
+    fail "embedding-service OOMKilled under mem_limit=12g (exit 137). Run scripts/diagnostics/measure_tei_memory.sh for evidence."
   fi
   if [[ "${wait_rc}" -eq 3 ]]; then
     cleanup_failed_embedding "${resolved_mode}"
