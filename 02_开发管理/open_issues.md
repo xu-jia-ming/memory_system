@@ -276,14 +276,16 @@ impact: "最小 MVP：默认 Embedding pivot 至 SiliconFlow BAAI/bge-m3（dim=1
 blocks_current_task: false
 resolve_by_task: OI-012
 downstream_dev_task: DEV-007
-status: open
+status: resolved
 task_plan: 02_开发管理/tasks/OI-012-siliconflow-embedding-provider-spec-oi.md
-amendment: "Amendment 002 MVP_SIMPLIFICATION"
+amendment: "Amendment 002 MVP_SIMPLIFICATION + Amendment 002.1（Round 2 MF-1/SF-1～4）"
+resolved_at: "2026-08-09 06:55 UTC"
+resolved_by_task: OI-012
 ```
 
 **问题描述：** MVP 须将默认 Embedding 从 `local_tei` pivot 至 SiliconFlow 托管 `BAAI/bge-m3`。Amendment 002 将 OI-012 **缩减为最小 Spec-OI**（架构决策记录 + 最小规格句），**不**一次性重构 embedding 架构。实现合并为 **单一 DEV-007**（取消 DEV-008/009）。官方未知：bge-m3 输出维度（Integration 须验证 dim=1024 否则 HALT）。DEV-006/PR#13：**PAUSED/SUPERSEDED_FOR_MVP** + **DO_NOT_MERGE**（决策 deferred）。
 
-**是否阻塞当前任务：** **否**（相对 OI-012 规划审查；PR#13 处置 deferred）。
+**是否阻塞当前任务：** **否**（PR#13 处置 deferred）。
 
 **禁止行为：**
 
@@ -293,9 +295,18 @@ amendment: "Amendment 002 MVP_SIMPLIFICATION"
 - 不得在本 OI 引入 local HF tokenizer 或 §3.3/§3.18 大规模改写
 - 不得让 STM/EXT/RET 直接依赖 SiliconFlow SDK
 
-**规划态备注（非决议）：** Amendment 002（2026-08-09）；`next_action=计划审查`；**本轮不 PLAN_LANDING**；DEV-006 **PAUSED/SUPERSEDED_FOR_MVP**。
+**决议记录（2026-08-09；Amendment 002/002.1 吸收；Round 3 PLAN_APPROVED）：**
 
-**决议记录：** （空；OI-012 实施后追加）
+1. **默认 Provider**：`memory_retrieval.embedding_provider=siliconflow`（`local_tei` 枚举保留，可选自托管，非 MVP 阻塞）。
+2. **模型与维度**：`BAAI/bge-m3`；`dimension=1024`；Integration gate：`dim≠1024` → **HALT**（不改 ES mapping）。
+3. **Secret Contract**：`SILICONFLOW_API_KEY`（`SecretStr`）；仅 `siliconflow` provider 必填（§3.8）。
+4. **规格最小 pivot**：§3.1 / §2.2.14 / §3.8 / §3.10.0 / §2.2.6（SiliconFlowEmbeddingClient 一句；`EmbeddingClient` 唯一业务边界）；§3.3/§3.18 **未**大规模改写。
+5. **Batch limits**：SiliconFlow **32**/request；TEI **64**/request（各自 Client Contract 内分片）。
+6. **Retry（DEV-007 Contract 引用）**：**1 次初始 + 最多 2 次重试 = 最多 3 次 HTTP attempt**。
+7. **L2 归一化**：SiliconFlow 向量 L2 归一化语义 **UNKNOWN / DEV-007 规划决策**（不得猜测）。
+8. **下游**：**单一 DEV-007**（合并原 DEV-007/008/009 意图）；**无** DEV-008/009。
+9. **DEV-006 / PR #13**：**PAUSED / SUPERSEDED_FOR_MVP**；PR #13 **OPEN / DO_NOT_MERGE**；决策 deferred 至 DEV-007 Integration gate PASS。
+10. **Amendment 002.1 traceability（SHOULD_FIX SF-R3-001）**：`latest_commit`/`git` 前提 SHA = `c8c03db4b984a1e65b7d2d46b392f87a938c8eec`（`git rev-parse HEAD` 验证；禁混缀）；`plan_commit` = `e122c8ab840720a4f86cffda5a58e5f9e6f34944`。
 
 ---
 
@@ -314,4 +325,4 @@ amendment: "Amendment 002 MVP_SIMPLIFICATION"
 | OI-009 | STM-004 | 否 | open |
 | OI-010 | 已人工决议（uv_build） | 否 | resolved |
 | OI-011 | OI-011 | 否 | resolved |
-| OI-012 | OI-012 | 否（PR#13 deferred） | open |
+| OI-012 | OI-012 | 否（PR#13 deferred） | resolved |

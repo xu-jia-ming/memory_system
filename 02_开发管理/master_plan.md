@@ -54,11 +54,11 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | completed |
 | DEV-003-002 | TEI CPU Memory Contract Validation（Preflight Hardening） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003 | completed |
 | OI-011 | BAAI/bge-m3 CPU TEI Memory Contract（Spec-OI） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003-002 | completed |
-| OI-012 | SiliconFlow Embedding Provider（Spec-OI） | §2.2.6, §2.2.14, §3.1, §3.8, §3.10 | OI-011 | planned |
+| OI-012 | SiliconFlow Embedding Provider（Spec-OI） | §2.2.6, §2.2.14, §3.1, §3.8, §3.10 | OI-011 | tested |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | completed |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | completed |
 | DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003, DEV-003-002, OI-011 | paused / SUPERSEDED_FOR_MVP |
-| DEV-007 | SiliconFlow Embedding Client MVP | §2.2.6, §3.8, §3.10 | OI-012, DEV-002, DEV-004, DEV-005 | planned |
+| DEV-007 | SiliconFlow Embedding Client MVP | §2.2.6, §2.2.14, §3.8, §3.10 | OI-012, DEV-002, DEV-004, DEV-005 | planned |
 
 ### Phase 0 补充：开发工作流自动化（非业务规格）
 
@@ -223,7 +223,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：最小 spec + 治理；DEFERRED 清单；Review 无 P0/P1。
 - **计划文件**：`02_开发管理/tasks/OI-012-siliconflow-embedding-provider-spec-oi.md`
 - **规格章节**：§2.2.6、§2.2.14、§3.1、§3.8、§3.10（最小 pivot；**不含** §3.2/§3.3/§3.18 大改）。
-- **状态备注**：`planned`（Amendment 002/002.1 MVP_SIMPLIFICATION；`next_action=计划审查`）。
+- **状态备注**：`tested`（Amendment 002/002.1 MVP_SIMPLIFICATION；Round 3 PLAN_APPROVED；`plan_commit=e122c8a`；Phase A+B 实施完成；`next_action=代码审查`）。
 
 #### DEV-006 TEI Embedding Client + Token Budget
 
@@ -236,6 +236,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **非目标**：TEI refactor/429/compose；STM/EXT/RET；PR #13；local tokenizer；large metrics。
 - **前置**：OI-012 completed。
 - **计划文件**：（待 OI-012 merged 后 Planner 创建 `DEV-007-siliconflow-embedding-client-mvp.md`）
+- **规格章节**：§2.2.6、§2.2.14、§3.8、§3.10（OI-012 已修订最小 Contract）。
 - **状态备注**：`planned`（Amendment 002 取代 DEV-008/009 占位）。
 
 ---
