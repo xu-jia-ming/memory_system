@@ -405,7 +405,7 @@ pr_head: feat/DEV-OPS-006-phase0-baseline-hygiene-before-stm001
 merge_commit: 3e727b3dc1a168863d7fa6e8d52a175d36de4644
 merged_at: "2026-08-09T12:44:26Z"
 status_record_committed: 6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f
-status_record_completed: null  # pending this docs(status): complete commit SHA
+status_record_completed: 7abde48af72ea2d676deed64e1333f3e55d08a51
 ```
 
 ### 最终状态

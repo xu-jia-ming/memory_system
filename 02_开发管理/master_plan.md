@@ -79,7 +79,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **关键修复**：仅在 `tests/unit/test_compose_wrapper_contract.py` 对 `scripts/preflight/lib_tei_probe.sh` 与 `scripts/diagnostics/measure_tei_memory.sh` 做 exact-path/exact-purpose allowlist；禁止删测/skip/全局放宽。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md`
 - **插入说明**：用户显式 NEW_UNPLANNED_FEATURE；`workflow_mode=NORMAL`（explicit）。
-- **状态备注**：`completed`（implementation_commit `b9f049af59d0e904ebee0ce09df13cc383a91b52`；record `6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f`；PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`；plan_commit `09b045be1429716eab184e4565beb30cf2856b28`；baseline GREEN；Phase 0 completed；STM-001 READY_FOR_PLANNING；unit 216 / contract 47 / ruff PASS / mypy PASS；`workflow_mode=NORMAL`；**不得启动 STM-001 实施**）。
+- **状态备注**：`completed`（implementation_commit `b9f049af59d0e904ebee0ce09df13cc383a91b52`；record `6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f`；PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`；completed 治理 `7abde48af72ea2d676deed64e1333f3e55d08a51`；plan_commit `09b045be1429716eab184e4565beb30cf2856b28`；baseline GREEN；Phase 0 completed；STM-001 READY_FOR_PLANNING；unit 216 / contract 47 / ruff PASS / mypy PASS；`workflow_mode=NORMAL`；**不得启动 STM-001 实施**）。
 
 #### DEV-OPS-005 Human Prompt Playbook and Recovery Operations Manual
 

@@ -28,7 +28,7 @@ formal_DEV-OPS-006_plan_file: 02_开发管理/tasks/DEV-OPS-006-phase0-baseline-
 formal_DEV-OPS-006_plan_commit: 09b045be1429716eab184e4565beb30cf2856b28
 formal_DEV-OPS-006_implementation_commit: b9f049af59d0e904ebee0ce09df13cc383a91b52
 formal_DEV-OPS-006_status_record_committed: 6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f
-formal_DEV-OPS-006_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_DEV-OPS-006_status_record_completed: 7abde48af72ea2d676deed64e1333f3e55d08a51
 formal_DEV-OPS-006_pr: "#18"
 formal_DEV-OPS-006_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/18"
 formal_DEV-OPS-006_pr_state: MERGED
@@ -38,7 +38,7 @@ formal_DEV-OPS-006_workflow_mode: NORMAL
 formal_DEV-OPS-006_root_cause_classification: A
 formal_DEV-OPS-006_note: "Phase 0 baseline hygiene before STM-001 completed；baseline GREEN；STM-001 READY_FOR_PLANNING；不得实现 STM-001"
 # Verified baseline（DEV-OPS-006 tested / merge evidence）
-latest_commit: 3e727b3dc1a168863d7fa6e8d52a175d36de4644
+latest_commit: 7abde48af72ea2d676deed64e1333f3e55d08a51
 main_tip_at_tested: 09b045be1429716eab184e4565beb30cf2856b28
 planning_baseline_head: 524786aa52f3ac79b5e9a26e46f36b93545d7c55
 verified_unit: "216 passed / 0 failed (uv run pytest tests/unit -q @ 2026-08-09 12:32 UTC)"
@@ -317,7 +317,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | PLAN_APPROVED（DEV-OPS-006 计划） | **已通过**（Plan Reviewer BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；`workflow_mode=NORMAL`（explicit）；plan_commit `09b045be1429716eab184e4565beb30cf2856b28`；PLAN_LANDING 完成 |
 | CODE_REVIEW_APPROVED（DEV-OPS-006 实现） | **已通过**（P0=0 / P1=0）；`CODE_REVIEW_APPROVED` |
 | RELEASE_COMPLETED（DEV-OPS-006 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `b9f049af59d0e904ebee0ce09df13cc383a91b52`；record `6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f`；PR #18 曾 OPEN 后已 MERGED |
-| RELEASE_COMPLETED（DEV-OPS-006 POST_MERGE_CLEANUP） | **本轮**；PR #18 MERGED（`3e727b3dc1a168863d7fa6e8d52a175d36de4644`）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
+| RELEASE_COMPLETED（DEV-OPS-006 POST_MERGE_CLEANUP） | **已完成**；PR #18 MERGED（`3e727b3dc1a168863d7fa6e8d52a175d36de4644`）；completed 治理 `7abde48af72ea2d676deed64e1333f3e55d08a51`；exact feat 待删 |
 | CODE_REVIEW_APPROVED（DEV-OPS-005 实现） | **已通过**（P0=0 / P1=0 / P2=0 / P3=3；P3 残余不阻塞） |
 | RELEASE_COMPLETED（DEV-OPS-005 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `373cd331313e02d053a6b49af11beaa7be02acbc`；PR #11 MERGED（`0239c28281949bedec66dbec1412197c5561a611`）；committed 治理 `239218432d6b86d4f34d24c248611361df5d5069` |
 | RELEASE_COMPLETED（DEV-OPS-005 POST_MERGE_CLEANUP） | **已完成**（本轮）；completed 治理待本 docs(status) 落盘；exact feat 待删 |
