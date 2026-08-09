@@ -5,9 +5,11 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 0
-current_task: DEV-007
-current_task_status: completed
+current_phase: Phase 0  # hygiene 完成后应标 Phase 0 completed / Phase 1 ready（实施阶段经验证后回写；本轮不伪造）
+phase0_readiness: PASS
+stm_001_entry_gate: GO_FOR_STM_001
+current_task: DEV-OPS-006
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -16,26 +18,38 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mvp.md
+current_plan_file: 02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
+# DEV-OPS-006 planning evidence（本轮；未实施）
+formal_DEV-OPS-006_status: approved
+formal_DEV-OPS-006_plan_file: 02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md
+formal_DEV-OPS-006_plan_commit: null
+formal_DEV-OPS-006_implementation_commit: null
+formal_DEV-OPS-006_pr: null
+formal_DEV-OPS-006_workflow_mode: NORMAL
+formal_DEV-OPS-006_root_cause_classification: A
+formal_DEV-OPS-006_note: "Phase 0 baseline hygiene before STM-001；exact allowlist OI-011 probe paths；不得实现 STM-001"
+# Verified main HEAD at planning time（DOC_CODE_DRIFT hygiene target；实施完成后再与 post-merge HEAD 对齐）
+latest_commit: 524786aa52f3ac79b5e9a26e46f36b93545d7c55
+planning_baseline_head: 524786aa52f3ac79b5e9a26e46f36b93545d7c55
+planning_unit_collect: 215
+planning_unit_known_failure: "tests/unit/test_compose_wrapper_contract.py::test_no_bare_docker_compose_outside_wrapper (1 failed; PRE_EXISTING_WARNING)"
+planning_contract_verified: "47 passed (uv run pytest tests/contract -q @ planning)"
+# DEV-007 formal completion evidence (retained)
 formal_DEV-007_status: completed
-latest_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
-plan_commit: 69e4dece8e72acf22828ba5b81682b70ecb34e8b
-implementation_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
-implementation_commit_message: "feat(embedding): add siliconflow client, settings, and contract tests"
-status_record_commit_committed: ea58d72690d2e34539cd2eb123e1fedd14c5874f
-status_record_commit_committed_message: "docs(status): record DEV-007 implementation commit and PR"
-pr: "#17"
-pr_url: "https://github.com/xu-jia-ming/memory_system/pull/17"
-pr_status: MERGED
-pr_base: main
-pr_head: feat/DEV-007-siliconflow-embedding-client-mvp
-merge_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
-merged_at: "2026-08-09T08:24:13Z"
-real_siliconflow_integration: PASS
-real_siliconflow_integration_model: "BAAI/bge-m3"
-real_siliconflow_integration_dimension: 1024
+formal_DEV-007_plan_file: 02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mvp.md
+formal_DEV-007_plan_commit: 69e4dece8e72acf22828ba5b81682b70ecb34e8b
+formal_DEV-007_implementation_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
+formal_DEV-007_status_record_committed: ea58d72690d2e34539cd2eb123e1fedd14c5874f
+formal_DEV-007_status_record_completed: ce461229fd3c997d5ebe237127d849c547462481
+formal_DEV-007_pr: "#17"
+formal_DEV-007_pr_state: MERGED
+formal_DEV-007_merge_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
+formal_DEV-007_workflow_mode: NORMAL
+formal_DEV-007_real_integration: PASS
+formal_DEV-007_embedding_model: "BAAI/bge-m3"
+formal_DEV-007_embedding_dimension: 1024
 memory_limit_decision: 12g
 cpu_tei_profile: "BAAI/bge-m3 float32 ONNX CPU mem_limit=12g"
 historical_8g_runtime_contract_status: SPEC_RUNTIME_CONTRACT_CONFLICT
@@ -60,21 +74,6 @@ formal_OI-012_pr: "#16"
 formal_OI-012_pr_state: MERGED
 formal_OI-012_merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
 formal_OI-012_workflow_mode: NORMAL
-# DEV-007 formal completion evidence
-formal_DEV-007_plan_file: 02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mvp.md
-formal_DEV-007_plan_commit: 69e4dece8e72acf22828ba5b81682b70ecb34e8b
-formal_DEV-007_implementation_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
-formal_DEV-007_status_record_committed: ea58d72690d2e34539cd2eb123e1fedd14c5874f
-formal_DEV-007_status_record_completed: ce461229fd3c997d5ebe237127d849c547462481
-status_record_commit_completed: ce461229fd3c997d5ebe237127d849c547462481
-status_record_commit_completed_message: "docs(status): complete DEV-007 after PR merge"
-formal_DEV-007_pr: "#17"
-formal_DEV-007_pr_state: MERGED
-formal_DEV-007_merge_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
-formal_DEV-007_workflow_mode: NORMAL
-formal_DEV-007_real_integration: PASS
-formal_DEV-007_embedding_model: "BAAI/bge-m3"
-formal_DEV-007_embedding_dimension: 1024
 # Retained DEV-003-002 completion evidence
 formal_DEV-003-002_plan_file: 02_开发管理/tasks/DEV-003-002-tei-cpu-memory-contract-validation.md
 formal_DEV-003-002_plan_commit: 7172e918647c1853d0982ce979b299920d96a0cb
@@ -90,6 +89,7 @@ previous_status_record_commit_committed_message: "docs(status): record DEV-007 i
 previous_pr: "#17"
 previous_pr_status: MERGED
 previous_merge_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
+previous_status_record_commit_completed: ce461229fd3c997d5ebe237127d849c547462481
 # DEV-OPS-005 formal completion evidence
 formal_DEV-OPS-005_status: completed
 formal_DEV-OPS-005_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
@@ -158,27 +158,27 @@ step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task
-deferred_business_task: null
-deferred_business_task_status: null
-deferred_business_task_note: null
-next_action: 等待用户显式指定下一任务（Phase 0 bootstrap 就绪；STM-001 / EXT-007 / RET-001 等可规划）
-human_plan_approved_at: "2026-08-09 15:26 UTC"
-human_plan_approved_note: "PLAN_APPROVED DEV-007 Amendment 001; BLOCKER=0; MUST_FIX=0"
+deferred_business_task: STM-001
+deferred_business_task_status: not_started
+deferred_business_task_note: "DEV-OPS-006 hygiene 完成后方可规划；本任务期间不得实现 STM-001"
+next_action: PLAN_LANDING（docs(plan) on main + 创建 feat 分支）
+human_plan_approved_at: null
+human_plan_approved_note: null
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
 insertion_override:
-  prior_current_task: DEV-006
-  prior_current_task_status: paused
-  prior_next_action: "DEV-006 resume 评估（OI-011 completed）"
-  override_by: "用户显式 NEW_UNPLANNED_FEATURE → Amendment 002 MVP 最小 pivot"
-  effect: "OI-012 minimal Spec-OI；单一 DEV-007；DEV-006 SUPERSEDED_FOR_MVP；PR #13 DO_NOT_MERGE；不 PLAN_LANDING"
-  overridden_at: "2026-08-09 06:00 UTC"
+  prior_current_task: DEV-007
+  prior_current_task_status: completed
+  prior_next_action: "等待用户显式指定下一任务（Phase 0 bootstrap 就绪；STM-001 / EXT-007 / RET-001 等可规划）"
+  override_by: "用户显式 NEW_UNPLANNED_FEATURE → DEV-OPS-006 Phase 0 baseline hygiene；WORKFLOW_MODE=NORMAL(explicit)"
+  effect: "current_task=DEV-OPS-006 planned；清 unit compose-wrapper fail + progress DOC_CODE_DRIFT；不得实现 STM-001；不得触碰 DEV-006/PR#13"
+  overridden_at: "2026-08-09 10:42 UTC"
 # DEV-006 / PR #13 disposition (record only)
 dev_006_disposition:
   status: "PAUSED / SUPERSEDED_FOR_MVP"
   plan_file: 02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md
   pr: "#13"
   pr_status: "OPEN / DO_NOT_MERGE"
-  pr13_decision: "deferred until DEV-007 SiliconFlow MVP integration gate validated"
+  pr13_decision: "deferred；DEV-OPS-006 不得操作 dirty worktree / Merge PR #13"
   must_not: "merge PR #13; modify DEV-006 feat; access DEV-006 dirty worktree"
 # Retained DEV-004 governance deviation evidence (historical)
 governance_deviation:
@@ -198,18 +198,18 @@ governance_deviation:
 
 | 测试层级 | 状态 | 最近命令 | 最近结果 |
 |---|---|---|---|
-| Unit | passed（DEV-OPS-005） | `uv run pytest tests/unit -q` | **156 passed**；exit=0（含 Playbook 契约 28） |
-| Contract（Playbook DEV-OPS-005） | passed | `uv run pytest tests/unit/test_project_operations_playbook_contract.py -q` | **28 passed**；exit=0 |
-| Contract（业务） | passed | `uv run pytest tests/contract -q` | **17 passed**（含 migrate paths + compose；exit=0；本任务未改） |
-| Contract（Cursor 工作流） | passed | `uv run pytest tests/unit/test_cursor_orchestrator_contract.py tests/unit/test_cursor_workflow_modes_contract.py tests/unit/test_cursor_commands_contract.py -q` | 50 passed（既有；本任务未改五命令） |
-| Contract（Mihomo 网络回退） | passed | `uv run pytest tests/unit/test_mihomo_network_fallback_contract.py -q` | 15 passed（DEV-OPS-004；本任务未改） |
-| Integration | passed | `uv run pytest tests/integration/test_migrate_infra.py -v` | **1 passed**（79s；compose test 栈；exit=0；本任务未改） |
-| TEI lock validate | passed | `timeout 600 ./scripts/lock_tei_images.sh` | CPU+GPU 1.9.3（GPU `--gpus all` 修复后；DEV-003） |
-| E2E | passed（DEV-OPS-003 Step 7） | DEV-OPS-003-SMOKE NORMAL 受监督全链路 | **PASSED**：默认 NORMAL；两人工门（PLAN_APPROVED + PR Merge）；三相 Release 真实执行；PR #8 MERGED（`e14d71e`）；POST_MERGE `45c74f8`；STRICT 正路径证据=正式 DEV-OPS-003 自身 |
-| Ruff | passed（DEV-OPS-005） | `uv run ruff check .` | All checks passed；exit=0 |
-| Mypy | passed（DEV-OPS-005） | `uv run mypy src tests scripts` | Success: 61 source files；exit=0 |
-| UI discovery（§9 / OI-OPS-005 延续） | passed（DEV-OPS-002） | 人工 `/` 菜单 | 七项均可发现：`/orchestrate-task`、`/planner`、`/plan-reviewer`、`/developer`、`/code-reviewer`、`/commit-recorder`、`/release-operator`（2026-08-07 02:40 UTC） |
-| E2E 冒烟（§9） | passed（DEV-OPS-002） | 受监督完整编排链路 | PR #3；`0891cd5`；测试 PR 已关闭（未 merge）；E2E 分支保留 |
+| Unit | **failing（1；DEV-OPS-006 目标修复）** | `uv run pytest tests/unit -q`（规划只读） | **215 collected**；已知 **1 failed**：`test_no_bare_docker_compose_outside_wrapper`（`lib_tei_probe.sh` + `measure_tei_memory.sh`）；其余历史行保留为 DOC_CODE_DRIFT 待 hygiene 后用实跑结果覆盖；**禁止伪造全绿** |
+| Contract（业务） | passed（规划只读复验） | `uv run pytest tests/contract -q` | **47 passed**；exit=0（2026-08-09 10:42 UTC 规划轮次） |
+| Contract（Playbook DEV-OPS-005） | passed（历史） | `uv run pytest tests/unit/test_project_operations_playbook_contract.py -q` | **28 passed**（历史；计入 unit collect） |
+| Contract（Cursor 工作流） | passed（历史） | `uv run pytest tests/unit/test_cursor_orchestrator_contract.py tests/unit/test_cursor_workflow_modes_contract.py tests/unit/test_cursor_commands_contract.py -q` | 50 passed（既有） |
+| Contract（Mihomo 网络回退） | passed（历史） | `uv run pytest tests/unit/test_mihomo_network_fallback_contract.py -q` | 15 passed（DEV-OPS-004） |
+| Integration | passed（历史） | `uv run pytest tests/integration/test_migrate_infra.py -v` | **1 passed**（79s；compose test 栈） |
+| TEI lock validate | passed（历史） | `timeout 600 ./scripts/lock_tei_images.sh` | CPU+GPU 1.9.3（DEV-003） |
+| E2E | passed（DEV-OPS-003 Step 7） | DEV-OPS-003-SMOKE NORMAL 受监督全链路 | **PASSED**（PR #8 MERGED） |
+| Ruff | stale（待 DEV-OPS-006 实跑） | `uv run ruff check .` | 上次记录为 DEV-OPS-005 passed；本轮规划未声称复跑通过 |
+| Mypy | stale（待 DEV-OPS-006 实跑） | `uv run mypy src tests scripts` | 上次记录为 DEV-OPS-005 passed；本轮规划未声称复跑通过 |
+| UI discovery（§9 / OI-OPS-005 延续） | passed（DEV-OPS-002） | 人工 `/` 菜单 | 七项均可发现（2026-08-07 02:40 UTC） |
+| E2E 冒烟（§9） | passed（DEV-OPS-002） | 受监督完整编排链路 | PR #3；E2E 分支保留 |
 
 ## 已完成任务
 
@@ -232,13 +232,17 @@ governance_deviation:
 
 ## 规格阻塞项
 
-**OI-012（Amendment 002/002.1）**：**completed**（PR #16 MERGED `003fb43e24ab5bb5d2401342a0f466fcbe22ce26`；最小 MVP Spec-OI 已在 main；`next_action`→DEV-007 规划）。
+**DEV-OPS-006（当前）**：**planned** — Phase 0 baseline hygiene（compose-wrapper allowlist + progress DOC_CODE_DRIFT）；分类 A；等待 Plan Review / `PLAN_APPROVED`；完成后才进入 STM-001 规划。
 
-**DEV-006 / PR #13**：**PAUSED / SUPERSEDED_FOR_MVP**；PR #13 **OPEN / DO_NOT_MERGE**；PR 处置 deferred 至 DEV-007 Integration 验证后。
+**OI-012（Amendment 002/002.1）**：**completed**（PR #16 MERGED `003fb43e24ab5bb5d2401342a0f466fcbe22ce26`）。
 
-**下游**：单一 **DEV-007**（SiliconFlow MVP）；**无** DEV-008/009；**前置 OI-012 已满足，可进入规划**。
+**DEV-007**：**completed**（PR #17 MERGED `b7916ea79a2d2ec7bf25873ec2ba50ad64041775`；SiliconFlow MVP 在 main）。
 
-**OI-011 / TEI**：已完成（12g contract 保留；本 MVP 不修改）。
+**DEV-006 / PR #13**：**PAUSED / SUPERSEDED_FOR_MVP**；PR #13 **OPEN / DO_NOT_MERGE**；DEV-OPS-006 **不得**操作。
+
+**OI-011 / TEI**：已完成（12g contract 保留；本 hygiene 不修改）。
+
+**下游**：DEV-OPS-006 完成后 → **STM-001 可规划**（须另一次显式编排；本任务不得实施）。
 
 ## 实施前置条件
 
@@ -528,6 +532,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-09 07:02 UTC | OI-012 | committed → completed | PR #16 MERGED（`003fb43`）；POST_MERGE_CLEANUP 本轮 | main 含最小 Spec-OI pivot | `next_action`→DEV-007 规划；feat 待删；**不得启动 DEV-007 实施** |
 | 2026-08-09 15:20 UTC | DEV-007 | planned（Planner 初版） | 创建 Task Plan `02_开发管理/tasks/DEV-007-siliconflow-embedding-client-mvp.md`；master_plan CHANGE-016；progress 规划态回写 | 未实施、未 Git 写、未建 feat 分支；`next_action=计划审查`；**不得触碰 DEV-006 feat / PR #13** |
 | 2026-08-09 16:20 UTC | DEV-007 | approved → in_progress → tested | SiliconFlow client MVP 实施完成；U1–U6/C1–C17 通过；ruff/mypy/env check 通过 | unit+contract 261 passed（1 main 既有 compose wrapper 失败） | `next_action=Code Review`；未 commit；integration opt-in 未跑 |
+| 2026-08-09 08:24 UTC | DEV-007 | committed → completed | PR #17 MERGED（`b7916ea`）；POST_MERGE docs(status) complete；HEAD 后续含 `524786a` record SHA | main 同步；SiliconFlow MVP 在 main | `next_action` 曾为等待下一任务 |
+| 2026-08-09 10:42 UTC | DEV-OPS-006 | planned（Planner 初版） | 创建 Task Plan `DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md`；master_plan CHANGE-019；progress 规划态回写 | 只读诊断：分类 **A**；contract 47 passed；unit 215 collected / 1 fail | `next_action=计划审查`；**不得实现 STM-001**；**不得触碰 DEV-006/PR#13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -560,7 +566,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **DEV-007**：`tested`（SiliconFlow Embedding Client MVP；Amendment 001）；`next_action=Code Review`；feat 分支未 commit。
-2. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**。
-3. **OI-012**：`completed`（PR #16 MERGED；最小 MVP Spec-OI 已在 main）。
-4. **OI-011**：`completed`（TEI 12g 保留；本 MVP 不修改）。
+1. **DEV-OPS-006**（当前）：`planned` — Phase 0 Baseline Hygiene Before STM-001；`next_action=计划审查`；分类 **A**（OI-011 probe exact allowlist）；**不得实施**直至 `PLAN_APPROVED`。
+2. **STM-001**：可规划（待 DEV-OPS-006 completed）；本轮不得实现。
+3. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；DEV-OPS-006 不得触碰。
+4. **DEV-007 / OI-012 / OI-011**：`completed`（保留）。

@@ -69,6 +69,17 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-003 | NORMAL / STRICT 工作流模式；减少常规人工机械门禁 | 非业务：扩展 DEV-OPS-002；保留六 Subagent 与唯一 Git 写角色 | DEV-OPS-002 | completed |
 | DEV-OPS-004 | 本机 Mihomo 网络回退策略文档（AI 工作流） | 非业务：全局开发规则 + 契约测试；不改规格/业务代理 Contract | DEV-OPS-003 | completed |
 | DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 非业务：人类日常操作手册 + 契约测试；不改 Orchestrator/mode/业务 | DEV-OPS-003, DEV-OPS-004, DEV-004 | completed |
+| DEV-OPS-006 | Phase 0 Baseline Hygiene Before STM-001 | 非业务：unit compose-wrapper allowlist + progress DOC_CODE_DRIFT hygiene | DEV-007, OI-011 | approved |
+
+#### DEV-OPS-006 Phase 0 Baseline Hygiene Before STM-001
+
+- **目标**：进入 STM-001 前最小 hygiene——unit/contract/ruff/mypy baseline 全绿；`progress.md` 治理 metadata 与 main HEAD 一致；修复 `test_no_bare_docker_compose_outside_wrapper`（OI-011 probe 路径）。
+- **根因分类**：**A**（批准的 characterization wrapper exception；contract test 缺 exact-path allowlist）。次因：`measure_tei_memory.sh` 为 usage comment 命中（C-like），修复仍走 A。
+- **非目标**：实现 STM-001；改 SiliconFlow/TEI 12g/`compose*.yaml`；操作 DEV-006/PR#13；启停 TEI；infrastructure redesign。
+- **关键修复**：仅在 `tests/unit/test_compose_wrapper_contract.py` 对 `scripts/preflight/lib_tei_probe.sh` 与 `scripts/diagnostics/measure_tei_memory.sh` 做 exact-path/exact-purpose allowlist；禁止删测/skip/全局放宽。
+- **计划文件**：`02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md`
+- **插入说明**：用户显式 NEW_UNPLANNED_FEATURE；`workflow_mode=NORMAL`（explicit）。
+- **状态备注**：`approved`（Plan Reviewer PLAN_APPROVED；BLOCKER=0 MUST_FIX=0；人工确认）；待 PLAN_LANDING；未实施。
 
 #### DEV-OPS-005 Human Prompt Playbook and Recovery Operations Manual
 
@@ -636,5 +647,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | DEV-007（`completed`）；Phase 0 bootstrap（`v0.1.0-bootstrap`）就绪；EXT-007 / RET-001 / RET-002 embedding 前置满足；DEV-006 仍 PAUSED |
 | 是否改变技术规格 | **否**（实现 OI-012 已批准 Contract） |
 | 审批 | POST_MERGE_CLEANUP `docs(status): complete` |
+
+### CHANGE-019
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-09 |
+| 原因 | 用户显式 NEW_UNPLANNED_FEATURE：**DEV-OPS-006** Phase 0 Baseline Hygiene Before STM-001（unit compose-wrapper allowlist + progress DOC_CODE_DRIFT）；根因分类 **A** |
+| 受影响任务 | 新增 `DEV-OPS-006`（`approved`）；**不**实现 STM-001；**不**触碰 DEV-006/PR #13；**不**改 TEI 12g / SiliconFlow / compose*.yaml |
+| 是否改变技术规格 | **否** |
+| 审批 | Plan Reviewer PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
