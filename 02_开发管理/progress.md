@@ -33,7 +33,7 @@ merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
 merged_at: "2026-08-09T07:02:28Z"
 status_record_commit_committed: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
 status_record_commit_committed_message: "docs(governance): close OI-012 and retarget DEV-007"
-status_record_commit_completed: null  # filled after this docs(status): complete commit
+status_record_commit_completed: a338dbc344579326a2edb0090d4562033bbab2b0
 memory_limit_decision: 12g
 cpu_tei_profile: "BAAI/bge-m3 float32 ONNX CPU mem_limit=12g"
 historical_8g_runtime_contract_status: SPEC_RUNTIME_CONTRACT_CONFLICT
@@ -53,7 +53,7 @@ formal_OI-012_plan_commit: e122c8ab840720a4f86cffda5a58e5f9e6f34944
 formal_OI-012_implementation_commit_spec: bd7529f455ab0c34dc03a6659e1850a5eab189f7
 formal_OI-012_implementation_commit: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
 formal_OI-012_status_record_committed: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
-formal_OI-012_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_OI-012_status_record_completed: a338dbc344579326a2edb0090d4562033bbab2b0
 formal_OI-012_pr: "#16"
 formal_OI-012_pr_state: MERGED
 formal_OI-012_merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
@@ -71,7 +71,7 @@ previous_implementation_commit_message: "docs(governance): close OI-012 and reta
 previous_implementation_commit_spec: bd7529f455ab0c34dc03a6659e1850a5eab189f7
 previous_status_record_commit_committed: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
 previous_status_record_commit_committed_message: "docs(governance): close OI-012 and retarget DEV-007"
-previous_status_record_commit_completed: null  # pending this docs(status): complete commit SHA
+previous_status_record_commit_completed: a338dbc344579326a2edb0090d4562033bbab2b0
 previous_status_record_commit_completed_message: "docs(status): complete OI-012 after PR merge"
 previous_pr: "#16"
 previous_pr_status: MERGED

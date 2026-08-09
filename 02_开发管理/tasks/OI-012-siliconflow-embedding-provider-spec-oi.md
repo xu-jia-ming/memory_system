@@ -574,7 +574,7 @@ pr_status: MERGED
 merge_commit: 003fb43e24ab5bb5d2401342a0f466fcbe22ce26
 merged_at: "2026-08-09T07:02:28Z"
 status_record_commit_committed: f4d2e614773f7bcdf8b45b39e3e1c438d282b410
-status_record_commit_completed: null  # filled after docs(status): complete OI-012 after PR merge
+status_record_commit_completed: a338dbc344579326a2edb0090d4562033bbab2b0
 feature_branch_deleted: pending  # local -d + remote --delete in this POST_MERGE_CLEANUP
 ```
 
