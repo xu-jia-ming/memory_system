@@ -52,7 +52,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-002 | 配置系统与 `.env.example` | §3.8, §3.30 P1 | DEV-001 | completed |
 | DEV-003 | Docker Compose、Embedding 服务、Preflight | §3.3, §3.10–3.18 | DEV-002 | completed |
 | DEV-003-002 | TEI CPU Memory Contract Validation（Preflight Hardening） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003 | completed |
-| OI-011 | BAAI/bge-m3 CPU TEI Memory Contract（Spec-OI） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003-002 | tested |
+| OI-011 | BAAI/bge-m3 CPU TEI Memory Contract（Spec-OI） | §3.10.3, §3.10.8, §3.18 #12 | DEV-003-002 | completed |
 | DEV-004 | Migration Runner；含 ES Mapping + Alias | §3.12, §3.26, §2.2.4 | DEV-003 | completed |
 | DEV-005 | 通用 API 壳、鉴权、Request ID、日志与指标 | §3.7, §3.21, §3.23, §3.27 | DEV-002 | completed |
 | DEV-006 | TEI Embedding Client + Token Budget（共享） | §3.2, §3.10, §2.2.6 | DEV-003, DEV-003-002, OI-011 | paused |
@@ -174,7 +174,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **插入说明**：**人工显式 NEW_UNPLANNED_FEATURE**；在 DEV-003-002 completed 之后、DEV-006 恢复之前插入。
 - **计划文件**：`02_开发管理/tasks/OI-011-bge-m3-cpu-tei-memory-contract.md`
 - **绑定 OI**：`OI-011`（`02_开发管理/open_issues.md`）
-- **状态备注**：`tested`（`MEMORY_LIMIT_DECISION=12g`；matrix 8×有效 runs；规格/compose/preflight 对齐；formal measure PASS；Layer B CONFLICT@8g+PASS@12g；待 Code Review；DEV-006 仍 PAUSED 至 OI-011 merge）。
+- **状态备注**：`completed`（plan_commit `bda5018`；implementation_commit `131a2e9`；committed 治理 `8a595b8`；PR #15 MERGED `7cc020a97b0373579a91e620fcdef90976193c8c`；`MEMORY_LIMIT_DECISION=12g`；`RUNTIME_CONTRACT_STATUS=PASS`；historical 8g `SPEC_RUNTIME_CONTRACT_CONFLICT` 保留；OI-011 resolved；DEV-006 OI-011 dependency **SATISFIED**；DEV-006 仍 **PAUSED**（R5–R7 pending）；**不得** Merge PR #13）。
 
 #### DEV-003 Docker Compose、Embedding、Preflight
 
@@ -219,7 +219,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收**：§2.2.6、§3.10.6、§8 行为合同；ruff/mypy/pytest 全绿；供 EXT-007 与 RET-* 复用。
 - **风险**：TEI `/tokenize` 响应格式对齐；Integration 首次模型下载耗时；GPU Cosine 0.999 可能需人工验收；禁止运行时热切换与降阈值。
 - **计划文件**：`02_开发管理/tasks/DEV-006-tei-embedding-client-token-budget.md`
-- **状态备注**：`paused`（PR #13 OPEN；`NOT_READY_FOR_PR_MERGE`；DEV-003-002 **completed**（R1 satisfied）；前置新增 **OI-011**；R2–R4 **BLOCKED** pending OI-011 new runtime memory contract；**不得**恢复 §8.8 Integration until OI-011；**不得** Merge PR #13）。
+- **状态备注**：`paused`（PR #13 OPEN；`NOT_READY_FOR_PR_MERGE`；DEV-003-002 **completed**（R1 satisfied）；**OI-011 completed**（R2–R4 satisfied on main）；`dev006_dependency_status=READY_FOR_RESUME_AFTER_OI011_MERGE`；R5–R7 pending 单独恢复；**不得** Merge PR #13）。
 
 ---
 
