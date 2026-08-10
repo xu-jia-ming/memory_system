@@ -274,7 +274,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | completed |
 | STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | completed |
 | STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | completed |
-| STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | planned |
+| STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | tested |
 | STM-007 | Compression LLM Client + Structured Output | §1.2.5, §3.9 | DEV-002 | planned |
 | STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | planned |
 | STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | planned |
@@ -344,7 +344,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **正式前置依赖**：STM-005 — **SATISFIED**。
 - **测试**：Unit（lock/pending/pre-held A–C、ValidationError）+ Contract（枚举/六字段/TOCTOU guard D）+ Redis Integration（锁互斥、pending、stale/expired/valid pre-held、无 version bump、无 LTRIM；不依赖 Kafka broker）+ Kafka Integration（topic/schema/key/失败注入/重复允许）+ Recovery R1–R4。
 - **规划备注**：Amendment 001（Round 2）；MF-1 方案 A；fresh acquire 与 pre-held 同 pending contract；Kafka **at-least-once**；Redis 内原子 ≠ Redis+Kafka 事务；OI-004 open acknowledged 不阻塞；OI-005 进程内生产者决议；锁过期后既有 pending republish 依赖 STM-011（不实现）；lock 仅 `compression_lock_repository.py`。
-- **状态备注**：`approved`（Amendment 001；plan file `02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md`；baseline `e53a0f1e2e448a6a40445768f30c902173dd0921`；`workflow_mode=NORMAL` explicit）；正式前置 STM-005 **SATISFIED**；Round 2 `PLAN_APPROVED`（BLOCKER=0 MUST_FIX=0）；Human `PLAN_APPROVED`；**next_action=PLAN_LANDING**；落地后允许 Developer；不得触碰 DEV-006/PR#13。
+- **状态备注**：`tested`（Amendment 001；plan_commit `6dd97278ec82ebb24dcb21c2c5a58118a65db0cd`；feat `feat/STM-006-compression-lock-pending-archive-kafka`；`workflow_mode=NORMAL`）；compression lock SET NX EX + compare-and-del；pending Lua ownership 同窗 + accounting identity accounting fail-closed；Kafka `context.archive.created` 六字段 at-least-once；scoped unit 26 / contract 4 / redis int 16 / kafka int 4；full unit 349 / contract 72；ruff PASS；mypy PASS；**next_action=Code Review**；未 commit；不得触碰 DEV-006/PR#13。
 
 #### STM-007
 
@@ -904,5 +904,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-006`（`approved`；plan `02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md`；feat `feat/STM-006-compression-lock-pending-archive-kafka`）；**不** 业务实施直至 Developer；**不** 触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否** |
 | 审批 | Human PLAN_APPROVED；Release Operator PLAN_LANDING |
+
+### CHANGE-041
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-006 Developer 实施完成：compression lock + pending Lua（PREHELD atomic）+ Kafka `context.archive.created`；status→`tested` |
+| 受影响任务 | `STM-006`（`tested`；feat `feat/STM-006-compression-lock-pending-archive-kafka`）；Human SF same-identity accounting fail-closed；**不** LLM/Finalize/HTTP/STM-011；**不** 触碰 DEV-006/PR #13；未 commit |
+| 是否改变技术规格 | **否** |
+| 审批 | Developer tested；`next_action=Code Review` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

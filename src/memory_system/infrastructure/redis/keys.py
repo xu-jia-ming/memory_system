@@ -18,3 +18,8 @@ def working_memory_messages_key(user_id: str, session_id: str) -> str:
 def working_memory_message_ids_key(user_id: str, session_id: str) -> str:
     """Return the Set key for session message IDs."""
     return f"{_WORKING_MEMORY_PREFIX}:{user_id}:{session_id}:message_ids"
+
+
+def compression_lock_key(user_id: str, session_id: str) -> str:
+    """Return the compression lock key (§1.2.1 rule 6)."""
+    return f"memory:compression:lock:{user_id}:{session_id}"

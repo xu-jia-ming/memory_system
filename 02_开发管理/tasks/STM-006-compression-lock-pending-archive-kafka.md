@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-006
 task_name: Compression Lock, Pending Archive, Kafka context.archive.created
-status: approved
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 plan_review_round: 2
@@ -29,10 +29,10 @@ prerequisites:
     - "本任务需要真实 Redis + 真实 Kafka（compose test 栈）；不需要 LLM / Finalize / HTTP / STM-011 脚本实现"
 branch: "feat/STM-006-compression-lock-pending-archive-kafka"
 created_at: "2026-08-10 12:14 UTC"
-updated_at: "2026-08-10 12:35 UTC"
+updated_at: "2026-08-10 13:25 UTC"
 approval_gates:
   planning_docs: "Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；Human PLAN_APPROVED Amendment 001"
-  implementation_plan: "status=approved；PLAN_LANDING 后允许 Developer；实施前不得业务编码"
+  implementation_plan: "status=tested；next_action=Code Review"
 ```
 
 ### 1.1 编排与门禁（本轮）
@@ -707,6 +707,8 @@ Release Operator：**PLAN_LANDING**（main `docs(plan)` + ff-only + create exact
 | 2026-08-10 12:14 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | OI-004 open acknowledged；OI-005 进程内决议；Kafka at-least-once；待 Plan Review |
 | 2026-08-10 12:30 UTC | Planner Amendment 001（Round 2 remediation） | 修订 Task Plan（MF-1 方案 A + SF-1–5）；progress/master_plan 规划态同步 | 未运行（规划-only） | Round 1 PLAN_REJECTED 闭合中；待 Round 2 复审；零 Git 写；未实施 |
 | 2026-08-10 12:35 UTC | Human + Plan Review Round 2 | status→approved；Human PLAN_APPROVED Amendment 001；Round 2 BLOCKER=0 MUST_FIX=0 | 未运行（治理） | 待 Release Operator PLAN_LANDING；仍不得实施 |
+| 2026-08-10 12:40 UTC | Developer start | status→in_progress；分支 `feat/STM-006-compression-lock-pending-archive-kafka`；HEAD=`6dd97278ec82ebb24dcb21c2c5a58118a65db0cd` | 未运行（实施开始） | 按白名单实施；Human SF：same identity + inconsistent count/tokens → fail-closed `pending_conflict` |
+| 2026-08-10 13:25 UTC | Developer implement+test | 白名单内实现 lock/pending Lua/Kafka/service + unit/contract/integration；status→implemented→tested | 见 §14 | Human SF accounting fail-closed；无 compression_lock_service.py；未改 runtime/settings；未 commit |
 
 ---
 
@@ -716,22 +718,51 @@ Release Operator：**PLAN_LANDING**（main `docs(plan)` + ff-only + create exact
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `src/memory_system/domain/enums/compression_preparation.py` | 创建 |
+| `src/memory_system/domain/models/compression_preparation.py` | 创建 |
+| `src/memory_system/domain/models/archive_created_event.py` | 创建 |
+| `src/memory_system/domain/services/compression_preparation_service.py` | 创建 |
+| `src/memory_system/infrastructure/redis/keys.py` | 修改（`compression_lock_key`） |
+| `src/memory_system/infrastructure/redis/compression_lock_repository.py` | 创建 |
+| `src/memory_system/infrastructure/redis/scripts/pending_archive_write.lua` | 创建 |
+| `src/memory_system/infrastructure/redis/pending_archive_script.py` | 创建 |
+| `src/memory_system/infrastructure/redis/pending_archive_repository.py` | 创建 |
+| `src/memory_system/infrastructure/kafka/__init__.py` | 修改导出 |
+| `src/memory_system/infrastructure/kafka/archive_created_publisher.py` | 创建 |
+| `src/memory_system/domain/enums/__init__.py` | 最小导出 |
+| `src/memory_system/domain/models/__init__.py` | 最小导出 |
+| `src/memory_system/domain/services/__init__.py` | 最小导出 |
+| `src/memory_system/infrastructure/redis/__init__.py` | 最小导出 |
+| `tests/unit/test_compression_lock.py` | 创建 |
+| `tests/unit/test_pending_archive_lua_mapping.py` | 创建 |
+| `tests/unit/test_archive_created_event.py` | 创建 |
+| `tests/unit/test_compression_preparation_service.py` | 创建 |
+| `tests/contract/test_stm006_contract.py` | 创建 |
+| `tests/integration/test_compression_preparation_redis.py` | 创建 |
+| `tests/integration/test_archive_created_kafka.py` | 创建 |
+| `02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md` | 执行记录 |
+| `02_开发管理/progress.md` | 状态回写 |
+| `02_开发管理/master_plan.md` | 状态回写 |
 
 ### 与原计划的差异
 
 见 §12 Amendment 001（相对 Round 1 初版）。
 
+**Human Round 2 / SF 幂等闭合（执行证据）**：Lua step 6 在 same `archive_id`+`archive_batch_key` 时仍须校验 `pending_archive_message_count` 与 `pending_archive_estimated_tokens`；不一致 → `pending_conflict`（不覆盖旧值；不新增枚举）。规格要求复用既有 Pending 绑定（含 count 用于后续 LTRIM），故 accounting 不一致 fail-closed。Integration：`test_i5b_same_identity_inconsistent_accounting_fail_closed` PASS。
+
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| STM-006 scoped unit | `uv run pytest tests/unit/test_compression_lock.py tests/unit/test_pending_archive_lua_mapping.py tests/unit/test_archive_created_event.py tests/unit/test_compression_preparation_service.py -q` | **26 passed** |
+| STM-006 contract | `uv run pytest tests/contract/test_stm006_contract.py -q` | **4 passed** |
+| Redis integration | `uv run pytest tests/integration/test_compression_preparation_redis.py -q` | **16 passed** |
+| Kafka integration | `uv run pytest tests/integration/test_archive_created_kafka.py -q` | **4 passed** |
+| Full unit | `uv run pytest tests/unit -q` | **349 passed** |
+| Full contract | `uv run pytest tests/contract -q` | **72 passed** |
+| Ruff | `uv run ruff check .` | **PASS** (All checks passed) |
+| Mypy | `uv run mypy src tests scripts` | **PASS** (Success: no issues found in 154 source files) |
+| E2E | N/A | 不适用（本任务无 HTTP E2E） |
 
 ### Review 结果
 
@@ -754,11 +785,11 @@ human_plan_approved_at: "2026-08-10T12:35:00Z"
 
 ```yaml
 branch: "feat/STM-006-compression-lock-pending-archive-kafka"
-plan_commit: null  # filled after PLAN_LANDING docs(plan) commit via git rev-parse HEAD
+plan_commit: "6dd97278ec82ebb24dcb21c2c5a58118a65db0cd"
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`planned`
+`tested`

@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-006 approved
+current_phase: Phase 1 — STM-006 tested
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-006
-current_task_status: approved
-current_branch: main
+current_task_status: tested
+current_branch: feat/STM-006-compression-lock-pending-archive-kafka
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -24,13 +24,13 @@ target_default_branch: main
 current_plan_file: 02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-formal_STM-006_status: approved
+formal_STM-006_status: tested
 formal_STM-006_plan_file: 02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md
 formal_STM-006_prerequisite: SATISFIED  # STM-005 completed
 formal_STM-006_workflow_mode: NORMAL
-formal_STM-006_note: "Human PLAN_APPROVED Amendment 001；Round 2 BLOCKER=0 MUST_FIX=0；PREHELD_TOKEN_MUST_BE_ATOMICALLY_VERIFIED；SF 幂等 count/tokens fail-closed；PLAN_LANDING in progress"
+formal_STM-006_note: "Developer tested；PREHELD_TOKEN_MUST_BE_ATOMICALLY_VERIFIED；SF accounting fail-closed；scoped unit 26 / contract 4 / redis int 16 / kafka int 4；full unit 349 / contract 72；ruff PASS；mypy PASS；next_action=Code Review；未 commit"
 formal_STM-006_branch: feat/STM-006-compression-lock-pending-archive-kafka
-formal_STM-006_plan_commit: null  # filled after PLAN_LANDING docs(plan)
+formal_STM-006_plan_commit: 6dd97278ec82ebb24dcb21c2c5a58118a65db0cd
 formal_DEV-002_prerequisite: SATISFIED
 planning_baseline_head_stm006: e53a0f1e2e448a6a40445768f30c902173dd0921
 # STM-001 completed evidence（POST_MERGE_CLEANUP；PR #19 MERGED）
