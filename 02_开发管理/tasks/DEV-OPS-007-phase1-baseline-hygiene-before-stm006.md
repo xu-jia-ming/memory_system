@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-007
 task_name: Phase 1 Baseline Hygiene Before STM-006
-status: planned
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -17,10 +17,10 @@ prerequisites:
   - "本任务为用户显式 START_NEW_TASK：进入 STM-006 前最小 hygiene；不得实现 STM-006"
 branch: "feat/DEV-OPS-007-phase1-baseline-hygiene-before-stm006"
 created_at: "2026-08-10 10:14 UTC"
-updated_at: "2026-08-10 10:14 UTC"
+updated_at: "2026-08-10 10:30 UTC"
 approval_gates:
-  planning_docs: "pending — 等待独立 Plan Review → PLAN_APPROVED"
-  implementation_plan: "pending — 本任务仅规划；未实施"
+  planning_docs: "PLAN_APPROVED"
+  implementation_plan: "tested"
 insertion_override:
   prior_current_task: "STM-005"
   prior_current_task_status: "completed"
@@ -220,14 +220,14 @@ uv run mypy src tests scripts
 
 ## 9. 验收标准
 
-- [ ] `git merge-base --is-ancestor 301c8d9… main` → exit **1**（orphan 仍不在 main 血统；不得 resurrect）
-- [ ] `git merge-base --is-ancestor b0736431… main` → exit **0**
-- [ ] 全仓 `rg 301c8d9` → **零** stale 权威引用（`status_record_completed` / `formal_STM-005_status_record_completed` 均已更正）
-- [ ] `formal_STM-005_status_record_completed` 与 STM-005 Task Plan §14 均为 `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`
-- [ ] `uv run ruff check .` → **FULL_RUFF=PASS**
-- [ ] `uv run pytest tests/integration/test_context_read_redis.py -q` → 全绿
-- [ ] `uv run mypy src tests scripts` → PASS（若仓库治理要求）
-- [ ] 未修改 STM-005/004 `src/**`、Redis Lua、Mongo、Kafka、compression、LLM
+- [x] `git merge-base --is-ancestor 301c8d9… main` → exit **1**（orphan 仍不在 main 血统；不得 resurrect）
+- [x] `git merge-base --is-ancestor b0736431… main` → exit **0**
+- [x] 全仓 `rg 301c8d9` → **零** stale 权威引用（`status_record_completed` / `formal_STM-005_status_record_completed` 均已更正）
+- [x] `formal_STM-005_status_record_completed` 与 STM-005 Task Plan §14 均为 `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`
+- [x] `uv run ruff check .` → **FULL_RUFF=PASS**
+- [x] `uv run pytest tests/integration/test_context_read_redis.py -q` → 全绿
+- [x] `uv run mypy src tests scripts` → PASS（若仓库治理要求）
+- [x] 未修改 STM-005/004 `src/**`、Redis Lua、Mongo、Kafka、compression、LLM
 - [ ] Review 无 P0/P1
 
 ---
@@ -284,6 +284,8 @@ out_of_scope_changes:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
+| 2026-08-10 11:42 UTC | IMPLEMENTATION_RELEASE | implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；PR #24 OPEN；docs(status): record on feat | n/a（沿用 tested 门禁） | implementation_commit=1ef8932b87604de9a01dab72e7584a4e7886b155；WAITING_FOR_PR_MERGE；禁 push main / 禁 gh pr merge |
+| 2026-08-10 10:30 UTC | Developer tested | Issue A：progress.md + STM-005 §14 SHA 更正；Issue B：E501 换行 | integration 14 / unit 323 / contract 68；ruff PASS；mypy PASS | ZERO_STALE_AUTHORITATIVE_REFERENCES；未 commit |
 | 2026-08-10 10:14 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | orphan SHA + E501 已只读确认；待 Plan Review |
 
 ---
@@ -294,21 +296,27 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-| （待实施） | |
+| `02_开发管理/progress.md` | `formal_STM-005_status_record_completed` 更正为 `b0736431…`；DEV-OPS-007 tested 治理回写 |
+| `02_开发管理/tasks/STM-005-context-archive-create-reuse.md` | §14 `status_record_completed` 更正为 `b0736431…` |
+| `tests/integration/context_read_torn_read_helpers.py` | L174–175 E501 换行（零语义变更） |
+| `02_开发管理/master_plan.md` | DEV-OPS-007 状态 `planned` → `tested` |
 
 ### 与原计划的差异
 
-暂无。
+无。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Ancestry | `git merge-base --is-ancestor …` | （待实施） |
-| Orphan search | `rg 301c8d9` | （待实施） |
-| Integration | `uv run pytest tests/integration/test_context_read_redis.py -q` | （待实施） |
-| Ruff | `uv run ruff check .` | （待实施） |
-| Mypy | `uv run mypy src tests scripts` | （待实施） |
+| Ancestry (orphan) | `git merge-base --is-ancestor 301c8d9ff873ba826b122f6cbb34a3dc0d2aa40b main` | exit **1** |
+| Ancestry (authoritative) | `git merge-base --is-ancestor b0736431a636f0ba20a9cf5aad61a2ea8dc365df main` | exit **0** |
+| Orphan search | `rg 301c8d9` | **ZERO_STALE_AUTHORITATIVE_REFERENCES**（剩余命中仅诊断/历史节） |
+| Integration | `uv run pytest tests/integration/test_context_read_redis.py -q` | **14 passed** in 2.29s |
+| Unit (optional) | `uv run pytest tests/unit -q` | **323 passed** in 4.61s |
+| Contract (optional) | `uv run pytest tests/contract -q` | **68 passed** in 4.61s |
+| Ruff | `uv run ruff check .` | **All checks passed!** |
+| Mypy | `uv run mypy src tests scripts` | **Success: no issues found in 139 source files** |
 
 ### Review 结果
 
@@ -323,12 +331,15 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/DEV-OPS-007-phase1-baseline-hygiene-before-stm006
+plan_commit: f42eaf3190d8fc3600f52c869fc7e8dfbec86cf1
+implementation_commit: 1ef8932b87604de9a01dab72e7584a4e7886b155
+implementation_commit_message: "chore(hygiene): fix STM-005 governance SHA and ruff E501 in torn-read helpers"
+pr_number: 24
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/24"
+pr_state: OPEN
 ```
 
 ### 最终状态
 
-`planned`
+`committed`（WAITING_FOR_PR_MERGE）

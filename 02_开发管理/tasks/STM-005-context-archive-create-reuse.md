@@ -460,7 +460,7 @@ expected_commits:
 - **implementation_commit**：`c166be5cd40475a513cede67f53cafec8fc8529a`
 - **implementation_commit_message**：`feat(stm): add context archive mongo create reuse service`
 - **status_record_committed**：`a52207473534b1667967be32957c9e1f500ac429`
-- **status_record_completed**：`301c8d9ff873ba826b122f6cbb34a3dc0d2aa40b`
+- **status_record_completed**：`b0736431a636f0ba20a9cf5aad61a2ea8dc365df`
 - **merge_commit**：`164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`
 - **merged_at**：`2026-08-10T09:16:52Z`
 - **PR**：#23 MERGED — https://github.com/xu-jia-ming/memory_system/pull/23
