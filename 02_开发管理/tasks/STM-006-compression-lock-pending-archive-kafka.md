@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-006
 task_name: Compression Lock, Pending Archive, Kafka context.archive.created
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 plan_review_round: 2
@@ -29,10 +29,10 @@ prerequisites:
     - "本任务需要真实 Redis + 真实 Kafka（compose test 栈）；不需要 LLM / Finalize / HTTP / STM-011 脚本实现"
 branch: "feat/STM-006-compression-lock-pending-archive-kafka"
 created_at: "2026-08-10 12:14 UTC"
-updated_at: "2026-08-10 13:25 UTC"
+updated_at: "2026-08-10 13:40 UTC"
 approval_gates:
   planning_docs: "Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；Human PLAN_APPROVED Amendment 001"
-  implementation_plan: "status=tested；next_action=Code Review"
+  implementation_plan: "status=committed；PR #25 OPEN；next_action=WAITING_FOR_PR_MERGE"
 ```
 
 ### 1.1 编排与门禁（本轮）
@@ -709,6 +709,7 @@ Release Operator：**PLAN_LANDING**（main `docs(plan)` + ff-only + create exact
 | 2026-08-10 12:35 UTC | Human + Plan Review Round 2 | status→approved；Human PLAN_APPROVED Amendment 001；Round 2 BLOCKER=0 MUST_FIX=0 | 未运行（治理） | 待 Release Operator PLAN_LANDING；仍不得实施 |
 | 2026-08-10 12:40 UTC | Developer start | status→in_progress；分支 `feat/STM-006-compression-lock-pending-archive-kafka`；HEAD=`6dd97278ec82ebb24dcb21c2c5a58118a65db0cd` | 未运行（实施开始） | 按白名单实施；Human SF：same identity + inconsistent count/tokens → fail-closed `pending_conflict` |
 | 2026-08-10 13:25 UTC | Developer implement+test | 白名单内实现 lock/pending Lua/Kafka/service + unit/contract/integration；status→implemented→tested | 见 §14 | Human SF accounting fail-closed；无 compression_lock_service.py；未改 runtime/settings；未 commit |
+| 2026-08-10 13:40 UTC | Release Operator IMPLEMENTATION_RELEASE | implementation `683caab306e082d58f577977ba3ecee5c550aa6e`；PR #25 OPEN；docs(status): record on feat | 见 §14 | 仅 feat push；禁 push main；WAITING_FOR_PR_MERGE |
 
 ---
 
@@ -786,10 +787,14 @@ human_plan_approved_at: "2026-08-10T12:35:00Z"
 ```yaml
 branch: "feat/STM-006-compression-lock-pending-archive-kafka"
 plan_commit: "6dd97278ec82ebb24dcb21c2c5a58118a65db0cd"
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: "683caab306e082d58f577977ba3ecee5c550aa6e"
+implementation_commit_message: "feat(stm): add compression lock pending archive and kafka publish"
+pr: "#25"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/25"
+pr_state: OPEN
+status_record_committed: null  # pending this docs(status): record commit SHA
 ```
 
 ### 最终状态
 
-`tested`
+`committed`
