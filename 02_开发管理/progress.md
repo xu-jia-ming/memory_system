@@ -5,12 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 0 completed / Phase 1 (STM-001) READY_FOR_PLANNING
+current_phase: Phase 1 (STM-001) approved — awaiting Developer
 phase0_baseline: GREEN
 phase0_readiness: PASS
-stm_001_entry_gate: GO_FOR_STM_001
-current_task: DEV-OPS-006
-current_task_status: completed
+phase0_secret_readiness: PASS
+stm_001_entry_gate: GO
+stm_001_secret_gate: GO
+current_task: STM-001
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -19,9 +21,18 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md
+current_plan_file: 02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
+formal_DEV-002_prerequisite: SATISFIED
+# STM-001 planning evidence（本轮只规划，不实施）
+formal_STM-001_status: approved
+formal_STM-001_plan_file: 02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md
+formal_STM-001_plan_commit: null
+formal_STM-001_implementation_commit: null
+formal_STM-001_pr: null
+formal_STM-001_workflow_mode: NORMAL
+formal_STM-001_note: "Amendment 001 PLAN_REMEDIATION（Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；MANDATORY strict < contract + contract test + import redis ban；next_action=Developer 实施；不得触碰 DEV-006/PR#13；无 Redis I/O / 无 SiliconFlow·LLM 网络依赖"
 # DEV-OPS-006 completed evidence（POST_MERGE_CLEANUP；PR #18 MERGED）
 formal_DEV-OPS-006_status: completed
 formal_DEV-OPS-006_plan_file: 02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md
@@ -36,17 +47,17 @@ formal_DEV-OPS-006_merge_commit: 3e727b3dc1a168863d7fa6e8d52a175d36de4644
 formal_DEV-OPS-006_merged_at: "2026-08-09T12:44:26Z"
 formal_DEV-OPS-006_workflow_mode: NORMAL
 formal_DEV-OPS-006_root_cause_classification: A
-formal_DEV-OPS-006_note: "Phase 0 baseline hygiene before STM-001 completed；baseline GREEN；STM-001 READY_FOR_PLANNING；不得实现 STM-001"
-# Verified baseline（DEV-OPS-006 tested / merge evidence）
-latest_commit: 7abde48af72ea2d676deed64e1333f3e55d08a51
+formal_DEV-OPS-006_note: "Phase 0 baseline hygiene before STM-001 completed；baseline GREEN；STM-001 已进入规划（planned）"
+# Verified baseline（DEV-OPS-006 tested / merge evidence；STM-001 规划轮次 HEAD）
+latest_commit: 6721a54066fb0bc67d9c0313ab69e10bcaef2804
 main_tip_at_tested: 09b045be1429716eab184e4565beb30cf2856b28
-planning_baseline_head: 524786aa52f3ac79b5e9a26e46f36b93545d7c55
+planning_baseline_head: 6721a54066fb0bc67d9c0313ab69e10bcaef2804
 verified_unit: "216 passed / 0 failed (uv run pytest tests/unit -q @ 2026-08-09 12:32 UTC)"
 verified_contract: "47 passed (uv run pytest tests/contract -q @ 2026-08-09 12:32 UTC)"
 verified_ruff: "PASS — All checks passed (uv run ruff check .)"
 verified_mypy: "PASS — Success: no issues found in 91 source files (uv run mypy src tests scripts)"
-planning_unit_collect: 215
-planning_unit_known_failure: "RESOLVED by DEV-OPS-006 allowlist + invariant (+1 test → 216)"
+planning_unit_collect: 216
+planning_unit_known_failure: "RESOLVED by DEV-OPS-006 allowlist + invariant"
 planning_contract_verified: "47 passed (uv run pytest tests/contract -q @ planning)"
 # DEV-007 formal completion evidence (retained)
 formal_DEV-007_status: completed
@@ -92,16 +103,16 @@ formal_DEV-003-002_plan_commit: 7172e918647c1853d0982ce979b299920d96a0cb
 formal_DEV-003-002_implementation_commit: 715e985e4e4fee35a3b12f4517af445081b2c5d7
 formal_DEV-003-002_pr: "#14"
 formal_DEV-003-002_merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
-previous_task: DEV-007
+previous_task: DEV-OPS-006
 previous_task_status: completed
-previous_implementation_commit: 88c442e909c89fe297921f61d6bd6c13ba4b719d
-previous_implementation_commit_message: "feat(embedding): add siliconflow client, settings, and contract tests"
-previous_status_record_commit_committed: ea58d72690d2e34539cd2eb123e1fedd14c5874f
-previous_status_record_commit_committed_message: "docs(status): record DEV-007 implementation commit and PR"
-previous_pr: "#17"
+previous_implementation_commit: b9f049af59d0e904ebee0ce09df13cc383a91b52
+previous_implementation_commit_message: "test(compose): allowlist OI-011 tei probe bare compose paths"
+previous_status_record_commit_committed: 6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f
+previous_status_record_commit_committed_message: "docs(status): record DEV-OPS-006 implementation commit and PR"
+previous_pr: "#18"
 previous_pr_status: MERGED
-previous_merge_commit: b7916ea79a2d2ec7bf25873ec2ba50ad64041775
-previous_status_record_commit_completed: ce461229fd3c997d5ebe237127d849c547462481
+previous_merge_commit: 3e727b3dc1a168863d7fa6e8d52a175d36de4644
+previous_status_record_commit_completed: 7abde48af72ea2d676deed64e1333f3e55d08a51
 # DEV-OPS-005 formal completion evidence
 formal_DEV-OPS-005_status: completed
 formal_DEV-OPS-005_plan_file: 02_开发管理/tasks/DEV-OPS-005-human-prompt-playbook-recovery-operations.md
@@ -169,21 +180,21 @@ step7_smoke_pr: "#8"
 step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
-# Next business task
+# Next business task / STM-001 planning
 deferred_business_task: STM-001
-deferred_business_task_status: READY_FOR_PLANNING
-deferred_business_task_note: "DEV-OPS-006 completed；Phase 0 baseline GREEN；STM-001 可规划（须另一次显式编排）；本轮不得启动 STM-001 实施"
-next_action: STM-001 可规划（READY_FOR_PLANNING；须另一次显式编排）；不得启动 STM-001 实施；不得触碰 DEV-006/PR#13
-human_plan_approved_at: "2026-08-09"
-human_plan_approved_note: "人工确认 PLAN_APPROVED；PLAN_LANDING 完成"
+deferred_business_task_status: approved
+deferred_business_task_note: "Amendment 001 PLAN_REMEDIATION；Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；status=approved；next_action=Developer 实施"
+next_action: Developer 实施
+human_plan_approved_at: "2026-08-10 09:55 UTC"
+human_plan_approved_note: "STM-001 Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；PLAN_LANDING 进行中；确认后进入 Developer 实施"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
 insertion_override:
-  prior_current_task: DEV-007
+  prior_current_task: DEV-OPS-006
   prior_current_task_status: completed
-  prior_next_action: "等待用户显式指定下一任务（Phase 0 bootstrap 就绪；STM-001 / EXT-007 / RET-001 等可规划）"
-  override_by: "用户显式 NEW_UNPLANNED_FEATURE → DEV-OPS-006 Phase 0 baseline hygiene；WORKFLOW_MODE=NORMAL(explicit)"
-  effect: "current_task=DEV-OPS-006 planned；清 unit compose-wrapper fail + progress DOC_CODE_DRIFT；不得实现 STM-001；不得触碰 DEV-006/PR#13"
-  overridden_at: "2026-08-09 10:42 UTC"
+  prior_next_action: "STM-001 可规划（READY_FOR_PLANNING；须另一次显式编排）；不得启动 STM-001 实施"
+  override_by: "用户显式 START_EXISTING_TASK=STM-001 + WORKFLOW_MODE=NORMAL(explicit)；PHASE0/STM gates GO；DEV-002 SATISFIED"
+  effect: "current_task=STM-001 planned；current_plan_file=STM-001 Task Plan；next_action=计划审查；本轮只规划不实施；不得触碰 DEV-006/PR#13"
+  overridden_at: "2026-08-10 01:42 UTC"
 # DEV-006 / PR #13 disposition (record only)
 dev_006_disposition:
   status: "PAUSED / SUPERSEDED_FOR_MVP"
@@ -256,7 +267,7 @@ governance_deviation:
 
 **OI-011 / TEI**：已完成（12g contract 保留；本 hygiene 不修改）。
 
-**下游**：**STM-001 可规划**（须另一次显式编排；本轮不得启动 STM-001 实施）。
+**下游**：**STM-001** 已进入 **approved**（Round 2 PLAN_APPROVED；人工确认）；`next_action=Developer 实施`；PLAN_LANDING 后进入实施。
 
 ## 实施前置条件
 
@@ -556,6 +567,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-09 12:33 UTC | DEV-OPS-006 | approved → in_progress → tested | exact-path allowlist + SHOULD_FIX 存在性断言；progress/master_plan hygiene | unit **216 passed**；contract **47 passed**；ruff PASS；mypy PASS | `next_action`→代码审查；未 Git 写；**不得实现 STM-001**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-09 12:40 UTC | DEV-OPS-006 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `b9f049af59d0e904ebee0ce09df13cc383a91b52`；PR #18 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；`next_action`→WAITING_FOR_PR_MERGE；**不得自动 merge**；**不得实现 STM-001** |
 | 2026-08-09 12:44 UTC | DEV-OPS-006 | committed → completed | PR #18 MERGED（`3e727b3dc1a168863d7fa6e8d52a175d36de4644`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | baseline GREEN；Phase 0 completed；STM-001 READY_FOR_PLANNING；**不得启动 STM-001 实施** |
+| 2026-08-10 09:55 UTC | STM-001 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；progress 回写 approved | PLAN_LANDING 进行中；**不得触碰 DEV-006/PR#13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -588,7 +600,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **STM-001**：**READY_FOR_PLANNING**（Phase 0 completed / baseline GREEN）；须另一次显式编排；**本轮不得启动 STM-001 实施**。
-2. **DEV-OPS-006**：`completed`（PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`；implementation `b9f049af59d0e904ebee0ce09df13cc383a91b52`；record `6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f`）。
+1. **STM-001**：`approved` — Task Plan `02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md`（Amendment 001）；**next_action=Developer 实施**；PLAN_LANDING 后进入实施；**不得触碰 DEV-006/PR#13**。
+2. **DEV-OPS-006**：`completed`（PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）。
 3. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；不得触碰。
 4. **DEV-007 / OI-012 / OI-011**：`completed`（保留）。

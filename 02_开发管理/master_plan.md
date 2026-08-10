@@ -274,11 +274,13 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-001
 
-- **目标**：字符 Token 估算；Redis key/字段常量与模型；相关配置不等式校验。
-- **非目标**：Redis 写入；HTTP API。
-- **测试**：Unit（中英文边界、ceil 公式）。
+- **目标**：字符 Token 估算（§1.2.1 heuristic：中文 ×1.25 + 其他 ×0.25 后 ceil；**非** exact tokenizer）；Redis WM key/字段常量与模型（无 live I/O；禁止 `import redis`）；相关配置不等式校验（复用 DEV-002 `validate_context` + STM-001 定向 Unit 证明 **MANDATORY STARTUP VALIDATION CONTRACT** `max_compressed < trigger` strict `<`）；小 contract 测试（`test_stm001_contract.py`）。
+- **非目标**：Redis live write / 真实 Redis I/O / `import redis`；HTTP API；Mongo archive；Kafka；compression；LLM / embedding / extraction / retrieval；操作 DEV-006/PR#13；不因基础设施无认证阻塞；不需要 `SILICONFLOW_API_KEY` / `LLM__API_KEY`。
+- **测试**：Unit（中英文边界、ceil 公式；Key/字段模型与 Optional 语义；§1.2.1/§1.2.6 不等式含 mandatory strict `<` 三用例 + 正向四链断言）；Contract（`test_stm001_contract.py`；无网络/无 Redis I/O）；无 Integration Redis I/O。
 - **风险**：OI-001/002 不在本任务解释。
-
+- **计划文件**：`02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md`
+- **状态备注**：`planned`（Amendment 001 PLAN_REMEDIATION 2026-08-10；Round 1 PLAN_REJECTED MUST_FIX=1；`workflow_mode=NORMAL` explicit；`next_action=计划审查 Round 2`；本轮只规划不实施；Plan Review 后人工确认前不得 Developer / PLAN_LANDING）。
+- **分支（批准后）**：`feat/STM-001-token-estimator-wm-key-model-config-validation`
 #### STM-002
 
 - **目标**：`POST /api/v1/memory/session`；初始化 Working Memory Hash（`status=active`，`compression_version=0`）。
@@ -657,5 +659,25 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | 新增 `DEV-OPS-006`（现 `completed`；PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）；**不**实现 STM-001；**不**触碰 DEV-006/PR #13；**不**改 TEI 12g / SiliconFlow / compose*.yaml |
 | 是否改变技术规格 | **否** |
 | 审批 | Plan Reviewer PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；PLAN_LANDING 完成；CODE_REVIEW_APPROVED（P0=0 P1=0）；IMPLEMENTATION_RELEASE 完成；PR #18 MERGED；POST_MERGE_CLEANUP 本轮 |
+
+### CHANGE-020
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | 用户显式 `START_EXISTING_TASK=STM-001` + `WORKFLOW_MODE=NORMAL`：登记 STM-001 Task Plan（Token heuristic + WM Key/字段模型 + 配置不等式定向 Unit）；Phase 0 gates GO；DEV-002 SATISFIED |
+| 受影响任务 | `STM-001` → `planned`（计划文件 `02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md`）；**不**扩大为 STM-002+；**不**触碰 DEV-006/PR #13；本轮只规划不实施 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner 初版；Round 1 PLAN_REJECTED（MUST_FIX=1）；Amendment 001 PLAN_REMEDIATION；待 Plan Review Round 2 → 人工确认；确认前不得 PLAN_LANDING / Developer |
+
+### CHANGE-021
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-001 Plan Review Round 1 `PLAN_REJECTED`（MUST_FIX=1）：`max_compressed < trigger` 须为 MANDATORY STARTUP VALIDATION CONTRACT；吸收 SHOULD_FIX 1–4 |
+| 受影响任务 | `STM-001` 保持 `planned`；Amendment 001 修订 Task Plan；**不**扩大 scope；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner Amendment 001；待 Plan Review Round 2 → 人工确认 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
