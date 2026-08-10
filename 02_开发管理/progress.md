@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-005 committed
+current_phase: Phase 1 — STM-005 completed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-005
-current_task_status: committed
-current_branch: feat/STM-005-context-archive-create-reuse
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -179,27 +179,30 @@ formal_STM-004_full_contract: "65 passed"
 formal_STM-004_ruff: PASS
 formal_STM-004_mypy: PASS
 formal_STM-004_note: "POST_MERGE_CLEANUP；read-only atomic Redis Lua context snapshot；compression_version + compressed_context + ordered messages；malformed state fail-closed；I12 deterministic torn-read negative control；production single-Lua canonical snapshot；zero Redis write side effect（I13）；OI-009 resolved；scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；feat 分支待删"
-# STM-005 committed evidence（IMPLEMENTATION_RELEASE；PR pending）
-formal_STM-005_status: committed
+# STM-005 completed evidence（POST_MERGE_CLEANUP；PR #23 MERGED）
+formal_STM-005_status: completed
 formal_STM-005_plan_file: 02_开发管理/tasks/STM-005-context-archive-create-reuse.md
 formal_STM-005_plan_commit: 7b761c35ae8aa83c2b5c909312dd511b863a660c
 formal_STM-005_implementation_commit: c166be5cd40475a513cede67f53cafec8fc8529a
 formal_STM-005_implementation_commit_message: "feat(stm): add context archive mongo create reuse service"
-formal_STM-005_status_record_committed: 477b895bb863dc2655e1d674f8a329e8291c822e
-formal_STM-005_status_record_completed: null
+formal_STM-005_status_record_committed: a52207473534b1667967be32957c9e1f500ac429
+formal_STM-005_status_record_completed: 301c8d9ff873ba826b122f6cbb34a3dc0d2aa40b
 formal_STM-005_branch: feat/STM-005-context-archive-create-reuse
 formal_STM-005_workflow_mode: NORMAL
 formal_STM-005_pr: "#23"
 formal_STM-005_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/23"
-formal_STM-005_pr_state: OPEN
+formal_STM-005_pr_state: MERGED
+formal_STM-005_merge_commit: 164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf
+formal_STM-005_merged_at: "2026-08-10T09:16:52Z"
 formal_STM-005_scoped_unit: "26 passed (test_context_archive_batch_key + test_context_archive_models + test_context_archive_repository + test_context_archive_service)"
 formal_STM-005_scoped_contract: "3 passed (test_stm005_contract)"
 formal_STM-005_integration: "12 passed (test_context_archive_mongo — 11 scenarios)"
 formal_STM-005_full_unit: "323 passed"
 formal_STM-005_full_contract: "68 passed"
-formal_STM-005_ruff: PASS
+formal_STM-005_ruff: PRE_EXISTING_BASELINE_RUFF_FAILURE
+formal_STM-005_ruff_note: "2x E501 tests/integration/context_read_torn_read_helpers.py:174:101,175:101 — identical at plan_commit and HEAD; STM-005 changed files Ruff PASS; STM005_REGRESSION=false"
 formal_STM-005_mypy: PASS
-formal_STM-005_note: "IMPLEMENTATION_RELEASE；Mongo context_archive create/reuse；DuplicateKey reuse；无 estimated_tokens；DEV-004 索引；无新 migration；scoped unit 26 / contract 3 / integration 12 / full unit 323 / contract 68；ruff PASS；mypy PASS；PR #23 OPEN 待 merge"
+formal_STM-005_note: "POST_MERGE_CLEANUP；Mongo context_archive create/reuse；archive_batch_key session_id:first_message_id:last_message_id + mandatory validation；empty messages fail-closed；DuplicateKey → REUSED no overwrite；concurrent same key → one doc same archive_id；message order preserved；DEV-004 unique index verified；no Kafka/Redis pending/compression/LLM/HTTP；scoped unit 26 / contract 3 / integration 12 / full unit 323 / contract 68；mypy PASS；feat 分支待删"
 previous_task: STM-004
 previous_task_status: completed
 previous_implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
@@ -280,8 +283,8 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
 deferred_business_task: null
 deferred_business_task_status: null
-deferred_business_task_note: "STM-005 approved；PLAN_LANDING 后 Developer 实施；不得自动 commit"
-next_action: "Developer 实施"
+deferred_business_task_note: "STM-005 completed；STM-006 READY_FOR_PLANNING only；不得自动开始 STM-006 规划或实施"
+next_action: "STM-006 READY_FOR_PLANNING only（do NOT auto-start）"
 human_plan_approved_at: "2026-08-10 08:24 UTC"
 human_plan_approved_note: "STM-005 PLAN_APPROVED（BLOCKER=0；MUST_FIX=0）；人工确认；PLAN_LANDING 待 docs(plan) on main"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
@@ -355,6 +358,7 @@ governance_deviation:
 | STM-002 | Session 创建 | 2026-08-10 03:11 | `3440048` | `efb39bf0bbbb408626e3d187d81b889dafc7a351` | #20 merged |
 | STM-003 | 消息写入 Lua | 2026-08-10 06:26 | `e1913d1` | `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4` | #21 merged |
 | STM-004 | 上下文一致性读取 Lua | 2026-08-10 08:02 | `3aed605` | `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c` | #22 merged |
+| STM-005 | Mongo context_archive create/reuse | 2026-08-10 09:16 | `c166be5` | `164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf` | #23 merged |
 
 ## 规格阻塞项
 
@@ -376,7 +380,9 @@ governance_deviation:
 
 **STM-004**：**completed** — read-only atomic Redis Lua context snapshot；`read_working_memory_context` + `context_read.lua`；`compression_version` + `compressed_context` + ordered messages；malformed state fail-closed；I12 deterministic torn-read negative control；production single-Lua canonical snapshot guarantee；zero Redis write side effect（I13）；OI-009 resolved；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；record `8c050fc0d09523d82eb201b4f03fa87060efd065`；PR [#22](https://github.com/xu-jia-ming/memory_system/pull/22) **MERGED**（merge `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c` mergedAt `2026-08-10T08:02:11Z`）；scoped unit **15 passed** / contract **3 passed** / integration **14 passed**（13 scenarios）；full unit **300 passed** / contract **65 passed**；ruff **PASS**；mypy **PASS**；无 HTTP/压缩写回；Phase 1 STM-004 **completed**。
 
-**下游**：**STM-005** `approved` — plan `02_开发管理/tasks/STM-005-context-archive-create-reuse.md`；`next_action=Developer 实施`；**不得自动 commit**。
+**STM-005**：**completed** — Mongo `context_archive` create/reuse；`archive_batch_key` `session_id:first_message_id:last_message_id` + mandatory validation；empty messages fail-closed；DuplicateKey → REUSED no overwrite；concurrent same key → one doc same `archive_id`；message order preserved；DEV-004 unique index verified；no Kafka/Redis pending/compression/LLM/HTTP；implementation `c166be5cd40475a513cede67f53cafec8fc8529a`；record `a52207473534b1667967be32957c9e1f500ac429`；PR [#23](https://github.com/xu-jia-ming/memory_system/pull/23) **MERGED**（merge `164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf` mergedAt `2026-08-10T09:16:52Z`）；scoped unit **26 passed** / contract **3 passed** / integration **12 passed**；full unit **323 passed** / contract **68 passed**；mypy **PASS**；ruff baseline E501 pre-existing（非回归）；Phase 1 STM-005 **completed**。
+
+**下游**：**STM-006** `READY_FOR_PLANNING only` — prerequisites STM-005 **SATISFIED**；**不得自动开始规划或实施**。
 
 ## 实施前置条件
 
@@ -453,6 +459,8 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（STM-003 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `e1913d17b159d426aadfd54d32e07c84ea61043a`；record `34bbebd`；PR #21 MERGED（`3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`） |
 | RELEASE_COMPLETED（STM-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `3aed60522db64c3b11597e025caa0aae00afaba6`；record `8c050fc0d09523d82eb201b4f03fa87060efd065`；PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`） |
 | RELEASE_COMPLETED（STM-004 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status): complete 落盘；exact feat 待删 |
+| RELEASE_COMPLETED（STM-005 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `c166be5cd40475a513cede67f53cafec8fc8529a`；record `a52207473534b1667967be32957c9e1f500ac429`；PR #23 MERGED（`164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`） |
+| RELEASE_COMPLETED（STM-005 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status): complete 落盘；exact feat 待删 |
 | RELEASE_COMPLETED（STM-003 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status): complete 落盘；exact feat 待删 |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
@@ -696,6 +704,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 14:20 UTC | STM-003 | committed | IMPLEMENTATION_RELEASE；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | 待人工 merge；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 06:26 UTC | STM-003 | committed → completed | PR #21 MERGED（`3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | STM-004 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 08:02 UTC | STM-004 | committed → completed | PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；OI-009 resolved | STM-005 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 09:16 UTC | STM-005 | committed → completed | PR #23 MERGED（`164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped unit 26 / contract 3 / integration 12 / full unit 323 / contract 68；mypy PASS；ruff baseline E501 pre-existing（非回归）；OI-004 partial evidence status remains open | STM-006 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 07:55 UTC | STM-004 | committed | IMPLEMENTATION_RELEASE；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；PR #22 OPEN | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS | 待人工 merge；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 07:38 UTC | STM-004 | approved → in_progress → tested | Developer：只读 context read Lua + `read_working_memory_context`；I12 三段式 torn-read；13 Integration 场景 | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS | 未 commit；`next_action=Code Review`；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 07:18 UTC | STM-004 | planned（Amendment 002） | Round 2 `PLAN_REJECTED` MF-2（非原子 mutator）；Amendment 002：三段式 I12 torn-read（原子 mutator + broken reader 负对照 + 生产 Lua 正对照）；I10 compressed_context 缺失；__init__.py 白名单；ContextReadFailure→STM-009 | 未实施、未 Git 写；`next_action=计划审查 Round 3`；**不得触碰 DEV-006/PR#13** |
@@ -732,11 +741,12 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **STM-004**：`completed`（PR #22 MERGED `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；scoped **15** / contract **3** / integration **14** / full unit **300** / contract **65** / ruff / mypy 全绿；OI-009 resolved；feat 分支待删）。
-2. **STM-005**：`approved` — plan `02_开发管理/tasks/STM-005-context-archive-create-reuse.md`；prerequisites STM-003 **SATISFIED**、DEV-004 **SATISFIED**；`next_action=Developer 实施`；**不得自动 commit**。
-3. **STM-003**：`completed`（PR #21 MERGED `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；scoped **21** / integration **11** / full unit **287** / contract **62** / ruff / mypy 全绿）。
-4. **STM-002**：`completed`（PR #20 MERGED `efb39bf0bbbb408626e3d187d81b889dafc7a351`；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；scoped **25** / integration **3** / full unit **269** / contract **59** / ruff / mypy 全绿）。
-5. **STM-001**：`completed`（PR #19 MERGED `6f2081da6266282470948ecac8e62ef3ae969c15`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`）。
-6. **DEV-OPS-006**：`completed`（PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）。
-7. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；不得触碰。
-8. **DEV-007 / OI-012 / OI-011**：`completed`（保留）。
+1. **STM-005**：`completed`（PR #23 MERGED `164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`；implementation `c166be5cd40475a513cede67f53cafec8fc8529a`；scoped **26** / contract **3** / integration **12** / full unit **323** / contract **68** / mypy 全绿；ruff baseline E501 pre-existing（非回归）；feat 分支待删）。
+2. **STM-006**：`READY_FOR_PLANNING only` — prerequisites STM-005 **SATISFIED**；**不得自动开始规划或实施**。
+3. **STM-004**：`completed`（PR #22 MERGED `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；scoped **15** / contract **3** / integration **14** / full unit **300** / contract **65** / ruff / mypy 全绿；OI-009 resolved）。
+4. **STM-003**：`completed`（PR #21 MERGED `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；scoped **21** / integration **11** / full unit **287** / contract **62** / ruff / mypy 全绿）。
+5. **STM-002**：`completed`（PR #20 MERGED `efb39bf0bbbb408626e3d187d81b889dafc7a351`；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；scoped **25** / integration **3** / full unit **269** / contract **59** / ruff / mypy 全绿）。
+6. **STM-001**：`completed`（PR #19 MERGED `6f2081da6266282470948ecac8e62ef3ae969c15`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`）。
+7. **DEV-OPS-006**：`completed`（PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）。
+8. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；不得触碰。
+9. **DEV-007 / OI-012 / OI-011**：`completed`（保留）。

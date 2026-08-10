@@ -91,7 +91,9 @@ status: open
 
 **禁止行为：** 不得在未解决前自行定为新 Contract。
 
-**决议记录：** （空）
+**决议记录：**
+
+- **2026-08-10** — STM-005 POST_MERGE_CLEANUP evidence：Mongo archive messages persist 4 fields only（no `estimated_tokens`）；create/reuse contract delivered；full token-boundary resolution deferred to STM-010；**status remains open**。
 
 ---
 

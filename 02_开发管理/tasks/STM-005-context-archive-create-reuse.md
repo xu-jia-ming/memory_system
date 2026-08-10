@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-005
 task_name: Mongo context_archive Create / Reuse
-status: planned
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -450,7 +450,8 @@ expected_commits:
 |---|---|---|---|---|
 | 2026-08-10 08:15 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | OI-004 acknowledged；OI-STM-005-001～003 Planner 决议；待 Plan Review |
 | 2026-08-10 08:50 UTC | Developer 实施 | ContextArchive 模型/枚举/服务 + Mongo Repository + unit/contract/integration | scoped unit 26 / integration 12 / full unit 323 / contract 68 / ruff PASS / mypy PASS | OI-004 acknowledged；DuplicateKey reuse；无 estimated_tokens；无新 migration |
-| 2026-08-10 08:50 UTC | Release Operator IMPLEMENTATION_RELEASE | implementation `c166be5cd40475a513cede67f53cafec8fc8529a`；PR #23 OPEN | scoped unit 26 / integration 12 / full unit 323 / contract 68 / ruff PASS / mypy PASS | 待 record commit |
+| 2026-08-10 08:50 UTC | Release Operator IMPLEMENTATION_RELEASE | implementation `c166be5cd40475a513cede67f53cafec8fc8529a`；record `a52207473534b1667967be32957c9e1f500ac429`；PR #23 MERGED | scoped unit 26 / integration 12 / full unit 323 / contract 68 / mypy PASS / ruff baseline E501 pre-existing | OI-004 partial evidence；feat 分支待删 |
+| 2026-08-10 09:16 UTC | Release Operator POST_MERGE_CLEANUP | PR #23 MERGED（`164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`）；docs(status): complete on main；删 exact feat | scoped unit 26 / integration 12 / full unit 323 / contract 68 / mypy PASS | STM-006 READY_FOR_PLANNING only |
 
 ---
 
@@ -458,11 +459,14 @@ expected_commits:
 
 - **implementation_commit**：`c166be5cd40475a513cede67f53cafec8fc8529a`
 - **implementation_commit_message**：`feat(stm): add context archive mongo create reuse service`
-- **status_record_committed**：`477b895bb863dc2655e1d674f8a329e8291c822e`
-- **PR**：#23 OPEN — https://github.com/xu-jia-ming/memory_system/pull/23
-- **测试**：scoped unit 26 / integration 12 / full unit 323 / contract 68 / ruff PASS / mypy PASS
-- **交付物**：`create_or_reuse_context_archive`；`build_archive_batch_key`；Mongo insert + DuplicateKey reuse；`context_archive_repository`；archived messages 四字段（无 `estimated_tokens`）；DEV-004 索引消费；无新 migration
+- **status_record_committed**：`a52207473534b1667967be32957c9e1f500ac429`
+- **status_record_completed**：`301c8d9ff873ba826b122f6cbb34a3dc0d2aa40b`
+- **merge_commit**：`164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`
+- **merged_at**：`2026-08-10T09:16:52Z`
+- **PR**：#23 MERGED — https://github.com/xu-jia-ming/memory_system/pull/23
+- **测试**：scoped unit 26 / contract 3 / integration 12 / full unit 323 / contract 68 / mypy PASS / ruff baseline E501 pre-existing（非回归）
+- **交付物**：`create_or_reuse_context_archive`；`build_archive_batch_key`；Mongo insert + DuplicateKey reuse；`context_archive_repository`；archived messages 四字段（无 `estimated_tokens`）；DEV-004 索引消费；无新 migration；empty messages fail-closed；concurrent same key → one doc same `archive_id`；message order preserved
 
 ### 最终状态
 
-`committed`
+`completed`

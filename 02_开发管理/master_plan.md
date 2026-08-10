@@ -262,7 +262,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-002 | Session 创建 | §1.2.1, §1.2.3, §1.2.7, §3.21, §3.23 | STM-001, DEV-005 | completed |
 | STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | completed |
 | STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | completed |
-| STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | planned |
+| STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | completed |
 | STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | planned |
 | STM-007 | Compression LLM Client + Structured Output | §1.2.5, §3.9 | DEV-002 | planned |
 | STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | planned |
@@ -322,13 +322,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **实现复用**：STM-001（`WorkingMemoryMessage`）、STM-004（分层模式）— **SATISFIED**。
 - **测试**：Unit（模型映射、`build_archive_batch_key`、create/reuse 服务、Repository DuplicateKey）+ Contract（`test_stm005_contract.py`）+ Integration（**11** 场景真实 Mongo：首建/reuse/同 id/单文档/并发同 key/不同 key/会话隔离/字段持久化/不覆盖/畸形 fail-closed/唯一索引存在）。
 - **规划备注**：OI-004 **acknowledged — 不阻塞** create/reuse；Mongo 不写 `estimated_tokens`；token 边界留给 STM-010；`archive_batch_key` 调用方预计算 + 服务一致性校验；`AppState.mongodb` 复用。
-- **状态备注**：`planned`（规划基线 main @ `5be0f07b7a5183aedc9ff2c67abc8e9cea8b0031`）；`workflow_mode=NORMAL`；`next_action=计划审查`；**不得自动开始实施**。
+- **状态备注**：`completed`（plan_commit `7b761c35ae8aa83c2b5c909312dd511b863a660c`；implementation_commit `c166be5cd40475a513cede67f53cafec8fc8529a`；record `a52207473534b1667967be32957c9e1f500ac429`；PR #23 MERGED https://github.com/xu-jia-ming/memory_system/pull/23 merge `164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf` mergedAt `2026-08-10T09:16:52Z`；`workflow_mode=NORMAL`）；Mongo context_archive create/reuse；`archive_batch_key` `session_id:first_message_id:last_message_id` + mandatory validation；empty messages fail-closed；DuplicateKey → REUSED no overwrite；concurrent same key → one doc same `archive_id`；message order preserved；archived messages 四字段（无 `estimated_tokens`）；DEV-004 unique index verified；no Kafka/Redis pending/compression/LLM/HTTP；STM-005 scoped unit 26 / contract 3 / integration 12；full unit 323 / contract 68；mypy PASS；ruff baseline E501 pre-existing（非回归）；feat 分支待删；**STM-006 READY_FOR_PLANNING only**（不得自动开始实施）。
 
 #### STM-006
 
 - **目标**：压缩锁（NX+owner token）；pending_archive_*；发布 `context.archive.created`（失败仅日志，不阻断后续压缩语义按规格）。
 - **非目标**：LLM 压缩；Finalize；补发脚本（STM-011）。
 - **测试**：Integration（锁互斥、pending 写入、Kafka 契约字段）。
+- **状态备注**：`planned`；正式前置 STM-005 **SATISFIED**；**READY_FOR_PLANNING only**（不得自动开始规划或实施）。
 
 #### STM-007
 
@@ -838,5 +839,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-005`（`planned`；plan `02_开发管理/tasks/STM-005-context-archive-create-reuse.md`）；OI-004 acknowledged 不阻塞；11 Integration 场景含并发同 key；**不** 新 migration；**不** Kafka/Redis pending；**不** 触碰 DEV-006/PR #13；本轮只规划不实施 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner；`next_action=计划审查` |
+
+### CHANGE-036
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-005 POST_MERGE_CLEANUP：PR #23 MERGED；docs(status): complete on main；删 exact feat；OI-004 partial evidence（status remains open） |
+| 受影响任务 | `STM-005`（`completed`；merge `164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`）；`STM-006`（prerequisites **SATISFIED** — **READY_FOR_PLANNING only**）；**不** Kafka/Redis pending/compression/LLM/HTTP；**不** 触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（OI-004 token-boundary 完整决议 deferred to STM-010） |
+| 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-006 READY_FOR_PLANNING only` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
