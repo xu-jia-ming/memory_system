@@ -276,7 +276,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | completed |
 | STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | completed |
 | STM-007 | Compression LLM Client + Structured Output | §1.2.5, §3.9 | DEV-002 | completed |
-| STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | tested |
+| STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | completed |
 | STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | planned |
 | STM-010 | Session Close | §1.2.3, §1.2.7 | STM-006, STM-009 | planned |
 | STM-011 | `republish_archive_event.py` 补发脚本 | §1.2.4, §3.4 | STM-006 | planned |
@@ -365,25 +365,30 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **正式前置依赖**：STM-006、STM-007 — **SATISFIED**。
 - **测试**：Unit（Input/payload handoff/ValidationError/Lua 映射）+ Contract（枚举/TOCTOU/无 message_ids SREM）+ Redis Integration **27 场景**（I18 Case A token 分解证明 new=500、I27 clamp 0、M1–M4 边界、畸形 Redis 整数 I24–I25、畸形 message JSON I26、closing in-flight、并发 duplicate 单次 version 迁移、失败零 mutation、retry 无 double-trim、无 Kafka/Mongo/LLM 副作用）。
 - **规划备注**：§5.0 十六项 Contract 闭合；Amendment 001（`plan_review_round: 2`）：HM-1 五项 token 变量 + I18 算术修正；HM-2 `max(0,…)` clamp 语义；畸形 `compression_version`/`estimated_tokens` → `invalid_session_state`；`ARGV[11]==ARGV[7]` defense；`closing` + 非空 pending 允许 in-flight Finalize（§733/§5845）；`archived_message_tokens` 调用方供给（OI-004 open）；OI-005 partial evidence acknowledged；成功路径锁在 Lua 内释放。
-- **状态备注**：`tested`（`plan_review_round: 2`；plan commit `fa3e1bf33e889dbb6180315eda896b954a02df8f`；branch `feat/STM-008-compression-finalize-lua`；`workflow_mode=NORMAL`）；单 Lua 12 precondition + 9 mutation；scoped unit 13 / contract 4 / integration 27；full unit 393 / contract 80；ruff PASS；mypy PASS；OI-004/OI-005 remain open；**READY_FOR_CODE_REVIEW**；**STM-009 NOT ready until STM-008 completed + merged**。
+- **状态备注**：`completed`（plan_commit `fa3e1bf33e889dbb6180315eda896b954a02df8f`；implementation `d619ca2f7e2e20d2d944794c2ca21e8e6d5752ef`；record `a938220f8937b0e8af7e52dd34019ad1b558e789`；PR #27 MERGED https://github.com/xu-jia-ming/memory_system/pull/27 merge `ac61680098d2ae2644bc8b990f057816c3218fca` mergedAt `2026-08-10T15:48:17Z`；`workflow_mode=NORMAL`）；单 Lua 12 precondition + 9 mutation；token 公式 §1000–1006（I18 Case A new=500；I27 clamp 0）；safety/idempotency：precondition 失败零 mutation、success 后旧 version 重试 version_conflict、无 double-trim/bump、closing in-flight 允许；STM-007 `CompressionFinalizeLlmPayload` handoff；scoped unit 20 / contract 4 / integration 27；full unit 393 / contract 80；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2；无 Kafka/Mongo/LLM；OI-004/OI-005 remain open；feat 分支待删；**STM-009 READY_FOR_PLANNING only**（prerequisites STM-003+STM-004+STM-008 **SATISFIED**；不得自动开始）；**不得触碰 DEV-006/PR#13**。
 
 #### STM-009
 
 - **目标**：多轮 Compression Coordinator；写入 API 接线与 `compression_status`；容量路径触发压缩（语义待 OI-001/002 决议前按规格字面实现并在 Task Plan 标注开放问题）。
 - **非目标**：Session Close。
+- **正式前置依赖**：STM-003、STM-004、STM-008 — **SATISFIED**。
+- **状态备注**：`planned` — **READY_FOR_PLANNING only**（prerequisites STM-003+STM-004+STM-008 all completed；**不得自动开始**）。
 - **测试**：Integration/失败注入（LLM 超时、锁占用）。
 
 #### STM-010
 
 - **目标**：Close 状态机、切分、resume、早失败回滚、原子删 Redis；`close_incomplete`（HTTP 映射见 OI-003，不得臆造）。
 - **非目标**：Extraction。
+- **正式前置依赖**：STM-006、STM-009 — STM-006 **SATISFIED**；STM-009 **NOT ready**（needs STM-009 completed）。
+- **状态备注**：`planned` — **NOT ready**（needs STM-009 completed）。
 - **测试**：Integration/E2E 片段；部分失败与恢复。
 
 #### STM-011
 
 - **目标**：实现 `scripts/republish_archive_event.py`（发布侧）。
 - **非目标**：消费侧任务创建断言（属 STM-012）。
-- **前置**：**仅 STM-006**。
+- **前置**：**仅 STM-006** — **SATISFIED**。
+- **状态备注**：`planned` — **READY_FOR_PLANNING only**（STM-006 satisfied；**不得自动开始**）。
 - **测试**：Unit/脚本级；不依赖 EXT-001。
 
 #### STM-012
@@ -973,5 +978,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-008`（`planned`；`plan_review_round: 2`；Integration **27** 场景；I18 new=500；I27 clamp 0）；OI-004/OI-005 remain open；**不** 实施；**不** 触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner；`next_action=计划审查 Round 2` |
+
+### CHANGE-047
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-008 POST_MERGE_CLEANUP：PR #27 MERGED（`ac61680098d2ae2644bc8b990f057816c3218fca` mergedAt `2026-08-10T15:48:17Z`）；docs(status): complete on main；删 exact feat |
+| 受影响任务 | `STM-008`（`completed`）；`STM-009`（prerequisites STM-003+STM-004+STM-008 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-011`（prerequisite STM-006 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-010` NOT ready（needs STM-009）；OI-004/OI-005 remain open；**不** 自动启动 STM-009/011；**不** 触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否** |
+| 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-009 READY_FOR_PLANNING only` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

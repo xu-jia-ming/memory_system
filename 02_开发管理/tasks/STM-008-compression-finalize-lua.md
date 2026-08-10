@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-008
 task_name: Compression Finalize Lua
-status: committed
+status: completed
 plan_review_round: 2
 workflow_mode: NORMAL
 workflow_mode_source: explicit
@@ -33,7 +33,7 @@ created_at: "2026-08-10 23:01 UTC"
 updated_at: "2026-08-10 23:50 UTC"
 approval_gates:
   planning_docs: "Round 2 PLAN_APPROVED; Human PLAN_APPROVED Amendment 001; plan_commit fa3e1bf33e889dbb6180315eda896b954a02df8f"
-  implementation_plan: "status=committed; PR #27 OPEN; next_action=WAITING_FOR_PR_MERGE"
+  implementation_plan: "status=completed; PR #27 MERGED; merge ac61680098d2ae2644bc8b990f057816c3218fca"
 ```
 
 ### 1.1 编排与门禁（本轮）
@@ -675,6 +675,7 @@ release_phases:
 |---|---|---|---|---|
 | 2026-08-10 23:01 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | OI-004/OI-005 open acknowledged；待 Plan Review |
 | 2026-08-10 23:30 UTC | Planner Amendment 001 | HM-1/HM-2 + SHOULD_FIX；I18 修正；Integration 27 场景；`plan_review_round: 2` | 未运行（规划-only） | Round 1 MUST_FIX 闭合；待 Round 2 Plan Review |
+| 2026-08-10 15:48 UTC | POST_MERGE_CLEANUP | PR #27 MERGED（`ac61680098d2ae2644bc8b990f057816c3218fca` mergedAt `2026-08-10T15:48:17Z`）；docs(status): complete on main；删 exact feat | n/a（治理） | STM-009 READY_FOR_PLANNING only；STM-011 READY_FOR_PLANNING only；STM-010 NOT ready；OI-004/OI-005 remain open |
 | 2026-08-10 23:50 UTC | IMPLEMENTATION_RELEASE | implementation `d619ca2f7e2e20d2d944794c2ca21e8e6d5752ef`；PR #27 OPEN | scoped unit 20 / contract 4 / integration 27；full unit 393 / contract 80；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE` |
 | 2026-08-10 23:45 UTC | Developer 实施 | 枚举/模型/服务；`compression_finalize.lua`（12 precondition + 9 mutation）；script + repository；unit 13 + contract 4 + integration 27 | unit+contract PASS；integration 27 PASS（Docker Redis）；full unit 393 / contract 80；ruff PASS；mypy PASS | C8 标题 10→12 步修正；无 Kafka/Mongo/LLM；OI-004/OI-005 remain open |
 
@@ -729,7 +730,7 @@ release_phases:
 p0: 0
 p1: 0
 p2: 0
-p3: 0
+p3: 2
 review_report: null
 ```
 
@@ -740,12 +741,15 @@ branch: "feat/STM-008-compression-finalize-lua"
 plan_commit: "fa3e1bf33e889dbb6180315eda896b954a02df8f"
 implementation_commit: "d619ca2f7e2e20d2d944794c2ca21e8e6d5752ef"
 implementation_commit_message: "feat(stm): add compression finalize lua and domain service"
-status_record_committed: null  # pending this docs(status): record commit SHA
+status_record_committed: "a938220f8937b0e8af7e52dd34019ad1b558e789"
+status_record_completed: "bdc2429fe63b9852de28e73cbd840de5c9d999d3"
 pr: "#27"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/27"
-pr_state: OPEN
+pr_state: MERGED
+merge_commit: "ac61680098d2ae2644bc8b990f057816c3218fca"
+merged_at: "2026-08-10T15:48:17Z"
 ```
 
 ### 最终状态
 
-`committed`
+`completed` — POST_MERGE_CLEANUP；单 Lua Finalize（12 precondition + 9 mutation）；token 公式 §1000–1006（I18 Case A new=500；I27 clamp 0）；safety/idempotency（precondition 零 mutation、version gate、无 double-trim/bump）；STM-007 `CompressionFinalizeLlmPayload` handoff；无 Kafka/Mongo/LLM；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2；OI-004/OI-005 remain open；feat 分支待删；**STM-009 READY_FOR_PLANNING only**（prerequisites SATISFIED；不得自动开始）。
