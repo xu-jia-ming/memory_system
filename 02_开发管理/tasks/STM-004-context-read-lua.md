@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-004
 task_name: Context Read Lua
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -23,7 +23,7 @@ prerequisites:
     - "本任务不需要 SiliconFlow / LLM / TEI / Mongo / Kafka / ES / Neo4j / HTTP 路由网络调用"
 branch: "feat/STM-004-context-read-lua"
 created_at: "2026-08-10 06:38 UTC"
-updated_at: "2026-08-10 07:18 UTC"
+updated_at: "2026-08-10 07:38 UTC"
 approval_gates:
   planning_docs: "pending Plan Review Round 3 → READY_FOR_PLAN_REVIEW；本轮不得 PLAN_APPROVED / 不得实施"
   implementation_plan: "status=planned；不得 Developer / 不得 Git 写"
@@ -449,20 +449,20 @@ uv run mypy src tests scripts
 
 ## 9. 验收标准
 
-- [ ] `read_working_memory_context(user_id, session_id)` 经单 Lua 返回一致快照（`compression_version` + `compressed_context` + `messages`）
-- [ ] Lua 脚本 **只读**；Integration I13 证明无 `updated_time`/消息/meta 变更
-- [ ] 复用 `working_memory_meta_key` + `working_memory_messages_key`；不读 `message_ids`
-- [ ] 复用 STM-003 `json_to_message`；畸形消息 → **`ContextReadFailure`**（非裸 `JSONDecodeError`/`KeyError`）；**不** 在本任务定义 HTTP 映射（STM-009）
-- [ ] 空 messages：Lua 返回最小 3 元素成功数组；Python `messages=[]`
-- [ ] `compressed_context` Redis `""` ↔ Python `""`；字段 **缺失** → `invalid_session_state`（I10）
-- [ ] `session_not_found`（缺失/身份不匹配）；`invalid_session_state`（畸形 version / 缺失 compressed_context）
-- [ ] `status=closing` 可读；读取 **不** 返回 `session_closing`
-- [ ] OI-009 决议落实在 Lua（无 `updated_time` 写；无 TTL）
-- [ ] Integration 13 场景全通过（含 I12 `NO_STALE_SUMMARY_TRIMMED_LIST_HYBRID` 三段式证明）
-- [ ] STM-004 scoped unit + contract + full unit/contract 无回归
-- [ ] Ruff / Mypy 通过
+- [x] `read_working_memory_context(user_id, session_id)` 经单 Lua 返回一致快照（`compression_version` + `compressed_context` + `messages`）
+- [x] Lua 脚本 **只读**；Integration I13 证明无 `updated_time`/消息/meta 变更
+- [x] 复用 `working_memory_meta_key` + `working_memory_messages_key`；不读 `message_ids`
+- [x] 复用 STM-003 `json_to_message`；畸形消息 → **`ContextReadFailure`**（非裸 `JSONDecodeError`/`KeyError`）；**不** 在本任务定义 HTTP 映射（STM-009）
+- [x] 空 messages：Lua 返回最小 3 元素成功数组；Python `messages=[]`
+- [x] `compressed_context` Redis `""` ↔ Python `""`；字段 **缺失** → `invalid_session_state`（I10）
+- [x] `session_not_found`（缺失/身份不匹配）；`invalid_session_state`（畸形 version / 缺失 compressed_context）
+- [x] `status=closing` 可读；读取 **不** 返回 `session_closing`
+- [x] OI-009 决议落实在 Lua（无 `updated_time` 写；无 TTL）
+- [x] Integration 13 场景全通过（含 I12 `NO_STALE_SUMMARY_TRIMMED_LIST_HYBRID` 三段式证明）
+- [x] STM-004 scoped unit + contract + full unit/contract 无回归
+- [x] Ruff / Mypy 通过
 - [ ] Review 无 P0/P1
-- [ ] 白名单外零 diff
+- [x] 白名单外零 diff
 
 ---
 
@@ -582,6 +582,7 @@ out_of_scope_changes:
 | 2026-08-10 06:38 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | OI-009 + OI-STM-004-001～003 已 Planner 决议；待 Plan Review |
 | 2026-08-10 07:10 UTC | Planner Amendment 001 | PLAN_REMEDIATION：MF-1 I11 对抗性 torn-read + `NO_STALE_SUMMARY_TRIMMED_LIST_HYBRID`；前置正式/复用区分；`ContextReadFailure`；空 messages 3 元素 Lua 返回 | 未运行（规划-only） | Round 1 MF-1 已吸收；待 Plan Review Round 2 |
 | 2026-08-10 07:18 UTC | Planner Amendment 002 | PLAN_REMEDIATION Round 3：MF-2 原子 mutator + 三段式 I12（负/正对照）；I10 compressed_context 缺失；`__init__.py` 白名单；ContextReadFailure→STM-009 注记 | 未运行（规划-only） | Round 2 MF-2 已吸收；待 Plan Review Round 3 |
+| 2026-08-10 07:38 UTC | Developer 实施 | 只读 Lua + 领域服务 + unit/contract/integration（13 场景含 I12 三段式） | scoped unit 15 / contract 3 / integration 14 / full unit 300 / full contract 65 / ruff PASS / mypy PASS | OI-009 只读 Lua；`compressed_context` 缺失 HGET false→invalid_session_state |
 
 ---
 
@@ -591,4 +592,4 @@ out_of_scope_changes:
 
 ### 最终状态
 
-`planned`
+`tested`
