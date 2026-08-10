@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-001 completed
+current_phase: Phase 1 — STM-002 approved
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: STM-001
-current_task_status: completed
+current_task: STM-002
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,7 +21,7 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md
+current_plan_file: 02_开发管理/tasks/STM-002-session-creation.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_DEV-002_prerequisite: SATISFIED
@@ -109,6 +109,12 @@ formal_DEV-003-002_plan_commit: 7172e918647c1853d0982ce979b299920d96a0cb
 formal_DEV-003-002_implementation_commit: 715e985e4e4fee35a3b12f4517af445081b2c5d7
 formal_DEV-003-002_pr: "#14"
 formal_DEV-003-002_merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
+# STM-002 planning evidence（本轮 Planner 初版；只规划不实施）
+formal_STM-002_status: planned
+formal_STM-002_plan_file: 02_开发管理/tasks/STM-002-session-creation.md
+formal_STM-002_plan_commit: null  # pending docs(plan) after PLAN_APPROVED
+formal_STM-002_workflow_mode: NORMAL
+formal_STM-002_note: "Session Create API + Redis WM meta init；复用 STM-001 模型与 DEV-005 壳；Amendment 001 吸收 Human Contract（OI-001～004 RESOLVED）；PLAN_APPROVED 2026-08-10；PLAN_LANDING 进行中"
 previous_task: STM-001
 previous_task_status: completed
 previous_implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
@@ -187,12 +193,12 @@ step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
-deferred_business_task: STM-002
-deferred_business_task_status: planned
-deferred_business_task_note: "STM-001 completed；prerequisites STM-001 completed + DEV-005 completed — READY_FOR_PLANNING only；须另一次显式编排；不得自动开始 STM-002 实施"
-next_action: STM-002 可规划（须另一次显式编排）；不得自动开始 STM-002；不得触碰 DEV-006/PR#13
-human_plan_approved_at: "2026-08-10 09:55 UTC"
-human_plan_approved_note: "STM-001 Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；PLAN_LANDING 进行中；确认后进入 Developer 实施"
+deferred_business_task: null
+deferred_business_task_status: null
+deferred_business_task_note: "STM-002 已进入规划（planned）；Task Plan Amendment 001 已吸收 Human Contract；待 Plan Review Round 2"
+next_action: Developer 实施（feat/STM-002-session-creation）
+human_plan_approved_at: "2026-08-10 10:44 UTC"
+human_plan_approved_note: "STM-002 Amendment 001 PLAN_APPROVED（Human Contract）；人工确认 PLAN_APPROVED；PLAN_LANDING 进行中"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
 insertion_override:
   prior_current_task: DEV-OPS-006
@@ -264,7 +270,9 @@ governance_deviation:
 
 ## 规格阻塞项
 
-**STM-001**：**completed** — deterministic heuristic token estimator；WM key/field contract；mandatory ContextSettings strict inequality validation evidence；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；record `ecc15af80ab18e5fe2905b5f5cd4f371f34127a0`；PR [#19](https://github.com/xu-jia-ming/memory_system/pull/19) **MERGED**（merge `6f2081da6266282470948ecac8e62ef3ae969c15`）；STM-001 scoped unit **38 passed** / contract **2 passed**；full unit **254 passed** / contract **49 passed**；ruff **PASS**；mypy **PASS**；`validators.py` 未改；Phase 1 STM-001 **completed**；**STM-002 READY_FOR_PLANNING only**（不得自动开始实施）。
+**STM-002**：**planned** — Task Plan `02_开发管理/tasks/STM-002-session-creation.md`；`POST /api/v1/memory/session` + Redis WM meta 初始化；Amendment 001 已吸收 Human Contract（OI-001～004 RESOLVED）；`next_action=计划审查`；**不得自动开始实施**；**不得触碰 DEV-006/PR#13**。
+
+**STM-001**：**completed** — deterministic heuristic token estimator；WM key/field contract；mandatory ContextSettings strict inequality validation evidence；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；record `ecc15af80ab18e5fe2905b5f5cd4f371f34127a0`；PR [#19](https://github.com/xu-jia-ming/memory_system/pull/19) **MERGED**（merge `6f2081da6266282470948ecac8e62ef3ae969c15`）；STM-001 scoped unit **38 passed** / contract **2 passed**；full unit **254 passed** / contract **49 passed**；ruff **PASS**；mypy **PASS**；`validators.py` 未改；Phase 1 STM-001 **completed**。
 
 **DEV-OPS-006**：**completed** — Phase 0 baseline hygiene；baseline **GREEN**；implementation `b9f049af59d0e904ebee0ce09df13cc383a91b52`；record `6de3f6ac3acd804df1831dcb58a0b3d1ebecf42f`；PR [#18](https://github.com/xu-jia-ming/memory_system/pull/18) **MERGED**（merge `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）；unit **216 passed / 0 failed**；contract **47 passed**；ruff **PASS**；mypy **PASS**；Phase 0 **completed**。
 
@@ -276,7 +284,7 @@ governance_deviation:
 
 **OI-011 / TEI**：已完成（12g contract 保留；本 hygiene 不修改）。
 
-**下游**：**STM-002** 前置满足（STM-001 completed + DEV-005 completed）；`status=planned`；**READY_FOR_PLANNING only**；须另一次显式编排；**不得自动开始 STM-002 实施**。
+**下游**：**STM-002** `status=planned`；Amendment 001 已吸收 Human Contract；`next_action=计划审查`；**不得自动开始 STM-002 实施**。
 
 ## 实施前置条件
 
@@ -582,6 +590,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 09:55 UTC | STM-001 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；progress 回写 approved | PLAN_LANDING 进行中；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 10:10 UTC | STM-001 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；PR #19 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；`next_action`→WAITING_FOR_PR_MERGE；**不得自动 merge**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 02:11 UTC | STM-001 | committed → completed | PR #19 MERGED（`6f2081da6266282470948ecac8e62ef3ae969c15`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | STM-002 READY_FOR_PLANNING only；**不得启动 STM-002 实施**；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 02:38 UTC | STM-002 | planned（Amendment 001） | Planner 吸收 Human Contract 四项决议 + Plan Review SHOULD_FIX；§5/§7/§8/§10 修订；§5 Step 6 与 §6.1 测试路径统一 | 未实施、未 Git 写；`next_action=计划审查 Round 2`；**不得触碰 DEV-006/PR#13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -614,7 +623,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **STM-002**（下一候选）：`planned` — prerequisites STM-001 completed + DEV-005 completed — **READY_FOR_PLANNING only**；须另一次显式编排；**不得自动开始 STM-002 实施**；**不得触碰 DEV-006/PR#13**。
+1. **STM-002**（当前）：`planned` — Task Plan `02_开发管理/tasks/STM-002-session-creation.md`；Amendment 001 已吸收 Human Contract；`next_action=计划审查`；**不得自动开始实施**；**不得触碰 DEV-006/PR#13**。
 2. **STM-001**：`completed`（PR #19 MERGED `6f2081da6266282470948ecac8e62ef3ae969c15`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；unit **254** / contract **49** / ruff / mypy 全绿）。
 3. **DEV-OPS-006**：`completed`（PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）。
 4. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；不得触碰。

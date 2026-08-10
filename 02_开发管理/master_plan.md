@@ -259,7 +259,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | STM-001 | Token 估算、WM Key/字段模型、配置校验 | §1.2.1 | DEV-002 | completed |
-| STM-002 | Session 创建 | §1.2.1, §1.2.3 | STM-001, DEV-005 | planned |
+| STM-002 | Session 创建 | §1.2.1, §1.2.3, §1.2.7, §3.21, §3.23 | STM-001, DEV-005 | planned |
 | STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | planned |
 | STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | planned |
 | STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | planned |
@@ -282,10 +282,13 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **状态备注**：`completed`（plan_commit `06c272f25e15fd5c7b4afd6e44257bc164dc83ca`；implementation_commit `66541cf3727d5735dd977e597acd6943fd997fb4`；record `ecc15af80ab18e5fe2905b5f5cd4f371f34127a0`；PR #19 MERGED https://github.com/xu-jia-ming/memory_system/pull/19 merge `6f2081da6266282470948ecac8e62ef3ae969c15` mergedAt `2026-08-10T02:11:17Z`；Amendment 001；`workflow_mode=NORMAL`；STM-001 scoped unit 38 / contract 2；full unit 254 / contract 49；ruff PASS；mypy PASS；`validators.py` 未改）；deterministic heuristic token estimator + WM key/field contract + mandatory ContextSettings strict inequality validation evidence；feat 分支已删；**STM-002 READY_FOR_PLANNING only**（不得自动开始实施）。
 #### STM-002
 
-- **目标**：`POST /api/v1/memory/session`；初始化 Working Memory Hash（`status=active`，`compression_version=0`）。
-- **非目标**：消息写入；压缩。
-- **测试**：Integration（用户隔离、字段齐全）。
-- **状态备注**：`planned`；prerequisites STM-001 completed + DEV-005 completed — **READY_FOR_PLANNING only**；须另一次显式编排；**不得自动开始实施**。
+- **目标**：`POST /api/v1/memory/session`；初始化 Working Memory Hash（`status=active`，`compression_version=0`）；复用 STM-001 `WorkingMemoryMeta`/Key helpers 与 DEV-005 API 壳；真实 Redis 写 meta Hash only（不预创建 messages/message_ids；无 TTL）。
+- **非目标**：消息写入；压缩；Session Close；Mongo/Kafka；第二套 WM 模型或 Redis 连接管理。
+- **计划文件**：`02_开发管理/tasks/STM-002-session-creation.md`
+- **规格章节**：§1.2.1、§1.2.3、§1.2.7、§3.21、§3.23。
+- **测试**：Unit（codec/service）+ Contract（鉴权/包络/`status=created`）+ Integration（真实 Redis：字段齐全、用户隔离、无消息副作用、TTL=-1）。
+- **规划备注**：Amendment 001 已吸收 Human Contract（OI-STM-002-001～004 RESOLVED：每次新建 UUID、user_id min_length=1→422、null↔""、HTTP 200）；§1.2.7 规则 12 禁止 TTL。
+- **状态备注**：`planned`（Amendment 001 2026-08-10）；prerequisites STM-001 + DEV-005 **SATISFIED**；`next_action=计划审查 Round 2`；**不得自动开始实施**；**不得触碰 DEV-006/PR#13**。
 
 #### STM-003
 
@@ -689,5 +692,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-001`（`completed`）；`STM-002`（`planned`；prerequisites satisfied — **READY_FOR_PLANNING only**）；**不**开始 STM-002 实施；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否**（实现 §1.2.1 / §1.2.6 既有 Contract；`validators.py` 未改） |
 | 审批 | POST_MERGE_CLEANUP `docs(status): complete` |
+
+### CHANGE-023
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | 用户显式 `START_EXISTING_TASK=STM-002` + `WORKFLOW_MODE=NORMAL`：登记 STM-002 Task Plan（Session 创建 API + Redis WM meta 初始化）；复用 STM-001 模型与 DEV-005 API 壳 |
+| 受影响任务 | `STM-002` → `planned`（计划文件 `02_开发管理/tasks/STM-002-session-creation.md`）；**不**扩大为 STM-003+；**不**触碰 DEV-006/PR #13；本轮只规划不实施 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner 初版；待 Plan Review → 人工确认；确认前不得 PLAN_LANDING / Developer |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
