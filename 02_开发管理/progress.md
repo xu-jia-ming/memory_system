@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-002 completed
+current_phase: Phase 1 — STM-003 planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: STM-002
-current_task_status: completed
-current_branch: main
+current_task: STM-003
+current_task_status: planned
+current_branch: feat/STM-003-message-write-lua
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -21,7 +21,7 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/STM-002-session-creation.md
+current_plan_file: 02_开发管理/tasks/STM-003-message-write-lua.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_DEV-002_prerequisite: SATISFIED
@@ -55,7 +55,7 @@ formal_DEV-OPS-006_workflow_mode: NORMAL
 formal_DEV-OPS-006_root_cause_classification: A
 formal_DEV-OPS-006_note: "Phase 0 baseline hygiene before STM-001 completed；baseline GREEN；STM-001 已进入规划（planned）"
 # Verified baseline（DEV-OPS-006 tested / merge evidence；STM-001 规划轮次 HEAD）
-latest_commit: efb39bf0bbbb408626e3d187d81b889dafc7a351
+latest_commit: 033e05ac23acd72f17458cdb701ddc37d28799bf
 main_tip_at_tested: 09b045be1429716eab184e4565beb30cf2856b28
 planning_baseline_head: 6721a54066fb0bc67d9c0313ab69e10bcaef2804
 verified_unit: "269 passed / 0 failed (uv run pytest tests/unit -q @ 2026-08-10 STM-002 tested)"
@@ -116,7 +116,7 @@ formal_STM-002_plan_commit: ac84b31210001f22df4a049d28ff1e90618c244d
 formal_STM-002_implementation_commit: 3440048f8a304219ec7bbddf3c192089cac6e8cb
 formal_STM-002_implementation_commit_message: "feat(stm): add session creation API and redis working memory init"
 formal_STM-002_status_record_committed: 1499fd23ad4aa92c6e9dd89f087d77b007674ff3
-formal_STM-002_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_STM-002_status_record_completed: 033e05ac23acd72f17458cdb701ddc37d28799bf
 formal_STM-002_pr: "#20"
 formal_STM-002_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/20"
 formal_STM-002_pr_state: MERGED
@@ -131,8 +131,15 @@ formal_STM-002_full_unit: "269 passed"
 formal_STM-002_full_contract: "59 passed"
 formal_STM-002_ruff: PASS
 formal_STM-002_mypy: "PASS — 108 source files"
-formal_STM-002_note: "POST_MERGE_CLEANUP；POST /api/v1/memory/session；X-API-Key；UUID v4；WM Hash status=active compression_version=0；HTTP 200 status=created；Amendment 001 四项落实；STM-002 scoped 25 / integration 3 / full unit 269 / contract 59；ruff PASS；mypy PASS；feat 分支待删"
-previous_task: STM-001
+formal_STM-002_note: "POST_MERGE_CLEANUP；POST /api/v1/memory/session；X-API-Key；UUID v4；WM Hash status=active compression_version=0；HTTP 200 status=created；Amendment 001 四项落实；STM-002 scoped 25 / integration 3 / full unit 269 / contract 59；ruff PASS；mypy PASS；feat 分支已删"
+# STM-003 planned evidence（规划轮次；未实施）
+formal_STM-003_status: planned
+formal_STM-003_plan_file: 02_开发管理/tasks/STM-003-message-write-lua.md
+formal_STM-003_branch: feat/STM-003-message-write-lua
+formal_STM-003_workflow_mode: NORMAL
+formal_STM-003_prerequisites: "STM-001 completed；STM-002 completed（PR #20 MERGED main @ 033e05a）"
+formal_STM-003_note: "规划-only；Amendment 001（Round 1 MF-1 Lua 步骤重排 + SF-1～3）；待 Plan Review Round 2；不得自动开始实施"
+previous_task: STM-002
 previous_task_status: completed
 previous_implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
 previous_implementation_commit_message: "feat(stm): add token estimator, wm key/field models, context inequality tests"
@@ -212,8 +219,8 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
 deferred_business_task: null
 deferred_business_task_status: null
-deferred_business_task_note: "STM-002 completed；PR #20 MERGED；STM-003 READY_FOR_PLANNING only"
-next_action: 等待用户显式指定下一任务（STM-003 READY_FOR_PLANNING only；不得自动开始实施）
+deferred_business_task_note: "STM-003 Amendment 001 已修订；prerequisites SATISFIED；待 Plan Review Round 2；不得自动开始实施"
+next_action: 计划审查
 human_plan_approved_at: "2026-08-10 10:44 UTC"
 human_plan_approved_note: "STM-002 Amendment 001 PLAN_APPROVED；Developer 实施 tested；READY_FOR_CODE_REVIEW"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
@@ -302,7 +309,7 @@ governance_deviation:
 
 **OI-011 / TEI**：已完成（12g contract 保留；本 hygiene 不修改）。
 
-**下游**：**STM-003** `status=planned`；prerequisites STM-002 **SATISFIED** — **READY_FOR_PLANNING only**；**不得自动开始 STM-003 实施**。
+**下游**：**STM-003** `status=planned`；plan `02_开发管理/tasks/STM-003-message-write-lua.md`；Amendment 001（Lua 步骤重排 + ARGV[7] + 精确边界 + contract）；prerequisites STM-002 **SATISFIED**；`next_action=计划审查`；**不得自动开始 STM-003 实施**。
 
 ## 实施前置条件
 
@@ -611,7 +618,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 02:38 UTC | STM-002 | planned（Amendment 001） | Planner 吸收 Human Contract 四项决议 + Plan Review SHOULD_FIX；§5/§7/§8/§10 修订；§5 Step 6 与 §6.1 测试路径统一 | 未实施、未 Git 写；`next_action=计划审查 Round 2`；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 02:52 UTC | STM-002 | tested | Developer 实施 Session Create API + Redis WM meta；Unit/Contract/Integration PASS | 未 commit；`next_action=Code Review` |
 | 2026-08-10 03:03 UTC | STM-002 | committed | IMPLEMENTATION_RELEASE；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；PR #20 OPEN | 待人工 merge |
-| 2026-08-10 03:11 UTC | STM-002 | committed → completed | PR #20 MERGED（`efb39bf0bbbb408626e3d187d81b889dafc7a351`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | STM-003 READY_FOR_PLANNING only；**不得启动 STM-003 实施**；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 04:17 UTC | STM-003 | planned | 创建 Task Plan `STM-003-message-write-lua.md`；master_plan CHANGE-025；progress 规划态回写 | 未实施、未 Git 写；`next_action=计划审查`；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 04:30 UTC | STM-003 | planned（Amendment 001） | Round 1 `PLAN_REJECTED` MF-1：§4.4/§5 Step 3 Lua 步骤重排对齐 OI-STM-003-002；吸收 SF-1 ARGV[7]、SF-2 精确边界 #14/#15、SF-3 contract 白名单 | 未实施、未 Git 写；`next_action=计划审查 Round 2`；**不得触碰 DEV-006/PR#13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -645,7 +653,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 下一任务
 
 1. **STM-002**：`completed`（PR #20 MERGED `efb39bf0bbbb408626e3d187d81b889dafc7a351`；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；scoped **25** / integration **3** / full unit **269** / contract **59** / ruff / mypy 全绿）。
-2. **STM-003**：`planned` — prerequisites STM-002 **SATISFIED**；**READY_FOR_PLANNING only**；`next_action=等待用户显式指定下一任务`；**不得自动开始实施**。
+2. **STM-003**：`planned` — Amendment 001 已修订（Lua 步骤重排 + ARGV[7] + 精确边界 + contract）；plan `02_开发管理/tasks/STM-003-message-write-lua.md`；prerequisites **SATISFIED**；`next_action=计划审查 Round 2`；**不得自动开始实施**。
 3. **STM-001**：`completed`（PR #19 MERGED `6f2081da6266282470948ecac8e62ef3ae969c15`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`）。
 4. **DEV-OPS-006**：`completed`（PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）。
 5. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；不得触碰。

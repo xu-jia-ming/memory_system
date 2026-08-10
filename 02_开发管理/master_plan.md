@@ -292,9 +292,12 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-003
 
-- **目标**：消息写入 Lua：`message_id` 幂等、容量校验、`duplicate`/`capacity_exceeded` 内部语义；**不含**完整多轮压缩协调。
-- **非目标**：Coordinator；Kafka。
-- **测试**：Unit/Integration（重复 id、容量、并发写入）；用户隔离。
+- **目标**：消息写入 Lua：`message_id` 幂等、容量校验、`duplicate`/`capacity_exceeded`/`session_closing`/`session_not_found`/`message_too_large` 内部语义；Python 层复用 `estimate_tokens()`；单 Lua 原子 RPUSH/SADD/meta 更新；**不含** HTTP 写入路由与完整压缩协调。
+- **非目标**：`POST /api/v1/memory/working/message` HTTP 路由与 `compression_status`（**STM-009**）；Coordinator；Kafka；`compression_trigger_tokens` 检查。
+- **计划文件**：`02_开发管理/tasks/STM-003-message-write-lua.md`
+- **规格章节**：§1.2.1、§1.2.3（写入流程摘录）、§1.2.6、§1.2.7。
+- **测试**：Unit（estimator 复用、消息 JSON codec、Lua 结果映射）+ Contract（`test_stm003_contract.py`：`MessageWriteStatus` 字面量稳定）+ Integration（15 场景：success/duplicate/零副作用/单条超限/WM 超限/精确边界 #14/#15/session 缺失/closing/用户隔离/并发同 id/原子失败无 partial state）。
+- **规划备注**：§10.1 OI-STM-003-001/002 已 Planner 决议（Lua 成功返回 `success`；meta 缺失与身份不匹配均 `session_not_found`；身份校验 **先于** `status`）；Amendment 001 落实 Round 1 MF-1 + SF-1～3；HTTP 接线见 STM-009。
 
 #### STM-004
 
@@ -712,5 +715,25 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-002`（`completed`）；`STM-003`/`STM-004`（prerequisites STM-002 **SATISFIED** — **READY_FOR_PLANNING only**）；**不**开始 STM-003 实施；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否**（实现 §1.2.3 / §1.2.7 / §3.21 既有 Contract；Amendment 001 Human Contract 已落实） |
 | 审批 | POST_MERGE_CLEANUP `docs(status): complete` |
+
+### CHANGE-025
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | 用户显式 `START_EXISTING_TASK=STM-003` + `WORKFLOW_MODE=NORMAL`：登记 STM-003 Task Plan（消息写入 Lua + 领域服务；不含 HTTP/压缩） |
+| 受影响任务 | `STM-003` → `planned`（计划文件 `02_开发管理/tasks/STM-003-message-write-lua.md`）；**不**扩大为 STM-009 HTTP/Coordinator；**不**触碰 DEV-006/PR #13；本轮只规划不实施 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner 初版；待 Plan Review → 人工确认；确认前不得 PLAN_LANDING / Developer |
+
+### CHANGE-026
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-003 Plan Review Round 1 `PLAN_REJECTED`（MF-1：Lua 步骤顺序与 §10.1 OI-STM-003-002 矛盾）；Planner Amendment 001 修订 |
+| 受影响任务 | `STM-003`（`planned`；Amendment 001：§4.4/§5 Step 3 Lua 重排 EXISTS→身份→status→duplicate→容量→写入；`ARGV[7]=message_id`；Integration #14/#15 精确边界；`test_stm003_contract.py` 白名单）；**不**扩大 STM-009 范围；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（对齐已决议 OI-STM-003-002） |
+| 审批 | Amendment 001；待 Plan Review Round 2 → 人工确认；确认前不得 PLAN_LANDING / Developer |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
