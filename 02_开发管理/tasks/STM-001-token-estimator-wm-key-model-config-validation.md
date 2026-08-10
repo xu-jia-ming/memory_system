@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-001
 task_name: Token 估算、WM Key/字段模型、配置校验
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -398,6 +398,7 @@ out_of_scope_changes:
 |---|---|---|---|---|
 | 2026-08-10 01:42 UTC | Planner 初版 Task Plan | 新建本计划；progress/master_plan 规划态登记 | 未跑实施测试（规划轮） | 本轮只规划；待 Plan Review |
 | 2026-08-10 09:50 UTC | Planner Amendment 001（PLAN_REMEDIATION） | 修订 MUST_FIX-1 + SHOULD_FIX 1–4；§3/§5/§6/§8/§9/Amendment 001 | 未跑实施测试（规划轮） | Round 1 PLAN_REJECTED；待 Plan Review Round 2 |
+| 2026-08-10 10:05 UTC | Developer Step 1–4 实施 | 白名单 8 源文件 + 4 测试文件；`validators.py` 未改（无缺口） | STM-001 定向 37 unit + 2 contract；全量 254 unit / 49 contract；ruff/mypy PASS | 无规格偏差；无 Redis I/O |
 
 ---
 
@@ -407,22 +408,38 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-| | |
+| `src/memory_system/domain/services/token_estimator.py` | 创建 — `estimate_tokens` heuristic 纯函数 |
+| `src/memory_system/domain/services/__init__.py` | 修改 — 导出 `estimate_tokens` |
+| `src/memory_system/domain/models/working_memory.py` | 创建 — `WorkingMemoryMeta` / `WorkingMemoryMessage` |
+| `src/memory_system/domain/models/__init__.py` | 修改 — 最小导出 |
+| `src/memory_system/domain/enums/working_memory.py` | 创建 — `SessionStatus` / `MessageRole` |
+| `src/memory_system/domain/enums/__init__.py` | 修改 — 最小导出 |
+| `src/memory_system/infrastructure/redis/keys.py` | 创建 — 三 Key 模板纯函数 |
+| `src/memory_system/infrastructure/redis/__init__.py` | 修改 — 最小导出 |
+| `tests/unit/test_token_estimator.py` | 创建 — 17 用例 |
+| `tests/unit/test_working_memory_keys_and_models.py` | 创建 — 12 用例 |
+| `tests/unit/test_context_inequalities_stm001.py` | 创建 — 8 用例（含 mandatory strict `<` 三用例） |
+| `tests/contract/test_stm001_contract.py` | 创建 — 2 用例 |
+| `02_开发管理/progress.md` | 修改 — 实施态治理字段 |
+| `02_开发管理/master_plan.md` | 修改 — STM-001 状态 |
+| 本 Task Plan | 修改 — 执行记录 / `status=tested` |
 
 ### 与原计划的差异
 
-暂无。
+- `validators.py`：未修改；既有 `validate_context` L37–43 已满足 MANDATORY strict `<`，无真实缺口。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | | |
-| Contract | | |
-| Integration | | |
-| E2E | | |
-| Ruff | | |
-| Mypy | | |
+| STM-001 Unit | `uv run pytest tests/unit/test_token_estimator.py tests/unit/test_working_memory_keys_and_models.py tests/unit/test_context_inequalities_stm001.py -q` | **37 passed** |
+| STM-001 Contract | `uv run pytest tests/contract/test_stm001_contract.py -q` | **2 passed** |
+| Unit（全量） | `uv run pytest tests/unit -q` | **254 passed**（baseline 216 + 38 新增） |
+| Contract（全量） | `uv run pytest tests/contract -q` | **49 passed**（baseline 47 + 2 新增） |
+| Ruff | `uv run ruff check .` | **PASS** |
+| Mypy | `uv run mypy src tests scripts` | **PASS** — 99 source files |
+| Integration | — | 不适用 |
+| E2E | — | 不适用 |
 
 ### Review 结果
 
@@ -437,12 +454,12 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/STM-001-token-estimator-wm-key-model-config-validation
+plan_commit: 06c272f25e15fd5c7b4afd6e44257bc164dc83ca
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`planned`
+`tested`

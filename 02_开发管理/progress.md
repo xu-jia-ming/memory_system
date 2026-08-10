@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 (STM-001) approved — awaiting Developer
+current_phase: Phase 1 (STM-001) tested — awaiting Code Review
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-001
-current_task_status: approved
-current_branch: main
+current_task_status: tested
+current_branch: feat/STM-001-token-estimator-wm-key-model-config-validation
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -26,13 +26,13 @@ workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_DEV-002_prerequisite: SATISFIED
 # STM-001 planning evidence（本轮只规划，不实施）
-formal_STM-001_status: approved
+formal_STM-001_status: tested
 formal_STM-001_plan_file: 02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md
-formal_STM-001_plan_commit: null
+formal_STM-001_plan_commit: 06c272f25e15fd5c7b4afd6e44257bc164dc83ca
 formal_STM-001_implementation_commit: null
 formal_STM-001_pr: null
 formal_STM-001_workflow_mode: NORMAL
-formal_STM-001_note: "Amendment 001 PLAN_REMEDIATION（Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；MANDATORY strict < contract + contract test + import redis ban；next_action=Developer 实施；不得触碰 DEV-006/PR#13；无 Redis I/O / 无 SiliconFlow·LLM 网络依赖"
+formal_STM-001_note: "Developer 实施完成；estimate_tokens + WM key/field models + inequality unit/contract；validators.py 未改；254 unit / 49 contract / ruff PASS / mypy PASS；next_action=Code Review"
 # DEV-OPS-006 completed evidence（POST_MERGE_CLEANUP；PR #18 MERGED）
 formal_DEV-OPS-006_status: completed
 formal_DEV-OPS-006_plan_file: 02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md
@@ -52,10 +52,10 @@ formal_DEV-OPS-006_note: "Phase 0 baseline hygiene before STM-001 completed；ba
 latest_commit: 6721a54066fb0bc67d9c0313ab69e10bcaef2804
 main_tip_at_tested: 09b045be1429716eab184e4565beb30cf2856b28
 planning_baseline_head: 6721a54066fb0bc67d9c0313ab69e10bcaef2804
-verified_unit: "216 passed / 0 failed (uv run pytest tests/unit -q @ 2026-08-09 12:32 UTC)"
-verified_contract: "47 passed (uv run pytest tests/contract -q @ 2026-08-09 12:32 UTC)"
-verified_ruff: "PASS — All checks passed (uv run ruff check .)"
-verified_mypy: "PASS — Success: no issues found in 91 source files (uv run mypy src tests scripts)"
+verified_unit: "254 passed / 0 failed (uv run pytest tests/unit -q @ 2026-08-10 STM-001 tested)"
+verified_contract: "49 passed (uv run pytest tests/contract -q @ 2026-08-10 STM-001 tested)"
+verified_ruff: "PASS — All checks passed (uv run ruff check . @ 2026-08-10 STM-001 tested)"
+verified_mypy: "PASS — Success: no issues found in 99 source files (uv run mypy src tests scripts @ 2026-08-10 STM-001 tested)"
 planning_unit_collect: 216
 planning_unit_known_failure: "RESOLVED by DEV-OPS-006 allowlist + invariant"
 planning_contract_verified: "47 passed (uv run pytest tests/contract -q @ planning)"
