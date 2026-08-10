@@ -348,9 +348,13 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-007
 
-- **目标**：DeepSeek Compression Client；`deepseek-v4-flash`；json_object + Pydantic 校验；超时/非法输出错误。
-- **非目标**：Finalize Lua；Coordinator。
-- **测试**：Contract（Fake LLM）；禁止 CI 真实计费调用。
+- **目标**：纯 LLM 压缩能力：`CompressionLlmService` + `LLMClient`/`DeepSeekLlmClient`；`deepseek-v4-flash`；`json_object` + Pydantic 校验；`estimate_tokens` 输出边界；`compression_output_too_large` / `llm_empty_output` / `llm_invalid_output` fail-closed；`FakeLlmClient` 供 CI。
+- **非目标**：Redis lock / pending / Kafka / Mongo archive I/O；Finalize Lua（STM-008）；Coordinator / HTTP（STM-009）；prompt 截断与 archive 选择。
+- **规格章节**：§1.2.5、§1.2.6（`compression_llm_timeout_seconds`）、§3.9。
+- **正式前置依赖**：DEV-002 — **SATISFIED**；STM-001 — **SATISFIED**；STM-006 — **SATISFIED**。
+- **测试**：Unit 13 + Contract 4 + Integration(fake) 5；opt-in 真实 DeepSeek（`RUN_COMPRESSION_LLM_INTEGRATION=1`）；默认 CI 禁止计费调用。
+- **计划文件**：`02_开发管理/tasks/STM-007-compression-llm-client-structured-output.md`
+- **状态备注**：`planned`（baseline `dc74311d6658c87cb164283f9ec775e012aa93f5`；§5.0 十六项 Contract 已闭合；OI-004/OI-005 OUT OF SCOPE）；**不得自动实施**；**不得触碰 DEV-006/PR#13**。
 
 #### STM-008
 
@@ -924,5 +928,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-006`（`completed`）；`STM-007`（prerequisites **SATISFIED** for planning — **READY_FOR_PLANNING only**）；`STM-008`（prerequisite STM-006 **SATISFIED**；仍须 STM-007）；`STM-011`（prerequisite STM-006 **SATISFIED** — **READY_FOR_PLANNING only**）；**不** 自动启动 STM-007/008/011；**不** 触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否** |
 | 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-007 READY_FOR_PLANNING only` |
+
+### CHANGE-043
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | 用户显式 START_EXISTING_TASK=STM-007 + WORKFLOW_MODE=NORMAL；Planner 初版 Task Plan |
+| 受影响任务 | `STM-007`（`planned`；plan `02_开发管理/tasks/STM-007-compression-llm-client-structured-output.md`）；baseline `dc74311d6658c87cb164283f9ec775e012aa93f5`；OI-004/OI-005 OUT OF SCOPE；**不** Redis/Mongo/Kafka/Finalize/Coordinator；**不** 触碰 DEV-006/PR #13；本轮只规划不实施 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner；`next_action=计划审查` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
