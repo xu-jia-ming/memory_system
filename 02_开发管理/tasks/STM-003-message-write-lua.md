@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-003
 task_name: Message Write Lua
-status: planned
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -20,10 +20,10 @@ prerequisites:
   - "本任务不需要 SiliconFlow / LLM / TEI / Mongo / Kafka / ES / Neo4j 网络调用"
 branch: "feat/STM-003-message-write-lua"
 created_at: "2026-08-10 04:17 UTC"
-updated_at: "2026-08-10 04:30 UTC"
+updated_at: "2026-08-10 14:20 UTC"
 approval_gates:
   planning_docs: "pending Plan Review → READY_FOR_PLAN_REVIEW；本轮不得 PLAN_APPROVED / 不得实施"
-  implementation_plan: "status=planned；Amendment 001 已修订；§10.1 两项 OPEN_ISSUE 已决议；待 Plan Review Round 2 后方可 Developer"
+  implementation_plan: "status=committed；implementation_commit e1913d17b159d426aadfd54d32e07c84ea61043a；PR #21 OPEN；next_action=Human PR merge"
 ```
 
 ### 1.1 编排与门禁（本轮）
@@ -379,18 +379,18 @@ must_not_this_round:
 
 ## 9. 验收标准
 
-- [ ] `write_message` 服务可用；输入契约符合 §1.2.3（无客户端 `estimated_tokens`；`timestamp` 可选）
-- [ ] **唯一** `estimate_tokens()` 在 Lua 前计算；Lua **不重算** Token
-- [ ] 单 Lua 原子脚本实现 §1.2.1 规则 3 写入路径（success/duplicate/capacity/session 分支）
-- [ ] `message_too_large` 与 `capacity_exceeded` **分离**；未使用 `compression_trigger_tokens` 作 WM 上限
-- [ ] `duplicate` / `capacity_exceeded` / `session_closing` / `session_not_found` **零副作用**
-- [ ] List JSON 符合 `WorkingMemoryMessage` 字段集；复用 STM-001 Key helpers
-- [ ] **未**实现 HTTP 路由、压缩、Kafka、Mongo
-- [ ] **未**修改 STM-001 estimator / STM-002 session-create Contract
-- [ ] STM-003 scoped Unit + Contract + Redis Integration（15 场景）通过
-- [ ] 全量 `tests/unit` + `tests/contract` 无回归
-- [ ] `uv run ruff check .` PASS
-- [ ] `uv run mypy src tests scripts` PASS
+- [x] `write_message` 服务可用；输入契约符合 §1.2.3（无客户端 `estimated_tokens`；`timestamp` 可选）
+- [x] **唯一** `estimate_tokens()` 在 Lua 前计算；Lua **不重算** Token
+- [x] 单 Lua 原子脚本实现 §1.2.1 规则 3 写入路径（success/duplicate/capacity/session 分支）
+- [x] `message_too_large` 与 `capacity_exceeded` **分离**；未使用 `compression_trigger_tokens` 作 WM 上限
+- [x] `duplicate` / `capacity_exceeded` / `session_closing` / `session_not_found` **零副作用**
+- [x] List JSON 符合 `WorkingMemoryMessage` 字段集；复用 STM-001 Key helpers
+- [x] **未**实现 HTTP 路由、压缩、Kafka、Mongo
+- [x] **未**修改 STM-001 estimator / STM-002 session-create Contract
+- [x] STM-003 scoped Unit + Contract + Redis Integration（17 场景含 #16 malformed / #17 ARGV 校验）通过
+- [x] 全量 `tests/unit` + `tests/contract` 无回归
+- [x] `uv run ruff check .` PASS
+- [x] `uv run mypy src tests scripts` PASS
 - [ ] Code Review 无 P0/P1
 
 ### 9.1 Release gate（实施阶段结束）
@@ -488,9 +488,41 @@ out_of_scope_changes:
 |---|---|---|---|---|
 | 2026-08-10 04:17 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | §10.1 两项 OPEN_ISSUE 已 Planner 决议；待 Plan Review |
 | 2026-08-10 04:30 UTC | Planner Amendment 001 | MF-1 Lua 步骤重排对齐 OI-STM-003-002；SF-1 ARGV[7] message_id；SF-2 精确边界 #14/#15；SF-3 contract 白名单 | 未运行（规划-only） | Round 1 PLAN_REJECTED 修订；待 Plan Review Round 2 |
+| 2026-08-10 06:10 UTC | Developer 实施 | `MessageWriteStatus`/`MessageWriteInput`/`MessageWriteResult`；`write_message` 服务；`message_write.lua`（ARGV[7]、malformed `estimated_tokens`→`invalid_session_state`）；message codec/repository/script；Unit+Contract+Integration（17 场景） | STM-003 scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS（119 files） | Human 约束：malformed token fail-closed；#16/#17；未 Git commit；`next_action=Code Review` |
+| 2026-08-10 14:12 UTC | Developer P1-1 修复 | `git checkout --` 回滚 17 条越权路径（`settings/**`、`scripts/migrate.py`、非 STM-003 contract/unit/integration）；保留 §6.1 白名单 | STM-003 scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS（119 files） | Code Review P1-1：工作区越权变更已清零；未 Git commit；`next_action=Code Review` |
+| 2026-08-10 14:20 UTC | Release Operator IMPLEMENTATION_RELEASE | implementation commit `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS（119 files） | `status=committed`；`next_action=Human PR merge` |
 
 ---
 
 ## 14. 实际执行结果
 
-（实施前留空。）
+`committed` — IMPLEMENTATION_RELEASE 完成；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN。
+
+| 维度 | 结果 |
+|---|---|
+| 交付 | `write_message` 领域服务 + 单 Lua 原子脚本；`MessageWriteStatus`（含 `invalid_session_state`）；`WorkingMemoryMessage` List JSON codec |
+| Human 约束 | Python 预检 `message_too_large`；Lua 不重算 token；`ARGV[7]=message_id`；malformed/missing `estimated_tokens` fail-closed；精确边界 #14/#15 |
+| STM-003 scoped | **21 passed**（unit 18 + contract 3） |
+| Integration | **11 passed**（17 场景分布于 11 用例；compose test Redis） |
+| Full unit | **287 passed** |
+| Full contract | **62 passed** |
+| ruff | PASS |
+| mypy | PASS — 119 source files |
+| Git | implementation commit `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN |
+| next_action | Human PR merge |
+
+### 14.5 Git 记录
+
+```yaml
+branch: feat/STM-003-message-write-lua
+plan_commit: 926f37d166089f02b3143470ca74ba1258d48010
+implementation_commit: e1913d17b159d426aadfd54d32e07c84ea61043a
+implementation_commit_message: "feat(stm): add message write lua and domain service"
+pr_number: 21
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/21"
+pr_state: OPEN
+merge_commit: null
+merged_at: null
+status_record_committed: 3b44d1d9265442502e76f1cde78f145054bffa65
+status_record_completed: null  # pending POST_MERGE_CLEANUP
+```

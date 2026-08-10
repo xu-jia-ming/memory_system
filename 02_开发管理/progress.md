@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-003 planned
+current_phase: Phase 1 — STM-003 committed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-003
-current_task_status: planned
+current_task_status: committed
 current_branch: feat/STM-003-message-write-lua
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -58,10 +58,10 @@ formal_DEV-OPS-006_note: "Phase 0 baseline hygiene before STM-001 completed；ba
 latest_commit: 033e05ac23acd72f17458cdb701ddc37d28799bf
 main_tip_at_tested: 09b045be1429716eab184e4565beb30cf2856b28
 planning_baseline_head: 6721a54066fb0bc67d9c0313ab69e10bcaef2804
-verified_unit: "269 passed / 0 failed (uv run pytest tests/unit -q @ 2026-08-10 STM-002 tested)"
-verified_contract: "59 passed (uv run pytest tests/contract -q @ 2026-08-10 STM-002 tested)"
-verified_ruff: "PASS — All checks passed (uv run ruff check . @ 2026-08-10 STM-002 tested)"
-verified_mypy: "PASS — Success: no issues found in 108 source files (uv run mypy src tests scripts @ 2026-08-10 STM-002 tested)"
+verified_unit: "287 passed / 0 failed (uv run pytest tests/unit -q @ 2026-08-10 STM-003 tested)"
+verified_contract: "62 passed (uv run pytest tests/contract -q @ 2026-08-10 STM-003 tested)"
+verified_ruff: "PASS — All checks passed (uv run ruff check . @ 2026-08-10 STM-003 tested)"
+verified_mypy: "PASS — Success: no issues found in 119 source files (uv run mypy src tests scripts @ 2026-08-10 STM-003 tested)"
 planning_unit_collect: 216
 planning_unit_known_failure: "RESOLVED by DEV-OPS-006 allowlist + invariant"
 planning_contract_verified: "47 passed (uv run pytest tests/contract -q @ planning)"
@@ -132,13 +132,26 @@ formal_STM-002_full_contract: "59 passed"
 formal_STM-002_ruff: PASS
 formal_STM-002_mypy: "PASS — 108 source files"
 formal_STM-002_note: "POST_MERGE_CLEANUP；POST /api/v1/memory/session；X-API-Key；UUID v4；WM Hash status=active compression_version=0；HTTP 200 status=created；Amendment 001 四项落实；STM-002 scoped 25 / integration 3 / full unit 269 / contract 59；ruff PASS；mypy PASS；feat 分支已删"
-# STM-003 planned evidence（规划轮次；未实施）
-formal_STM-003_status: planned
+# STM-003 committed evidence（IMPLEMENTATION_RELEASE；PR #21 OPEN）
+formal_STM-003_status: committed
 formal_STM-003_plan_file: 02_开发管理/tasks/STM-003-message-write-lua.md
+formal_STM-003_plan_commit: 926f37d166089f02b3143470ca74ba1258d48010
+formal_STM-003_implementation_commit: e1913d17b159d426aadfd54d32e07c84ea61043a
+formal_STM-003_implementation_commit_message: "feat(stm): add message write lua and domain service"
+formal_STM-003_status_record_committed: 3b44d1d9265442502e76f1cde78f145054bffa65
 formal_STM-003_branch: feat/STM-003-message-write-lua
 formal_STM-003_workflow_mode: NORMAL
-formal_STM-003_prerequisites: "STM-001 completed；STM-002 completed（PR #20 MERGED main @ 033e05a）"
-formal_STM-003_note: "规划-only；Amendment 001（Round 1 MF-1 Lua 步骤重排 + SF-1～3）；待 Plan Review Round 2；不得自动开始实施"
+formal_STM-003_pr: "#21"
+formal_STM-003_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/21"
+formal_STM-003_pr_state: OPEN
+formal_STM-003_scoped_unit: "18 passed (test_message_write_service + test_working_memory_message_codec + test_message_write_status_mapping)"
+formal_STM-003_scoped_contract: "3 passed (test_stm003_contract)"
+formal_STM-003_integration: "11 passed (test_message_write_redis — 17 scenarios)"
+formal_STM-003_full_unit: "287 passed"
+formal_STM-003_full_contract: "62 passed"
+formal_STM-003_ruff: PASS
+formal_STM-003_mypy: "PASS — 119 source files"
+formal_STM-003_note: "write_message + message_write.lua；ARGV[7] message_id；malformed estimated_tokens→invalid_session_state；Human #16/#17；P1-1 越权 17 路径已回滚；IMPLEMENTATION_RELEASE；next_action=Human PR merge"
 previous_task: STM-002
 previous_task_status: completed
 previous_implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
@@ -620,6 +633,9 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 03:03 UTC | STM-002 | committed | IMPLEMENTATION_RELEASE；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；PR #20 OPEN | 待人工 merge |
 | 2026-08-10 04:17 UTC | STM-003 | planned | 创建 Task Plan `STM-003-message-write-lua.md`；master_plan CHANGE-025；progress 规划态回写 | 未实施、未 Git 写；`next_action=计划审查`；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 04:30 UTC | STM-003 | planned（Amendment 001） | Round 1 `PLAN_REJECTED` MF-1：§4.4/§5 Step 3 Lua 步骤重排对齐 OI-STM-003-002；吸收 SF-1 ARGV[7]、SF-2 精确边界 #14/#15、SF-3 contract 白名单 | 未实施、未 Git 写；`next_action=计划审查 Round 2`；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 06:10 UTC | STM-003 | approved → in_progress → tested | Developer：消息写入服务 + Lua；malformed token fail-closed；Integration 17 场景 | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | 未 commit；`next_action=Code Review`；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 14:12 UTC | STM-003 | tested（P1-1 修复） | Code Review P1-1：`git checkout --` 回滚 17 条越权路径；白名单外变更清零 | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | 未 commit；`next_action=Code Review`；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 14:20 UTC | STM-003 | committed | IMPLEMENTATION_RELEASE；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | 待人工 merge；**不得触碰 DEV-006/PR#13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
