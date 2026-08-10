@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-001
 task_name: Token 估算、WM Key/字段模型、配置校验
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -26,7 +26,7 @@ created_at: "2026-08-10 01:42 UTC"
 updated_at: "2026-08-10 09:50 UTC"
 approval_gates:
   planning_docs: "pending Plan Review → READY_FOR_PLAN_REVIEW；本轮不得 PLAN_APPROVED / 不得实施"
-  implementation_plan: "status=planned；implementation_commit=null；PR=null"
+  implementation_plan: "status=committed；implementation_commit=66541cf3727d5735dd977e597acd6943fd997fb4；PR #19 OPEN；WAITING_FOR_PR_MERGE"
 ```
 
 ### 1.1 编排与门禁（本轮）
@@ -399,6 +399,7 @@ out_of_scope_changes:
 | 2026-08-10 01:42 UTC | Planner 初版 Task Plan | 新建本计划；progress/master_plan 规划态登记 | 未跑实施测试（规划轮） | 本轮只规划；待 Plan Review |
 | 2026-08-10 09:50 UTC | Planner Amendment 001（PLAN_REMEDIATION） | 修订 MUST_FIX-1 + SHOULD_FIX 1–4；§3/§5/§6/§8/§9/Amendment 001 | 未跑实施测试（规划轮） | Round 1 PLAN_REJECTED；待 Plan Review Round 2 |
 | 2026-08-10 10:05 UTC | Developer Step 1–4 实施 | 白名单 8 源文件 + 4 测试文件；`validators.py` 未改（无缺口） | STM-001 定向 37 unit + 2 contract；全量 254 unit / 49 contract；ruff/mypy PASS | 无规格偏差；无 Redis I/O |
+| 2026-08-10 10:10 UTC | IMPLEMENTATION_RELEASE | implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；PR #19 OPEN；docs(status): record on feat | 仅 feat push；禁 push main | `next_action`→WAITING_FOR_PR_MERGE；不得自动 merge |
 
 ---
 
@@ -456,10 +457,14 @@ review_report: null
 ```yaml
 branch: feat/STM-001-token-estimator-wm-key-model-config-validation
 plan_commit: 06c272f25e15fd5c7b4afd6e44257bc164dc83ca
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
+implementation_commit_message: "feat(stm): add token estimator, wm key/field models, context inequality tests"
+pr_number: 19
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/19"
+pr_state: OPEN
+status_record_committed: null  # pending this docs(status): record commit SHA
 ```
 
 ### 最终状态
 
-`tested`
+`committed`

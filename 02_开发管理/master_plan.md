@@ -258,7 +258,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| STM-001 | Token 估算、WM Key/字段模型、配置校验 | §1.2.1 | DEV-002 | tested |
+| STM-001 | Token 估算、WM Key/字段模型、配置校验 | §1.2.1 | DEV-002 | committed |
 | STM-002 | Session 创建 | §1.2.1, §1.2.3 | STM-001, DEV-005 | planned |
 | STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | planned |
 | STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | planned |
@@ -279,7 +279,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit（中英文边界、ceil 公式；Key/字段模型与 Optional 语义；§1.2.1/§1.2.6 不等式含 mandatory strict `<` 三用例 + 正向四链断言）；Contract（`test_stm001_contract.py`；无网络/无 Redis I/O）；无 Integration Redis I/O。
 - **风险**：OI-001/002 不在本任务解释。
 - **计划文件**：`02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md`
-- **状态备注**：`tested`（Developer 实施完成 2026-08-10；Amendment 001；`workflow_mode=NORMAL`；unit 254 / contract 49 / ruff PASS / mypy PASS；`validators.py` 未改；`next_action=Code Review`）。
+- **状态备注**：`committed`（implementation_commit `66541cf3727d5735dd977e597acd6943fd997fb4`；PR #19 OPEN https://github.com/xu-jia-ming/memory_system/pull/19；Amendment 001；`workflow_mode=NORMAL`；unit 254 / contract 49 / ruff PASS / mypy PASS；`validators.py` 未改）；WAITING_FOR_PR_MERGE；不得自动 merge。
 - **分支**：`feat/STM-001-token-estimator-wm-key-model-config-validation`（plan_commit `06c272f25e15fd5c7b4afd6e44257bc164dc83ca`）
 #### STM-002
 

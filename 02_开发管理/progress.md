@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 (STM-001) tested — awaiting Code Review
+current_phase: Phase 1 (STM-001) committed — awaiting PR merge
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-001
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/STM-001-token-estimator-wm-key-model-config-validation
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -25,14 +25,17 @@ current_plan_file: 02_开发管理/tasks/STM-001-token-estimator-wm-key-model-co
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_DEV-002_prerequisite: SATISFIED
-# STM-001 planning evidence（本轮只规划，不实施）
-formal_STM-001_status: tested
+# STM-001 committed evidence（IMPLEMENTATION_RELEASE；PR OPEN；等待人工 Merge）
+formal_STM-001_status: committed
 formal_STM-001_plan_file: 02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md
 formal_STM-001_plan_commit: 06c272f25e15fd5c7b4afd6e44257bc164dc83ca
-formal_STM-001_implementation_commit: null
-formal_STM-001_pr: null
+formal_STM-001_implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
+formal_STM-001_status_record_committed: null  # pending this docs(status): record commit SHA
+formal_STM-001_pr: "#19"
+formal_STM-001_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/19"
+formal_STM-001_pr_state: OPEN
 formal_STM-001_workflow_mode: NORMAL
-formal_STM-001_note: "Developer 实施完成；estimate_tokens + WM key/field models + inequality unit/contract；validators.py 未改；254 unit / 49 contract / ruff PASS / mypy PASS；next_action=Code Review"
+formal_STM-001_note: "IMPLEMENTATION_RELEASE 完成；estimate_tokens + WM key/field models + inequality unit/contract；validators.py 未改；254 unit / 49 contract / ruff PASS / mypy PASS；WAITING_FOR_PR_MERGE"
 # DEV-OPS-006 completed evidence（POST_MERGE_CLEANUP；PR #18 MERGED）
 formal_DEV-OPS-006_status: completed
 formal_DEV-OPS-006_plan_file: 02_开发管理/tasks/DEV-OPS-006-phase0-baseline-hygiene-before-stm001.md
@@ -184,7 +187,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 deferred_business_task: STM-001
 deferred_business_task_status: approved
 deferred_business_task_note: "Amendment 001 PLAN_REMEDIATION；Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；status=approved；next_action=Developer 实施"
-next_action: Developer 实施
+next_action: WAITING_FOR_PR_MERGE（PR #19 OPEN）；等待人工 Merge；不得自动 merge / gh pr merge；不得触碰 DEV-006/PR#13
 human_plan_approved_at: "2026-08-10 09:55 UTC"
 human_plan_approved_note: "STM-001 Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；PLAN_LANDING 进行中；确认后进入 Developer 实施"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
@@ -338,6 +341,8 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（OI-011 POST_MERGE_CLEANUP） | **待本 docs(status): complete 落盘**；exact feat 待删 |
 | RELEASE_COMPLETED（OI-012 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `f4d2e614773f7bcdf8b45b39e3e1c438d282b410`；spec commit `bd7529f455ab0c34dc03a6659e1850a5eab189f7`；PR #16 MERGED（`003fb43e24ab5bb5d2401342a0f466fcbe22ce26`） |
 | RELEASE_COMPLETED（OI-012 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status) 落盘；exact feat 待删 |
+| CODE_REVIEW_APPROVED（STM-001 实现） | **已通过**（P0=0 / P1=0）；`CODE_REVIEW_APPROVED` |
+| RELEASE_COMPLETED（STM-001 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `66541cf3727d5735dd977e597acd6943fd997fb4`；PR #19 OPEN（base=main；head=feat/STM-001-token-estimator-wm-key-model-config-validation）；等待人工 Merge |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -568,6 +573,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-09 12:40 UTC | DEV-OPS-006 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `b9f049af59d0e904ebee0ce09df13cc383a91b52`；PR #18 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；`next_action`→WAITING_FOR_PR_MERGE；**不得自动 merge**；**不得实现 STM-001** |
 | 2026-08-09 12:44 UTC | DEV-OPS-006 | committed → completed | PR #18 MERGED（`3e727b3dc1a168863d7fa6e8d52a175d36de4644`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | baseline GREEN；Phase 0 completed；STM-001 READY_FOR_PLANNING；**不得启动 STM-001 实施** |
 | 2026-08-10 09:55 UTC | STM-001 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；progress 回写 approved | PLAN_LANDING 进行中；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 10:10 UTC | STM-001 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；PR #19 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；`next_action`→WAITING_FOR_PR_MERGE；**不得自动 merge**；**不得触碰 DEV-006/PR#13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -600,7 +606,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **STM-001**：`approved` — Task Plan `02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md`（Amendment 001）；**next_action=Developer 实施**；PLAN_LANDING 后进入实施；**不得触碰 DEV-006/PR#13**。
+1. **STM-001**（当前）：`committed` — implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；PR [#19](https://github.com/xu-jia-ming/memory_system/pull/19) **OPEN**；unit **254** / contract **49** / ruff / mypy 全绿；`plan_commit=06c272f25e15fd5c7b4afd6e44257bc164dc83ca`；分支 `feat/STM-001-token-estimator-wm-key-model-config-validation`；`next_action`→**WAITING_FOR_PR_MERGE**；**不得自动 merge**；**不得触碰 DEV-006/PR#13**。
 2. **DEV-OPS-006**：`completed`（PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）。
 3. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；不得触碰。
 4. **DEV-007 / OI-012 / OI-011**：`completed`（保留）。
