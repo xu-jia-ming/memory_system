@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-007 planned
+current_phase: Phase 1 — STM-007 committed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-007
-current_task_status: planned
-current_branch: main
+current_task_status: committed
+current_branch: feat/STM-007-compression-llm-client-structured-output
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -23,11 +23,31 @@ dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/STM-007-compression-llm-client-structured-output.md
 workflow_mode_for_this_task: NORMAL
-formal_STM-007_status: planned
+formal_STM-007_status: committed
 formal_STM-007_plan_file: 02_开发管理/tasks/STM-007-compression-llm-client-structured-output.md
+formal_STM-007_plan_commit: c5c54c53ae04e323b70c8648c88e0e09b41ede2b
+formal_STM-007_implementation_commit: 87dc9c4a442aff113ac220b9604010aa135f721e
+formal_STM-007_implementation_commit_message: "feat(stm): add compression llm client and structured output service"
+formal_STM-007_status_record_committed: null  # pending this docs(status): record commit SHA
+formal_STM-007_status_record_completed: null  # pending POST_MERGE docs(status): complete SHA
+formal_STM-007_branch: feat/STM-007-compression-llm-client-structured-output
+formal_STM-007_pr: "#26"
+formal_STM-007_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/26"
+formal_STM-007_pr_state: OPEN
+formal_STM-007_scoped_unit: "20 passed (authoritative STM-007 scoped unit per Task Plan §测试结果)"
+formal_STM-007_scoped_contract: "4 passed"
+formal_STM-007_integration_fake: "5 passed"
+formal_STM-007_scoped_total: "29 passed"
+formal_STM-007_full_unit: "369 passed"
+formal_STM-007_full_contract: "76 passed"
+formal_STM-007_ruff: PASS
+formal_STM-007_mypy: PASS
+formal_STM-007_code_review: CODE_REVIEW_APPROVED
+formal_STM-007_p0: 0
+formal_STM-007_p1: 0
 formal_STM-007_prerequisite: SATISFIED  # DEV-002 + STM-001 + STM-006 completed
 formal_STM-007_workflow_mode: NORMAL
-formal_STM-007_note: "纯 LLM 压缩能力；CompressionLlmService + DeepSeek LLMClient + FakeLlmClient；§5.0 十六项 Contract 闭合；OI-004/OI-005 OUT OF SCOPE；不得触碰 DEV-006/PR#13"
+formal_STM-007_note: "committed；CompressionLlmService + DeepSeek LLMClient + FakeLlmClient；§5.0 十六项 Contract 闭合；PR #26 OPEN；WAITING_FOR_PR_MERGE；OI-004/OI-005 OUT OF SCOPE；不得触碰 DEV-006/PR#13"
 planning_baseline_head: dc74311d6658c87cb164283f9ec775e012aa93f5
 workflow_mode_source: explicit
 formal_STM-006_status: completed
@@ -349,9 +369,9 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
 deferred_business_task: STM-008
 deferred_business_task_status: READY_FOR_PLANNING only
-deferred_business_task_note: "STM-007 planned；STM-008 仍须 STM-007 completed；不得自动开始 STM-008 规划或实施"
-next_action: 计划审查
-last_role_result: POST_MERGE_CLEANUP_PENDING
+deferred_business_task_note: "STM-007 committed PR #26 OPEN；STM-008 仍须 STM-007 completed；不得自动开始 STM-008 规划或实施"
+next_action: WAITING_FOR_PR_MERGE
+last_role_result: RELEASE_COMPLETED
 blocking_reason: null
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
 human_plan_approved_at: "2026-08-10T12:35:00Z"
@@ -781,6 +801,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 06:26 UTC | STM-003 | committed → completed | PR #21 MERGED（`3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | STM-004 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 08:02 UTC | STM-004 | committed → completed | PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；OI-009 resolved | STM-005 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 14:05 UTC | STM-007 | planned | 创建 Task Plan `02_开发管理/tasks/STM-007-compression-llm-client-structured-output.md`；master_plan CHANGE-043；progress 规划态回写 | baseline `dc74311`；§5.0 十六项 Contract 闭合；OI-004/OI-005 OUT OF SCOPE | `next_action=计划审查`；未实施、未 Git 写；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 22:40 UTC | STM-007 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `87dc9c4a442aff113ac220b9604010aa135f721e`；PR #26 OPEN；docs(status): record on feat | scoped 29 / full unit 369 / contract 76；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 13:40 UTC | STM-006 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `683caab306e082d58f577977ba3ecee5c550aa6e`；PR #25 OPEN；docs(status): record on feat | scoped unit 26 / contract 4 / redis int 16 / kafka int 4；full unit 349 / contract 72；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 12:35 UTC | STM-006 | planned → approved | Human PLAN_APPROVED Amendment 001；Round 2 BLOCKER=0 MUST_FIX=0；治理回写 Task Plan / progress / master_plan | 未运行（治理） | **next_action=PLAN_LANDING**；仍不得业务实施；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 12:40 UTC | STM-006 | planned（Round 2 Plan Review） | Plan Reviewer `PLAN_APPROVED`；BLOCKER=0 MUST_FIX=0；SHOULD_FIX=1（幂等 count/tokens 非阻塞） | MF-1 已闭合；未实施、未 Git 写 | **等待人工确认 PLAN_APPROVED**；其后才可 PLAN_LANDING；**不得触碰 DEV-006/PR#13** |

@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-007
 task_name: Compression LLM Client + Structured Output
-status: planned
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -25,10 +25,10 @@ prerequisites:
     - "不需要 Redis / Mongo / Kafka live I/O；不需要真实 DeepSeek 作为默认 CI 门禁"
 branch: "feat/STM-007-compression-llm-client-structured-output"
 created_at: "2026-08-10 14:05 UTC"
-updated_at: "2026-08-10 14:05 UTC"
+updated_at: "2026-08-10 22:40 UTC"
 approval_gates:
-  planning_docs: "本轮 Planner 输出；等待独立 Plan Review → PLAN_APPROVED"
-  implementation_plan: "status=planned；未实施；未 PLAN_LANDING"
+  planning_docs: "PLAN_APPROVED；plan_commit c5c54c53ae04e323b70c8648c88e0e09b41ede2b"
+  implementation_plan: "status=committed；PR #26 OPEN；next_action=WAITING_FOR_PR_MERGE"
 open_issues_acknowledged:
   - "OI-004 — open；Mongo token boundary；**不在 STM-007 scope**"
   - "OI-005 — open；service naming；**不在 STM-007 scope**"
@@ -597,7 +597,8 @@ release_phases:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 2026-08-10 22:30 UTC | Step 1–4 实施 | 白名单 15 文件（8 src + 7 tests） | unit 18 / contract 4 / integration(fake) 5 PASS；ruff PASS；mypy PASS | Client/Service 分层；`run_compression_llm` 唯一入口；transport retry=0 |
+| 2026-08-10 22:40 UTC | IMPLEMENTATION_RELEASE | implementation `87dc9c4a442aff113ac220b9604010aa135f721e`；PR #26 OPEN | scoped 29 / full unit 369 / contract 76；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE` |
 
 ---
 
@@ -607,7 +608,20 @@ release_phases:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `src/memory_system/domain/models/compression_llm.py` | 创建 |
+| `src/memory_system/domain/services/compression_llm_service.py` | 创建 |
+| `src/memory_system/infrastructure/llm/protocol.py` | 创建 |
+| `src/memory_system/infrastructure/llm/errors.py` | 创建 |
+| `src/memory_system/infrastructure/llm/deepseek_client.py` | 创建 |
+| `src/memory_system/infrastructure/llm/fake_client.py` | 创建 |
+| `src/memory_system/infrastructure/llm/compression_prompts.py` | 创建 |
+| `src/memory_system/infrastructure/llm/__init__.py` | 创建 |
+| `tests/unit/test_compression_llm_service.py` | 创建 |
+| `tests/unit/test_deepseek_llm_client.py` | 创建 |
+| `tests/contract/test_compression_llm_contract.py` | 创建 |
+| `tests/contract/helpers/compression_llm_fake.py` | 创建 |
+| `tests/integration/test_compression_llm_fake.py` | 创建 |
+| `tests/integration/test_compression_llm_integration.py` | 创建 |
 
 ### 与原计划的差异
 
@@ -617,12 +631,12 @@ release_phases:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit | `uv run pytest tests/unit/test_compression_llm_service.py tests/unit/test_deepseek_llm_client.py -q` | PASS (18) |
+| Contract | `uv run pytest tests/contract/test_compression_llm_contract.py -q` | PASS (4) |
+| Integration | `uv run pytest tests/integration/test_compression_llm_fake.py -q` | PASS (5) |
+| E2E | N/A | N/A |
+| Ruff | `uv run ruff check .` | PASS |
+| Mypy | `uv run mypy src tests scripts` | PASS |
 
 ### Review 结果
 
@@ -637,12 +651,19 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: "feat/STM-007-compression-llm-client-structured-output"
+plan_commit: "c5c54c53ae04e323b70c8648c88e0e09b41ede2b"
+implementation_commit: "87dc9c4a442aff113ac220b9604010aa135f721e"
+implementation_commit_message: "feat(stm): add compression llm client and structured output service"
+status_record_committed: null  # pending this docs(status): record commit SHA
+pr: "#26"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/26"
+pr_state: OPEN
+merge_commit: null
+merged_at: null
+status_record_completed: null  # pending POST_MERGE docs(status): complete SHA
 ```
 
 ### 最终状态
 
-`planned`
+`committed`
