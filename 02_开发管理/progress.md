@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-002 tested
+current_phase: Phase 1 — STM-002 committed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-002
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/STM-002-session-creation
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -109,20 +109,27 @@ formal_DEV-003-002_plan_commit: 7172e918647c1853d0982ce979b299920d96a0cb
 formal_DEV-003-002_implementation_commit: 715e985e4e4fee35a3b12f4517af445081b2c5d7
 formal_DEV-003-002_pr: "#14"
 formal_DEV-003-002_merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
-# STM-002 implementation evidence（Developer tested；未 commit）
-formal_STM-002_status: tested
+# STM-002 implementation evidence（IMPLEMENTATION_RELEASE；PR #20 OPEN）
+formal_STM-002_status: committed
 formal_STM-002_plan_file: 02_开发管理/tasks/STM-002-session-creation.md
 formal_STM-002_plan_commit: ac84b31210001f22df4a049d28ff1e90618c244d
+formal_STM-002_implementation_commit: 3440048f8a304219ec7bbddf3c192089cac6e8cb
+formal_STM-002_implementation_commit_message: "feat(stm): add session creation API and redis working memory init"
+formal_STM-002_status_record_committed: null  # pending this docs(status): record commit SHA
+formal_STM-002_status_record_completed: null
+formal_STM-002_pr: "#20"
+formal_STM-002_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/20"
+formal_STM-002_pr_state: OPEN
 formal_STM-002_branch: feat/STM-002-session-creation
 formal_STM-002_workflow_mode: NORMAL
-formal_STM-002_scoped_unit: "17 passed (test_session_create_service + test_working_memory_redis_codec)"
+formal_STM-002_scoped_unit: "25 passed (test_session_create_service + test_working_memory_redis_codec + test_stm002_contract)"
 formal_STM-002_scoped_contract: "10 passed (test_stm002_contract)"
 formal_STM-002_integration: "3 passed (test_session_create_redis)"
 formal_STM-002_full_unit: "269 passed"
 formal_STM-002_full_contract: "59 passed"
 formal_STM-002_ruff: PASS
 formal_STM-002_mypy: "PASS — 108 source files"
-formal_STM-002_note: "POST /api/v1/memory/session；UUID v4；HSET WM meta；HTTP 200 status=created；Amendment 001 四项落实；READY_FOR_CODE_REVIEW"
+formal_STM-002_note: "POST /api/v1/memory/session；UUID v4；HSET WM meta；HTTP 200 status=created；Amendment 001 四项落实；PR #20 OPEN 待 merge"
 previous_task: STM-001
 previous_task_status: completed
 previous_implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
@@ -203,8 +210,8 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
 deferred_business_task: null
 deferred_business_task_status: null
-deferred_business_task_note: "STM-002 实施完成（tested）；待 Code Review"
-next_action: Code Review（STM-002）
+deferred_business_task_note: "STM-002 committed；PR #20 OPEN 待人工 merge"
+next_action: 人工 merge PR #20（STM-002）
 human_plan_approved_at: "2026-08-10 10:44 UTC"
 human_plan_approved_note: "STM-002 Amendment 001 PLAN_APPROVED；Developer 实施 tested；READY_FOR_CODE_REVIEW"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
@@ -278,7 +285,7 @@ governance_deviation:
 
 ## 规格阻塞项
 
-**STM-002**：**tested** — `POST /api/v1/memory/session` + Redis WM meta 初始化已实施；Amendment 001 四项落实；`next_action=Code Review`；**READY_FOR_CODE_REVIEW**。
+**STM-002**：**committed** — `POST /api/v1/memory/session` + Redis WM meta 初始化；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；PR [#20](https://github.com/xu-jia-ming/memory_system/pull/20) **OPEN**；待人工 merge。
 
 **STM-001**：**completed** — deterministic heuristic token estimator；WM key/field contract；mandatory ContextSettings strict inequality validation evidence；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；record `ecc15af80ab18e5fe2905b5f5cd4f371f34127a0`；PR [#19](https://github.com/xu-jia-ming/memory_system/pull/19) **MERGED**（merge `6f2081da6266282470948ecac8e62ef3ae969c15`）；STM-001 scoped unit **38 passed** / contract **2 passed**；full unit **254 passed** / contract **49 passed**；ruff **PASS**；mypy **PASS**；`validators.py` 未改；Phase 1 STM-001 **completed**。
 
@@ -600,6 +607,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 02:11 UTC | STM-001 | committed → completed | PR #19 MERGED（`6f2081da6266282470948ecac8e62ef3ae969c15`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | STM-002 READY_FOR_PLANNING only；**不得启动 STM-002 实施**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 02:38 UTC | STM-002 | planned（Amendment 001） | Planner 吸收 Human Contract 四项决议 + Plan Review SHOULD_FIX；§5/§7/§8/§10 修订；§5 Step 6 与 §6.1 测试路径统一 | 未实施、未 Git 写；`next_action=计划审查 Round 2`；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 02:52 UTC | STM-002 | tested | Developer 实施 Session Create API + Redis WM meta；Unit/Contract/Integration PASS | 未 commit；`next_action=Code Review` |
+| 2026-08-10 03:03 UTC | STM-002 | committed | IMPLEMENTATION_RELEASE；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；PR #20 OPEN | 待人工 merge |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -632,7 +640,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **STM-002**（当前）：`tested` — Developer 实施完成；`next_action=Code Review`；**READY_FOR_CODE_REVIEW**。
+1. **STM-002**（当前）：`committed` — implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；PR #20 OPEN；`next_action=人工 merge PR #20`。
 2. **STM-001**：`completed`（PR #19 MERGED `6f2081da6266282470948ecac8e62ef3ae969c15`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；unit **254** / contract **49** / ruff / mypy 全绿）。
 3. **DEV-OPS-006**：`completed`（PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）。
 4. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；不得触碰。

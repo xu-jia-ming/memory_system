@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-002
 task_name: Session 创建
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -490,6 +490,7 @@ out_of_scope_changes:
 | 2026-08-10 02:28 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | §10.1 四项 OPEN_ISSUE 待 Plan Review |
 | 2026-08-10 02:38 UTC | Planner Amendment 001 | 吸收 Human Contract 四项决议；§5/§7/§8/§10 修订；§5 Step 6 与 §6.1 测试路径统一为 `test_session_create_service.py`；移除 OI-001 skip 指引 | 未运行（规划-only） | §10.1 全部 RESOLVED；待 Plan Review Round 2 |
 | 2026-08-10 02:52 UTC | Developer 实施 | 新增 `POST /api/v1/memory/session`；WM codec/repository；session_service；app 接线；Unit/Contract/Integration 测试 | STM-002 scoped unit 17 / contract 10 / integration 3 PASS；full unit 269 / contract 59；ruff PASS；mypy PASS（108 files） | 无 Contract 变更；Amendment 001 四项已落实；未 commit |
+| 2026-08-10 03:03 UTC | IMPLEMENTATION_RELEASE | implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；PR #20 OPEN | pre-commit 全绿 | feat 分支已推送；待人工 merge |
 
 ---
 
@@ -544,10 +545,15 @@ review_report: null
 ```yaml
 branch: feat/STM-002-session-creation
 plan_commit: ac84b31210001f22df4a049d28ff1e90618c244d
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 3440048f8a304219ec7bbddf3c192089cac6e8cb
+implementation_commit_message: "feat(stm): add session creation API and redis working memory init"
+pr_number: 20
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/20"
+pr_state: OPEN
+status_record_committed: null  # pending this docs(status): record commit SHA
+status_record_completed: null
 ```
 
 ### 14.6 最终状态
 
-`tested` — READY_FOR_CODE_REVIEW
+`committed` — PR #20 OPEN；待人工 merge
