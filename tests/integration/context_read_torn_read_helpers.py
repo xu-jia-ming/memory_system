@@ -171,8 +171,16 @@ async def broken_split_read_with_barrier(
     compressed_context_raw = await redis.hget(meta_key, "compressed_context")
     messages_raw = await redis.lrange(messages_key, 0, -1)
     return BrokenSplitReadSnapshot(
-        compression_version=str(compression_version_raw) if compression_version_raw is not None else None,
-        compressed_context=str(compressed_context_raw) if compressed_context_raw is not None else "",
+        compression_version=(
+            str(compression_version_raw)
+            if compression_version_raw is not None
+            else None
+        ),
+        compressed_context=(
+            str(compressed_context_raw)
+            if compressed_context_raw is not None
+            else ""
+        ),
         messages=[str(item) for item in messages_raw],
     )
 

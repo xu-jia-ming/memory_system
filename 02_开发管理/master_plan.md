@@ -70,7 +70,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-004 | 本机 Mihomo 网络回退策略文档（AI 工作流） | 非业务：全局开发规则 + 契约测试；不改规格/业务代理 Contract | DEV-OPS-003 | completed |
 | DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 非业务：人类日常操作手册 + 契约测试；不改 Orchestrator/mode/业务 | DEV-OPS-003, DEV-OPS-004, DEV-004 | completed |
 | DEV-OPS-006 | Phase 0 Baseline Hygiene Before STM-001 | 非业务：unit compose-wrapper allowlist + progress DOC_CODE_DRIFT hygiene | DEV-007, OI-011 | completed |
-| DEV-OPS-007 | Phase 1 Baseline Hygiene Before STM-006 | 非业务：STM-005 orphan SHA metadata 更正 + Ruff E501 torn-read helper 换行 | STM-005 | planned |
+| DEV-OPS-007 | Phase 1 Baseline Hygiene Before STM-006 | 非业务：STM-005 orphan SHA metadata 更正 + Ruff E501 torn-read helper 换行 | STM-005 | tested |
 
 #### DEV-OPS-007 Phase 1 Baseline Hygiene Before STM-006
 
@@ -80,7 +80,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **关键修复**：`progress.md` + STM-005 Task Plan §14 将 `status_record_completed` 更正为 `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；`tests/integration/context_read_torn_read_helpers.py` 换行（零语义变更）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-007-phase1-baseline-hygiene-before-stm006.md`
 - **插入说明**：用户显式 START_NEW_TASK；`workflow_mode=NORMAL`（explicit）；STM-006 仍 **READY_FOR_PLANNING only**（不得标 in_progress）。
-- **状态备注**：`planned`（main @ `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；orphan `301c8d9…` exit 1 / authoritative `b0736431…` exit 0；Ruff E501 @ L174–175；`next_action=计划审查`；**不得启动 STM-006 规划或实施**）。
+- **状态备注**：`tested`（orphan SHA metadata 更正 → `b0736431…`；Ruff E501 L174–175 换行；integration 14 / unit 323 / contract 68；ruff PASS；mypy PASS；`next_action=Code Review`；**不得启动 STM-006 规划或实施**）。
 
 #### DEV-OPS-006 Phase 0 Baseline Hygiene Before STM-001
 
