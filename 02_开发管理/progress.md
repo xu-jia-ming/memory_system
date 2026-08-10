@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-005 approved
+current_phase: Phase 1 — STM-005 committed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-005
-current_task_status: approved
-current_branch: main
+current_task_status: committed
+current_branch: feat/STM-005-context-archive-create-reuse
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -179,6 +179,27 @@ formal_STM-004_full_contract: "65 passed"
 formal_STM-004_ruff: PASS
 formal_STM-004_mypy: PASS
 formal_STM-004_note: "POST_MERGE_CLEANUP；read-only atomic Redis Lua context snapshot；compression_version + compressed_context + ordered messages；malformed state fail-closed；I12 deterministic torn-read negative control；production single-Lua canonical snapshot；zero Redis write side effect（I13）；OI-009 resolved；scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；feat 分支待删"
+# STM-005 committed evidence（IMPLEMENTATION_RELEASE；PR pending）
+formal_STM-005_status: committed
+formal_STM-005_plan_file: 02_开发管理/tasks/STM-005-context-archive-create-reuse.md
+formal_STM-005_plan_commit: 7b761c35ae8aa83c2b5c909312dd511b863a660c
+formal_STM-005_implementation_commit: c166be5cd40475a513cede67f53cafec8fc8529a
+formal_STM-005_implementation_commit_message: "feat(stm): add context archive mongo create reuse service"
+formal_STM-005_status_record_committed: 477b895bb863dc2655e1d674f8a329e8291c822e
+formal_STM-005_status_record_completed: null
+formal_STM-005_branch: feat/STM-005-context-archive-create-reuse
+formal_STM-005_workflow_mode: NORMAL
+formal_STM-005_pr: "#23"
+formal_STM-005_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/23"
+formal_STM-005_pr_state: OPEN
+formal_STM-005_scoped_unit: "26 passed (test_context_archive_batch_key + test_context_archive_models + test_context_archive_repository + test_context_archive_service)"
+formal_STM-005_scoped_contract: "3 passed (test_stm005_contract)"
+formal_STM-005_integration: "12 passed (test_context_archive_mongo — 11 scenarios)"
+formal_STM-005_full_unit: "323 passed"
+formal_STM-005_full_contract: "68 passed"
+formal_STM-005_ruff: PASS
+formal_STM-005_mypy: PASS
+formal_STM-005_note: "IMPLEMENTATION_RELEASE；Mongo context_archive create/reuse；DuplicateKey reuse；无 estimated_tokens；DEV-004 索引；无新 migration；scoped unit 26 / contract 3 / integration 12 / full unit 323 / contract 68；ruff PASS；mypy PASS；PR #23 OPEN 待 merge"
 previous_task: STM-004
 previous_task_status: completed
 previous_implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
