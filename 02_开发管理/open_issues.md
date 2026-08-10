@@ -113,7 +113,9 @@ status: open
 
 **禁止行为：** 不得在未解决前自行拆分未规定的网络服务。
 
-**决议记录：** （空）
+**决议记录：**
+
+- **2026-08-10** — STM-006 POST_MERGE_CLEANUP partial evidence：`archive_created_publisher` 与 `compression_preparation_service` 均在 `memory-api` 进程内；未创建独立 Context Archive Service 网络组件；Kafka publish 复用 `AppState.kafka_producer`。**status remains open**（正式治理落盘 OI-005 决议段待人工/后续 OI task 闭合）。
 
 ---
 

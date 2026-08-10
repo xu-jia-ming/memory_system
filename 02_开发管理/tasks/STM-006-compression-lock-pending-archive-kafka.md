@@ -789,12 +789,15 @@ branch: "feat/STM-006-compression-lock-pending-archive-kafka"
 plan_commit: "6dd97278ec82ebb24dcb21c2c5a58118a65db0cd"
 implementation_commit: "683caab306e082d58f577977ba3ecee5c550aa6e"
 implementation_commit_message: "feat(stm): add compression lock pending archive and kafka publish"
+status_record_committed: "5b9d6cb8125a72b502d93980ae75eb43a3d2fd82"
 pr: "#25"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/25"
-pr_state: OPEN
-status_record_committed: null  # pending this docs(status): record commit SHA
+pr_state: MERGED
+merge_commit: "d704bc5421d346d46a48cb69a3a7ad956e94dbb8"
+merged_at: "2026-08-10T13:53:53Z"
+status_record_completed: null  # pending POST_MERGE docs(status): complete SHA
 ```
 
 ### 最终状态
 
-`committed`
+`completed`

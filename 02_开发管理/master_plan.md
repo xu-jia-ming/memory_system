@@ -274,7 +274,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | completed |
 | STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | completed |
 | STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | completed |
-| STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | committed |
+| STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | completed |
 | STM-007 | Compression LLM Client + Structured Output | §1.2.5, §3.9 | DEV-002 | planned |
 | STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | planned |
 | STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | planned |
@@ -344,7 +344,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **正式前置依赖**：STM-005 — **SATISFIED**。
 - **测试**：Unit（lock/pending/pre-held A–C、ValidationError）+ Contract（枚举/六字段/TOCTOU guard D）+ Redis Integration（锁互斥、pending、stale/expired/valid pre-held、无 version bump、无 LTRIM；不依赖 Kafka broker）+ Kafka Integration（topic/schema/key/失败注入/重复允许）+ Recovery R1–R4。
 - **规划备注**：Amendment 001（Round 2）；MF-1 方案 A；fresh acquire 与 pre-held 同 pending contract；Kafka **at-least-once**；Redis 内原子 ≠ Redis+Kafka 事务；OI-004 open acknowledged 不阻塞；OI-005 进程内生产者决议；锁过期后既有 pending republish 依赖 STM-011（不实现）；lock 仅 `compression_lock_repository.py`。
-- **状态备注**：`tested`（Amendment 001；plan_commit `6dd97278ec82ebb24dcb21c2c5a58118a65db0cd`；feat `feat/STM-006-compression-lock-pending-archive-kafka`；`workflow_mode=NORMAL`）；compression lock SET NX EX + compare-and-del；pending Lua ownership 同窗 + accounting identity accounting fail-closed；Kafka `context.archive.created` 六字段 at-least-once；scoped unit 26 / contract 4 / redis int 16 / kafka int 4；full unit 349 / contract 72；ruff PASS；mypy PASS；**next_action=Code Review**；未 commit；不得触碰 DEV-006/PR#13。
+- **状态备注**：`completed`（plan_commit `6dd97278ec82ebb24dcb21c2c5a58118a65db0cd`；implementation `683caab306e082d58f577977ba3ecee5c550aa6e`；record `5b9d6cb8125a72b502d93980ae75eb43a3d2fd82`；PR #25 MERGED https://github.com/xu-jia-ming/memory_system/pull/25 merge `d704bc5421d346d46a48cb69a3a7ad956e94dbb8` mergedAt `2026-08-10T13:53:53Z`；`workflow_mode=NORMAL`）；compression lock `memory:compression:lock:{user_id}:{session_id}` SET NX EX TTL default 420s；PREHELD atomic Lua pending；same identity accounting fail-closed `pending_conflict`；Kafka `context.archive.created` 六字段 key=user_id AT_LEAST_ONCE；pending+Kafka fail recovery-visible for STM-011；no compression_version bump/no trim/no compressed_context；authoritative scoped unit 26 / contract 4 / redis int 16 / kafka int 4；full unit 349 / contract 72；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3；OI-004 remains open；OI-005 partial evidence；feat 分支待删；**STM-007 READY_FOR_PLANNING only**
 
 #### STM-007
 
@@ -914,5 +914,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-006`（`tested`；feat `feat/STM-006-compression-lock-pending-archive-kafka`）；Human SF same-identity accounting fail-closed；**不** LLM/Finalize/HTTP/STM-011；**不** 触碰 DEV-006/PR #13；未 commit |
 | 是否改变技术规格 | **否** |
 | 审批 | Developer tested；`next_action=Code Review` |
+
+### CHANGE-042
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-006 POST_MERGE_CLEANUP：PR #25 MERGED（`d704bc5421d346d46a48cb69a3a7ad956e94dbb8`）；docs(status): complete on main；删 exact feat |
+| 受影响任务 | `STM-006`（`completed`）；`STM-007`（prerequisites **SATISFIED** for planning — **READY_FOR_PLANNING only**）；`STM-008`（prerequisite STM-006 **SATISFIED**；仍须 STM-007）；`STM-011`（prerequisite STM-006 **SATISFIED** — **READY_FOR_PLANNING only**）；**不** 自动启动 STM-007/008/011；**不** 触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否** |
+| 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-007 READY_FOR_PLANNING only` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
