@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-007
 task_name: Compression LLM Client + Structured Output
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -597,7 +597,7 @@ release_phases:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 2026-08-10 22:30 UTC | Step 1–4 实施 | 白名单 15 文件（8 src + 7 tests） | unit 18 / contract 4 / integration(fake) 5 PASS；ruff PASS；mypy PASS | Client/Service 分层；`run_compression_llm` 唯一入口；transport retry=0 |
 
 ---
 
@@ -607,7 +607,20 @@ release_phases:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `src/memory_system/domain/models/compression_llm.py` | 创建 |
+| `src/memory_system/domain/services/compression_llm_service.py` | 创建 |
+| `src/memory_system/infrastructure/llm/protocol.py` | 创建 |
+| `src/memory_system/infrastructure/llm/errors.py` | 创建 |
+| `src/memory_system/infrastructure/llm/deepseek_client.py` | 创建 |
+| `src/memory_system/infrastructure/llm/fake_client.py` | 创建 |
+| `src/memory_system/infrastructure/llm/compression_prompts.py` | 创建 |
+| `src/memory_system/infrastructure/llm/__init__.py` | 创建 |
+| `tests/unit/test_compression_llm_service.py` | 创建 |
+| `tests/unit/test_deepseek_llm_client.py` | 创建 |
+| `tests/contract/test_compression_llm_contract.py` | 创建 |
+| `tests/contract/helpers/compression_llm_fake.py` | 创建 |
+| `tests/integration/test_compression_llm_fake.py` | 创建 |
+| `tests/integration/test_compression_llm_integration.py` | 创建 |
 
 ### 与原计划的差异
 
@@ -617,12 +630,12 @@ release_phases:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit | `uv run pytest tests/unit/test_compression_llm_service.py tests/unit/test_deepseek_llm_client.py -q` | PASS (18) |
+| Contract | `uv run pytest tests/contract/test_compression_llm_contract.py -q` | PASS (4) |
+| Integration | `uv run pytest tests/integration/test_compression_llm_fake.py -q` | PASS (5) |
+| E2E | N/A | N/A |
+| Ruff | `uv run ruff check .` | PASS |
+| Mypy | `uv run mypy src tests scripts` | PASS |
 
 ### Review 结果
 
@@ -645,4 +658,4 @@ implementation_commit_message: null
 
 ### 最终状态
 
-`planned`
+`tested`
