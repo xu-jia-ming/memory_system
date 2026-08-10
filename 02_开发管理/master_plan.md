@@ -337,10 +337,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-006
 
-- **目标**：压缩锁（NX+owner token）；pending_archive_*；发布 `context.archive.created`（失败仅日志，不阻断后续压缩语义按规格）。
-- **非目标**：LLM 压缩；Finalize；补发脚本（STM-011）。
-- **测试**：Integration（锁互斥、pending 写入、Kafka 契约字段）。
-- **状态备注**：`planned`；正式前置 STM-005 **SATISFIED**；**READY_FOR_PLANNING only**（不得自动开始规划或实施）。
+- **目标**：压缩锁（`SET NX EX` + owner token + TTL + token-checked release）；保留 pre-held token path，但 `PREHELD_TOKEN_MUST_BE_ATOMICALLY_VERIFIED`（ownership 与 pending mutation 同 Lua）；`pending_archive_*` 写入/幂等/冲突；发布 `context.archive.created`（六字段 schema；key=`user_id`；仅 Lua success 后；失败仅日志不回滚 pending，不阻断后续压缩语义）。
+- **非目标**：LLM 压缩（STM-007）；Finalize（STM-008）；Coordinator/HTTP（STM-009）；Close（STM-010）；补发脚本（STM-011）；Mongo create/reuse 重实现；消息批次选择；OI-004 私解；跨系统伪原子事务。
+- **计划文件**：`02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md`
+- **规格章节**：§1.2.1、§1.2.2、§1.2.4、§1.2.6、§1.2.7。
+- **正式前置依赖**：STM-005 — **SATISFIED**。
+- **测试**：Unit（lock/pending/pre-held A–C、ValidationError）+ Contract（枚举/六字段/TOCTOU guard D）+ Redis Integration（锁互斥、pending、stale/expired/valid pre-held、无 version bump、无 LTRIM；不依赖 Kafka broker）+ Kafka Integration（topic/schema/key/失败注入/重复允许）+ Recovery R1–R4。
+- **规划备注**：Amendment 001（Round 2）；MF-1 方案 A；fresh acquire 与 pre-held 同 pending contract；Kafka **at-least-once**；Redis 内原子 ≠ Redis+Kafka 事务；OI-004 open acknowledged 不阻塞；OI-005 进程内生产者决议；锁过期后既有 pending republish 依赖 STM-011（不实现）；lock 仅 `compression_lock_repository.py`。
+- **状态备注**：`approved`（Amendment 001；plan file `02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md`；baseline `e53a0f1e2e448a6a40445768f30c902173dd0921`；`workflow_mode=NORMAL` explicit）；正式前置 STM-005 **SATISFIED**；Round 2 `PLAN_APPROVED`（BLOCKER=0 MUST_FIX=0）；Human `PLAN_APPROVED`；**next_action=PLAN_LANDING**；落地后允许 Developer；不得触碰 DEV-006/PR#13。
 
 #### STM-007
 
@@ -870,5 +874,35 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | 新增 `DEV-OPS-007`（`planned`；plan `02_开发管理/tasks/DEV-OPS-007-phase1-baseline-hygiene-before-stm006.md`）；**不** 实现 STM-006；**不** 改 STM-005/004 `src/**`；**不** resurrect orphan；**不** 触碰 DEV-006/PR #13；本轮只规划不实施 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner；`next_action=计划审查` |
+
+### CHANGE-038
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | 用户显式 START_EXISTING_TASK：**STM-006** Compression Lock / Pending Archive / Kafka `context.archive.created`；Planner 初版 Task Plan |
+| 受影响任务 | `STM-006`（`planned`；plan `02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md`）；OI-004 open acknowledged 不阻塞；OI-005 进程内生产者决议；**不** LLM/Finalize/HTTP/STM-011；**不** 触碰 DEV-006/PR #13；本轮只规划不实施 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner；`next_action=计划审查` |
+
+### CHANGE-039
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-006 Plan Review Round 1 `PLAN_REJECTED`（MF-1）；用户选定方案 A；Planner Amendment 001 / Round 2 remediation |
+| 受影响任务 | `STM-006`（`planned`；Amendment 001：`PREHELD_TOKEN_MUST_BE_ATOMICALLY_VERIFIED`；SF-1–5 已吸收；plan `02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md`）；**不** 实施；**不** PLAN_LANDING；**不** Git 写；**不** 触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（收紧实现约束；不改 API/Schema） |
+| 审批 | Planner；`next_action=计划审查`（Round 2） |
+
+### CHANGE-040
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-006 Round 2 Plan Reviewer `PLAN_APPROVED`（BLOCKER=0 MUST_FIX=0）；Human `PLAN_APPROVED` Amendment 001；进入 PLAN_LANDING |
+| 受影响任务 | `STM-006`（`approved`；plan `02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md`；feat `feat/STM-006-compression-lock-pending-archive-kafka`）；**不** 业务实施直至 Developer；**不** 触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否** |
+| 审批 | Human PLAN_APPROVED；Release Operator PLAN_LANDING |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

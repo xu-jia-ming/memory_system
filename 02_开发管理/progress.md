@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — DEV-OPS-007 completed
+current_phase: Phase 1 — STM-006 approved
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: DEV-OPS-007
-current_task_status: completed
+current_task: STM-006
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,18 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-OPS-007-phase1-baseline-hygiene-before-stm006.md
+current_plan_file: 02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
+formal_STM-006_status: approved
+formal_STM-006_plan_file: 02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md
+formal_STM-006_prerequisite: SATISFIED  # STM-005 completed
+formal_STM-006_workflow_mode: NORMAL
+formal_STM-006_note: "Human PLAN_APPROVED Amendment 001；Round 2 BLOCKER=0 MUST_FIX=0；PREHELD_TOKEN_MUST_BE_ATOMICALLY_VERIFIED；SF 幂等 count/tokens fail-closed；PLAN_LANDING in progress"
+formal_STM-006_branch: feat/STM-006-compression-lock-pending-archive-kafka
+formal_STM-006_plan_commit: null  # filled after PLAN_LANDING docs(plan)
 formal_DEV-002_prerequisite: SATISFIED
+planning_baseline_head_stm006: e53a0f1e2e448a6a40445768f30c902173dd0921
 # STM-001 completed evidence（POST_MERGE_CLEANUP；PR #19 MERGED）
 formal_STM-001_status: completed
 formal_STM-001_plan_file: 02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md
@@ -306,20 +314,23 @@ step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
-deferred_business_task: STM-006
-deferred_business_task_status: READY_FOR_PLANNING only
-deferred_business_task_note: "DEV-OPS-007 completed（PR #24 MERGED）；STM-006 READY_FOR_PLANNING only；不得自动开始 STM-006 规划或实施"
-next_action: "STM-006 READY_FOR_PLANNING only"
-human_plan_approved_at: "2026-08-10 10:30 UTC"
-human_plan_approved_note: "DEV-OPS-007 PLAN_APPROVED；Developer 实施完成；orphan SHA metadata 更正 + Ruff E501 换行；全量门禁 PASS"
+deferred_business_task: null
+deferred_business_task_status: null
+deferred_business_task_note: "STM-006 已由用户显式 START_EXISTING_TASK 进入规划"
+next_action: "PLAN_LANDING（Release Operator）→ then Developer on feat"
+last_role_result: HUMAN_PLAN_APPROVED
+blocking_reason: null
+# note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
+human_plan_approved_at: "2026-08-10T12:35:00Z"
+human_plan_approved_note: "Human PLAN_APPROVED STM-006 Amendment 001；Round 2 Plan Reviewer PLAN_APPROVED BLOCKER=0 MUST_FIX=0；absorb R2 SHOULD_FIX count/tokens fail-closed；scope lock+pending+Kafka only"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
 insertion_override:
-  prior_current_task: STM-005
+  prior_current_task: DEV-OPS-007
   prior_current_task_status: completed
   prior_next_action: "STM-006 READY_FOR_PLANNING only（do NOT auto-start）"
-  override_by: "用户显式 START_NEW_TASK=DEV-OPS-007 + WORKFLOW_MODE=NORMAL(explicit)；STM-005 completed；main @ b073643"
-  effect: "current_task=DEV-OPS-007 planned；修正 orphan SHA metadata + Ruff E501；next_action=计划审查；本轮只规划不实施；不得触碰 DEV-006/PR#13；不得启动 STM-006"
-  overridden_at: "2026-08-10 10:14 UTC"
+  override_by: "用户显式 START_EXISTING_TASK=STM-006 + WORKFLOW_MODE=NORMAL(explicit)；STM-005 completed；main @ e53a0f1"
+  effect: "current_task=STM-006 planned；compression lock + pending_archive_* + Kafka context.archive.created；next_action=计划审查；本轮只规划不实施；OI-004 不得私解；不得触碰 DEV-006/PR#13"
+  overridden_at: "2026-08-10 12:14 UTC"
 # DEV-006 / PR #13 disposition (record only)
 dev_006_disposition:
   status: "PAUSED / SUPERSEDED_FOR_MVP"
@@ -410,7 +421,7 @@ governance_deviation:
 
 **DEV-OPS-007**：**completed** — Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；Ruff E501 L174–175 换行（零语义变更）；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；record `c48a70d`；PR [#24](https://github.com/xu-jia-ming/memory_system/pull/24) **MERGED**（merge `de95f3a2f0107f791f89441177841754b1d4f82c` mergedAt `2026-08-10T11:54:41Z`）；ZERO_STALE_AUTHORITATIVE_REFERENCES **PASS**；FULL_RUFF **PASS**；integration context-read **14 passed**；mypy **PASS**；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；production `src/**` changes **none**；Phase 1 DEV-OPS-007 **completed**。
 
-**下游**：**STM-006** `READY_FOR_PLANNING only` — prerequisites STM-005 **SATISFIED**；DEV-OPS-007 hygiene **SATISFIED**；**不得自动开始规划或实施**。
+**下游**：**STM-006** `approved` — Round 2 Plan Reviewer `PLAN_APPROVED`（BLOCKER=0 MUST_FIX=0）；Human `PLAN_APPROVED` Amendment 001（2026-08-10T12:35:00Z）；MF-1 方案 A 已闭合；SF-1–5 已吸收；Task Plan `02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md`；**next_action=PLAN_LANDING**（Release Operator）；落地后 Developer 于 `feat/STM-006-compression-lock-pending-archive-kafka`；**PLAN_LANDING 完成前不得业务实施**。
 
 ## 实施前置条件
 
@@ -734,6 +745,10 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 14:20 UTC | STM-003 | committed | IMPLEMENTATION_RELEASE；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | 待人工 merge；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 06:26 UTC | STM-003 | committed → completed | PR #21 MERGED（`3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | STM-004 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 08:02 UTC | STM-004 | committed → completed | PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；OI-009 resolved | STM-005 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 12:35 UTC | STM-006 | planned → approved | Human PLAN_APPROVED Amendment 001；Round 2 BLOCKER=0 MUST_FIX=0；治理回写 Task Plan / progress / master_plan | 未运行（治理） | **next_action=PLAN_LANDING**；仍不得业务实施；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 12:40 UTC | STM-006 | planned（Round 2 Plan Review） | Plan Reviewer `PLAN_APPROVED`；BLOCKER=0 MUST_FIX=0；SHOULD_FIX=1（幂等 count/tokens 非阻塞） | MF-1 已闭合；未实施、未 Git 写 | **等待人工确认 PLAN_APPROVED**；其后才可 PLAN_LANDING；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 12:30 UTC | STM-006 | planned（Amendment 001 / Round 2） | Round 1 `PLAN_REJECTED` MF-1；用户选定方案 A；修订 Task Plan：`PREHELD_TOKEN_MUST_BE_ATOMICALLY_VERIFIED` + SF-1–5；progress/master_plan 同步 | 未运行（规划-only） | `next_action=计划审查`（Round 2）；**不得实施**；**不得 PLAN_LANDING**；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 12:14 UTC | STM-006 | planned | 创建 Task Plan `02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md`；master_plan CHANGE-038；progress 规划态回写 | 未运行（规划-only） | OI-004 open acknowledged；OI-005 进程内决议；Kafka at-least-once；`next_action=计划审查`；**不得实施**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 12:00 UTC | DEV-OPS-007 | committed → completed | PR #24 MERGED（`de95f3a2f0107f791f89441177841754b1d4f82c`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | ruff PASS；mypy PASS；orphan exit 1 / authoritative exit 0；ZERO_STALE_AUTHORITATIVE_REFERENCES PASS | STM-006 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 11:42 UTC | DEV-OPS-007 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；PR #24 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；**不得实现 STM-006** |
 | 2026-08-10 10:30 UTC | DEV-OPS-007 | approved → in_progress → tested | Developer：orphan SHA metadata 更正（`b0736431…`）；Ruff E501 L174–175 换行 | integration 14 / unit 323 / contract 68；ruff PASS；mypy PASS；orphan exit 1 / authoritative exit 0 | 未 commit；`next_action=Code Review`；**不得实现 STM-006**；**不得触碰 DEV-006/PR#13** |
@@ -775,8 +790,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **DEV-OPS-007**：`completed`（PR #24 MERGED `de95f3a2f0107f791f89441177841754b1d4f82c`；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；orphan SHA metadata 更正 → `b0736431…`；FULL_RUFF **PASS**；integration **14** / unit **323** / contract **68**；mypy 全绿；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；feat 分支待删）。
-2. **STM-006**：`READY_FOR_PLANNING only` — prerequisites STM-005 **SATISFIED**；DEV-OPS-007 hygiene **SATISFIED**；**不得自动开始规划或实施**。
+1. **STM-006**：`approved` — Round 2 Plan Reviewer `PLAN_APPROVED`（BLOCKER=0 MUST_FIX=0）；Human `PLAN_APPROVED` Amendment 001；**PLAN_LANDING**（Release Operator）；feat=`feat/STM-006-compression-lock-pending-archive-kafka`；落地后 Developer；**不得业务实施直至 feat 就绪**；OI-004 open acknowledged；**不得触碰 DEV-006/PR#13**。
+2. **DEV-OPS-007**：`completed`（PR #24 MERGED `de95f3a2f0107f791f89441177841754b1d4f82c`；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；orphan SHA metadata 更正 → `b0736431…`；FULL_RUFF **PASS**；integration **14** / unit **323** / contract **68**；mypy 全绿；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；feat 分支待删）。
 3. **STM-005**：`completed`（PR #23 MERGED `164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`；implementation `c166be5cd40475a513cede67f53cafec8fc8529a`；scoped **26** / contract **3** / integration **12** / full unit **323** / contract **68** / mypy 全绿；ruff baseline E501 已由 DEV-OPS-007 修复）。
 4. **STM-004**：`completed`（PR #22 MERGED `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；scoped **15** / contract **3** / integration **14** / full unit **300** / contract **65** / ruff / mypy 全绿；OI-009 resolved）。
 5. **STM-003**：`completed`（PR #21 MERGED `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；scoped **21** / integration **11** / full unit **287** / contract **62** / ruff / mypy 全绿）。
