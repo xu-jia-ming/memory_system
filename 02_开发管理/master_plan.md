@@ -259,7 +259,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | STM-001 | Token 估算、WM Key/字段模型、配置校验 | §1.2.1 | DEV-002 | completed |
-| STM-002 | Session 创建 | §1.2.1, §1.2.3, §1.2.7, §3.21, §3.23 | STM-001, DEV-005 | planned |
+| STM-002 | Session 创建 | §1.2.1, §1.2.3, §1.2.7, §3.21, §3.23 | STM-001, DEV-005 | committed |
 | STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | planned |
 | STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | planned |
 | STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | planned |
@@ -288,7 +288,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规格章节**：§1.2.1、§1.2.3、§1.2.7、§3.21、§3.23。
 - **测试**：Unit（codec/service）+ Contract（鉴权/包络/`status=created`）+ Integration（真实 Redis：字段齐全、用户隔离、无消息副作用、TTL=-1）。
 - **规划备注**：Amendment 001 已吸收 Human Contract（OI-STM-002-001～004 RESOLVED：每次新建 UUID、user_id min_length=1→422、null↔""、HTTP 200）；§1.2.7 规则 12 禁止 TTL。
-- **状态备注**：`planned`（Amendment 001 2026-08-10）；prerequisites STM-001 + DEV-005 **SATISFIED**；`next_action=计划审查 Round 2`；**不得自动开始实施**；**不得触碰 DEV-006/PR#13**。
+- **状态备注**：`committed`（plan_commit `ac84b31210001f22df4a049d28ff1e90618c244d`；implementation_commit `3440048f8a304219ec7bbddf3c192089cac6e8cb`；branch `feat/STM-002-session-creation`；PR #20 OPEN https://github.com/xu-jia-ming/memory_system/pull/20；Amendment 001 已落实；STM-002 scoped unit 25 / contract 10 / integration 3；full unit 269 / contract 59；ruff PASS；mypy PASS；待人工 merge）。
 
 #### STM-003
 

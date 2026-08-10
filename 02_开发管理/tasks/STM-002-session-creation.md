@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-002
 task_name: Session 创建
-status: planned
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -22,7 +22,7 @@ prerequisites:
   - "本任务不需要 SiliconFlow / LLM / TEI 网络调用"
 branch: "feat/STM-002-session-creation"
 created_at: "2026-08-10 02:28 UTC"
-updated_at: "2026-08-10 02:38 UTC"
+updated_at: "2026-08-10 02:52 UTC"
 approval_gates:
   planning_docs: "Amendment 001 已吸收 Human Contract；pending Plan Review Round 2 → READY_FOR_PLAN_REVIEW；本轮不得 PLAN_APPROVED / 不得实施"
   implementation_plan: "status=planned；§10.1 四项 OPEN_ISSUE 已由 Amendment 001（Human Contract）关闭；待 Plan Review Round 2 后方可 Developer"
@@ -489,6 +489,8 @@ out_of_scope_changes:
 |---|---|---|---|---|
 | 2026-08-10 02:28 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | §10.1 四项 OPEN_ISSUE 待 Plan Review |
 | 2026-08-10 02:38 UTC | Planner Amendment 001 | 吸收 Human Contract 四项决议；§5/§7/§8/§10 修订；§5 Step 6 与 §6.1 测试路径统一为 `test_session_create_service.py`；移除 OI-001 skip 指引 | 未运行（规划-only） | §10.1 全部 RESOLVED；待 Plan Review Round 2 |
+| 2026-08-10 02:52 UTC | Developer 实施 | 新增 `POST /api/v1/memory/session`；WM codec/repository；session_service；app 接线；Unit/Contract/Integration 测试 | STM-002 scoped unit 17 / contract 10 / integration 3 PASS；full unit 269 / contract 59；ruff PASS；mypy PASS（108 files） | 无 Contract 变更；Amendment 001 四项已落实；未 commit |
+| 2026-08-10 03:03 UTC | IMPLEMENTATION_RELEASE | implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；PR #20 OPEN | pre-commit 全绿 | feat 分支已推送；待人工 merge |
 
 ---
 
@@ -498,7 +500,18 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-| （实施前为空） | |
+| `src/memory_system/api/schemas/memory_session.py` | 创建 — CreateSessionRequest/Response |
+| `src/memory_system/api/routes/memory_session.py` | 创建 — POST /api/v1/memory/session |
+| `src/memory_system/infrastructure/redis/working_memory_codec.py` | 创建 — meta ↔ Hash 编解码 |
+| `src/memory_system/infrastructure/redis/working_memory_repository.py` | 创建 — 无条件 HSET 创建 WM meta |
+| `src/memory_system/domain/services/session_service.py` | 创建 — UUID v4 + repository 编排 |
+| `src/memory_system/infrastructure/redis/__init__.py` | 修改 — 导出 codec/repository |
+| `src/memory_system/domain/services/__init__.py` | 修改 — 导出 create_session |
+| `src/memory_system/api/app.py` | 修改 — 注册 memory_session router |
+| `tests/unit/test_working_memory_redis_codec.py` | 创建 — 编解码 round-trip / pending 语义 |
+| `tests/unit/test_session_create_service.py` | 创建 — UUID / 初始字段 / mock redis |
+| `tests/contract/test_stm002_contract.py` | 创建 — 鉴权 / 200 OK / 422 / 重复创建 |
+| `tests/integration/test_session_create_redis.py` | 创建 — 真实 Redis 字段/隔离/TTL |
 
 ### 14.2 与原计划的差异
 
@@ -508,12 +521,14 @@ out_of_scope_changes:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | | |
-| Contract | | |
-| Integration | | |
+| Unit (scoped) | `uv run pytest tests/unit/test_session_create_service.py tests/unit/test_working_memory_redis_codec.py -q` | 17 passed |
+| Contract (scoped) | `uv run pytest tests/contract/test_stm002_contract.py -q` | 10 passed |
+| Integration | `uv run pytest tests/integration/test_session_create_redis.py -q` | 3 passed |
+| Unit (full) | `uv run pytest tests/unit -q` | 269 passed |
+| Contract (full) | `uv run pytest tests/contract -q` | 59 passed |
 | E2E | N/A | |
-| Ruff | | |
-| Mypy | | |
+| Ruff | `uv run ruff check .` | PASS |
+| Mypy | `uv run mypy src tests scripts` | PASS（108 files） |
 
 ### 14.4 Review 结果
 
@@ -528,12 +543,17 @@ review_report: null
 ### 14.5 Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/STM-002-session-creation
+plan_commit: ac84b31210001f22df4a049d28ff1e90618c244d
+implementation_commit: 3440048f8a304219ec7bbddf3c192089cac6e8cb
+implementation_commit_message: "feat(stm): add session creation API and redis working memory init"
+pr_number: 20
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/20"
+pr_state: OPEN
+status_record_committed: null  # pending this docs(status): record commit SHA
+status_record_completed: null
 ```
 
 ### 14.6 最终状态
 
-`planned`
+`committed` — PR #20 OPEN；待人工 merge

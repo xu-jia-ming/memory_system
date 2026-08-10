@@ -9,7 +9,7 @@ from fastapi import FastAPI
 
 from memory_system.api.error_handlers import register_error_handlers
 from memory_system.api.middleware import AccessLogMetricsMiddleware, RequestIdMiddleware
-from memory_system.api.routes import health, internal_metrics
+from memory_system.api.routes import health, internal_metrics, memory_session
 from memory_system.infrastructure.runtime import AppState, create_app_state, shutdown_app_state
 from memory_system.observability.logging import configure_logging
 from memory_system.settings.models import Settings, get_settings
@@ -56,5 +56,6 @@ def create_app(
     register_error_handlers(app)
     app.include_router(health.router)
     app.include_router(internal_metrics.router)
+    app.include_router(memory_session.router)
 
     return app
