@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-004
 task_name: Context Read Lua
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -582,7 +582,8 @@ out_of_scope_changes:
 | 2026-08-10 06:38 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | OI-009 + OI-STM-004-001～003 已 Planner 决议；待 Plan Review |
 | 2026-08-10 07:10 UTC | Planner Amendment 001 | PLAN_REMEDIATION：MF-1 I11 对抗性 torn-read + `NO_STALE_SUMMARY_TRIMMED_LIST_HYBRID`；前置正式/复用区分；`ContextReadFailure`；空 messages 3 元素 Lua 返回 | 未运行（规划-only） | Round 1 MF-1 已吸收；待 Plan Review Round 2 |
 | 2026-08-10 07:18 UTC | Planner Amendment 002 | PLAN_REMEDIATION Round 3：MF-2 原子 mutator + 三段式 I12（负/正对照）；I10 compressed_context 缺失；`__init__.py` 白名单；ContextReadFailure→STM-009 注记 | 未运行（规划-only） | Round 2 MF-2 已吸收；待 Plan Review Round 3 |
-| 2026-08-10 07:55 UTC | Release Operator IMPLEMENTATION_RELEASE | implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；PR #22 OPEN | scoped unit 15 / contract 3 / integration 14 / full unit 300 / full contract 65 / ruff PASS / mypy PASS | OI-009 只读 Lua；待人工 merge |
+| 2026-08-10 08:02 UTC | POST_MERGE_CLEANUP | PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；docs(status): complete on main；删 exact feat；OI-009 resolved | scoped unit 15 / contract 3 / integration 14 / full unit 300 / full contract 65 / ruff PASS / mypy PASS | OI-009 只读 Lua；I13 zero write；feat 分支已删 |
+| 2026-08-10 07:55 UTC | Release Operator IMPLEMENTATION_RELEASE | implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；record `8c050fc0d09523d82eb201b4f03fa87060efd065`；PR #22 OPEN | scoped unit 15 / contract 3 / integration 14 / full unit 300 / full contract 65 / ruff PASS / mypy PASS | OI-009 只读 Lua；待人工 merge |
 | 2026-08-10 07:38 UTC | Developer 实施 | 只读 Lua + 领域服务 + unit/contract/integration（13 场景含 I12 三段式） | scoped unit 15 / contract 3 / integration 14 / full unit 300 / full contract 65 / ruff PASS / mypy PASS | OI-009 只读 Lua；`compressed_context` 缺失 HGET false→invalid_session_state |
 
 ---
@@ -590,9 +591,13 @@ out_of_scope_changes:
 ## 14. 实际执行结果
 
 - **implementation_commit**：`3aed60522db64c3b11597e025caa0aae00afaba6`
-- **PR**：#22 OPEN — https://github.com/xu-jia-ming/memory_system/pull/22
+- **status_record_committed**：`8c050fc0d09523d82eb201b4f03fa87060efd065`
+- **PR**：#22 MERGED — https://github.com/xu-jia-ming/memory_system/pull/22
+- **merge_commit**：`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`
+- **merged_at**：`2026-08-10T08:02:11Z`
 - **测试**：scoped unit 15 / contract 3 / integration 14 / full unit 300 / full contract 65 / ruff PASS / mypy PASS
+- **交付物**：read-only atomic Redis Lua context snapshot；compression_version + compressed_context + ordered messages；malformed state fail-closed；I12 deterministic torn-read negative control；production single-Lua canonical snapshot guarantee；zero Redis write side effect（I13）；OI-009 resolved
 
 ### 最终状态
 
-`committed`
+`completed`

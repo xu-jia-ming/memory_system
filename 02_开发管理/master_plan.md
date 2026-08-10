@@ -261,7 +261,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-001 | Token 估算、WM Key/字段模型、配置校验 | §1.2.1 | DEV-002 | completed |
 | STM-002 | Session 创建 | §1.2.1, §1.2.3, §1.2.7, §3.21, §3.23 | STM-001, DEV-005 | completed |
 | STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | completed |
-| STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | committed |
+| STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | completed |
 | STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | planned |
 | STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | planned |
 | STM-007 | Compression LLM Client + Structured Output | §1.2.5, §3.9 | DEV-002 | planned |
@@ -310,7 +310,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **实现/测试复用**（非正式前置）：STM-001（Key/codec/模型）、STM-003（`write_message` Integration 种子、`json_to_message` 解码）— SATISFIED。
 - **测试**：Unit（结果映射、快照解码、`""` 语义、畸形 → `ContextReadFailure`、空 messages 最小 3 元素 Lua 返回）+ Contract（`test_stm004_contract.py`）+ Integration（**13** 场景：空 WM/有消息/有摘要/session 缺失/身份不匹配/closing 可读/畸形 version·**compressed_context 缺失**/message/**I12 `NO_STALE_SUMMARY_TRIMMED_LIST_HYBRID` 三段式 torn-read（原子 mutator + broken split-reader 负对照 + 生产 Lua 正对照）**/只读零写入/确定性重复读）。
 - **规划备注**：Amendment 002（2026-08-10 PLAN_REMEDIATION Round 3）：MF-2 吸收 — I12 读者组合 torn-read 三段式；原子 test-only mutator；确定性 barrier 负对照；13 Integration 场景；`ContextReadFailure` HTTP 映射归 STM-009；Amendment 001（OI-009、正式/复用区分）保留。
-- **状态备注**：`committed`（plan_commit `c3214164ccbc47ad88b104a0497c6b9020f26ba7`；implementation_commit `3aed60522db64c3b11597e025caa0aae00afaba6`；PR #22 OPEN https://github.com/xu-jia-ming/memory_system/pull/22；Amendment 002 已落实；`workflow_mode=NORMAL`）；只读 Lua + `read_working_memory_context`；OI-009 严格只读；I12 三段式 torn-read；`compressed_context` 缺失 fail-closed；STM-004 scoped 15 / contract 3 / integration 14；full unit 300 / contract 65；ruff PASS；mypy PASS；无 HTTP/压缩写回；`next_action=Human PR merge`。
+- **状态备注**：`completed`（plan_commit `c3214164ccbc47ad88b104a0497c6b9020f26ba7`；implementation_commit `3aed60522db64c3b11597e025caa0aae00afaba6`；record `8c050fc0d09523d82eb201b4f03fa87060efd065`；PR #22 MERGED https://github.com/xu-jia-ming/memory_system/pull/22 merge `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c` mergedAt `2026-08-10T08:02:11Z`；Amendment 002 已落实；`workflow_mode=NORMAL`）；read-only atomic Redis Lua context snapshot；`read_working_memory_context` + `context_read.lua`；OI-009 resolved（只读 Lua；无 `updated_time` 写；无 TTL）；I12 三段式 torn-read；`compressed_context` 缺失 fail-closed；I13 zero Redis write side effect；STM-004 scoped 15 / contract 3 / integration 14；full unit 300 / contract 65；ruff PASS；mypy PASS；无 HTTP/压缩写回；feat 分支待删；**STM-005 READY_FOR_PLANNING only**（不得自动开始实施）。
 
 #### STM-005
 
@@ -813,5 +813,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-004`（`committed`；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；PR #22 OPEN）；**不**扩大 STM-009 HTTP/Coordinator；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否** |
 | 审批 | Release Operator IMPLEMENTATION_RELEASE；`next_action=Human PR merge` |
+
+### CHANGE-034
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-004 POST_MERGE_CLEANUP：PR #22 MERGED；docs(status): complete on main；删 exact feat；OI-009 resolved |
+| 受影响任务 | `STM-004`（`completed`；merge `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；`OI-009`（`resolved`）；`STM-005`（prerequisites **SATISFIED** — **READY_FOR_PLANNING only**）；**不**扩大 STM-009 HTTP/Coordinator；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（OI-009 为 Planner 读路径语义决议；不修订规格正文） |
+| 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-005 READY_FOR_PLANNING only` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

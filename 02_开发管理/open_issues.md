@@ -186,14 +186,22 @@ spec_sections:
 impact: "GET 上下文更新 updated_time 与 MVP 无 idle 清理并存的意图说明"
 blocks_current_task: false
 resolve_by_task: STM-004
-status: open
+status: resolved
+resolved_at: "2026-08-10T08:02:11Z"
+resolved_by_task: STM-004
 ```
 
 **问题描述：** 读路径触摸 `updated_time` 已写明；与“不做 idle session 清理”同时存在，实现时不得引申出未规定的 TTL/自动关闭行为。
 
 **禁止行为：** 不得在未解决前增加 Redis TTL 或自动 Close。
 
-**决议记录：** （空）
+**决议记录：**
+
+- 日期：2026-08-10 08:02 UTC
+- 审批：STM-004 POST_MERGE_CLEANUP（PR #22 MERGED）
+- Planner 决议（Task Plan §10.1）：上下文读取 Lua **严格只读** — **不** `HSET updated_time`；**不** 引入 Redis TTL/EXPIRE/闲置扫描/自动关闭；`updated_time` 仅由写入（STM-003）与未来压缩写回（STM-008）更新
+- 验收证据：Integration I13 — `updated_time` 读前后不变；全 Key `TTL=-1`
+- merge_commit：`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`；implementation：`3aed60522db64c3b11597e025caa0aae00afaba6`
 
 ---
 
@@ -322,7 +330,7 @@ resolved_by_task: OI-012
 | OI-006 | EXT-008 前需规格确认 | 否 | open |
 | OI-007 | STM-011 | 否 | open |
 | OI-008 | RET-005 | 否 | open |
-| OI-009 | STM-004 | 否 | open |
+| OI-009 | STM-004 | 否 | resolved |
 | OI-010 | 已人工决议（uv_build） | 否 | resolved |
 | OI-011 | OI-011 | 否 | resolved |
 | OI-012 | OI-012 | 否（PR#13 deferred） | resolved |

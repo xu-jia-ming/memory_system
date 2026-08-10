@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-004 committed
+current_phase: Phase 1 — STM-004 completed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-004
-current_task_status: committed
-current_branch: feat/STM-004-context-read-lua
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -156,18 +156,21 @@ formal_STM-003_full_contract: "62 passed"
 formal_STM-003_ruff: PASS
 formal_STM-003_mypy: "PASS — 119 source files"
 formal_STM-003_note: "POST_MERGE_CLEANUP；atomic Redis Lua；message_id idempotency；duplicate zero side-effect；hard WM capacity；concurrent same message_id one write；malformed estimated_tokens fail-closed；no compression/Kafka/HTTP；STM-003 scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS；feat 分支待删"
-# STM-004 committed evidence（IMPLEMENTATION_RELEASE；PR #22 OPEN）
-formal_STM-004_status: committed
+# STM-004 completed evidence（POST_MERGE_CLEANUP；PR #22 MERGED）
+formal_STM-004_status: completed
 formal_STM-004_plan_file: 02_开发管理/tasks/STM-004-context-read-lua.md
 formal_STM-004_plan_commit: c3214164ccbc47ad88b104a0497c6b9020f26ba7
 formal_STM-004_implementation_commit: 3aed60522db64c3b11597e025caa0aae00afaba6
 formal_STM-004_implementation_commit_message: "feat(stm): add context read lua and domain service"
-formal_STM-004_status_record_committed: null  # pending this docs(status): record commit SHA
+formal_STM-004_status_record_committed: 8c050fc0d09523d82eb201b4f03fa87060efd065
+formal_STM-004_status_record_completed: null  # pending this docs(status): complete commit SHA
 formal_STM-004_branch: feat/STM-004-context-read-lua
 formal_STM-004_workflow_mode: NORMAL
 formal_STM-004_pr: "#22"
 formal_STM-004_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/22"
-formal_STM-004_pr_state: OPEN
+formal_STM-004_pr_state: MERGED
+formal_STM-004_merge_commit: 6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c
+formal_STM-004_merged_at: "2026-08-10T08:02:11Z"
 formal_STM-004_scoped_unit: "15 passed (test_context_read_service + test_context_read_status_mapping)"
 formal_STM-004_scoped_contract: "3 passed (test_stm004_contract)"
 formal_STM-004_integration: "14 passed (test_context_read_redis — 13 scenarios)"
@@ -175,8 +178,8 @@ formal_STM-004_full_unit: "300 passed"
 formal_STM-004_full_contract: "65 passed"
 formal_STM-004_ruff: PASS
 formal_STM-004_mypy: PASS
-formal_STM-004_note: "read_working_memory_context + context_read.lua；OI-009 只读 Lua；I12 三段式 torn-read；IMPLEMENTATION_RELEASE；next_action=Human PR merge"
-previous_task: STM-003
+formal_STM-004_note: "POST_MERGE_CLEANUP；read-only atomic Redis Lua context snapshot；compression_version + compressed_context + ordered messages；malformed state fail-closed；I12 deterministic torn-read negative control；production single-Lua canonical snapshot；zero Redis write side effect（I13）；OI-009 resolved；scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；feat 分支待删"
+previous_task: STM-004
 previous_task_status: completed
 previous_implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
 previous_implementation_commit_message: "feat(stm): add token estimator, wm key/field models, context inequality tests"
@@ -256,8 +259,8 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
 deferred_business_task: null
 deferred_business_task_status: null
-deferred_business_task_note: "STM-005 prerequisites STM-003 SATISFIED；须另一次显式编排；不得自动开始实施"
-next_action: "Developer 实施"
+deferred_business_task_note: "STM-005 prerequisites STM-003/STM-004 SATISFIED；须另一次显式编排；不得自动开始实施"
+next_action: "STM-005 READY_FOR_PLANNING only（须另一次显式编排）；不得自动开始实施"
 human_plan_approved_at: "2026-08-10 10:44 UTC"
 human_plan_approved_note: "STM-002 Amendment 001 PLAN_APPROVED；Developer 实施 tested；READY_FOR_CODE_REVIEW"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
@@ -330,6 +333,7 @@ governance_deviation:
 | STM-001 | Token 估算、WM Key/字段模型、配置校验 | 2026-08-10 02:11 | `66541cf` | `6f2081da6266282470948ecac8e62ef3ae969c15` | #19 merged |
 | STM-002 | Session 创建 | 2026-08-10 03:11 | `3440048` | `efb39bf0bbbb408626e3d187d81b889dafc7a351` | #20 merged |
 | STM-003 | 消息写入 Lua | 2026-08-10 06:26 | `e1913d1` | `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4` | #21 merged |
+| STM-004 | 上下文一致性读取 Lua | 2026-08-10 08:02 | `3aed605` | `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c` | #22 merged |
 
 ## 规格阻塞项
 
@@ -349,7 +353,9 @@ governance_deviation:
 
 **STM-003**：**completed** — atomic Redis Lua + `write_message` 领域服务；`message_id` 幂等；duplicate 零副作用；hard WM capacity；concurrent same `message_id` 单写；malformed `estimated_tokens` fail-closed；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；record `34bbebd`；PR [#21](https://github.com/xu-jia-ming/memory_system/pull/21) **MERGED**（merge `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4` mergedAt `2026-08-10T06:26:37Z`）；STM-003 scoped **21 passed** / integration **11 passed**；full unit **287 passed** / contract **62 passed**；ruff **PASS**；mypy **PASS**；无 compression/Kafka/HTTP；Phase 1 STM-003 **completed**。
 
-**下游**：**STM-004** `status=planned` — Task Plan `02_开发管理/tasks/STM-004-context-read-lua.md`（Amendment 002）；正式前置 STM-002 **SATISFIED**；实现复用 STM-001/003 **SATISFIED**；`next_action=计划审查 Round 3`；**不得自动开始实施**。**STM-005** prerequisites STM-003 **SATISFIED**、DEV-004 **SATISFIED**；**READY_FOR_PLANNING only**；**不得自动开始实施**。
+**STM-004**：**completed** — read-only atomic Redis Lua context snapshot；`read_working_memory_context` + `context_read.lua`；`compression_version` + `compressed_context` + ordered messages；malformed state fail-closed；I12 deterministic torn-read negative control；production single-Lua canonical snapshot guarantee；zero Redis write side effect（I13）；OI-009 resolved；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；record `8c050fc0d09523d82eb201b4f03fa87060efd065`；PR [#22](https://github.com/xu-jia-ming/memory_system/pull/22) **MERGED**（merge `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c` mergedAt `2026-08-10T08:02:11Z`）；scoped unit **15 passed** / contract **3 passed** / integration **14 passed**（13 scenarios）；full unit **300 passed** / contract **65 passed**；ruff **PASS**；mypy **PASS**；无 HTTP/压缩写回；Phase 1 STM-004 **completed**。
+
+**下游**：**STM-005** prerequisites STM-003 **SATISFIED**、STM-004 **SATISFIED**、DEV-004 **SATISFIED**；**READY_FOR_PLANNING only**；**不得自动开始实施**。
 
 ## 实施前置条件
 
@@ -360,7 +366,7 @@ governance_deviation:
 
 ## 规格歧义
 
-见 `02_开发管理/open_issues.md`。OI-010、**OI-011**、**OI-012** 为 `resolved`；未解决项不得自行解释为新 Contract。
+见 `02_开发管理/open_issues.md`。OI-009、OI-010、**OI-011**、**OI-012** 为 `resolved`；未解决项不得自行解释为新 Contract。
 
 DEV-OPS-001 产品/流程未决项见其 Task Plan §12.2（OI-OPS-001–005）；**不**写入规格 Contract。
 
@@ -424,7 +430,8 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（STM-001 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `66541cf3727d5735dd977e597acd6943fd997fb4`；record `ecc15af80ab18e5fe2905b5f5cd4f371f34127a0`；PR #19 MERGED（`6f2081da6266282470948ecac8e62ef3ae969c15`） |
 | RELEASE_COMPLETED（STM-002 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status): complete 落盘；exact feat 待删 |
 | RELEASE_COMPLETED（STM-003 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `e1913d17b159d426aadfd54d32e07c84ea61043a`；record `34bbebd`；PR #21 MERGED（`3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`） |
-| RELEASE_COMPLETED（STM-004 IMPLEMENTATION_RELEASE） | **本轮**；implementation_commit `3aed60522db64c3b11597e025caa0aae00afaba6`；PR #22 OPEN https://github.com/xu-jia-ming/memory_system/pull/22 |
+| RELEASE_COMPLETED（STM-004 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `3aed60522db64c3b11597e025caa0aae00afaba6`；record `8c050fc0d09523d82eb201b4f03fa87060efd065`；PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`） |
+| RELEASE_COMPLETED（STM-004 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status): complete 落盘；exact feat 待删 |
 | RELEASE_COMPLETED（STM-003 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status): complete 落盘；exact feat 待删 |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
@@ -667,6 +674,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 14:12 UTC | STM-003 | tested（P1-1 修复） | Code Review P1-1：`git checkout --` 回滚 17 条越权路径；白名单外变更清零 | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | 未 commit；`next_action=Code Review`；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 14:20 UTC | STM-003 | committed | IMPLEMENTATION_RELEASE；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | 待人工 merge；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 06:26 UTC | STM-003 | committed → completed | PR #21 MERGED（`3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | STM-004 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 08:02 UTC | STM-004 | committed → completed | PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；OI-009 resolved | STM-005 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 07:55 UTC | STM-004 | committed | IMPLEMENTATION_RELEASE；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；PR #22 OPEN | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS | 待人工 merge；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 07:38 UTC | STM-004 | approved → in_progress → tested | Developer：只读 context read Lua + `read_working_memory_context`；I12 三段式 torn-read；13 Integration 场景 | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS | 未 commit；`next_action=Code Review`；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 07:18 UTC | STM-004 | planned（Amendment 002） | Round 2 `PLAN_REJECTED` MF-2（非原子 mutator）；Amendment 002：三段式 I12 torn-read（原子 mutator + broken reader 负对照 + 生产 Lua 正对照）；I10 compressed_context 缺失；__init__.py 白名单；ContextReadFailure→STM-009 | 未实施、未 Git 写；`next_action=计划审查 Round 3`；**不得触碰 DEV-006/PR#13** |
@@ -703,9 +711,9 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **STM-003**：`completed`（PR #21 MERGED `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；scoped **21** / integration **11** / full unit **287** / contract **62** / ruff / mypy 全绿）。
-2. **STM-004**：`committed` — implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；PR #22 OPEN https://github.com/xu-jia-ming/memory_system/pull/22；scoped **15** / contract **3** / integration **14** / full unit **300** / contract **65** / ruff / mypy 全绿；`next_action=Human PR merge`。
-3. **STM-005**：`planned` — prerequisites STM-003 **SATISFIED**、DEV-004 **SATISFIED**；**READY_FOR_PLANNING only**；**不得自动开始实施**。
+1. **STM-004**：`completed`（PR #22 MERGED `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；scoped **15** / contract **3** / integration **14** / full unit **300** / contract **65** / ruff / mypy 全绿；OI-009 resolved；feat 分支待删）。
+2. **STM-005**：`planned` — prerequisites STM-003 **SATISFIED**、STM-004 **SATISFIED**、DEV-004 **SATISFIED**；**READY_FOR_PLANNING only**；**不得自动开始实施**。
+3. **STM-003**：`completed`（PR #21 MERGED `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；scoped **21** / integration **11** / full unit **287** / contract **62** / ruff / mypy 全绿）。
 4. **STM-002**：`completed`（PR #20 MERGED `efb39bf0bbbb408626e3d187d81b889dafc7a351`；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；scoped **25** / integration **3** / full unit **269** / contract **59** / ruff / mypy 全绿）。
 5. **STM-001**：`completed`（PR #19 MERGED `6f2081da6266282470948ecac8e62ef3ae969c15`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`）。
 6. **DEV-OPS-006**：`completed`（PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）。
