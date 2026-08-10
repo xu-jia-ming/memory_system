@@ -260,7 +260,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | STM-001 | Token 估算、WM Key/字段模型、配置校验 | §1.2.1 | DEV-002 | completed |
 | STM-002 | Session 创建 | §1.2.1, §1.2.3, §1.2.7, §3.21, §3.23 | STM-001, DEV-005 | completed |
-| STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | planned |
+| STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | tested |
 | STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | planned |
 | STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | planned |
 | STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | planned |
@@ -296,8 +296,9 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **非目标**：`POST /api/v1/memory/working/message` HTTP 路由与 `compression_status`（**STM-009**）；Coordinator；Kafka；`compression_trigger_tokens` 检查。
 - **计划文件**：`02_开发管理/tasks/STM-003-message-write-lua.md`
 - **规格章节**：§1.2.1、§1.2.3（写入流程摘录）、§1.2.6、§1.2.7。
-- **测试**：Unit（estimator 复用、消息 JSON codec、Lua 结果映射）+ Contract（`test_stm003_contract.py`：`MessageWriteStatus` 字面量稳定）+ Integration（15 场景：success/duplicate/零副作用/单条超限/WM 超限/精确边界 #14/#15/session 缺失/closing/用户隔离/并发同 id/原子失败无 partial state）。
+- **测试**：Unit（estimator 复用、消息 JSON codec、Lua 结果映射）+ Contract（`test_stm003_contract.py`：`MessageWriteStatus` 字面量稳定）+ Integration（17 场景：success/duplicate/零副作用/单条超限/WM 超限/精确边界 #14/#15/session 缺失/closing/用户隔离/并发同 id/原子失败无 partial state/malformed token #16/ARGV 校验 #17）。
 - **规划备注**：§10.1 OI-STM-003-001/002 已 Planner 决议（Lua 成功返回 `success`；meta 缺失与身份不匹配均 `session_not_found`；身份校验 **先于** `status`）；Amendment 001 落实 Round 1 MF-1 + SF-1～3；HTTP 接线见 STM-009。
+- **状态备注**：`tested`（plan_commit `926f37d`；branch `feat/STM-003-message-write-lua`；未 commit）；`write_message` + `message_write.lua`；`invalid_session_state` for malformed `estimated_tokens`；STM-003 scoped 21 / integration 11；full unit 287 / contract 62；ruff PASS；mypy PASS（119 files）；`next_action=Code Review`。
 
 #### STM-004
 
@@ -735,5 +736,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-003`（`planned`；Amendment 001：§4.4/§5 Step 3 Lua 重排 EXISTS→身份→status→duplicate→容量→写入；`ARGV[7]=message_id`；Integration #14/#15 精确边界；`test_stm003_contract.py` 白名单）；**不**扩大 STM-009 范围；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否**（对齐已决议 OI-STM-003-002） |
 | 审批 | Amendment 001；待 Plan Review Round 2 → 人工确认；确认前不得 PLAN_LANDING / Developer |
+
+### CHANGE-027
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-003 Developer 实施完成（未 commit）：消息写入领域服务 + Redis Lua；Human 约束 malformed `estimated_tokens` fail-closed + Integration #16/#17 |
+| 受影响任务 | `STM-003`（`tested`；scoped 21 / integration 11 / full unit 287 / contract 62；ruff/mypy PASS）；**不**扩大 STM-009 HTTP/Coordinator；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（实现 §1.2.1 写入 Lua 语义；新增内部 `invalid_session_state`） |
+| 审批 | Developer tested；`next_action=Code Review`；未 commit |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
