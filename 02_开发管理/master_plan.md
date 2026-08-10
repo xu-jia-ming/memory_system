@@ -258,7 +258,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| STM-001 | Token 估算、WM Key/字段模型、配置校验 | §1.2.1 | DEV-002 | committed |
+| STM-001 | Token 估算、WM Key/字段模型、配置校验 | §1.2.1 | DEV-002 | completed |
 | STM-002 | Session 创建 | §1.2.1, §1.2.3 | STM-001, DEV-005 | planned |
 | STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | planned |
 | STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | planned |
@@ -279,13 +279,13 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit（中英文边界、ceil 公式；Key/字段模型与 Optional 语义；§1.2.1/§1.2.6 不等式含 mandatory strict `<` 三用例 + 正向四链断言）；Contract（`test_stm001_contract.py`；无网络/无 Redis I/O）；无 Integration Redis I/O。
 - **风险**：OI-001/002 不在本任务解释。
 - **计划文件**：`02_开发管理/tasks/STM-001-token-estimator-wm-key-model-config-validation.md`
-- **状态备注**：`committed`（implementation_commit `66541cf3727d5735dd977e597acd6943fd997fb4`；PR #19 OPEN https://github.com/xu-jia-ming/memory_system/pull/19；Amendment 001；`workflow_mode=NORMAL`；unit 254 / contract 49 / ruff PASS / mypy PASS；`validators.py` 未改）；WAITING_FOR_PR_MERGE；不得自动 merge。
-- **分支**：`feat/STM-001-token-estimator-wm-key-model-config-validation`（plan_commit `06c272f25e15fd5c7b4afd6e44257bc164dc83ca`）
+- **状态备注**：`completed`（plan_commit `06c272f25e15fd5c7b4afd6e44257bc164dc83ca`；implementation_commit `66541cf3727d5735dd977e597acd6943fd997fb4`；record `ecc15af80ab18e5fe2905b5f5cd4f371f34127a0`；PR #19 MERGED https://github.com/xu-jia-ming/memory_system/pull/19 merge `6f2081da6266282470948ecac8e62ef3ae969c15` mergedAt `2026-08-10T02:11:17Z`；Amendment 001；`workflow_mode=NORMAL`；STM-001 scoped unit 38 / contract 2；full unit 254 / contract 49；ruff PASS；mypy PASS；`validators.py` 未改）；deterministic heuristic token estimator + WM key/field contract + mandatory ContextSettings strict inequality validation evidence；feat 分支已删；**STM-002 READY_FOR_PLANNING only**（不得自动开始实施）。
 #### STM-002
 
 - **目标**：`POST /api/v1/memory/session`；初始化 Working Memory Hash（`status=active`，`compression_version=0`）。
 - **非目标**：消息写入；压缩。
 - **测试**：Integration（用户隔离、字段齐全）。
+- **状态备注**：`planned`；prerequisites STM-001 completed + DEV-005 completed — **READY_FOR_PLANNING only**；须另一次显式编排；**不得自动开始实施**。
 
 #### STM-003
 
@@ -679,5 +679,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-001` 保持 `planned`；Amendment 001 修订 Task Plan；**不**扩大 scope；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner Amendment 001；待 Plan Review Round 2 → 人工确认 |
+
+### CHANGE-022
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | **STM-001 completed**：Token heuristic estimator + WM key/field models + ContextSettings strict inequality validation evidence merged（PR #19 `6f2081da6266282470948ecac8e62ef3ae969c15`） |
+| 受影响任务 | `STM-001`（`completed`）；`STM-002`（`planned`；prerequisites satisfied — **READY_FOR_PLANNING only**）；**不**开始 STM-002 实施；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（实现 §1.2.1 / §1.2.6 既有 Contract；`validators.py` 未改） |
+| 审批 | POST_MERGE_CLEANUP `docs(status): complete` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

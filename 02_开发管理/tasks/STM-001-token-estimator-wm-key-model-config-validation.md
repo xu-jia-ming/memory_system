@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-001
 task_name: Token 估算、WM Key/字段模型、配置校验
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -26,7 +26,7 @@ created_at: "2026-08-10 01:42 UTC"
 updated_at: "2026-08-10 09:50 UTC"
 approval_gates:
   planning_docs: "pending Plan Review → READY_FOR_PLAN_REVIEW；本轮不得 PLAN_APPROVED / 不得实施"
-  implementation_plan: "status=committed；implementation_commit=66541cf3727d5735dd977e597acd6943fd997fb4；PR #19 OPEN；WAITING_FOR_PR_MERGE"
+  implementation_plan: "status=completed；implementation_commit=66541cf3727d5735dd977e597acd6943fd997fb4；record=ecc15af80ab18e5fe2905b5f5cd4f371f34127a0；PR #19 MERGED merge=6f2081da6266282470948ecac8e62ef3ae969c15"
 ```
 
 ### 1.1 编排与门禁（本轮）
@@ -400,6 +400,7 @@ out_of_scope_changes:
 | 2026-08-10 09:50 UTC | Planner Amendment 001（PLAN_REMEDIATION） | 修订 MUST_FIX-1 + SHOULD_FIX 1–4；§3/§5/§6/§8/§9/Amendment 001 | 未跑实施测试（规划轮） | Round 1 PLAN_REJECTED；待 Plan Review Round 2 |
 | 2026-08-10 10:05 UTC | Developer Step 1–4 实施 | 白名单 8 源文件 + 4 测试文件；`validators.py` 未改（无缺口） | STM-001 定向 37 unit + 2 contract；全量 254 unit / 49 contract；ruff/mypy PASS | 无规格偏差；无 Redis I/O |
 | 2026-08-10 10:10 UTC | IMPLEMENTATION_RELEASE | implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；PR #19 OPEN；docs(status): record on feat | 仅 feat push；禁 push main | `next_action`→WAITING_FOR_PR_MERGE；不得自动 merge |
+| 2026-08-10 02:11 UTC | POST_MERGE_CLEANUP | PR #19 MERGED（`6f2081da6266282470948ecac8e62ef3ae969c15`）；docs(status): complete on main；删 exact feat | STM-001 scoped unit 38 / contract 2；full unit 254 / contract 49；ruff/mypy PASS | `status=completed`；STM-002 READY_FOR_PLANNING only；不得启动 STM-002 实施 |
 
 ---
 
@@ -433,7 +434,7 @@ out_of_scope_changes:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| STM-001 Unit | `uv run pytest tests/unit/test_token_estimator.py tests/unit/test_working_memory_keys_and_models.py tests/unit/test_context_inequalities_stm001.py -q` | **37 passed** |
+| STM-001 Unit | `uv run pytest tests/unit/test_token_estimator.py tests/unit/test_working_memory_keys_and_models.py tests/unit/test_context_inequalities_stm001.py -q` | **38 passed** |
 | STM-001 Contract | `uv run pytest tests/contract/test_stm001_contract.py -q` | **2 passed** |
 | Unit（全量） | `uv run pytest tests/unit -q` | **254 passed**（baseline 216 + 38 新增） |
 | Contract（全量） | `uv run pytest tests/contract -q` | **49 passed**（baseline 47 + 2 新增） |
@@ -461,10 +462,13 @@ implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
 implementation_commit_message: "feat(stm): add token estimator, wm key/field models, context inequality tests"
 pr_number: 19
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/19"
-pr_state: OPEN
-status_record_committed: null  # pending this docs(status): record commit SHA
+pr_state: MERGED
+merge_commit: 6f2081da6266282470948ecac8e62ef3ae969c15
+merged_at: "2026-08-10T02:11:17Z"
+status_record_committed: ecc15af80ab18e5fe2905b5f5cd4f371f34127a0
+status_record_completed: null  # pending this docs(status): complete commit SHA
 ```
 
 ### 最终状态
 
-`committed`
+`completed`
