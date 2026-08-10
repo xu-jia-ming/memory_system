@@ -70,6 +70,17 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-004 | 本机 Mihomo 网络回退策略文档（AI 工作流） | 非业务：全局开发规则 + 契约测试；不改规格/业务代理 Contract | DEV-OPS-003 | completed |
 | DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 非业务：人类日常操作手册 + 契约测试；不改 Orchestrator/mode/业务 | DEV-OPS-003, DEV-OPS-004, DEV-004 | completed |
 | DEV-OPS-006 | Phase 0 Baseline Hygiene Before STM-001 | 非业务：unit compose-wrapper allowlist + progress DOC_CODE_DRIFT hygiene | DEV-007, OI-011 | completed |
+| DEV-OPS-007 | Phase 1 Baseline Hygiene Before STM-006 | 非业务：STM-005 orphan SHA metadata 更正 + Ruff E501 torn-read helper 换行 | STM-005 | planned |
+
+#### DEV-OPS-007 Phase 1 Baseline Hygiene Before STM-006
+
+- **目标**：进入 STM-006 前最小 hygiene——STM-005 `status_record_completed` 与 main lineage 对齐（`b0736431…`）；修复 2 处 pre-existing Ruff E501（`context_read_torn_read_helpers.py` L174–175）；全仓 Ruff PASS；STM-004 torn-read Integration 回归。
+- **根因分类**：**A**（治理 metadata 漂移：orphan SHA `301c8d9…` 不在 main 血统）；**B**（pre-existing E501 格式化-only）。
+- **非目标**：实现 STM-006；改 STM-005/004 `src/**`；resurrect/cherry-pick orphan；修改 torn-read 并发语义；操作 DEV-006/PR#13。
+- **关键修复**：`progress.md` + STM-005 Task Plan §14 将 `status_record_completed` 更正为 `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；`tests/integration/context_read_torn_read_helpers.py` 换行（零语义变更）。
+- **计划文件**：`02_开发管理/tasks/DEV-OPS-007-phase1-baseline-hygiene-before-stm006.md`
+- **插入说明**：用户显式 START_NEW_TASK；`workflow_mode=NORMAL`（explicit）；STM-006 仍 **READY_FOR_PLANNING only**（不得标 in_progress）。
+- **状态备注**：`planned`（main @ `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；orphan `301c8d9…` exit 1 / authoritative `b0736431…` exit 0；Ruff E501 @ L174–175；`next_action=计划审查`；**不得启动 STM-006 规划或实施**）。
 
 #### DEV-OPS-006 Phase 0 Baseline Hygiene Before STM-001
 
@@ -849,5 +860,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-005`（`completed`；merge `164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`）；`STM-006`（prerequisites **SATISFIED** — **READY_FOR_PLANNING only**）；**不** Kafka/Redis pending/compression/LLM/HTTP；**不** 触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否**（OI-004 token-boundary 完整决议 deferred to STM-010） |
 | 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-006 READY_FOR_PLANNING only` |
+
+### CHANGE-037
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | 用户显式 START_NEW_TASK：**DEV-OPS-007** Phase 1 Baseline Hygiene Before STM-006（orphan SHA `301c8d9…` metadata 更正 → main-lineage `b0736431…`；Ruff E501 `context_read_torn_read_helpers.py` L174–175 格式化-only） |
+| 受影响任务 | 新增 `DEV-OPS-007`（`planned`；plan `02_开发管理/tasks/DEV-OPS-007-phase1-baseline-hygiene-before-stm006.md`）；**不** 实现 STM-006；**不** 改 STM-005/004 `src/**`；**不** resurrect orphan；**不** 触碰 DEV-006/PR #13；本轮只规划不实施 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner；`next_action=计划审查` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

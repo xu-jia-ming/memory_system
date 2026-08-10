@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-005 completed
+current_phase: Phase 1 — STM-005 completed; DEV-OPS-007 hygiene planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: STM-005
-current_task_status: completed
-current_branch: main
+current_task: DEV-OPS-007
+current_task_status: planned
+current_branch: feat/DEV-OPS-007-phase1-baseline-hygiene-before-stm006
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -21,7 +21,7 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/STM-005-context-archive-create-reuse.md
+current_plan_file: 02_开发管理/tasks/DEV-OPS-007-phase1-baseline-hygiene-before-stm006.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_DEV-002_prerequisite: SATISFIED
@@ -281,20 +281,20 @@ step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
-deferred_business_task: null
-deferred_business_task_status: null
-deferred_business_task_note: "STM-005 completed；STM-006 READY_FOR_PLANNING only；不得自动开始 STM-006 规划或实施"
-next_action: "STM-006 READY_FOR_PLANNING only（do NOT auto-start）"
-human_plan_approved_at: "2026-08-10 08:24 UTC"
-human_plan_approved_note: "STM-005 PLAN_APPROVED（BLOCKER=0；MUST_FIX=0）；人工确认；PLAN_LANDING 待 docs(plan) on main"
+deferred_business_task: STM-006
+deferred_business_task_status: READY_FOR_PLANNING only
+deferred_business_task_note: "STM-005 completed；DEV-OPS-007 hygiene planned；STM-006 READY_FOR_PLANNING only；不得自动开始 STM-006 规划或实施"
+next_action: "计划审查"
+human_plan_approved_at: null
+human_plan_approved_note: "DEV-OPS-007 规划轮次；等待独立 Plan Review → PLAN_APPROVED；不得实施"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
 insertion_override:
-  prior_current_task: DEV-OPS-006
+  prior_current_task: STM-005
   prior_current_task_status: completed
-  prior_next_action: "STM-001 可规划（READY_FOR_PLANNING；须另一次显式编排）；不得启动 STM-001 实施"
-  override_by: "用户显式 START_EXISTING_TASK=STM-001 + WORKFLOW_MODE=NORMAL(explicit)；PHASE0/STM gates GO；DEV-002 SATISFIED"
-  effect: "current_task=STM-001 planned；current_plan_file=STM-001 Task Plan；next_action=计划审查；本轮只规划不实施；不得触碰 DEV-006/PR#13"
-  overridden_at: "2026-08-10 01:42 UTC"
+  prior_next_action: "STM-006 READY_FOR_PLANNING only（do NOT auto-start）"
+  override_by: "用户显式 START_NEW_TASK=DEV-OPS-007 + WORKFLOW_MODE=NORMAL(explicit)；STM-005 completed；main @ b073643"
+  effect: "current_task=DEV-OPS-007 planned；修正 orphan SHA metadata + Ruff E501；next_action=计划审查；本轮只规划不实施；不得触碰 DEV-006/PR#13；不得启动 STM-006"
+  overridden_at: "2026-08-10 10:14 UTC"
 # DEV-006 / PR #13 disposition (record only)
 dev_006_disposition:
   status: "PAUSED / SUPERSEDED_FOR_MVP"
@@ -704,6 +704,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 14:20 UTC | STM-003 | committed | IMPLEMENTATION_RELEASE；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | 待人工 merge；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 06:26 UTC | STM-003 | committed → completed | PR #21 MERGED（`3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | STM-004 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 08:02 UTC | STM-004 | committed → completed | PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；OI-009 resolved | STM-005 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 10:14 UTC | DEV-OPS-007 | planned | 创建 Task Plan `02_开发管理/tasks/DEV-OPS-007-phase1-baseline-hygiene-before-stm006.md`；master_plan CHANGE-037；progress 规划态回写 | 只读确认：orphan `301c8d9…` exit 1 / `b0736431…` exit 0；Ruff E501 L174–175 | `next_action=计划审查`；**不得实现 STM-006**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 09:16 UTC | STM-005 | committed → completed | PR #23 MERGED（`164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped unit 26 / contract 3 / integration 12 / full unit 323 / contract 68；mypy PASS；ruff baseline E501 pre-existing（非回归）；OI-004 partial evidence status remains open | STM-006 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 07:55 UTC | STM-004 | committed | IMPLEMENTATION_RELEASE；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；PR #22 OPEN | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS | 待人工 merge；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 07:38 UTC | STM-004 | approved → in_progress → tested | Developer：只读 context read Lua + `read_working_memory_context`；I12 三段式 torn-read；13 Integration 场景 | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS | 未 commit；`next_action=Code Review`；**不得触碰 DEV-006/PR#13** |
