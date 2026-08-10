@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-004 completed
+current_phase: Phase 1 — STM-005 approved
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: STM-004
-current_task_status: completed
+current_task: STM-005
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,7 +21,7 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/STM-004-context-read-lua.md
+current_plan_file: 02_开发管理/tasks/STM-005-context-archive-create-reuse.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_DEV-002_prerequisite: SATISFIED
@@ -57,7 +57,7 @@ formal_DEV-OPS-006_note: "Phase 0 baseline hygiene before STM-001 completed；ba
 # Verified baseline（DEV-OPS-006 tested / merge evidence；STM-001 规划轮次 HEAD）
 latest_commit: 3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4
 main_tip_at_tested: 09b045be1429716eab184e4565beb30cf2856b28
-planning_baseline_head: 6721a54066fb0bc67d9c0313ab69e10bcaef2804
+planning_baseline_head: 5be0f07b7a5183aedc9ff2c67abc8e9cea8b0031
 verified_unit: "287 passed / 0 failed (uv run pytest tests/unit -q @ 2026-08-10 STM-003 tested)"
 verified_contract: "62 passed (uv run pytest tests/contract -q @ 2026-08-10 STM-003 tested)"
 verified_ruff: "PASS — All checks passed (uv run ruff check . @ 2026-08-10 STM-003 tested)"
@@ -259,10 +259,10 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
 deferred_business_task: null
 deferred_business_task_status: null
-deferred_business_task_note: "STM-005 prerequisites STM-003/STM-004 SATISFIED；须另一次显式编排；不得自动开始实施"
-next_action: "STM-005 READY_FOR_PLANNING only（须另一次显式编排）；不得自动开始实施"
-human_plan_approved_at: "2026-08-10 10:44 UTC"
-human_plan_approved_note: "STM-002 Amendment 001 PLAN_APPROVED；Developer 实施 tested；READY_FOR_CODE_REVIEW"
+deferred_business_task_note: "STM-005 approved；PLAN_LANDING 后 Developer 实施；不得自动 commit"
+next_action: "Developer 实施"
+human_plan_approved_at: "2026-08-10 08:24 UTC"
+human_plan_approved_note: "STM-005 PLAN_APPROVED（BLOCKER=0；MUST_FIX=0）；人工确认；PLAN_LANDING 待 docs(plan) on main"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
 insertion_override:
   prior_current_task: DEV-OPS-006
@@ -355,7 +355,7 @@ governance_deviation:
 
 **STM-004**：**completed** — read-only atomic Redis Lua context snapshot；`read_working_memory_context` + `context_read.lua`；`compression_version` + `compressed_context` + ordered messages；malformed state fail-closed；I12 deterministic torn-read negative control；production single-Lua canonical snapshot guarantee；zero Redis write side effect（I13）；OI-009 resolved；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；record `8c050fc0d09523d82eb201b4f03fa87060efd065`；PR [#22](https://github.com/xu-jia-ming/memory_system/pull/22) **MERGED**（merge `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c` mergedAt `2026-08-10T08:02:11Z`）；scoped unit **15 passed** / contract **3 passed** / integration **14 passed**（13 scenarios）；full unit **300 passed** / contract **65 passed**；ruff **PASS**；mypy **PASS**；无 HTTP/压缩写回；Phase 1 STM-004 **completed**。
 
-**下游**：**STM-005** prerequisites STM-003 **SATISFIED**、STM-004 **SATISFIED**、DEV-004 **SATISFIED**；**READY_FOR_PLANNING only**；**不得自动开始实施**。
+**下游**：**STM-005** `approved` — plan `02_开发管理/tasks/STM-005-context-archive-create-reuse.md`；`next_action=Developer 实施`；**不得自动 commit**。
 
 ## 实施前置条件
 
@@ -712,7 +712,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 下一任务
 
 1. **STM-004**：`completed`（PR #22 MERGED `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`；implementation `3aed60522db64c3b11597e025caa0aae00afaba6`；scoped **15** / contract **3** / integration **14** / full unit **300** / contract **65** / ruff / mypy 全绿；OI-009 resolved；feat 分支待删）。
-2. **STM-005**：`planned` — prerequisites STM-003 **SATISFIED**、STM-004 **SATISFIED**、DEV-004 **SATISFIED**；**READY_FOR_PLANNING only**；**不得自动开始实施**。
+2. **STM-005**：`approved` — plan `02_开发管理/tasks/STM-005-context-archive-create-reuse.md`；prerequisites STM-003 **SATISFIED**、DEV-004 **SATISFIED**；`next_action=Developer 实施`；**不得自动 commit**。
 3. **STM-003**：`completed`（PR #21 MERGED `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；scoped **21** / integration **11** / full unit **287** / contract **62** / ruff / mypy 全绿）。
 4. **STM-002**：`completed`（PR #20 MERGED `efb39bf0bbbb408626e3d187d81b889dafc7a351`；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；scoped **25** / integration **3** / full unit **269** / contract **59** / ruff / mypy 全绿）。
 5. **STM-001**：`completed`（PR #19 MERGED `6f2081da6266282470948ecac8e62ef3ae969c15`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`）。

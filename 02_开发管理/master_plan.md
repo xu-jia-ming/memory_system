@@ -314,10 +314,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-005
 
-- **目标**：`context_archive` 集合与唯一索引；按 `archive_batch_key` create/reuse。
-- **非目标**：Kafka；pending Redis 字段（STM-006）。
-- **测试**：Integration（唯一键冲突复用）；参见 OI-004。
-- **状态备注**：`planned`；prerequisites STM-003 **SATISFIED**、DEV-004 **SATISFIED**；**READY_FOR_PLANNING only**；**不得自动开始实施**。
+- **目标**：Mongo `context_archive` **create/reuse** 领域服务 + Repository；给定预计算 `archive_batch_key` 与 WM 消息批次 → 幂等获得 `archive_id`（CREATE 或 REUSE）；`messages` 按 §1.2.2 四字段持久化（**不含** `estimated_tokens`）；并发相同 key 至多一条物理文档。
+- **非目标**：Kafka；Redis `pending_archive_*`；压缩锁/Coordinator/LLM/Finalize；HTTP；消息批次选择逻辑；**新 migration**（DEV-004 已建索引）。
+- **计划文件**：`02_开发管理/tasks/STM-005-context-archive-create-reuse.md`
+- **规格章节**：§1.2.2。
+- **正式前置依赖**：STM-003、DEV-004 — **SATISFIED**。
+- **实现复用**：STM-001（`WorkingMemoryMessage`）、STM-004（分层模式）— **SATISFIED**。
+- **测试**：Unit（模型映射、`build_archive_batch_key`、create/reuse 服务、Repository DuplicateKey）+ Contract（`test_stm005_contract.py`）+ Integration（**11** 场景真实 Mongo：首建/reuse/同 id/单文档/并发同 key/不同 key/会话隔离/字段持久化/不覆盖/畸形 fail-closed/唯一索引存在）。
+- **规划备注**：OI-004 **acknowledged — 不阻塞** create/reuse；Mongo 不写 `estimated_tokens`；token 边界留给 STM-010；`archive_batch_key` 调用方预计算 + 服务一致性校验；`AppState.mongodb` 复用。
+- **状态备注**：`planned`（规划基线 main @ `5be0f07b7a5183aedc9ff2c67abc8e9cea8b0031`）；`workflow_mode=NORMAL`；`next_action=计划审查`；**不得自动开始实施**。
 
 #### STM-006
 
@@ -823,5 +828,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-004`（`completed`；merge `6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；`OI-009`（`resolved`）；`STM-005`（prerequisites **SATISFIED** — **READY_FOR_PLANNING only**）；**不**扩大 STM-009 HTTP/Coordinator；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否**（OI-009 为 Planner 读路径语义决议；不修订规格正文） |
 | 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-005 READY_FOR_PLANNING only` |
+
+### CHANGE-035
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-005 Planner 初版：Mongo `context_archive` create/reuse Task Plan；progress 规划态回写 |
+| 受影响任务 | `STM-005`（`planned`；plan `02_开发管理/tasks/STM-005-context-archive-create-reuse.md`）；OI-004 acknowledged 不阻塞；11 Integration 场景含并发同 key；**不** 新 migration；**不** Kafka/Redis pending；**不** 触碰 DEV-006/PR #13；本轮只规划不实施 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner；`next_action=计划审查` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
