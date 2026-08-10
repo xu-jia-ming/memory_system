@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-003
 task_name: Message Write Lua
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -20,10 +20,10 @@ prerequisites:
   - "本任务不需要 SiliconFlow / LLM / TEI / Mongo / Kafka / ES / Neo4j 网络调用"
 branch: "feat/STM-003-message-write-lua"
 created_at: "2026-08-10 04:17 UTC"
-updated_at: "2026-08-10 14:12 UTC"
+updated_at: "2026-08-10 14:20 UTC"
 approval_gates:
   planning_docs: "pending Plan Review → READY_FOR_PLAN_REVIEW；本轮不得 PLAN_APPROVED / 不得实施"
-  implementation_plan: "status=tested；P1-1 已回滚 17 条越权路径；白名单外变更已清零；全门禁复跑 PASS；READY_FOR_CODE_REVIEW"
+  implementation_plan: "status=committed；implementation_commit e1913d17b159d426aadfd54d32e07c84ea61043a；PR #21 OPEN；next_action=Human PR merge"
 ```
 
 ### 1.1 编排与门禁（本轮）
@@ -490,12 +490,13 @@ out_of_scope_changes:
 | 2026-08-10 04:30 UTC | Planner Amendment 001 | MF-1 Lua 步骤重排对齐 OI-STM-003-002；SF-1 ARGV[7] message_id；SF-2 精确边界 #14/#15；SF-3 contract 白名单 | 未运行（规划-only） | Round 1 PLAN_REJECTED 修订；待 Plan Review Round 2 |
 | 2026-08-10 06:10 UTC | Developer 实施 | `MessageWriteStatus`/`MessageWriteInput`/`MessageWriteResult`；`write_message` 服务；`message_write.lua`（ARGV[7]、malformed `estimated_tokens`→`invalid_session_state`）；message codec/repository/script；Unit+Contract+Integration（17 场景） | STM-003 scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS（119 files） | Human 约束：malformed token fail-closed；#16/#17；未 Git commit；`next_action=Code Review` |
 | 2026-08-10 14:12 UTC | Developer P1-1 修复 | `git checkout --` 回滚 17 条越权路径（`settings/**`、`scripts/migrate.py`、非 STM-003 contract/unit/integration）；保留 §6.1 白名单 | STM-003 scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS（119 files） | Code Review P1-1：工作区越权变更已清零；未 Git commit；`next_action=Code Review` |
+| 2026-08-10 14:20 UTC | Release Operator IMPLEMENTATION_RELEASE | implementation commit `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS（119 files） | `status=committed`；`next_action=Human PR merge` |
 
 ---
 
 ## 14. 实际执行结果
 
-`tested` — Developer 实施完成（未 commit）；`feat/STM-003-message-write-lua` @ plan_commit `926f37d` + 工作区实现变更。
+`committed` — IMPLEMENTATION_RELEASE 完成；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN。
 
 | 维度 | 结果 |
 |---|---|
@@ -507,5 +508,21 @@ out_of_scope_changes:
 | Full contract | **62 passed** |
 | ruff | PASS |
 | mypy | PASS — 119 source files |
-| Git | 未 commit（待 Code Review → Release Operator） |
-| next_action | Code Review |
+| Git | implementation commit `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN |
+| next_action | Human PR merge |
+
+### 14.5 Git 记录
+
+```yaml
+branch: feat/STM-003-message-write-lua
+plan_commit: 926f37d166089f02b3143470ca74ba1258d48010
+implementation_commit: e1913d17b159d426aadfd54d32e07c84ea61043a
+implementation_commit_message: "feat(stm): add message write lua and domain service"
+pr_number: 21
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/21"
+pr_state: OPEN
+merge_commit: null
+merged_at: null
+status_record_committed: 3b44d1d9265442502e76f1cde78f145054bffa65
+status_record_completed: null  # pending POST_MERGE_CLEANUP
+```
