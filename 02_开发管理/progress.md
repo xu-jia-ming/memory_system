@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-003 completed
+current_phase: Phase 1 — STM-004 planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: STM-003
-current_task_status: completed
+current_task: STM-004
+current_task_status: planned
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,7 +21,7 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/STM-003-message-write-lua.md
+current_plan_file: 02_开发管理/tasks/STM-004-context-read-lua.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_DEV-002_prerequisite: SATISFIED
@@ -156,7 +156,13 @@ formal_STM-003_full_contract: "62 passed"
 formal_STM-003_ruff: PASS
 formal_STM-003_mypy: "PASS — 119 source files"
 formal_STM-003_note: "POST_MERGE_CLEANUP；atomic Redis Lua；message_id idempotency；duplicate zero side-effect；hard WM capacity；concurrent same message_id one write；malformed estimated_tokens fail-closed；no compression/Kafka/HTTP；STM-003 scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS；feat 分支待删"
-previous_task: STM-002
+# STM-004 planning evidence（Planner 初版；本轮只规划不实施）
+formal_STM-004_status: planned
+formal_STM-004_plan_file: 02_开发管理/tasks/STM-004-context-read-lua.md
+formal_STM-004_plan_commit: null  # pending PLAN_LANDING
+formal_STM-004_workflow_mode: NORMAL
+formal_STM-004_note: "Amendment 002 PLAN_REMEDIATION Round 3：I12 三段式 torn-read（原子 mutator + broken split-reader 负对照 + 生产 Lua 正对照）；I10 compressed_context 缺失 fail-closed；__init__.py 白名单；ContextReadFailure→STM-009；13 Integration 场景；待 Plan Review Round 3"
+previous_task: STM-003
 previous_task_status: completed
 previous_implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
 previous_implementation_commit_message: "feat(stm): add token estimator, wm key/field models, context inequality tests"
@@ -236,8 +242,8 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
 deferred_business_task: null
 deferred_business_task_status: null
-deferred_business_task_note: "STM-004/STM-005 prerequisites STM-003 SATISFIED；须另一次显式编排；不得自动开始实施"
-next_action: "STM-004 READY_FOR_PLANNING only（须显式 START_EXISTING_TASK）；不得自动开始 STM-004/STM-005 实施"
+deferred_business_task_note: "STM-005 prerequisites STM-003 SATISFIED；须另一次显式编排；不得自动开始实施"
+next_action: "计划审查 Round 3"
 human_plan_approved_at: "2026-08-10 10:44 UTC"
 human_plan_approved_note: "STM-002 Amendment 001 PLAN_APPROVED；Developer 实施 tested；READY_FOR_CODE_REVIEW"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
@@ -329,7 +335,7 @@ governance_deviation:
 
 **STM-003**：**completed** — atomic Redis Lua + `write_message` 领域服务；`message_id` 幂等；duplicate 零副作用；hard WM capacity；concurrent same `message_id` 单写；malformed `estimated_tokens` fail-closed；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；record `34bbebd`；PR [#21](https://github.com/xu-jia-ming/memory_system/pull/21) **MERGED**（merge `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4` mergedAt `2026-08-10T06:26:37Z`）；STM-003 scoped **21 passed** / integration **11 passed**；full unit **287 passed** / contract **62 passed**；ruff **PASS**；mypy **PASS**；无 compression/Kafka/HTTP；Phase 1 STM-003 **completed**。
 
-**下游**：**STM-004** `status=planned` — prerequisites STM-002 **SATISFIED**；**READY_FOR_PLANNING only**（须显式编排）；**不得自动开始实施**。**STM-005** prerequisites STM-003 **SATISFIED**、DEV-004 **SATISFIED**；**READY_FOR_PLANNING only**；**不得自动开始实施**。
+**下游**：**STM-004** `status=planned` — Task Plan `02_开发管理/tasks/STM-004-context-read-lua.md`（Amendment 002）；正式前置 STM-002 **SATISFIED**；实现复用 STM-001/003 **SATISFIED**；`next_action=计划审查 Round 3`；**不得自动开始实施**。**STM-005** prerequisites STM-003 **SATISFIED**、DEV-004 **SATISFIED**；**READY_FOR_PLANNING only**；**不得自动开始实施**。
 
 ## 实施前置条件
 
@@ -646,6 +652,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 14:12 UTC | STM-003 | tested（P1-1 修复） | Code Review P1-1：`git checkout --` 回滚 17 条越权路径；白名单外变更清零 | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | 未 commit；`next_action=Code Review`；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 14:20 UTC | STM-003 | committed | IMPLEMENTATION_RELEASE；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | 待人工 merge；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 06:26 UTC | STM-003 | committed → completed | PR #21 MERGED（`3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | STM-004 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 07:18 UTC | STM-004 | planned（Amendment 002） | Round 2 `PLAN_REJECTED` MF-2（非原子 mutator）；Amendment 002：三段式 I12 torn-read（原子 mutator + broken reader 负对照 + 生产 Lua 正对照）；I10 compressed_context 缺失；__init__.py 白名单；ContextReadFailure→STM-009 | 未实施、未 Git 写；`next_action=计划审查 Round 3`；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 07:10 UTC | STM-004 | planned（Amendment 001） | Round 1 `PLAN_REJECTED` MF-1（I11 空洞）；Amendment 001：对抗性 torn-read + `NO_STALE_SUMMARY_TRIMMED_LIST_HYBRID`；正式前置 STM-002 vs 实现复用 STM-001/003；`ContextReadFailure`；空 messages 3 元素 Lua | 未实施、未 Git 写；`next_action=计划审查 Round 2`；**不得触碰 DEV-006/PR#13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -679,7 +687,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 下一任务
 
 1. **STM-003**：`completed`（PR #21 MERGED `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；scoped **21** / integration **11** / full unit **287** / contract **62** / ruff / mypy 全绿）。
-2. **STM-004**：`planned` — prerequisites STM-002 **SATISFIED**；**READY_FOR_PLANNING only**（须显式 `START_EXISTING_TASK=STM-004`）；**不得自动开始实施**。
+2. **STM-004**：`planned` — Task Plan `02_开发管理/tasks/STM-004-context-read-lua.md`（Amendment 002）；正式前置 STM-002 **SATISFIED**；实现复用 STM-001/003 **SATISFIED**；`next_action=计划审查 Round 3`；**不得自动开始实施**。
 3. **STM-005**：`planned` — prerequisites STM-003 **SATISFIED**、DEV-004 **SATISFIED**；**READY_FOR_PLANNING only**；**不得自动开始实施**。
 4. **STM-002**：`completed`（PR #20 MERGED `efb39bf0bbbb408626e3d187d81b889dafc7a351`；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；scoped **25** / integration **3** / full unit **269** / contract **59** / ruff / mypy 全绿）。
 5. **STM-001**：`completed`（PR #19 MERGED `6f2081da6266282470948ecac8e62ef3ae969c15`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`）。

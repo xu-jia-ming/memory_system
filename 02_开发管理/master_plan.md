@@ -302,10 +302,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-004
 
-- **目标**：上下文一致性读取 Lua（version + compressed_context + messages 原子快照）。
-- **非目标**：压缩写回。
-- **测试**：Integration；参见 OI-009（不得自行定 Contract）。
-- **状态备注**：`planned`；prerequisites STM-002 **SATISFIED**；**READY_FOR_PLANNING only**（须显式 `START_EXISTING_TASK=STM-004`）；**不得自动开始实施**。
+- **目标**：上下文一致性读取 Lua（`compression_version` + `compressed_context` + `messages` 原子快照）；领域服务 `read_working_memory_context`；Lua **严格只读**（OI-009：不更新 `updated_time`、无 TTL）。
+- **非目标**：压缩写回；HTTP `GET /api/v1/memory/working/...`（**STM-009**）；读取 `message_ids`；修改 STM-003 写入语义。
+- **计划文件**：`02_开发管理/tasks/STM-004-context-read-lua.md`
+- **规格章节**：§1.2.1（规则 7）、§1.2.3（获取当前上下文）、§1.2.7（无 TTL/闲置清理）。
+- **正式前置依赖**（`master_plan` 表权威）：**STM-002** — SATISFIED。
+- **实现/测试复用**（非正式前置）：STM-001（Key/codec/模型）、STM-003（`write_message` Integration 种子、`json_to_message` 解码）— SATISFIED。
+- **测试**：Unit（结果映射、快照解码、`""` 语义、畸形 → `ContextReadFailure`、空 messages 最小 3 元素 Lua 返回）+ Contract（`test_stm004_contract.py`）+ Integration（**13** 场景：空 WM/有消息/有摘要/session 缺失/身份不匹配/closing 可读/畸形 version·**compressed_context 缺失**/message/**I12 `NO_STALE_SUMMARY_TRIMMED_LIST_HYBRID` 三段式 torn-read（原子 mutator + broken split-reader 负对照 + 生产 Lua 正对照）**/只读零写入/确定性重复读）。
+- **规划备注**：Amendment 002（2026-08-10 PLAN_REMEDIATION Round 3）：MF-2 吸收 — I12 读者组合 torn-read 三段式；原子 test-only mutator；确定性 barrier 负对照；13 Integration 场景；`ContextReadFailure` HTTP 映射归 STM-009；Amendment 001（OI-009、正式/复用区分）保留。
+- **状态备注**：`planned`（Amendment 002 2026-08-10）；正式前置 STM-002 **SATISFIED**；`next_action=计划审查 Round 3`；**不得自动开始实施**。
 
 #### STM-005
 
@@ -768,5 +773,35 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-003`（`completed`；merge `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`）；`STM-004`/`STM-005`（prerequisites **SATISFIED** — **READY_FOR_PLANNING only**）；**不**扩大 STM-009 HTTP/Coordinator；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否** |
 | 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-004 READY_FOR_PLANNING only` |
+
+### CHANGE-030
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | 用户显式 `START_EXISTING_TASK=STM-004` + `WORKFLOW_MODE=NORMAL`：登记 STM-004 Task Plan（上下文一致性只读 Lua + 领域服务；不含 HTTP/压缩写回） |
+| 受影响任务 | `STM-004` → `planned`（计划文件 `02_开发管理/tasks/STM-004-context-read-lua.md`）；§10.1 OI-009 Planner 决议（读路径不更新 `updated_time`）；**不**扩大 STM-009 HTTP/Coordinator；**不**触碰 DEV-006/PR #13；本轮只规划不实施 |
+| 是否改变技术规格 | **否**（OI-009 为 Planner 读路径语义决议；不修订规格正文） |
+| 审批 | Planner 初版；待 Plan Review → 人工确认；确认前不得 PLAN_LANDING / Developer |
+
+### CHANGE-031
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-004 Plan Review Round 1 `PLAN_REJECTED`（MF-1：I11 torn-read 空洞）；Planner Amendment 001 PLAN_REMEDIATION |
+| 受影响任务 | `STM-004` → `planned`（Amendment 001）：I11 `NO_STALE_SUMMARY_TRIMMED_LIST_HYBRID` 对抗性 torn-read；正式前置 STM-002 vs 实现复用 STM-001/003 区分；`ContextReadFailure`；空 messages 最小 3 元素 Lua 返回；**不**改 master_plan 表 STM-002 正式依赖；**不**扩大 STM-009；**不**触碰 DEV-006/PR #13；本轮只修订计划不实施 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner Amendment 001；待 Plan Review Round 2 → 人工确认；确认前不得 PLAN_LANDING / Developer |
+
+### CHANGE-032
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-004 Plan Review Round 2 `PLAN_REJECTED`（MF-2：非原子 mutator 与 OLD/NEW-only 断言冲突）；Planner Amendment 002 PLAN_REMEDIATION Round 3 |
+| 受影响任务 | `STM-004` → `planned`（Amendment 002）：I12 三段式 reader-composed torn-read（原子 test-only mutator + broken split-reader 确定性负对照 + 生产 Lua 正对照）；I10 `compressed_context` 缺失 fail-closed；13 Integration 场景；`__init__.py` 白名单；`ContextReadFailure` HTTP 映射归 STM-009；test-only helpers 仅 `tests/integration/**`；**不**扩大 STM-009；**不**触碰 DEV-006/PR #13；本轮只修订计划不实施 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner Amendment 002；待 Plan Review Round 3 → 人工确认；确认前不得 PLAN_LANDING / Developer |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
