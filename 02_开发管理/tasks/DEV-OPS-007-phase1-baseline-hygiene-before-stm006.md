@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-007
 task_name: Phase 1 Baseline Hygiene Before STM-006
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -284,6 +284,7 @@ out_of_scope_changes:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
+| 2026-08-10 11:42 UTC | IMPLEMENTATION_RELEASE | implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；PR #24 OPEN；docs(status): record on feat | n/a（沿用 tested 门禁） | implementation_commit=1ef8932b87604de9a01dab72e7584a4e7886b155；WAITING_FOR_PR_MERGE；禁 push main / 禁 gh pr merge |
 | 2026-08-10 10:30 UTC | Developer tested | Issue A：progress.md + STM-005 §14 SHA 更正；Issue B：E501 换行 | integration 14 / unit 323 / contract 68；ruff PASS；mypy PASS | ZERO_STALE_AUTHORITATIVE_REFERENCES；未 commit |
 | 2026-08-10 10:14 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | orphan SHA + E501 已只读确认；待 Plan Review |
 
@@ -330,12 +331,15 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/DEV-OPS-007-phase1-baseline-hygiene-before-stm006
+plan_commit: f42eaf3190d8fc3600f52c869fc7e8dfbec86cf1
+implementation_commit: 1ef8932b87604de9a01dab72e7584a4e7886b155
+implementation_commit_message: "chore(hygiene): fix STM-005 governance SHA and ruff E501 in torn-read helpers"
+pr_number: 24
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/24"
+pr_state: OPEN
 ```
 
 ### 最终状态
 
-`tested`
+`committed`（WAITING_FOR_PR_MERGE）

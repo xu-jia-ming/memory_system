@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — DEV-OPS-007 hygiene tested
+current_phase: Phase 1 — DEV-OPS-007 hygiene committed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: DEV-OPS-007
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/DEV-OPS-007-phase1-baseline-hygiene-before-stm006
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -204,6 +204,18 @@ formal_STM-005_ruff: PRE_EXISTING_BASELINE_RUFF_FAILURE
 formal_STM-005_ruff_note: "2x E501 tests/integration/context_read_torn_read_helpers.py:174:101,175:101 — identical at plan_commit and HEAD; STM-005 changed files Ruff PASS; STM005_REGRESSION=false"
 formal_STM-005_mypy: PASS
 formal_STM-005_note: "POST_MERGE_CLEANUP；Mongo context_archive create/reuse；archive_batch_key session_id:first_message_id:last_message_id + mandatory validation；empty messages fail-closed；DuplicateKey → REUSED no overwrite；concurrent same key → one doc same archive_id；message order preserved；DEV-004 unique index verified；no Kafka/Redis pending/compression/LLM/HTTP；scoped unit 26 / contract 3 / integration 12 / full unit 323 / contract 68；mypy PASS；feat 分支待删"
+# DEV-OPS-007 committed evidence（IMPLEMENTATION_RELEASE；PR #24 OPEN）
+formal_DEV-OPS-007_status: committed
+formal_DEV-OPS-007_plan_file: 02_开发管理/tasks/DEV-OPS-007-phase1-baseline-hygiene-before-stm006.md
+formal_DEV-OPS-007_plan_commit: f42eaf3190d8fc3600f52c869fc7e8dfbec86cf1
+formal_DEV-OPS-007_implementation_commit: 1ef8932b87604de9a01dab72e7584a4e7886b155
+formal_DEV-OPS-007_implementation_commit_message: "chore(hygiene): fix STM-005 governance SHA and ruff E501 in torn-read helpers"
+formal_DEV-OPS-007_branch: feat/DEV-OPS-007-phase1-baseline-hygiene-before-stm006
+formal_DEV-OPS-007_workflow_mode: NORMAL
+formal_DEV-OPS-007_pr: "#24"
+formal_DEV-OPS-007_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/24"
+formal_DEV-OPS-007_pr_state: OPEN
+formal_DEV-OPS-007_note: "Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → b0736431…；Ruff E501 L174–175 换行；integration 14 / unit 323 / contract 68；ruff PASS；mypy PASS；WAITING_FOR_PR_MERGE；不得启动 STM-006 规划或实施"
 previous_task: STM-004
 previous_task_status: completed
 previous_implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
@@ -284,8 +296,8 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
 deferred_business_task: STM-006
 deferred_business_task_status: READY_FOR_PLANNING only
-deferred_business_task_note: "STM-005 completed；DEV-OPS-007 hygiene tested；STM-006 READY_FOR_PLANNING only；不得自动开始 STM-006 规划或实施"
-next_action: "Code Review"
+deferred_business_task_note: "STM-005 completed；DEV-OPS-007 hygiene committed（PR #24 OPEN）；STM-006 READY_FOR_PLANNING only；不得自动开始 STM-006 规划或实施"
+next_action: "WAITING_FOR_PR_MERGE"
 human_plan_approved_at: "2026-08-10 10:30 UTC"
 human_plan_approved_note: "DEV-OPS-007 PLAN_APPROVED；Developer 实施完成；orphan SHA metadata 更正 + Ruff E501 换行；全量门禁 PASS"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
@@ -462,6 +474,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（STM-004 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status): complete 落盘；exact feat 待删 |
 | RELEASE_COMPLETED（STM-005 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `c166be5cd40475a513cede67f53cafec8fc8529a`；record `a52207473534b1667967be32957c9e1f500ac429`；PR #23 MERGED（`164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`） |
 | RELEASE_COMPLETED（STM-005 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status): complete 落盘；exact feat 待删 |
+| RELEASE_COMPLETED（DEV-OPS-007 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `1ef8932b87604de9a01dab72e7584a4e7886b155`；PR #24 OPEN（https://github.com/xu-jia-ming/memory_system/pull/24）；record 待本 docs(status): record 落盘 |
 | RELEASE_COMPLETED（STM-003 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status): complete 落盘；exact feat 待删 |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
@@ -705,6 +718,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 14:20 UTC | STM-003 | committed | IMPLEMENTATION_RELEASE；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | 待人工 merge；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 06:26 UTC | STM-003 | committed → completed | PR #21 MERGED（`3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS | STM-004 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 08:02 UTC | STM-004 | committed → completed | PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；OI-009 resolved | STM-005 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
+| 2026-08-10 11:42 UTC | DEV-OPS-007 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；PR #24 OPEN；docs(status): record on feat | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；**不得实现 STM-006** |
 | 2026-08-10 10:30 UTC | DEV-OPS-007 | approved → in_progress → tested | Developer：orphan SHA metadata 更正（`b0736431…`）；Ruff E501 L174–175 换行 | integration 14 / unit 323 / contract 68；ruff PASS；mypy PASS；orphan exit 1 / authoritative exit 0 | 未 commit；`next_action=Code Review`；**不得实现 STM-006**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 10:14 UTC | DEV-OPS-007 | planned | 创建 Task Plan `02_开发管理/tasks/DEV-OPS-007-phase1-baseline-hygiene-before-stm006.md`；master_plan CHANGE-037；progress 规划态回写 | 只读确认：orphan `301c8d9…` exit 1 / `b0736431…` exit 0；Ruff E501 L174–175 | `next_action=计划审查`；**不得实现 STM-006**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 09:16 UTC | STM-005 | committed → completed | PR #23 MERGED（`164dc1a529fd265cb82f3a78cadbb8bc65b2dfbf`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped unit 26 / contract 3 / integration 12 / full unit 323 / contract 68；mypy PASS；ruff baseline E501 pre-existing（非回归）；OI-004 partial evidence status remains open | STM-006 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
