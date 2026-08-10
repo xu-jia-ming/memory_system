@@ -260,7 +260,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | STM-001 | Token 估算、WM Key/字段模型、配置校验 | §1.2.1 | DEV-002 | completed |
 | STM-002 | Session 创建 | §1.2.1, §1.2.3, §1.2.7, §3.21, §3.23 | STM-001, DEV-005 | completed |
-| STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | committed |
+| STM-003 | 消息写入 Lua（幂等/容量；不含完整压缩） | §1.2.1, §1.2.3 | STM-002 | completed |
 | STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | planned |
 | STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | planned |
 | STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | planned |
@@ -298,19 +298,21 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规格章节**：§1.2.1、§1.2.3（写入流程摘录）、§1.2.6、§1.2.7。
 - **测试**：Unit（estimator 复用、消息 JSON codec、Lua 结果映射）+ Contract（`test_stm003_contract.py`：`MessageWriteStatus` 字面量稳定）+ Integration（17 场景：success/duplicate/零副作用/单条超限/WM 超限/精确边界 #14/#15/session 缺失/closing/用户隔离/并发同 id/原子失败无 partial state/malformed token #16/ARGV 校验 #17）。
 - **规划备注**：§10.1 OI-STM-003-001/002 已 Planner 决议（Lua 成功返回 `success`；meta 缺失与身份不匹配均 `session_not_found`；身份校验 **先于** `status`）；Amendment 001 落实 Round 1 MF-1 + SF-1～3；HTTP 接线见 STM-009。
-- **状态备注**：`committed`（plan_commit `926f37d166089f02b3143470ca74ba1258d48010`；implementation_commit `e1913d17b159d426aadfd54d32e07c84ea61043a`；record `3b44d1d9265442502e76f1cde78f145054bffa65`；PR #21 OPEN https://github.com/xu-jia-ming/memory_system/pull/21；branch `feat/STM-003-message-write-lua`）；`write_message` + `message_write.lua`；`invalid_session_state` for malformed `estimated_tokens`；STM-003 scoped 21 / integration 11；full unit 287 / contract 62；ruff PASS；mypy PASS（119 files）；`next_action=Human PR merge`。
+- **状态备注**：`completed`（plan_commit `926f37d166089f02b3143470ca74ba1258d48010`；implementation_commit `e1913d17b159d426aadfd54d32e07c84ea61043a`；record `34bbebd`；PR #21 MERGED https://github.com/xu-jia-ming/memory_system/pull/21 merge `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4` mergedAt `2026-08-10T06:26:37Z`；Amendment 001 已落实；`workflow_mode=NORMAL`）；atomic Redis Lua + `write_message`；`message_id` 幂等；duplicate 零副作用；hard WM capacity；concurrent same `message_id` 单写；malformed `estimated_tokens` fail-closed；STM-003 scoped 21 / integration 11；full unit 287 / contract 62；ruff PASS；mypy PASS（119 files）；无 compression/Kafka/HTTP；feat 分支已删；**STM-004 READY_FOR_PLANNING only**（不得自动开始实施）。
 
 #### STM-004
 
 - **目标**：上下文一致性读取 Lua（version + compressed_context + messages 原子快照）。
 - **非目标**：压缩写回。
 - **测试**：Integration；参见 OI-009（不得自行定 Contract）。
+- **状态备注**：`planned`；prerequisites STM-002 **SATISFIED**；**READY_FOR_PLANNING only**（须显式 `START_EXISTING_TASK=STM-004`）；**不得自动开始实施**。
 
 #### STM-005
 
 - **目标**：`context_archive` 集合与唯一索引；按 `archive_batch_key` create/reuse。
 - **非目标**：Kafka；pending Redis 字段（STM-006）。
 - **测试**：Integration（唯一键冲突复用）；参见 OI-004。
+- **状态备注**：`planned`；prerequisites STM-003 **SATISFIED**、DEV-004 **SATISFIED**；**READY_FOR_PLANNING only**；**不得自动开始实施**。
 
 #### STM-006
 
@@ -756,5 +758,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-003`（`committed`；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN）；**不**扩大 STM-009 HTTP/Coordinator；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否** |
 | 审批 | Release Operator IMPLEMENTATION_RELEASE；`next_action=Human PR merge` |
+
+### CHANGE-029
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-003 POST_MERGE_CLEANUP：PR #21 MERGED；docs(status): complete on main；删 exact feat |
+| 受影响任务 | `STM-003`（`completed`；merge `3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`）；`STM-004`/`STM-005`（prerequisites **SATISFIED** — **READY_FOR_PLANNING only**）；**不**扩大 STM-009 HTTP/Coordinator；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否** |
+| 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-004 READY_FOR_PLANNING only` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

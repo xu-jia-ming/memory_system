@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-003
 task_name: Message Write Lua
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -491,16 +491,19 @@ out_of_scope_changes:
 | 2026-08-10 06:10 UTC | Developer 实施 | `MessageWriteStatus`/`MessageWriteInput`/`MessageWriteResult`；`write_message` 服务；`message_write.lua`（ARGV[7]、malformed `estimated_tokens`→`invalid_session_state`）；message codec/repository/script；Unit+Contract+Integration（17 场景） | STM-003 scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS（119 files） | Human 约束：malformed token fail-closed；#16/#17；未 Git commit；`next_action=Code Review` |
 | 2026-08-10 14:12 UTC | Developer P1-1 修复 | `git checkout --` 回滚 17 条越权路径（`settings/**`、`scripts/migrate.py`、非 STM-003 contract/unit/integration）；保留 §6.1 白名单 | STM-003 scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS（119 files） | Code Review P1-1：工作区越权变更已清零；未 Git commit；`next_action=Code Review` |
 | 2026-08-10 14:20 UTC | Release Operator IMPLEMENTATION_RELEASE | implementation commit `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS（119 files） | `status=committed`；`next_action=Human PR merge` |
+| 2026-08-10 06:26 UTC | POST_MERGE_CLEANUP | PR #21 MERGED（`3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`）；docs(status): complete on main；删 exact feat | scoped 21 / integration 11 / full unit 287 / contract 62；ruff PASS；mypy PASS（119 files） | `status=completed`；STM-004 READY_FOR_PLANNING only |
 
 ---
 
 ## 14. 实际执行结果
 
-`committed` — IMPLEMENTATION_RELEASE 完成；implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN。
+`completed` — PR #21 MERGED；POST_MERGE_CLEANUP 完成。
 
 | 维度 | 结果 |
 |---|---|
-| 交付 | `write_message` 领域服务 + 单 Lua 原子脚本；`MessageWriteStatus`（含 `invalid_session_state`）；`WorkingMemoryMessage` List JSON codec |
+| 交付 | atomic Redis Lua + `write_message` 领域服务；`MessageWriteStatus`（含 `invalid_session_state`）；`WorkingMemoryMessage` List JSON codec |
+| 语义 | `message_id` 幂等；duplicate 零副作用；hard WM capacity；concurrent same `message_id` 单写；malformed `estimated_tokens` fail-closed |
+| 范围外 | 无 compression / Kafka / HTTP |
 | Human 约束 | Python 预检 `message_too_large`；Lua 不重算 token；`ARGV[7]=message_id`；malformed/missing `estimated_tokens` fail-closed；精确边界 #14/#15 |
 | STM-003 scoped | **21 passed**（unit 18 + contract 3） |
 | Integration | **11 passed**（17 场景分布于 11 用例；compose test Redis） |
@@ -508,8 +511,8 @@ out_of_scope_changes:
 | Full contract | **62 passed** |
 | ruff | PASS |
 | mypy | PASS — 119 source files |
-| Git | implementation commit `e1913d17b159d426aadfd54d32e07c84ea61043a`；PR #21 OPEN |
-| next_action | Human PR merge |
+| Git | implementation `e1913d17b159d426aadfd54d32e07c84ea61043a`；record `34bbebd`；PR #21 MERGED（`3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4`） |
+| next_action | STM-004 READY_FOR_PLANNING only（须显式编排；不得自动开始实施） |
 
 ### 14.5 Git 记录
 
@@ -520,9 +523,9 @@ implementation_commit: e1913d17b159d426aadfd54d32e07c84ea61043a
 implementation_commit_message: "feat(stm): add message write lua and domain service"
 pr_number: 21
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/21"
-pr_state: OPEN
-merge_commit: null
-merged_at: null
-status_record_committed: 3b44d1d9265442502e76f1cde78f145054bffa65
-status_record_completed: null  # pending POST_MERGE_CLEANUP
+pr_state: MERGED
+merge_commit: 3a08a8040a429e5f5ccb3e143b5cce7cb7ee7bf4
+merged_at: "2026-08-10T06:26:37Z"
+status_record_committed: 34bbebd
+status_record_completed: null  # pending this docs(status): complete commit SHA
 ```
