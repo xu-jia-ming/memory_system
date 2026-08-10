@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-008
 task_name: Compression Finalize Lua
-status: tested
+status: committed
 plan_review_round: 2
 workflow_mode: NORMAL
 workflow_mode_source: explicit
@@ -30,10 +30,10 @@ prerequisites:
     - "本任务需要真实 Redis（compose test 栈）；不需要 Kafka broker / Mongo / LLM / HTTP"
 branch: "feat/STM-008-compression-finalize-lua"
 created_at: "2026-08-10 23:01 UTC"
-updated_at: "2026-08-10 23:30 UTC"
+updated_at: "2026-08-10 23:50 UTC"
 approval_gates:
-  planning_docs: "Round 2 PLAN_APPROVED; Human PLAN_APPROVED Amendment 001"
-  implementation: blocked_until_plan_approved
+  planning_docs: "Round 2 PLAN_APPROVED; Human PLAN_APPROVED Amendment 001; plan_commit fa3e1bf33e889dbb6180315eda896b954a02df8f"
+  implementation_plan: "status=committed; PR #27 OPEN; next_action=WAITING_FOR_PR_MERGE"
 ```
 
 ### 1.1 编排与门禁（本轮）
@@ -675,6 +675,7 @@ release_phases:
 |---|---|---|---|---|
 | 2026-08-10 23:01 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | OI-004/OI-005 open acknowledged；待 Plan Review |
 | 2026-08-10 23:30 UTC | Planner Amendment 001 | HM-1/HM-2 + SHOULD_FIX；I18 修正；Integration 27 场景；`plan_review_round: 2` | 未运行（规划-only） | Round 1 MUST_FIX 闭合；待 Round 2 Plan Review |
+| 2026-08-10 23:50 UTC | IMPLEMENTATION_RELEASE | implementation `d619ca2f7e2e20d2d944794c2ca21e8e6d5752ef`；PR #27 OPEN | scoped unit 20 / contract 4 / integration 27；full unit 393 / contract 80；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE` |
 | 2026-08-10 23:45 UTC | Developer 实施 | 枚举/模型/服务；`compression_finalize.lua`（12 precondition + 9 mutation）；script + repository；unit 13 + contract 4 + integration 27 | unit+contract PASS；integration 27 PASS（Docker Redis）；full unit 393 / contract 80；ruff PASS；mypy PASS | C8 标题 10→12 步修正；无 Kafka/Mongo/LLM；OI-004/OI-005 remain open |
 
 ---
@@ -735,12 +736,16 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: "feat/STM-008-compression-finalize-lua"
+plan_commit: "fa3e1bf33e889dbb6180315eda896b954a02df8f"
+implementation_commit: "d619ca2f7e2e20d2d944794c2ca21e8e6d5752ef"
+implementation_commit_message: "feat(stm): add compression finalize lua and domain service"
+status_record_committed: null  # pending this docs(status): record commit SHA
+pr: "#27"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/27"
+pr_state: OPEN
 ```
 
 ### 最终状态
 
-`tested`
+`committed`
