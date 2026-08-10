@@ -1,5 +1,6 @@
 """Domain services for the Memory System MVP."""
 
+from memory_system.domain.services.compression_finalize_service import finalize_compression
 from memory_system.domain.services.compression_preparation_service import (
     prepare_pending_archive_and_publish,
 )
@@ -13,6 +14,7 @@ __all__ = [
     "create_or_reuse_context_archive",
     "create_session",
     "estimate_tokens",
+    "finalize_compression",
     "prepare_pending_archive_and_publish",
     "read_working_memory_context",
     "write_message",

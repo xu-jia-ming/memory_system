@@ -1,5 +1,9 @@
 """Redis infrastructure helpers."""
 
+from memory_system.infrastructure.redis.compression_finalize_repository import (
+    finalize_compression_in_redis,
+    parse_compression_finalize_lua_result,
+)
 from memory_system.infrastructure.redis.compression_lock_repository import (
     acquire_compression_lock,
     release_compression_lock,
@@ -41,12 +45,14 @@ __all__ = [
     "compression_lock_key",
     "create_working_memory_session",
     "execute_context_read_lua",
+    "finalize_compression_in_redis",
     "execute_message_write_lua",
     "execute_pending_archive_write_lua",
     "hash_fields_to_meta",
     "json_to_message",
     "message_to_json",
     "meta_to_hash_fields",
+    "parse_compression_finalize_lua_result",
     "parse_context_read_lua_result",
     "parse_message_write_lua_result",
     "parse_pending_archive_lua_result",

@@ -1,6 +1,10 @@
 """Domain models for the Memory System MVP."""
 
 from memory_system.domain.models.archive_created_event import ArchiveCreatedEvent
+from memory_system.domain.models.compression_finalize import (
+    CompressionFinalizeInput,
+    CompressionFinalizeResult,
+)
 from memory_system.domain.models.compression_preparation import (
     CompressionPreparationInput,
     CompressionPreparationResult,
@@ -20,6 +24,8 @@ from memory_system.domain.models.working_memory import WorkingMemoryMessage, Wor
 
 __all__ = [
     "ArchiveCreatedEvent",
+    "CompressionFinalizeInput",
+    "CompressionFinalizeResult",
     "CompressionPreparationInput",
     "CompressionPreparationResult",
     "ContextArchive",

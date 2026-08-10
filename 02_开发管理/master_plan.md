@@ -276,7 +276,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | completed |
 | STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | completed |
 | STM-007 | Compression LLM Client + Structured Output | §1.2.5, §3.9 | DEV-002 | completed |
-| STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | planned |
+| STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | tested |
 | STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | planned |
 | STM-010 | Session Close | §1.2.3, §1.2.7 | STM-006, STM-009 | planned |
 | STM-011 | `republish_archive_event.py` 补发脚本 | §1.2.4, §3.4 | STM-006 | planned |
@@ -365,7 +365,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **正式前置依赖**：STM-006、STM-007 — **SATISFIED**。
 - **测试**：Unit（Input/payload handoff/ValidationError/Lua 映射）+ Contract（枚举/TOCTOU/无 message_ids SREM）+ Redis Integration **27 场景**（I18 Case A token 分解证明 new=500、I27 clamp 0、M1–M4 边界、畸形 Redis 整数 I24–I25、畸形 message JSON I26、closing in-flight、并发 duplicate 单次 version 迁移、失败零 mutation、retry 无 double-trim、无 Kafka/Mongo/LLM 副作用）。
 - **规划备注**：§5.0 十六项 Contract 闭合；Amendment 001（`plan_review_round: 2`）：HM-1 五项 token 变量 + I18 算术修正；HM-2 `max(0,…)` clamp 语义；畸形 `compression_version`/`estimated_tokens` → `invalid_session_state`；`ARGV[11]==ARGV[7]` defense；`closing` + 非空 pending 允许 in-flight Finalize（§733/§5845）；`archived_message_tokens` 调用方供给（OI-004 open）；OI-005 partial evidence acknowledged；成功路径锁在 Lua 内释放。
-- **状态备注**：`planned`（`plan_review_round: 2`；baseline `ff9a609009f2a151f2e1a4bf41e24be3bc3a2467`；branch plan `feat/STM-008-compression-finalize-lua`；`workflow_mode=NORMAL`）；**不得自动实施**；OI-004/OI-005 remain open；**STM-009 NOT ready until STM-008 completed**。
+- **状态备注**：`tested`（`plan_review_round: 2`；plan commit `fa3e1bf33e889dbb6180315eda896b954a02df8f`；branch `feat/STM-008-compression-finalize-lua`；`workflow_mode=NORMAL`）；单 Lua 12 precondition + 9 mutation；scoped unit 13 / contract 4 / integration 27；full unit 393 / contract 80；ruff PASS；mypy PASS；OI-004/OI-005 remain open；**READY_FOR_CODE_REVIEW**；**STM-009 NOT ready until STM-008 completed + merged**。
 
 #### STM-009
 

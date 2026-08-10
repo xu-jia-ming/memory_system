@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-008
 task_name: Compression Finalize Lua
-status: approved
+status: committed
 plan_review_round: 2
 workflow_mode: NORMAL
 workflow_mode_source: explicit
@@ -30,10 +30,10 @@ prerequisites:
     - "本任务需要真实 Redis（compose test 栈）；不需要 Kafka broker / Mongo / LLM / HTTP"
 branch: "feat/STM-008-compression-finalize-lua"
 created_at: "2026-08-10 23:01 UTC"
-updated_at: "2026-08-10 23:30 UTC"
+updated_at: "2026-08-10 23:50 UTC"
 approval_gates:
-  planning_docs: "Round 2 PLAN_APPROVED; Human PLAN_APPROVED Amendment 001"
-  implementation: blocked_until_plan_approved
+  planning_docs: "Round 2 PLAN_APPROVED; Human PLAN_APPROVED Amendment 001; plan_commit fa3e1bf33e889dbb6180315eda896b954a02df8f"
+  implementation_plan: "status=committed; PR #27 OPEN; next_action=WAITING_FOR_PR_MERGE"
 ```
 
 ### 1.1 编排与门禁（本轮）
@@ -264,7 +264,7 @@ new = max(0, 770 - 300 - 50 + 80) = max(0, 500) = 500
 
 单次 `EVAL`/`EVALSHA` 内完成 **全部** mutation；禁止 Python 多步 Redis 写回。
 
-#### C8 — Precondition 顺序（固定 10 步）+ Mutation 顺序
+#### C8 — Precondition 顺序（固定 12 步）+ Mutation 顺序
 
 **Preconditions（失败即返回；mutation 前零副作用）：**
 
@@ -675,6 +675,8 @@ release_phases:
 |---|---|---|---|---|
 | 2026-08-10 23:01 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | OI-004/OI-005 open acknowledged；待 Plan Review |
 | 2026-08-10 23:30 UTC | Planner Amendment 001 | HM-1/HM-2 + SHOULD_FIX；I18 修正；Integration 27 场景；`plan_review_round: 2` | 未运行（规划-only） | Round 1 MUST_FIX 闭合；待 Round 2 Plan Review |
+| 2026-08-10 23:50 UTC | IMPLEMENTATION_RELEASE | implementation `d619ca2f7e2e20d2d944794c2ca21e8e6d5752ef`；PR #27 OPEN | scoped unit 20 / contract 4 / integration 27；full unit 393 / contract 80；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE` |
+| 2026-08-10 23:45 UTC | Developer 实施 | 枚举/模型/服务；`compression_finalize.lua`（12 precondition + 9 mutation）；script + repository；unit 13 + contract 4 + integration 27 | unit+contract PASS；integration 27 PASS（Docker Redis）；full unit 393 / contract 80；ruff PASS；mypy PASS | C8 标题 10→12 步修正；无 Kafka/Mongo/LLM；OI-004/OI-005 remain open |
 
 ---
 
@@ -684,22 +686,42 @@ release_phases:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `src/memory_system/domain/enums/compression_finalize.py` | 创建 |
+| `src/memory_system/domain/models/compression_finalize.py` | 创建 |
+| `src/memory_system/domain/services/compression_finalize_service.py` | 创建 |
+| `src/memory_system/infrastructure/redis/scripts/compression_finalize.lua` | 创建 |
+| `src/memory_system/infrastructure/redis/compression_finalize_script.py` | 创建 |
+| `src/memory_system/infrastructure/redis/compression_finalize_repository.py` | 创建 |
+| `src/memory_system/domain/enums/__init__.py` | 修改 |
+| `src/memory_system/domain/models/__init__.py` | 修改 |
+| `src/memory_system/domain/services/__init__.py` | 修改 |
+| `src/memory_system/infrastructure/redis/__init__.py` | 修改 |
+| `tests/unit/test_compression_finalize_models.py` | 创建 |
+| `tests/unit/test_compression_finalize_lua_mapping.py` | 创建 |
+| `tests/unit/test_compression_finalize_service.py` | 创建 |
+| `tests/contract/test_stm008_contract.py` | 创建 |
+| `tests/integration/test_compression_finalize_redis.py` | 创建 |
+| `02_开发管理/tasks/STM-008-compression-finalize-lua.md` | 修改（C8 标题 + 执行记录） |
+| `02_开发管理/progress.md` | 修改 |
+| `02_开发管理/master_plan.md` | 修改 |
 
 ### 与原计划的差异
 
-暂无。
+- C8 标题由「固定 10 步」修正为「固定 12 步」（与正文 12 precondition 一致）。
+- 无业务语义偏差。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit | `uv run pytest tests/unit/test_compression_finalize_*.py -q` | **PASS**（13） |
+| Contract | `uv run pytest tests/contract/test_stm008_contract.py -q` | **PASS**（4） |
+| Integration | `uv run pytest tests/integration/test_compression_finalize_redis.py -q` | **PASS**（27；Docker Redis） |
+| E2E | — | **N/A** |
+| Full unit | `uv run pytest tests/unit -q` | **PASS**（393） |
+| Full contract | `uv run pytest tests/contract -q` | **PASS**（80） |
+| Ruff | `uv run ruff check .` | **PASS** |
+| Mypy | `uv run mypy src tests scripts` | **PASS** |
 
 ### Review 结果
 
@@ -714,12 +736,16 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: "feat/STM-008-compression-finalize-lua"
+plan_commit: "fa3e1bf33e889dbb6180315eda896b954a02df8f"
+implementation_commit: "d619ca2f7e2e20d2d944794c2ca21e8e6d5752ef"
+implementation_commit_message: "feat(stm): add compression finalize lua and domain service"
+status_record_committed: null  # pending this docs(status): record commit SHA
+pr: "#27"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/27"
+pr_state: OPEN
 ```
 
 ### 最终状态
 
-`planned`
+`committed`
