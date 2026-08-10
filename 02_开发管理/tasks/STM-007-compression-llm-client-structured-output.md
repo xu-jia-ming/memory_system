@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-007
 task_name: Compression LLM Client + Structured Output
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -25,10 +25,10 @@ prerequisites:
     - "不需要 Redis / Mongo / Kafka live I/O；不需要真实 DeepSeek 作为默认 CI 门禁"
 branch: "feat/STM-007-compression-llm-client-structured-output"
 created_at: "2026-08-10 14:05 UTC"
-updated_at: "2026-08-10 22:40 UTC"
+updated_at: "2026-08-10 22:50 UTC"
 approval_gates:
   planning_docs: "PLAN_APPROVED；plan_commit c5c54c53ae04e323b70c8648c88e0e09b41ede2b"
-  implementation_plan: "status=committed；PR #26 OPEN；next_action=WAITING_FOR_PR_MERGE"
+  implementation_plan: "status=completed；PR #26 MERGED；merge 7a72b3a4c159032a411bd48dc920e52973ddab3e"
 open_issues_acknowledged:
   - "OI-004 — open；Mongo token boundary；**不在 STM-007 scope**"
   - "OI-005 — open；service naming；**不在 STM-007 scope**"
@@ -598,7 +598,8 @@ release_phases:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-10 22:30 UTC | Step 1–4 实施 | 白名单 15 文件（8 src + 7 tests） | unit 18 / contract 4 / integration(fake) 5 PASS；ruff PASS；mypy PASS | Client/Service 分层；`run_compression_llm` 唯一入口；transport retry=0 |
-| 2026-08-10 22:40 UTC | IMPLEMENTATION_RELEASE | implementation `87dc9c4a442aff113ac220b9604010aa135f721e`；PR #26 OPEN | scoped 29 / full unit 369 / contract 76；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE` |
+| 2026-08-10 22:40 UTC | IMPLEMENTATION_RELEASE | implementation `87dc9c4a442aff113ac220b9604010aa135f721e`；record `357893a75fe6c95950c6e55d17ef4354194dfc20`；PR #26 OPEN | scoped 29 / full unit 369 / contract 76；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE` |
+| 2026-08-10 14:45 UTC | POST_MERGE_CLEANUP | PR #26 MERGED（`7a72b3a4c159032a411bd48dc920e52973ddab3e` mergedAt `2026-08-10T14:45:58Z`）；docs(status): complete on main；删 exact feat | scoped unit 20 / contract 4 / integration(fake) 5 / total 29；full unit 369 / contract 76；ruff PASS；mypy PASS；real integration SKIPPED | `status=completed`；STM-008 READY_FOR_PLANNING only；OI-004/OI-005 remain open |
 
 ---
 
@@ -631,9 +632,10 @@ release_phases:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | `uv run pytest tests/unit/test_compression_llm_service.py tests/unit/test_deepseek_llm_client.py -q` | PASS (18) |
+| Unit (scoped) | `uv run pytest tests/unit/test_compression_llm_service.py tests/unit/test_deepseek_llm_client.py -q` | PASS (20) |
 | Contract | `uv run pytest tests/contract/test_compression_llm_contract.py -q` | PASS (4) |
-| Integration | `uv run pytest tests/integration/test_compression_llm_fake.py -q` | PASS (5) |
+| Integration (fake) | `uv run pytest tests/integration/test_compression_llm_fake.py -q` | PASS (5) |
+| Integration (real) | `RUN_COMPRESSION_LLM_INTEGRATION=1 uv run pytest tests/integration/test_compression_llm_integration.py -q` | SKIPPED (opt-in, non-blocking) |
 | E2E | N/A | N/A |
 | Ruff | `uv run ruff check .` | PASS |
 | Mypy | `uv run mypy src tests scripts` | PASS |
@@ -643,9 +645,10 @@ release_phases:
 ```yaml
 p0: 0
 p1: 0
-p2: 0
+p2: 1
+p2_note: "User prompt JSON literal — non-blocking"
 p3: 0
-review_report: null
+review_report: CODE_REVIEW_APPROVED
 ```
 
 ### Git 记录
@@ -655,15 +658,15 @@ branch: "feat/STM-007-compression-llm-client-structured-output"
 plan_commit: "c5c54c53ae04e323b70c8648c88e0e09b41ede2b"
 implementation_commit: "87dc9c4a442aff113ac220b9604010aa135f721e"
 implementation_commit_message: "feat(stm): add compression llm client and structured output service"
-status_record_committed: null  # pending this docs(status): record commit SHA
+status_record_committed: "357893a75fe6c95950c6e55d17ef4354194dfc20"
 pr: "#26"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/26"
-pr_state: OPEN
-merge_commit: null
-merged_at: null
-status_record_completed: null  # pending POST_MERGE docs(status): complete SHA
+pr_state: MERGED
+merge_commit: "7a72b3a4c159032a411bd48dc920e52973ddab3e"
+merged_at: "2026-08-10T14:45:58Z"
+status_record_completed: null  # pending this docs(status): complete commit SHA
 ```
 
 ### 最终状态
 
-`committed`
+`completed`

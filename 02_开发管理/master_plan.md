@@ -275,7 +275,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-004 | 上下文一致性读取 Lua | §1.2.1, §1.2.3 | STM-002 | completed |
 | STM-005 | Mongo `context_archive` create/reuse | §1.2.2 | STM-003, DEV-004 | completed |
 | STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | completed |
-| STM-007 | Compression LLM Client + Structured Output | §1.2.5, §3.9 | DEV-002 | planned |
+| STM-007 | Compression LLM Client + Structured Output | §1.2.5, §3.9 | DEV-002 | completed |
 | STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | planned |
 | STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | planned |
 | STM-010 | Session Close | §1.2.3, §1.2.7 | STM-006, STM-009 | planned |
@@ -354,13 +354,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **正式前置依赖**：DEV-002 — **SATISFIED**；STM-001 — **SATISFIED**；STM-006 — **SATISFIED**。
 - **测试**：Unit 13 + Contract 4 + Integration(fake) 5；opt-in 真实 DeepSeek（`RUN_COMPRESSION_LLM_INTEGRATION=1`）；默认 CI 禁止计费调用。
 - **计划文件**：`02_开发管理/tasks/STM-007-compression-llm-client-structured-output.md`
-- **状态备注**：`planned`（baseline `dc74311d6658c87cb164283f9ec775e012aa93f5`；§5.0 十六项 Contract 已闭合；OI-004/OI-005 OUT OF SCOPE）；**不得自动实施**；**不得触碰 DEV-006/PR#13**。
+- **状态备注**：`completed`（plan_commit `c5c54c53ae04e323b70c8648c88e0e09b41ede2b`；implementation `87dc9c4a442aff113ac220b9604010aa135f721e`；record `357893a75fe6c95950c6e55d17ef4354194dfc20`；PR #26 MERGED https://github.com/xu-jia-ming/memory_system/pull/26 merge `7a72b3a4c159032a411bd48dc920e52973ddab3e` mergedAt `2026-08-10T14:45:58Z`；`workflow_mode=NORMAL`）；CompressionLlmService + DeepSeekLlmClient + FakeLlmClient；public API `run_compression_llm(...)`；CompressionLlmInput/Output strict structured-output validation；client single provider call `json_object` transport retry=0；service validation/parse/bounded schema retry max 2/token estimation/`compression_output_too_large`；provider `deepseek-v4-flash` temperature=0 thinking=disabled stream=false DEV-002 LLMSettings；STM-008 handoff `CompressionFinalizeLlmPayload`；scoped unit 20 / contract 4 / integration(fake) 5 / total 29；full unit 369 / contract 76；ruff PASS；mypy PASS；real integration SKIPPED；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1；OI-004 remains open；OI-005 remains open（partial evidence only from STM-006）；NOT implemented: Redis lock/pending/Kafka/Mongo/compression_version/trim/Finalize Lua/STM-009 Coordinator；feat 分支待删；**STM-008 READY_FOR_PLANNING only**（prerequisites STM-006+STM-007 SATISFIED；不得自动开始）；**不得触碰 DEV-006/PR#13**。
 
 #### STM-008
 
 - **目标**：Finalize Lua：锁 owner、`compression_version`、pending/head 校验、更新摘要、LTRIM、清 pending。
 - **非目标**：多轮策略。
+- **正式前置依赖**：STM-006、STM-007 — **SATISFIED**。
 - **测试**：Integration（version_conflict、pending 不匹配）。
+- **状态备注**：prerequisites STM-006+STM-007 **SATISFIED** — **READY_FOR_PLANNING only**（不得自动开始规划或实施）。
 
 #### STM-009
 
@@ -938,5 +940,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-007`（`planned`；plan `02_开发管理/tasks/STM-007-compression-llm-client-structured-output.md`）；baseline `dc74311d6658c87cb164283f9ec775e012aa93f5`；OI-004/OI-005 OUT OF SCOPE；**不** Redis/Mongo/Kafka/Finalize/Coordinator；**不** 触碰 DEV-006/PR #13；本轮只规划不实施 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner；`next_action=计划审查` |
+
+### CHANGE-044
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-007 POST_MERGE_CLEANUP：PR #26 MERGED（`7a72b3a4c159032a411bd48dc920e52973ddab3e` mergedAt `2026-08-10T14:45:58Z`）；docs(status): complete on main；删 exact feat |
+| 受影响任务 | `STM-007`（`completed`）；`STM-008`（prerequisites STM-006+STM-007 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-011`（prerequisite STM-006 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-009` NOT ready（needs STM-008）；OI-004/OI-005 remain open；**不** 自动启动 STM-008/011；**不** 触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否** |
+| 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-008 READY_FOR_PLANNING only` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
