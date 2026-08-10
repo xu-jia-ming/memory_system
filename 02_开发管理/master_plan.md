@@ -358,11 +358,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-008
 
-- **目标**：Finalize Lua：锁 owner、`compression_version`、pending/head 校验、更新摘要、LTRIM、清 pending。
-- **非目标**：多轮策略。
+- **目标**：单 Redis Lua 原子 Finalize：校验压缩锁 owner、`compression_version` 精确匹配后 +1、pending 四字段精确匹配、List 头部首尾 `message_id` 边界、`estimated_tokens` 按 §1000–1006 公式重算、写 `compressed_context`、按 `pending_archive_message_count` `LTRIM` 头部、清空 pending 四字段（codec `""`/`"0"`）、更新 `updated_time`、compare-and-delete 释放锁；领域服务消费 STM-007 `CompressionFinalizeLlmPayload`。
+- **非目标**：Compression LLM；Kafka publish；Mongo archive mutation；Coordinator / HTTP；Session Close；STM-011 republish；message_ids Set 裁剪；多轮压缩策略；DEV-006/PR#13。
+- **计划文件**：`02_开发管理/tasks/STM-008-compression-finalize-lua.md`
+- **规格章节**：§1.2.1（规则 4–6）、§1.2.5（§991–1018）、§1.2.6、§1.2.7、§3.28（§5845 in-flight）。
 - **正式前置依赖**：STM-006、STM-007 — **SATISFIED**。
-- **测试**：Integration（version_conflict、pending 不匹配）。
-- **状态备注**：prerequisites STM-006+STM-007 **SATISFIED** — **READY_FOR_PLANNING only**（不得自动开始规划或实施）。
+- **测试**：Unit（Input/payload handoff/ValidationError/Lua 映射）+ Contract（枚举/TOCTOU/无 message_ids SREM）+ Redis Integration **27 场景**（I18 Case A token 分解证明 new=500、I27 clamp 0、M1–M4 边界、畸形 Redis 整数 I24–I25、畸形 message JSON I26、closing in-flight、并发 duplicate 单次 version 迁移、失败零 mutation、retry 无 double-trim、无 Kafka/Mongo/LLM 副作用）。
+- **规划备注**：§5.0 十六项 Contract 闭合；Amendment 001（`plan_review_round: 2`）：HM-1 五项 token 变量 + I18 算术修正；HM-2 `max(0,…)` clamp 语义；畸形 `compression_version`/`estimated_tokens` → `invalid_session_state`；`ARGV[11]==ARGV[7]` defense；`closing` + 非空 pending 允许 in-flight Finalize（§733/§5845）；`archived_message_tokens` 调用方供给（OI-004 open）；OI-005 partial evidence acknowledged；成功路径锁在 Lua 内释放。
+- **状态备注**：`planned`（`plan_review_round: 2`；baseline `ff9a609009f2a151f2e1a4bf41e24be3bc3a2467`；branch plan `feat/STM-008-compression-finalize-lua`；`workflow_mode=NORMAL`）；**不得自动实施**；OI-004/OI-005 remain open；**STM-009 NOT ready until STM-008 completed**。
 
 #### STM-009
 
@@ -950,5 +953,25 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-007`（`completed`）；`STM-008`（prerequisites STM-006+STM-007 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-011`（prerequisite STM-006 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-009` NOT ready（needs STM-008）；OI-004/OI-005 remain open；**不** 自动启动 STM-008/011；**不** 触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否** |
 | 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-008 READY_FOR_PLANNING only` |
+
+### CHANGE-045
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | 用户显式 START_EXISTING_TASK=STM-008 + WORKFLOW_MODE=NORMAL；Planner 初版 Task Plan |
+| 受影响任务 | `STM-008`（`planned`；plan `02_开发管理/tasks/STM-008-compression-finalize-lua.md`）；baseline `ff9a609009f2a151f2e1a4bf41e24be3bc3a2467`；OI-004/OI-005 OUT OF SCOPE（remain open）；**不** LLM/Kafka/Mongo/Coordinator/HTTP/Close/STM-011；**不** 触碰 DEV-006/PR #13；本轮只规划不实施 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner；`next_action=计划审查` |
+
+### CHANGE-046
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-10 |
+| 原因 | STM-008 Plan Review Round 1 `PLAN_REJECTED`；Planner Amendment 001（HM-1 token 公式/I18 算术、HM-2 clamp 语义、吸收 SHOULD_FIX） |
+| 受影响任务 | `STM-008`（`planned`；`plan_review_round: 2`；Integration **27** 场景；I18 new=500；I27 clamp 0）；OI-004/OI-005 remain open；**不** 实施；**不** 触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner；`next_action=计划审查 Round 2` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
