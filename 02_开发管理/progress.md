@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-002 committed
+current_phase: Phase 1 — STM-002 completed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-002
-current_task_status: committed
-current_branch: feat/STM-002-session-creation
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -55,13 +55,13 @@ formal_DEV-OPS-006_workflow_mode: NORMAL
 formal_DEV-OPS-006_root_cause_classification: A
 formal_DEV-OPS-006_note: "Phase 0 baseline hygiene before STM-001 completed；baseline GREEN；STM-001 已进入规划（planned）"
 # Verified baseline（DEV-OPS-006 tested / merge evidence；STM-001 规划轮次 HEAD）
-latest_commit: 6f2081da6266282470948ecac8e62ef3ae969c15
+latest_commit: efb39bf0bbbb408626e3d187d81b889dafc7a351
 main_tip_at_tested: 09b045be1429716eab184e4565beb30cf2856b28
 planning_baseline_head: 6721a54066fb0bc67d9c0313ab69e10bcaef2804
-verified_unit: "254 passed / 0 failed (uv run pytest tests/unit -q @ 2026-08-10 STM-001 tested)"
-verified_contract: "49 passed (uv run pytest tests/contract -q @ 2026-08-10 STM-001 tested)"
-verified_ruff: "PASS — All checks passed (uv run ruff check . @ 2026-08-10 STM-001 tested)"
-verified_mypy: "PASS — Success: no issues found in 99 source files (uv run mypy src tests scripts @ 2026-08-10 STM-001 tested)"
+verified_unit: "269 passed / 0 failed (uv run pytest tests/unit -q @ 2026-08-10 STM-002 tested)"
+verified_contract: "59 passed (uv run pytest tests/contract -q @ 2026-08-10 STM-002 tested)"
+verified_ruff: "PASS — All checks passed (uv run ruff check . @ 2026-08-10 STM-002 tested)"
+verified_mypy: "PASS — Success: no issues found in 108 source files (uv run mypy src tests scripts @ 2026-08-10 STM-002 tested)"
 planning_unit_collect: 216
 planning_unit_known_failure: "RESOLVED by DEV-OPS-006 allowlist + invariant"
 planning_contract_verified: "47 passed (uv run pytest tests/contract -q @ planning)"
@@ -109,27 +109,29 @@ formal_DEV-003-002_plan_commit: 7172e918647c1853d0982ce979b299920d96a0cb
 formal_DEV-003-002_implementation_commit: 715e985e4e4fee35a3b12f4517af445081b2c5d7
 formal_DEV-003-002_pr: "#14"
 formal_DEV-003-002_merge_commit: 4d894cc61d0fdd4e12149cd86f2ab55072deb8b5
-# STM-002 implementation evidence（IMPLEMENTATION_RELEASE；PR #20 OPEN）
-formal_STM-002_status: committed
+# STM-002 completed evidence（POST_MERGE_CLEANUP；PR #20 MERGED）
+formal_STM-002_status: completed
 formal_STM-002_plan_file: 02_开发管理/tasks/STM-002-session-creation.md
 formal_STM-002_plan_commit: ac84b31210001f22df4a049d28ff1e90618c244d
 formal_STM-002_implementation_commit: 3440048f8a304219ec7bbddf3c192089cac6e8cb
 formal_STM-002_implementation_commit_message: "feat(stm): add session creation API and redis working memory init"
-formal_STM-002_status_record_committed: null  # pending this docs(status): record commit SHA
-formal_STM-002_status_record_completed: null
+formal_STM-002_status_record_committed: 1499fd23ad4aa92c6e9dd89f087d77b007674ff3
+formal_STM-002_status_record_completed: null  # pending this docs(status): complete commit SHA
 formal_STM-002_pr: "#20"
 formal_STM-002_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/20"
-formal_STM-002_pr_state: OPEN
+formal_STM-002_pr_state: MERGED
+formal_STM-002_merge_commit: efb39bf0bbbb408626e3d187d81b889dafc7a351
+formal_STM-002_merged_at: "2026-08-10T03:11:25Z"
 formal_STM-002_branch: feat/STM-002-session-creation
 formal_STM-002_workflow_mode: NORMAL
-formal_STM-002_scoped_unit: "25 passed (test_session_create_service + test_working_memory_redis_codec + test_stm002_contract)"
+formal_STM-002_scoped_unit: "25 passed (test_session_create_service + test_working_memory_redis_codec)"
 formal_STM-002_scoped_contract: "10 passed (test_stm002_contract)"
 formal_STM-002_integration: "3 passed (test_session_create_redis)"
 formal_STM-002_full_unit: "269 passed"
 formal_STM-002_full_contract: "59 passed"
 formal_STM-002_ruff: PASS
 formal_STM-002_mypy: "PASS — 108 source files"
-formal_STM-002_note: "POST /api/v1/memory/session；UUID v4；HSET WM meta；HTTP 200 status=created；Amendment 001 四项落实；PR #20 OPEN 待 merge"
+formal_STM-002_note: "POST_MERGE_CLEANUP；POST /api/v1/memory/session；X-API-Key；UUID v4；WM Hash status=active compression_version=0；HTTP 200 status=created；Amendment 001 四项落实；STM-002 scoped 25 / integration 3 / full unit 269 / contract 59；ruff PASS；mypy PASS；feat 分支待删"
 previous_task: STM-001
 previous_task_status: completed
 previous_implementation_commit: 66541cf3727d5735dd977e597acd6943fd997fb4
@@ -210,8 +212,8 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
 deferred_business_task: null
 deferred_business_task_status: null
-deferred_business_task_note: "STM-002 committed；PR #20 OPEN 待人工 merge"
-next_action: 人工 merge PR #20（STM-002）
+deferred_business_task_note: "STM-002 completed；PR #20 MERGED；STM-003 READY_FOR_PLANNING only"
+next_action: 等待用户显式指定下一任务（STM-003 READY_FOR_PLANNING only；不得自动开始实施）
 human_plan_approved_at: "2026-08-10 10:44 UTC"
 human_plan_approved_note: "STM-002 Amendment 001 PLAN_APPROVED；Developer 实施 tested；READY_FOR_CODE_REVIEW"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
@@ -282,10 +284,11 @@ governance_deviation:
 | DEV-007 | SiliconFlow Embedding Client MVP | 2026-08-09 08:24 | `88c442e` | `b7916ea79a2d2ec7bf25873ec2ba50ad64041775` | #17 merged |
 | DEV-OPS-006 | Phase 0 Baseline Hygiene Before STM-001 | 2026-08-09 12:44 | `b9f049a` | `3e727b3dc1a168863d7fa6e8d52a175d36de4644` | #18 merged |
 | STM-001 | Token 估算、WM Key/字段模型、配置校验 | 2026-08-10 02:11 | `66541cf` | `6f2081da6266282470948ecac8e62ef3ae969c15` | #19 merged |
+| STM-002 | Session 创建 | 2026-08-10 03:11 | `3440048` | `efb39bf0bbbb408626e3d187d81b889dafc7a351` | #20 merged |
 
 ## 规格阻塞项
 
-**STM-002**：**committed** — `POST /api/v1/memory/session` + Redis WM meta 初始化；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；PR [#20](https://github.com/xu-jia-ming/memory_system/pull/20) **OPEN**；待人工 merge。
+**STM-002**：**completed** — `POST /api/v1/memory/session` + Redis WM meta 初始化；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；record `1499fd23ad4aa92c6e9dd89f087d77b007674ff3`；PR [#20](https://github.com/xu-jia-ming/memory_system/pull/20) **MERGED**（merge `efb39bf0bbbb408626e3d187d81b889dafc7a351` mergedAt `2026-08-10T03:11:25Z`）；STM-002 scoped **25 passed** / integration **3 passed**；full unit **269 passed** / contract **59 passed**；ruff **PASS**；mypy **PASS**；`POST /api/v1/memory/session` + `X-API-Key` + UUID v4 + WM Hash `status=active` `compression_version=0` + HTTP 200；Phase 1 STM-002 **completed**。
 
 **STM-001**：**completed** — deterministic heuristic token estimator；WM key/field contract；mandatory ContextSettings strict inequality validation evidence；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；record `ecc15af80ab18e5fe2905b5f5cd4f371f34127a0`；PR [#19](https://github.com/xu-jia-ming/memory_system/pull/19) **MERGED**（merge `6f2081da6266282470948ecac8e62ef3ae969c15`）；STM-001 scoped unit **38 passed** / contract **2 passed**；full unit **254 passed** / contract **49 passed**；ruff **PASS**；mypy **PASS**；`validators.py` 未改；Phase 1 STM-001 **completed**。
 
@@ -299,7 +302,7 @@ governance_deviation:
 
 **OI-011 / TEI**：已完成（12g contract 保留；本 hygiene 不修改）。
 
-**下游**：**STM-002** `status=planned`；Amendment 001 已吸收 Human Contract；`next_action=计划审查`；**不得自动开始 STM-002 实施**。
+**下游**：**STM-003** `status=planned`；prerequisites STM-002 **SATISFIED** — **READY_FOR_PLANNING only**；**不得自动开始 STM-003 实施**。
 
 ## 实施前置条件
 
@@ -372,7 +375,7 @@ DEV-OPS-002 产品/流程未决项见其 Task Plan §11.2（OI-OPS-006–013）�
 | RELEASE_COMPLETED（OI-012 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status) 落盘；exact feat 待删 |
 | CODE_REVIEW_APPROVED（STM-001 实现） | **已通过**（P0=0 / P1=0）；`CODE_REVIEW_APPROVED` |
 | RELEASE_COMPLETED（STM-001 IMPLEMENTATION_RELEASE） | **已完成**；implementation_commit `66541cf3727d5735dd977e597acd6943fd997fb4`；record `ecc15af80ab18e5fe2905b5f5cd4f371f34127a0`；PR #19 MERGED（`6f2081da6266282470948ecac8e62ef3ae969c15`） |
-| RELEASE_COMPLETED（STM-001 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status): complete 落盘；exact feat 待删 |
+| RELEASE_COMPLETED（STM-002 POST_MERGE_CLEANUP） | **本轮**；completed 治理待本 docs(status): complete 落盘；exact feat 待删 |
 
 ## 固定 Git 初始化流程（DEV-001 历史）
 
@@ -608,6 +611,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 02:38 UTC | STM-002 | planned（Amendment 001） | Planner 吸收 Human Contract 四项决议 + Plan Review SHOULD_FIX；§5/§7/§8/§10 修订；§5 Step 6 与 §6.1 测试路径统一 | 未实施、未 Git 写；`next_action=计划审查 Round 2`；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 02:52 UTC | STM-002 | tested | Developer 实施 Session Create API + Redis WM meta；Unit/Contract/Integration PASS | 未 commit；`next_action=Code Review` |
 | 2026-08-10 03:03 UTC | STM-002 | committed | IMPLEMENTATION_RELEASE；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；PR #20 OPEN | 待人工 merge |
+| 2026-08-10 03:11 UTC | STM-002 | committed → completed | PR #20 MERGED（`efb39bf0bbbb408626e3d187d81b889dafc7a351`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | STM-003 READY_FOR_PLANNING only；**不得启动 STM-003 实施**；**不得触碰 DEV-006/PR#13** |
 
 ## DEV-OPS-003 Git 流程（正式任务；已完成；STRICT）
 
@@ -640,8 +644,9 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **STM-002**（当前）：`committed` — implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；PR #20 OPEN；`next_action=人工 merge PR #20`。
-2. **STM-001**：`completed`（PR #19 MERGED `6f2081da6266282470948ecac8e62ef3ae969c15`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`；unit **254** / contract **49** / ruff / mypy 全绿）。
-3. **DEV-OPS-006**：`completed`（PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）。
-4. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；不得触碰。
-5. **DEV-007 / OI-012 / OI-011**：`completed`（保留）。
+1. **STM-002**：`completed`（PR #20 MERGED `efb39bf0bbbb408626e3d187d81b889dafc7a351`；implementation `3440048f8a304219ec7bbddf3c192089cac6e8cb`；scoped **25** / integration **3** / full unit **269** / contract **59** / ruff / mypy 全绿）。
+2. **STM-003**：`planned` — prerequisites STM-002 **SATISFIED**；**READY_FOR_PLANNING only**；`next_action=等待用户显式指定下一任务`；**不得自动开始实施**。
+3. **STM-001**：`completed`（PR #19 MERGED `6f2081da6266282470948ecac8e62ef3ae969c15`；implementation `66541cf3727d5735dd977e597acd6943fd997fb4`）。
+4. **DEV-OPS-006**：`completed`（PR #18 MERGED `3e727b3dc1a168863d7fa6e8d52a175d36de4644`）。
+5. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；不得触碰。
+6. **DEV-007 / OI-012 / OI-011**：`completed`（保留）。
