@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-013 implementation
+current_phase: Phase 1 — STM-013 blocked (scope remediation)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-013
-current_task_status: implemented
+current_task_status: blocked
 current_branch: feat/STM-013-short-term-memory-e2e
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -23,13 +23,26 @@ dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/STM-013-short-term-memory-e2e.md
 workflow_mode_for_this_task: NORMAL
-formal_STM-013_status: implemented
+formal_STM-013_status: blocked
+formal_STM-013_implementation_commit: 975e6029d9aef98988c65a0556cb74695d61adf6
+formal_STM-013_implementation_commit_note: "superseded by scope remediation; production paths reverted on feat"
+formal_STM-013_pr: "#30"
+formal_STM-013_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/30"
+formal_STM-013_pr_state: OPEN
+formal_STM-013_release_gate: BLOCKED_BY_DEFECT_FIX
+formal_STM-013_blocking_task: DEV-OPS-008
+formal_STM-013_blocking_reason: "C1 aiokafka 0.13 runtime bootstrap_connected compatibility + C2 Elasticsearch 9.4 mapping-read element_type compatibility; production fixes OUT_OF_SCOPE; removed from PR #30 effective diff"
+formal_STM-013_code_review: "CODE_REVIEW_APPROVED superseded by remediation diff; P0=0 P1=0 on 975e6029 only"
+formal_STM-013_code_review_required: REQUIRED_AFTER_DEV_OPS_008_AND_REVALIDATION
+formal_STM-013_tests_init_py: "tests/__init__.py — mypy package resolution only (test-tooling adjunct; not production)"
+formal_DEV-OPS-008_status: candidate_blocker
+formal_DEV-OPS-008_candidate_title: "Compose test-stack runtime compatibility (aiokafka 0.13 + ES 9.4 mapping API)"
 formal_STM-013_plan_commit: 39fab9e564d005d7a8c6409c7b293a6d337741f8
 formal_STM-013_branch: feat/STM-013-short-term-memory-e2e
 formal_STM-013_plan_file: 02_开发管理/tasks/STM-013-short-term-memory-e2e.md
 formal_STM-013_prerequisite: SATISFIED
 formal_STM-013_workflow_mode: NORMAL
-formal_STM-013_note: "E2E E1–E4 PASS；tests/e2e + @pytest.mark.integration；Fixture A/B；E2E 暴露 aiokafka bootstrap_connected + ES element_type 兼容性修复；scoped E2E 79s；unit+contract 547 PASS；ruff PASS；mypy PASS；.env 备份恢复 verified"
+formal_STM-013_note: "E2E implemented on feat; scope remediation removed C1/C2 from PR #30; BLOCKED_BY_DEFECT_FIX until DEV-OPS-008 merges; E1–E4 E2E expected FAIL on current main without blocker fixes"
 formal_STM-013_plan_review_round: 2
 formal_STM-010_status: completed
 formal_STM-010_plan_file: 02_开发管理/tasks/STM-010-session-close.md
@@ -466,9 +479,9 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 deferred_business_task: null
 deferred_business_task_status: null
 deferred_business_task_note: null
-next_action: "Code Review"
-last_role_result: READY_FOR_CODE_REVIEW
-blocking_reason: null
+next_action: "DEV-OPS-008 PLANNING (human explicit); STM-013 revalidate after DEV-OPS-008 merge"
+last_role_result: SCOPE_REMEDIATION_COMPLETED
+blocking_reason: "BLOCKED_BY_DEFECT_FIX — DEV-OPS-008 (C1+C2); PR #30 OPEN must not merge"
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
 human_plan_approved_at: "2026-08-10T12:35:00Z"
 human_plan_approved_note: "Human PLAN_APPROVED STM-006 Amendment 001；Round 2 Plan Reviewer PLAN_APPROVED BLOCKER=0 MUST_FIX=0；absorb R2 SHOULD_FIX count/tokens fail-closed；scope lock+pending+Kafka only"
@@ -501,6 +514,28 @@ governance_deviation:
   remediation: "Governance record only; no test re-run; no status revert; no implementation rollback"
   future_rule: "Acceptance does not relax fail-closed; future failures require report + authorization"
   ready_for_code_review: true
+# STM-013 scope remediation — defect provenance for DEV-OPS-008 (do not merge via STM-013)
+stm_013_scope_remediation:
+  approved_at: "2026-08-11 12:12 UTC"
+  remediation_plan: REMEDIATION_PLAN_APPROVED
+  source_implementation_commit: 975e6029d9aef98988c65a0556cb74695d61adf6
+  plan_commit_baseline: 39fab9e564d005d7a8c6409c7b293a6d337741f8
+  out_of_scope_paths:
+    - src/memory_system/infrastructure/runtime.py
+    - scripts/migrations/003_elasticsearch_memory_v1.py
+  c1_runtime_aiokafka:
+    path: src/memory_system/infrastructure/runtime.py
+    baseline_failure: "AttributeError AIOKafkaClient has no attribute bootstrap_connected after kafka_producer.start() (aiokafka>=0.13)"
+    exposed_by: "STM-013 Fixture A memory-api container lifespan; Fixture B hybrid create_app_state"
+    intended_fix: "hasattr bootstrap_connected guard; else kafka_ready=True after successful start()"
+    restore_command: "git show 975e6029 -- src/memory_system/infrastructure/runtime.py"
+  c2_es_mapping_read:
+    path: scripts/migrations/003_elasticsearch_memory_v1.py
+    baseline_failure: "assert_mapping_compatible ValueError element_type None != float on ES 9.4 GET mapping API response"
+    exposed_by: "memory-api check_elasticsearch readiness; init-infra upgrade on existing index"
+    intended_fix: "element_type compared only when both actual and expected non-None"
+    restore_command: "git show 975e6029 -- scripts/migrations/003_elasticsearch_memory_v1.py"
+  blocking_task_candidate: DEV-OPS-008
 ```
 ## 测试状态
 
@@ -903,6 +938,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 08:02 UTC | STM-004 | committed → completed | PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；OI-009 resolved | STM-005 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 14:05 UTC | STM-007 | planned | 创建 Task Plan `02_开发管理/tasks/STM-007-compression-llm-client-structured-output.md`；master_plan CHANGE-043；progress 规划态回写 | baseline `dc74311`；§5.0 十六项 Contract 闭合；OI-004/OI-005 OUT OF SCOPE | `next_action=计划审查`；未实施、未 Git 写；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 22:40 UTC | STM-007 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `87dc9c4a442aff113ac220b9604010aa135f721e`；PR #26 OPEN；docs(status): record on feat | scoped 29 / full unit 369 / contract 76；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；**不得触碰 DEV-006/PR#13** |
+| 2026-08-11 04:12 UTC | STM-013 | scope remediation | REMEDIATION_PLAN_APPROVED；SCOPE_REMEDIATION：C1/C2 从 PR #30 effective diff 移除；`release_gate=BLOCKED_BY_DEFECT_FIX`；blocking `DEV-OPS-008`；provenance `975e6029` 记入 progress | 待 remediation commit push；E2E 预期 FAIL；PR #30 OPEN 不得 merge；CODE_REVIEW superseded | **不得 merge PR #30**；**不得实施 DEV-OPS-008 本轮**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-11 02:14 UTC | STM-010 | committed → completed | POST_MERGE_CLEANUP：PR #29 MERGED（`722e42d9e24d085b0ed671478730952ef7c92ad6` mergedAt `2026-08-11T02:14:24Z`）；docs(status): complete on main；删 exact feat | scoped unit 36 / contract 11 / integration 19；full unit 446 / contract 101；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=3；OI-003/OI-004 resolved；STM-011/STM-013 READY_FOR_PLANNING only；STM-012 NOT ready；**不得触碰 DEV-006/PR#13** |
 | 2026-08-11 01:47 UTC | STM-010 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；Amendment 001；治理回写 Task Plan / progress / master_plan / open_issues（OI-003 resolved at plan time） | 未实施 | `next_action=实施`；PLAN_LANDING 进行中；**不得触碰 DEV-006/PR#13** |
 | 2026-08-11 01:17 UTC | STM-009 | committed → completed | PR #28 MERGED（`924ca8c8af94793e76be9376c4514ef417ce5e33` mergedAt `2026-08-11T01:17:29Z`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped unit 21 / contract 10 / redis int 10 / kafka int 2；full unit 410 / contract 90；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=3；OI-001/OI-002/OI-005 resolved；OI-004 remains open；STM-010 READY_FOR_PLANNING only（STM-006+STM-009 SATISFIED）；STM-011 READY_FOR_PLANNING only；STM-013 NOT ready（needs STM-010）；**不得触碰 DEV-006/PR#13** |

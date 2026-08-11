@@ -111,12 +111,7 @@ async def create_app_state(settings: Settings) -> AppState:
     await elasticsearch_client.info()
     await kafka_producer.start()
 
-    kafka_client = kafka_producer.client
-    if kafka_client is not None and hasattr(kafka_client, "bootstrap_connected"):
-        kafka_ready = kafka_client.bootstrap_connected()
-    else:
-        # aiokafka >=0.13 removed bootstrap_connected; start() success is sufficient.
-        kafka_ready = True
+    kafka_ready = kafka_producer.client is not None and kafka_producer.client.bootstrap_connected()
 
     return AppState(
         settings=settings,
