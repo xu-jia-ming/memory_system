@@ -39,7 +39,7 @@ formal_EXT-001_pr_state: MERGED
 formal_EXT-001_merge_commit: ae346dd27cda39f93fa38b7316ec17559df217ef
 formal_EXT-001_merged_at: "2026-08-11T13:57:07Z"
 formal_EXT-001_status_record_committed: b16c2e05c351cf5402489262a601f9e3afcd20ba
-formal_EXT-001_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_EXT-001_status_record_completed: 128ab7dcae452561ecedf06aadb88b572fadf0be
 formal_EXT-001_note: "POST_MERGE_CLEANUP；implementation afd8b64；record b16c2e0；PR #34 MERGED merge ae346dd mergedAt 2026-08-11T13:57:07Z；CODE_REVIEW_APPROVED Round 2 P0=0 P1=0 P2=0 P3=1；scoped 61 passed；ruff+mypy PASS；feat 分支待删；STM-012 prerequisites SATISFIED but NOT auto-started；不得触碰 DEV-006/PR#13"
 formal_EXT-001_code_review: CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=1
 formal_EXT-001_p0: 0
