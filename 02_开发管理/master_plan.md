@@ -277,7 +277,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | completed |
 | STM-007 | Compression LLM Client + Structured Output | §1.2.5, §3.9 | DEV-002 | completed |
 | STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | completed |
-| STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | planned |
+| STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | planned（plan_review_round 1） |
 | STM-010 | Session Close | §1.2.3, §1.2.7 | STM-006, STM-009 | planned |
 | STM-011 | `republish_archive_event.py` 补发脚本 | §1.2.4, §3.4 | STM-006 | planned |
 | STM-012 | 补发事件消费验证 | §1.2.4, §2.1.4 | STM-011, EXT-001 | planned |
@@ -369,11 +369,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-009
 
-- **目标**：多轮 Compression Coordinator；写入 API 接线与 `compression_status`；容量路径触发压缩（语义待 OI-001/002 决议前按规格字面实现并在 Task Plan 标注开放问题）。
-- **非目标**：Session Close。
-- **正式前置依赖**：STM-003、STM-004、STM-008 — **SATISFIED**。
-- **状态备注**：`planned` — **READY_FOR_PLANNING only**（prerequisites STM-003+STM-004+STM-008 all completed；**不得自动开始**）。
-- **测试**：Integration/失败注入（LLM 超时、锁占用）。
+- **目标**：`CompressionCoordinatorService` 编排 STM-004/005/006/007/008 公共边界；`POST /api/v1/memory/working/message` HTTP 接线；`compression_status` 七值；容量背压（先协调再重试写入）与触发后同步压缩（§479）；消息头部选择（§1113–1118）；Pending 复用；默认 `FakeLlmClient`。
+- **非目标**：重写 STM-003–008 底层；`GET` 读上下文 HTTP；STM-010 Close；STM-011 republish；STM-013 全 E2E；DEV-006/PR#13。
+- **计划文件**：`02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md`
+- **规格章节**：§1.2.1–§1.2.3、§1.2.6、§1.2.4、§1.2.5、§3.9、§3.23。
+- **正式前置依赖**：STM-003、STM-004、STM-005、STM-006、STM-007、STM-008、DEV-005 — **SATISFIED**。
+- **规划备注**：§5.0 二十三项 Contract 闭合；OI-001/OI-002 Planner 决议 §10.1–10.2；OI-004 局部不阻塞；OI-005 进程内生产者闭合；成功响应仅 `message_id`/`status`/`compression_status`；触发 `estimated_tokens >= compression_trigger_tokens`；Kafka `publish_failed` 不阻断 LLM；MUST_FIX=0。
+- **测试**：Unit 20（Coordinator）+ Contract 10（HTTP）+ Integration A–L（Redis/Mongo/Kafka + FakeLlmClient）。
+- **状态备注**：`planned` — `plan_review_round: 1`；`workflow_mode=NORMAL`；baseline `a15a2e4`；`next_action=计划审查`；**不得自动实施**。
 
 #### STM-010
 

@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-008 completed
+current_phase: Phase 1 — STM-009 planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: STM-008
-current_task_status: completed
+current_task: STM-009
+current_task_status: planned
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,8 +21,13 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/STM-008-compression-finalize-lua.md
+current_plan_file: 02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md
 workflow_mode_for_this_task: NORMAL
+formal_STM-009_status: planned
+formal_STM-009_plan_file: 02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md
+formal_STM-009_prerequisite: SATISFIED  # STM-003 + STM-004 + STM-008 completed
+formal_STM-009_workflow_mode: NORMAL
+formal_STM-009_note: "规划轮次；Compression Coordinator + POST /api/v1/memory/working/message；OI-001/OI-002 Planner 决议 §10；OI-004 不阻塞；OI-005 进程内闭合；23 项 Contract §5.0；Unit 20 + Contract + Integration A–L；默认 FakeLlmClient；不得触碰 DEV-006/PR#13"
 formal_STM-008_status: completed
 formal_STM-008_plan_file: 02_开发管理/tasks/STM-008-compression-finalize-lua.md
 formal_STM-008_plan_commit: fa3e1bf33e889dbb6180315eda896b954a02df8f
@@ -83,7 +88,7 @@ formal_STM-007_p1: 0
 formal_STM-007_prerequisite: SATISFIED  # DEV-002 + STM-001 + STM-006 completed
 formal_STM-007_workflow_mode: NORMAL
 formal_STM-007_note: "POST_MERGE_CLEANUP；CompressionLlmService + DeepSeekLlmClient + FakeLlmClient；public API run_compression_llm(...)；CompressionLlmInput(existing_compressed_context, archived_messages, max_compressed_context_estimated_tokens, optional tracing)；Output {\"compressed_context\":\"...\"} Pydantic extra=forbid（empty string valid）；STM-008 handoff CompressionFinalizeLlmPayload(compressed_context, new_compressed_context_tokens)；client 单次 provider call json_object transport retry=0；service validation/parse/bounded schema retry max 2/token estimation/compression_output_too_large；provider deepseek-v4-flash temperature=0 thinking=disabled stream=false DEV-002 LLMSettings；scoped unit 20 / contract 4 / integration(fake) 5 / total 29；full unit 369 / contract 76；ruff PASS；mypy PASS；real integration SKIPPED；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1；OI-004 remains open；OI-005 remains open（partial evidence only from STM-006）；NOT implemented: Redis lock/pending/Kafka/Mongo/compression_version/trim/Finalize Lua/STM-009 Coordinator；feat 分支待删；不得触碰 DEV-006/PR#13"
-planning_baseline_head: dc74311d6658c87cb164283f9ec775e012aa93f5
+planning_baseline_head: a15a2e4cd4b0f937a9f15aa9f4a1481ddb867466
 workflow_mode_source: explicit
 formal_STM-006_status: completed
 formal_STM-006_plan_file: 02_开发管理/tasks/STM-006-compression-lock-pending-archive-kafka.md
@@ -402,10 +407,10 @@ step7_smoke_merge_commit: e14d71e8955a312f7c77c6d42c8f624cf3694563
 step7_smoke_completed_governance: 45c74f8a988170929d003f72cedcd48b8944f7c0
 step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 # Next business task / STM-002 readiness
-deferred_business_task: STM-009
-deferred_business_task_status: READY_FOR_PLANNING only
-deferred_business_task_note: "prerequisites STM-003+STM-004+STM-008 all completed — do NOT auto-start"
-next_action: STM-009 READY_FOR_PLANNING only（do NOT auto-start）
+deferred_business_task: null
+deferred_business_task_status: null
+deferred_business_task_note: null
+next_action: 计划审查
 last_role_result: RELEASE_COMPLETED
 blocking_reason: null
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
@@ -512,7 +517,7 @@ governance_deviation:
 
 **DEV-OPS-007**：**completed** — Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；Ruff E501 L174–175 换行（零语义变更）；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；record `c48a70d`；PR [#24](https://github.com/xu-jia-ming/memory_system/pull/24) **MERGED**（merge `de95f3a2f0107f791f89441177841754b1d4f82c` mergedAt `2026-08-10T11:54:41Z`）；ZERO_STALE_AUTHORITATIVE_REFERENCES **PASS**；FULL_RUFF **PASS**；integration context-read **14 passed**；mypy **PASS**；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；production `src/**` changes **none**；Phase 1 DEV-OPS-007 **completed**。
 
-**下游**：**STM-009** `READY_FOR_PLANNING only` — prerequisites STM-003+STM-004+STM-008 **SATISFIED**；**不得自动实施**；**STM-011** `READY_FOR_PLANNING only`（STM-006 satisfied）；**STM-010** NOT ready（needs STM-009）；**不得触碰 DEV-006/PR#13**。
+**下游**：**STM-009** `planned` — Task Plan 已创建；`next_action=计划审查`；**不得自动实施**；**STM-011** `READY_FOR_PLANNING only`（STM-006 satisfied）；**STM-010** NOT ready（needs STM-009）；**不得触碰 DEV-006/PR#13**。
 
 ## 实施前置条件
 
@@ -892,7 +897,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **STM-009**：`READY_FOR_PLANNING only` — prerequisites STM-003+STM-004+STM-008 **SATISFIED**；Compression Coordinator + HTTP 接线；**不得自动开始**；**不得触碰 DEV-006/PR#13**。
+1. **STM-009**：`planned` — Compression Coordinator + HTTP 接线；Task Plan `02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md`；`next_action=计划审查`；**不得自动实施**；**不得触碰 DEV-006/PR#13**。
 2. **STM-011**：`READY_FOR_PLANNING only` — prerequisite STM-006 **SATISFIED**；`republish_archive_event.py`；**不得自动开始**。
 3. **STM-010**：NOT ready — needs STM-009 completed。
 4. **STM-008**：`completed`（PR #27 MERGED `ac61680098d2ae2644bc8b990f057816c3218fca` mergedAt `2026-08-10T15:48:17Z`；implementation `d619ca2f7e2e20d2d944794c2ca21e8e6d5752ef`；record `a938220f8937b0e8af7e52dd34019ad1b558e789`；scoped unit **20** / contract **4** / integration **27**；full unit **393** / contract **80**；ruff **PASS**；mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2；OI-004/OI-005 remain open；feat 分支待删）。
