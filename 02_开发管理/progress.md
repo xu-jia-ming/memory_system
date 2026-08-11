@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — DEV-OPS-008 WAITING_FOR_PR_MERGE (STM-013 blocked)
+current_phase: Phase 1 — DEV-OPS-008 completed (STM-013 blocked pending revalidation)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: DEV-OPS-008
-current_task_status: WAITING_FOR_PR_MERGE
-current_branch: feat/DEV-OPS-008-compose-test-stack-runtime-compatibility
+current_task: STM-013
+current_task_status: blocked
+current_branch: feat/STM-013-short-term-memory-e2e
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -21,7 +21,7 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md
+current_plan_file: 02_开发管理/tasks/STM-013-short-term-memory-e2e.md
 workflow_mode_for_this_task: NORMAL
 formal_DEV-OPS-009_status: completed
 formal_DEV-OPS-009_plan_file: 02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md
@@ -41,12 +41,21 @@ formal_DEV-OPS-009_merged_at: "2026-08-11T09:36:27Z"
 formal_DEV-OPS-009_governance_completion_commit: e5ed43bee0310f3c42d977d5bd109f96d7522cb2
 formal_DEV-OPS-009_status_record_completed: e5ed43bee0310f3c42d977d5bd109f96d7522cb2
 formal_DEV-OPS-009_code_review: CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2
-formal_DEV-OPS-008_status: WAITING_FOR_PR_MERGE
+formal_DEV-OPS-008_status: completed
 formal_DEV-OPS-008_plan_file: 02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md
+formal_DEV-OPS-008_plan_commit: a464952021e3778bb8f29b96f867fc61619b8f76
+formal_DEV-OPS-008_implementation_commit: b2f29ee5eab17c02983ce5c041c7c821b8db8318
+formal_DEV-OPS-008_implementation_commit_message: "fix(ops): aiokafka 0.13 readiness and ES 9.4 mapping readback compat"
 formal_DEV-OPS-008_branch: feat/DEV-OPS-008-compose-test-stack-runtime-compatibility
 formal_DEV-OPS-008_branch_from: "main @ 390af52f58509e323dd6500e77524033e0b5dcbf（NOT feat/STM-013；PLAN_LANDING 后创建）"
 formal_DEV-OPS-008_workflow_mode: NORMAL
-formal_DEV-OPS-008_note: "POST_DEV-OPS-009 revalidation PASS；authoritative lz4 fresh image；C1/C2 PASS；regression全绿；CODE_REVIEW_APPROVED P0=0 P1=0；PR #31 OPEN awaiting human merge；blocks STM-013 PR #30"
+formal_DEV-OPS-008_note: "POST_MERGE_CLEANUP；C1 aiokafka 0.13 bootstrap_connected guard + C2 ES 9.4 element_type readback compat；POST_DEV-OPS-009 authoritative lz4 revalidation PASS；PR #31 MERGED merge 49719b9；feat 分支已删；C1/C2 blocker SATISFIED；STM-013 pending sync/revalidation"
+formal_DEV-OPS-008_pr: "#31"
+formal_DEV-OPS-008_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/31"
+formal_DEV-OPS-008_pr_state: MERGED
+formal_DEV-OPS-008_merge_commit: 49719b91e4be6c552c342fef45504166c919febd
+formal_DEV-OPS-008_merged_at: "2026-08-11T10:32:18Z"
+formal_DEV-OPS-008_status_record_completed: null  # pending this docs(status): complete commit SHA
 formal_DEV-OPS-008_revalidated_source_sha: 9f47597abeb0b69930f1cd18734049c2ee5a4497
 formal_DEV-OPS-008_revalidated_main_base: e5ed43bee0310f3c42d977d5bd109f96d7522cb2
 formal_DEV-OPS-008_revalidated_image_id: sha256:bf1edf179be9babd435a390f84c7862c9e745f08b77110690baed240b5aef176
@@ -54,17 +63,15 @@ formal_DEV-OPS-008_revalidated_container_id: 7dbc9f5a222659d1ca4eb427fbbeeb68072
 formal_DEV-OPS-008_authoritative_compression_type: lz4
 formal_DEV-OPS-008_gzip_override_used: false
 formal_DEV-OPS-008_code_review: CODE_REVIEW_APPROVED P0=0 P1=0 P2=4 P3=2
-formal_DEV-OPS-008_pr: "#31"
-formal_DEV-OPS-008_pr_state: OPEN
 formal_STM-013_status: blocked
 formal_STM-013_implementation_commit: 975e6029d9aef98988c65a0556cb74695d61adf6
 formal_STM-013_implementation_commit_note: "superseded by scope remediation; production paths reverted on feat"
 formal_STM-013_pr: "#30"
 formal_STM-013_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/30"
 formal_STM-013_pr_state: OPEN
-formal_STM-013_release_gate: BLOCKED_BY_DEFECT_FIX
-formal_STM-013_blocking_task: DEV-OPS-008
-formal_STM-013_blocking_reason: "DEV-OPS-008 C1/C2 pending merge; PR #30 production fixes OUT_OF_SCOPE; lz4 dimension SATISFIED by DEV-OPS-009 merge"
+formal_STM-013_release_gate: BLOCKED_PENDING_REVALIDATION
+formal_STM-013_blocking_task: null
+formal_STM-013_blocking_reason: "DEV-OPS-008 MERGED (C1/C2 SATISFIED); pending feat/STM-013 sync main + E1–E4 revalidation + new CODE_REVIEW; PR #30 MUST NOT MERGE until revalidated"
 formal_STM-013_code_review: "CODE_REVIEW_APPROVED superseded by remediation diff; P0=0 P1=0 on 975e6029 only"
 formal_STM-013_code_review_required: REQUIRED_AFTER_DEV_OPS_008_AND_REVALIDATION
 formal_STM-013_tests_init_py: "tests/__init__.py — mypy package resolution only (test-tooling adjunct; not production)"
@@ -74,7 +81,7 @@ formal_STM-013_branch: feat/STM-013-short-term-memory-e2e
 formal_STM-013_plan_file: 02_开发管理/tasks/STM-013-short-term-memory-e2e.md
 formal_STM-013_prerequisite: SATISFIED
 formal_STM-013_workflow_mode: NORMAL
-formal_STM-013_note: "E2E implemented on feat; scope remediation removed C1/C2 from PR #30; BLOCKED_BY_DEFECT_FIX until DEV-OPS-008 merge → STM-013 sync main → E1–E4 → new Code Review; DEV-OPS-009 lz4 merge SATISFIED"
+formal_STM-013_note: "E2E on feat; scope remediation removed C1/C2 from PR #30; DEV-OPS-008+DEV-OPS-009 blockers SATISFIED on main; pending sync main + E1–E4 + new Code Review; PR #30 OPEN MUST NOT MERGE until revalidated"
 formal_STM-013_plan_review_round: 2
 formal_STM-010_status: completed
 formal_STM-010_plan_file: 02_开发管理/tasks/STM-010-session-close.md
@@ -529,9 +536,9 @@ formal_DEV-OPS-008_ruff: PASS
 formal_DEV-OPS-008_mypy: PASS
 formal_DEV-OPS-008_kafka_lz4_integration: "2 passed"
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
-next_action: "Human merge PR #31 (DEV-OPS-008); do NOT merge PR #30"
-last_role_result: CODE_REVIEW_APPROVED
-blocking_reason: "STM-013 blocked until DEV-OPS-008 merged; PR #30 OPEN must not merge"
+next_action: "STM-013 sync main + revalidation (E1–E4); do NOT merge PR #30 until CODE_REVIEW_APPROVED"
+last_role_result: POST_MERGE_CLEANUP
+blocking_reason: "STM-013 blocked pending sync/revalidation; PR #30 OPEN must not merge"
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
 human_plan_approved_at: "2026-08-10T12:35:00Z"
 human_plan_approved_note: "Human PLAN_APPROVED STM-006 Amendment 001；Round 2 Plan Reviewer PLAN_APPROVED BLOCKER=0 MUST_FIX=0；absorb R2 SHOULD_FIX count/tokens fail-closed；scope lock+pending+Kafka only"

@@ -557,9 +557,11 @@ implementation_commit: b2f29ee5eab17c02983ce5c041c7c821b8db8318
 sync_commit: 9f47597abeb0b69930f1cd18734049c2ee5a4497
 implementation_commit_message: "fix(ops): aiokafka 0.13 readiness and ES 9.4 mapping readback compat"
 main_base: e5ed43bee0310f3c42d977d5bd109f96d7522cb2
-pr: "#31 OPEN"
+pr: "#31 MERGED"
+merge_commit: 49719b91e4be6c552c342fef45504166c919febd
+merged_at: "2026-08-11T10:32:18Z"
 ```
 
 ### 最终状态
 
-`WAITING_FOR_PR_MERGE`
+`completed`
