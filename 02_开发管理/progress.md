@@ -12,8 +12,8 @@ phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-010
-current_task_status: approved
-current_branch: main
+current_task_status: tested
+current_branch: feat/STM-010-session-close
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -23,12 +23,19 @@ dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/STM-010-session-close.md
 workflow_mode_for_this_task: NORMAL
-formal_STM-010_status: approved
+formal_STM-010_status: in_progress
 formal_STM-010_plan_file: 02_开发管理/tasks/STM-010-session-close.md
 formal_STM-010_workflow_mode: NORMAL
 formal_STM-010_prerequisite: SATISFIED
-formal_STM-010_note: "Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；Session Close 状态机 + enter/revert/terminal Lua + split_close_suffix_batches + ClosePlan.base_compression_version 快照/冻结 + POST close API；不调用 Coordinator/LLM/Finalize；OI-003 resolved at plan time HTTP 503 close_incomplete；OI-004 criteria 映射完成 formal closure 待实现+OI4；STM-011 非 blocker；Unit 22 + Contract 10 + Integration A–R；未实施"
+formal_STM-010_note: "实现完成待 Code Review；Session Close enter/revert/terminal Lua + close_session 编排 + ClosePlan.base_compression_version 快照/冻结 + POST close API；scoped unit 35 + contract 11 + integration 19 PASS；full unit 445 + contract 101 PASS；ruff/mypy PASS；OI-004 未标记 resolved"
 formal_STM-010_plan_review_round: 2
+formal_STM-010_scoped_unit: "35 passed"
+formal_STM-010_scoped_contract: "11 passed"
+formal_STM-010_integration_redis: "19 passed"
+formal_STM-010_full_unit: "445 passed"
+formal_STM-010_full_contract: "101 passed"
+formal_STM-010_ruff: PASS
+formal_STM-010_mypy: PASS
 formal_STM-009_status: completed
 formal_STM-009_plan_file: 02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md
 formal_STM-009_plan_commit: 8609f15b47a318e885fab9cd073b616863b8d5b5

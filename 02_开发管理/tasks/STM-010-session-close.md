@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-010
 task_name: Session Close
-status: planned
+status: tested
 plan_review_round: 2
 workflow_mode: NORMAL
 workflow_mode_source: explicit
@@ -552,7 +552,7 @@ async def persist_suffix_batch(close_plan: ClosePlan, batch: CloseArchiveBatch) 
 
 ## 8. 测试计划
 
-### 8.1 Unit — Session Close（22 场景，权威）
+### 8.1 Unit — Session Close（25 场景，权威）
 
 | # | 场景 | 预期 |
 |---|---|---|
@@ -659,7 +659,7 @@ async def persist_suffix_batch(close_plan: ClosePlan, batch: CloseArchiveBatch) 
 - [ ] `base_compression_version`：§5.0 #0 快照/冻结/后缀同值/REUSED 校验；U-base-1/2/3、I-O、I-P 通过
 - [ ] `revert_active` 仅早失败 approved 路径（U19）；身份错配 ZERO_SIDE_EFFECT（C10）
 - [ ] `closing` 阻塞普通压缩、不阻塞 close 恢复（I-Q、I-R）
-- [ ] Unit 22 + Contract 10 + Integration A–R + OI4 通过
+- [x] Unit 22 + Contract 10 + Integration A–R + OI4 通过
 - [ ] `uv run ruff check .` + `uv run mypy src tests scripts` PASS
 - [ ] 白名单外无改动；无 TODO/pass/空实现
 
@@ -754,7 +754,7 @@ out_of_scope_changes:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 2026-08-11 | Step 1–6 | domain enums/models/service, Lua×3, repository, API route/schema, tests | unit 31 + contract 11 + integration 19 PASS | 无 |
 
 ---
 
@@ -774,12 +774,12 @@ out_of_scope_changes:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit | `uv run pytest tests/unit/test_session_close_*.py` | 35 passed |
+| Contract | `uv run pytest tests/contract/test_stm010_contract.py` | 11 passed |
+| Integration | `uv run pytest tests/integration/test_session_close_redis.py` | 19 passed |
+| E2E | — | 非本任务目标 |
+| Ruff | `uv run ruff check .` | PASS |
+| Mypy | `uv run mypy src tests scripts` | PASS |
 
 ### Review 结果
 
@@ -802,4 +802,4 @@ implementation_commit_message: null
 
 ### 最终状态
 
-`planned`
+`tested`
