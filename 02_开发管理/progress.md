@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-009 planned
+current_phase: Phase 1 — STM-009 tested
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-009
-current_task_status: planned
-current_branch: main
+current_task_status: tested
+current_branch: feat/STM-009-compression-coordinator-message-write-api
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -23,11 +23,21 @@ dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md
 workflow_mode_for_this_task: NORMAL
-formal_STM-009_status: planned
+formal_STM-009_status: tested
 formal_STM-009_plan_file: 02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md
-formal_STM-009_prerequisite: SATISFIED  # STM-003 + STM-004 + STM-008 completed
+formal_STM-009_plan_commit: 8609f15b47a318e885fab9cd073b616863b8d5b5
+formal_STM-009_branch: feat/STM-009-compression-coordinator-message-write-api
+formal_STM-009_scoped_unit: "21 passed"
+formal_STM-009_scoped_contract: "10 passed"
+formal_STM-009_integration_redis: "10 passed"
+formal_STM-009_integration_kafka: "2 passed (I-I mandatory)"
+formal_STM-009_full_unit: "410 passed"
+formal_STM-009_full_contract: "90 passed"
+formal_STM-009_ruff: PASS
+formal_STM-009_mypy: PASS
+formal_STM-009_prerequisite: SATISFIED
 formal_STM-009_workflow_mode: NORMAL
-formal_STM-009_note: "规划轮次；Compression Coordinator + POST /api/v1/memory/working/message；OI-001/OI-002 Planner 决议 §10；OI-004 不阻塞；OI-005 进程内闭合；23 项 Contract §5.0；Unit 20 + Contract + Integration A–L；默认 FakeLlmClient；不得触碰 DEV-006/PR#13"
+formal_STM-009_note: "Compression Coordinator + POST /api/v1/memory/working/message；STM-003–008 编排；FakeLlmClient 注入；Kafka publish_failed 继续 LLM；多轮 partial fail 不回滚；HEAD prefix cap-shrink；待 Code Review"
 formal_STM-008_status: completed
 formal_STM-008_plan_file: 02_开发管理/tasks/STM-008-compression-finalize-lua.md
 formal_STM-008_plan_commit: fa3e1bf33e889dbb6180315eda896b954a02df8f
