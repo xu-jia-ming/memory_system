@@ -477,13 +477,17 @@ out_of_scope_changes:
 | 2026-08-11 05:16 UTC | Baseline reproduction | 无代码变更 | baseline image `fa1c24f18550` @ source `a464952`；container `db6c92e25d51`；**C1 AttributeError** `bootstrap_connected` | 本地 ephemeral `KAFKA_PRODUCER__COMPRESSION_TYPE=gzip` 仅用于绕过镜像缺 lz4 原生库以到达 C1 路径；**非 repo 变更** |
 | 2026-08-11 05:16 UTC | C1/C2 implementation | `runtime.py`；`003_elasticsearch_memory_v1.py`；unit tests | C1-U1～U5 + C2-U1～U5 PASS；full unit 455；contract 101；FULL_RUFF PASS；mypy PASS | client=None fail-closed |
 | 2026-08-11 05:16 UTC | Fixed image validation | 无额外 prod 变更 | image `b2d94086f63c`；container `0875143c22ff`；`/health/ready` HTTP 200；kafka_producer=ready；elasticsearch=ready | 同上 ephemeral gzip compression 仅本地验证 |
+| 2026-08-11 09:55 UTC | POST_DEV-OPS-009 revalidation sync | cherry-pick `90cd79c`（cramjam lz4）onto feat → `9f47597` | — | 无 merge/rebase；DEV-OPS-009 task doc 保留 main 态（feat 上 absent 为 sync artifact） |
+| 2026-08-11 09:56 UTC | Authoritative lz4 runtime validation | 无 prod 变更 | image `memory-api:devops008-revalidated` / `sha256:bf1edf179be9…`；container `7dbc9f5a2226`；compression_type=lz4；**无 gzip override** | startup PASS；C1/C2 PASS；`/health/ready` HTTP 200；kafka_producer=ready；elasticsearch=ready |
+| 2026-08-11 09:58 UTC | Regression gates + Code Review | — | C1 5 / C2 7 / unit 459 / contract 101 / ruff PASS / mypy PASS / kafka lz4 integration 2 | CODE_REVIEW_APPROVED P0=0 P1=0；release_gate=WAITING_FOR_PR_MERGE |
 
 ### 镜像 provenance（SOURCE-ALIGNED）
 
 | 阶段 | source commit | image tag / ID | container ID | 结果 |
 |---|---|---|---|---|
 | Baseline（无 C1/C2 fix） | `a464952021e3778bb8f29b96f867fc61619b8f76` | `devops008-baseline-a464952` / `sha256:fa1c24f18550…` | `db6c92e25d51` | C1 `AttributeError: bootstrap_connected`；lifespan startup failed |
-| Fixed（C1+C2 实施） | `a464952` + uncommitted impl（待 commit） | `devops008-fixed-a464952-uncommitted` / `sha256:b2d94086f63c…` | `0875143c22ff` | `/health/ready` 200；`kafka_producer=ready`；`elasticsearch=ready` |
+| Fixed（C1+C2 实施） | `a464952` + uncommitted impl（待 commit） | `devops008-fixed-a464952-uncommitted` / `sha256:b2d94086f63c…` | `0875143c22ff` | `/health/ready` 200；`kafka_producer=ready`；`elasticsearch=ready`（ephemeral gzip 时代） |
+| Revalidated（main+DEV-OPS-009 lz4） | `9f47597abeb0b69930f1cd18734049c2ee5a4497` | `memory-api:devops008-revalidated` / `sha256:bf1edf179be9babd435a390f84c7862c9e745f08b77110690baed240b5aef176` | `7dbc9f5a2226` | authoritative lz4；`/health/ready` 200；kafka_producer=ready；elasticsearch=ready |
 
 **本地 build 参数（ephemeral；非 repo 变更）**：`docker build --network=host --no-cache --build-arg HTTP_PROXY=http://127.0.0.1:17890 --build-arg HTTPS_PROXY=http://127.0.0.1:17890`
 
@@ -497,57 +501,65 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `src/memory_system/infrastructure/runtime.py` | C1 aiokafka 0.13 readiness guard |
+| `scripts/migrations/003_elasticsearch_memory_v1.py` | C2 ES 9.4 element_type readback compat |
+| `tests/unit/test_runtime_kafka_readiness.py` | 新建 C1-U1～U5 |
+| `tests/unit/test_elasticsearch_mapping_contract.py` | C2-U3～U5 扩展 |
 
 ### 与原计划的差异
 
-暂无。
+POST_DEV-OPS-009 revalidation：feat 分支 cherry-pick `90cd79c` 集成 cramjam（content identical to main）；权威 lz4 下 fresh image 验证 PASS（无 gzip override）。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit C1 |  |  |
-| Unit C2 |  |  |
-| Full unit |  |  |
-| Contract |  |  |
-| Compose readiness |  |  |
-| Baseline FAIL evidence |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit C1 | `uv run pytest tests/unit/test_runtime_kafka_readiness.py -q` | 5 passed |
+| Unit C2 | `uv run pytest tests/unit/test_elasticsearch_mapping_contract.py -q` | 7 passed |
+| Full unit | `uv run pytest tests/unit -q` | 459 passed |
+| Contract | `uv run pytest tests/contract -q` | 101 passed |
+| Compose readiness | authoritative lz4 compose test stack | HTTP 200 ready |
+| Baseline FAIL evidence | worktree `390af52` / `a464952` | C1 AttributeError recorded |
+| Ruff | `uv run ruff check .` | PASS |
+| Mypy | `uv run mypy src tests scripts` | PASS |
 
 ### Image provenance（实施后填写）
 
 ```yaml
-baseline_worktree_commit: null
-baseline_image_id: null
-baseline_readiness_result: null
-fix_commit: null
-fix_image_id: null
-fix_container_id: null
-fix_readiness_result: null
-build_command: "./scripts/compose.sh --stack=test --embedding=none build --no-cache memory-api"
+baseline_worktree_commit: a464952021e3778bb8f29b96f867fc61619b8f76
+baseline_image_id: sha256:fa1c24f18550f1e776b0a900d7e22c4b175aa3dd9df9b2b571476b8a37e956
+baseline_readiness_result: C1 AttributeError bootstrap_connected
+fix_commit: b2f29ee5eab17c02983ce5c041c7c821b8db8318
+revalidated_source_sha: 9f47597abeb0b69930f1cd18734049c2ee5a4497
+fix_image_id: sha256:bf1edf179be9babd435a390f84c7862c9e745f08b77110690baed240b5aef176
+fix_container_id: 7dbc9f5a222659d1ca4eb427fbbeeb68072ff69a0ed37ff0dd84752317e8f84e
+fix_readiness_result: HTTP 200; kafka_producer=ready; elasticsearch=ready; compression_type=lz4
+gzip_override_used: false
+build_command: "docker build --progress=plain --no-cache --network=host --build-arg HTTP_PROXY=... -t memory-api:devops008-revalidated ."
 ```
 
 ### Review 结果
 
 ```yaml
-p0: null
-p1: null
-p2: null
-p3: null
-review_report: null
+p0: 0
+p1: 0
+p2: 4
+p3: 2
+review_report: CODE_REVIEW_APPROVED (revalidation round POST_DEV-OPS-009)
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/DEV-OPS-008-compose-test-stack-runtime-compatibility
+plan_commit: a464952021e3778bb8f29b96f867fc61619b8f76
+implementation_commit: b2f29ee5eab17c02983ce5c041c7c821b8db8318
+sync_commit: 9f47597abeb0b69930f1cd18734049c2ee5a4497
+implementation_commit_message: "fix(ops): aiokafka 0.13 readiness and ES 9.4 mapping readback compat"
+main_base: e5ed43bee0310f3c42d977d5bd109f96d7522cb2
+pr: "#31 OPEN"
 ```
 
 ### 最终状态
 
-`planned`
+`WAITING_FOR_PR_MERGE`

@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — DEV-OPS-008 planned (STM-013 blocked)
+current_phase: Phase 1 — DEV-OPS-008 WAITING_FOR_PR_MERGE (STM-013 blocked)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: DEV-OPS-008
-current_task_status: tested
+current_task_status: WAITING_FOR_PR_MERGE
 current_branch: feat/DEV-OPS-008-compose-test-stack-runtime-compatibility
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -23,12 +23,21 @@ dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md
 workflow_mode_for_this_task: NORMAL
-formal_DEV-OPS-008_status: approved
+formal_DEV-OPS-008_status: WAITING_FOR_PR_MERGE
 formal_DEV-OPS-008_plan_file: 02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md
 formal_DEV-OPS-008_branch: feat/DEV-OPS-008-compose-test-stack-runtime-compatibility
 formal_DEV-OPS-008_branch_from: "main @ 390af52f58509e323dd6500e77524033e0b5dcbf（NOT feat/STM-013；PLAN_LANDING 后创建）"
 formal_DEV-OPS-008_workflow_mode: NORMAL
-formal_DEV-OPS-008_note: "C1 aiokafka 0.13 bootstrap_connected guard + C2 ES 9.4 element_type readback compat；SOURCE-ALIGNED fresh image validation mandatory；blocks STM-013 PR #30"
+formal_DEV-OPS-008_note: "POST_DEV-OPS-009 revalidation PASS；authoritative lz4 fresh image；C1/C2 PASS；regression全绿；CODE_REVIEW_APPROVED P0=0 P1=0；PR #31 OPEN awaiting human merge；blocks STM-013 PR #30"
+formal_DEV-OPS-008_revalidated_source_sha: 9f47597abeb0b69930f1cd18734049c2ee5a4497
+formal_DEV-OPS-008_revalidated_main_base: e5ed43bee0310f3c42d977d5bd109f96d7522cb2
+formal_DEV-OPS-008_revalidated_image_id: sha256:bf1edf179be9babd435a390f84c7862c9e745f08b77110690baed240b5aef176
+formal_DEV-OPS-008_revalidated_container_id: 7dbc9f5a222659d1ca4eb427fbbeeb68072ff69a0ed37ff0dd84752317e8f84e
+formal_DEV-OPS-008_authoritative_compression_type: lz4
+formal_DEV-OPS-008_gzip_override_used: false
+formal_DEV-OPS-008_code_review: CODE_REVIEW_APPROVED P0=0 P1=0 P2=4 P3=2
+formal_DEV-OPS-008_pr: "#31"
+formal_DEV-OPS-008_pr_state: OPEN
 formal_STM-013_status: blocked
 formal_STM-013_implementation_commit: 975e6029d9aef98988c65a0556cb74695d61adf6
 formal_STM-013_implementation_commit_note: "superseded by scope remediation; production paths reverted on feat"
@@ -485,25 +494,28 @@ deferred_business_task: null
 deferred_business_task_status: null
 deferred_business_task_note: null
 current_task_status: tested
-formal_DEV-OPS-008_status: tested
+formal_DEV-OPS-008_status: WAITING_FOR_PR_MERGE
 formal_DEV-OPS-008_plan_commit: a464952021e3778bb8f29b96f867fc61619b8f76
+formal_DEV-OPS-008_implementation_commit: b2f29ee5eab17c02983ce5c041c7c821b8db8318
+formal_DEV-OPS-008_sync_commit: 9f47597abeb0b69930f1cd18734049c2ee5a4497
 formal_DEV-OPS-008_baseline_source_sha: a464952021e3778bb8f29b96f867fc61619b8f76
 formal_DEV-OPS-008_baseline_image_id: sha256:fa1c24f18550f1e776b0a900d7e22c4b175aa3dd9df9b2b571476b8a37e956
 formal_DEV-OPS-008_baseline_container_id: db6c92e25d51
 formal_DEV-OPS-008_baseline_failure: "AttributeError AIOKafkaClient bootstrap_connected (C1)"
-formal_DEV-OPS-008_fixed_image_id: sha256:b2d94086f63c94b8e3443cc6817b5540c684405b5bb20a627f99b99ccd302815
-formal_DEV-OPS-008_fixed_container_id: 0875143c22ff
-formal_DEV-OPS-008_readiness: "HTTP 200; kafka_producer=ready; elasticsearch=ready"
+formal_DEV-OPS-008_fixed_image_id: sha256:bf1edf179be9babd435a390f84c7862c9e745f08b77110690baed240b5aef176
+formal_DEV-OPS-008_fixed_container_id: 7dbc9f5a222659d1ca4eb427fbbeeb68072ff69a0ed37ff0dd84752317e8f84e
+formal_DEV-OPS-008_readiness: "HTTP 200; kafka_producer=ready; elasticsearch=ready; compression_type=lz4; gzip_override=false"
 formal_DEV-OPS-008_scoped_unit_c1: "5 passed"
 formal_DEV-OPS-008_scoped_unit_c2: "7 passed"
-formal_DEV-OPS-008_full_unit: "455 passed"
+formal_DEV-OPS-008_full_unit: "459 passed"
 formal_DEV-OPS-008_full_contract: "101 passed"
 formal_DEV-OPS-008_ruff: PASS
 formal_DEV-OPS-008_mypy: PASS
+formal_DEV-OPS-008_kafka_lz4_integration: "2 passed"
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
-next_action: Code Review
-last_role_result: READY_FOR_CODE_REVIEW
-blocking_reason: "BLOCKED_BY_DEFECT_FIX — DEV-OPS-008 (C1+C2); PR #30 OPEN must not merge"
+next_action: "Human merge PR #31 (DEV-OPS-008); do NOT merge PR #30"
+last_role_result: CODE_REVIEW_APPROVED
+blocking_reason: "STM-013 blocked until DEV-OPS-008 merged; PR #30 OPEN must not merge"
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
 human_plan_approved_at: "2026-08-10T12:35:00Z"
 human_plan_approved_note: "Human PLAN_APPROVED STM-006 Amendment 001；Round 2 Plan Reviewer PLAN_APPROVED BLOCKER=0 MUST_FIX=0；absorb R2 SHOULD_FIX count/tokens fail-closed；scope lock+pending+Kafka only"
