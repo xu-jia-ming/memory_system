@@ -5,7 +5,7 @@
 ```yaml
 task_id: EXT-001
 task_name: Task Schema + Kafka Consumer Idempotency / Offset
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 plan_review_round: 2
@@ -679,7 +679,7 @@ RELEASE_PHASE_NOTES:
 |---|---|---|---|---|
 | 2026-08-11 12:31 UTC | Planner 初版计划 | 本文件 + progress/master_plan 规划态 | N/A | Open Issues 001–004 |
 | 2026-08-11 12:44 UTC | Planner Round 2 remediation（Amendment 001） | MF-001/MF-002 + SF-001..005；OI 状态更新；progress/master_plan 规划态 | N/A | OI-004 plan-resolved；OI-001/002/003 remain open |
-| 2026-08-11 13:18–13:24 UTC | Developer implementation and test completion | Implemented all approved EXT-001 production/test files; corrected Kafka integration record isolation to assign the published partition and use committed offsets for redelivery checks; added only approved task-index assertions | Unit/contract 45 passed; Mongo/migration integration 5 passed; Kafka integration 8 passed; Ruff and Mypy passed | No contract/spec deviation; Docker test stack was run sequentially |
+| 2026-08-11 13:57 UTC | POST_MERGE_CLEANUP | progress/master_plan completed governance；PR #34 MERGED merge ae346dd | N/A | feat 分支待删；STM-012 prerequisites SATISFIED — NOT auto-started |
 
 ---
 
@@ -726,8 +726,8 @@ Integration tests required sequential real test-stack execution; no implementati
 p0: 0
 p1: 0
 p2: 0
-p3: 0
-review_report: null
+p3: 1
+review_report: CODE_REVIEW_APPROVED Round 2
 ```
 
 ### Git 记录
@@ -737,11 +737,16 @@ branch: feat/EXT-001-task-schema-kafka-consumer-idempotency-offset
 plan_commit: 6f716946638d9585f0aa53854723559b9f8044bb
 implementation_commit: afd8b64dfd4856b4a2f00f82846dace76617e0d1
 implementation_commit_message: "feat(ext): add extraction task schema and kafka consumer idempotency"
+record_commit: b16c2e05c351cf5402489262a601f9e3afcd20ba
+record_commit_message: "docs(status): record EXT-001 implementation commit and PR"
+merge_commit: ae346dd27cda39f93fa38b7316ec17559df217ef
+merged_at: "2026-08-11T13:57:07Z"
 pr: "#34"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/34"
-pr_state: OPEN
+pr_state: MERGED
+status_record_completed: null  # pending docs(status): complete commit SHA
 ```
 
 ### 最终状态
 
-`committed`
+`completed`

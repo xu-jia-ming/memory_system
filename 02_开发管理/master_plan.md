@@ -427,9 +427,9 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 #### STM-012
 
 - **目标**：补发事件被 Extraction Consumer 消费的 Integration/E2E 验证（任务幂等创建等）。
-- **前置**：STM-011 — **SATISFIED**；EXT-001 — **NOT ready**（planned；not started）。
+- **前置**：STM-011 — **SATISFIED**；EXT-001 — **SATISFIED**。
 - **非目标**：修改补发脚本业务语义（除非缺陷修复）。
-- **状态备注**：`planned` — **NOT ready**（needs EXT-001 completed；STM-011 prerequisite **SATISFIED**）。
+- **状态备注**：`planned` — prerequisites **SATISFIED**（STM-011+EXT-001 **completed**）；**READY_FOR_PLANNING only** — **do NOT auto-start** until explicit human authorization。
 
 #### STM-013
 
@@ -449,7 +449,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| EXT-001 | Task Schema + Kafka Consumer 幂等/Offset | §2.1.3, §2.1.4 | STM-006, DEV-004 | committed |
+| EXT-001 | Task Schema + Kafka Consumer 幂等/Offset | §2.1.3, §2.1.4 | STM-006, DEV-004 | completed |
 | EXT-002 | Archive 读取/预处理/脱敏 | §2.1.5 | EXT-001 | planned |
 | EXT-003 | LLM Extraction + Fingerprint | §2.1.6–2.1.8 | EXT-002, STM-007 | planned |
 | EXT-004 | Entity Alignment + Neo4j 模型基础 | §2.1.9, §2.1.10 | EXT-003, DEV-004 | planned |
@@ -466,7 +466,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **计划文件**：`02_开发管理/tasks/EXT-001-task-schema-kafka-consumer-idempotency-offset.md`
 - **正式前置依赖**：STM-006 — **SATISFIED**；DEV-004 — **SATISFIED**（001 indexes + 004 topic 复核 MATCH；migrate 测试补 `memory_extraction_task` 索引断言）。
 - **规划备注**：Round 2 remediation（Amendment 001）；`workflow_mode=NORMAL`（explicit）；baseline `f4015cdca8694c3c2be96992a4957b2838c873e4`；MF-001 consumer-boundary exact six-key（不改 `ArchiveCreatedEvent`）；MF-002 key≠user_id fail-closed；SF-001 `main()` exit≠0；OI-001/002/003 open；OI-004 plan-resolved；C6 四类幂等语义保留。
-- **状态备注**：`committed`（Human PLAN_APPROVED Round 2；plan_commit `6f716946638d9585f0aa53854723559b9f8044bb`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；PR #34 OPEN https://github.com/xu-jia-ming/memory_system/pull/34；feat `feat/EXT-001-task-schema-kafka-consumer-idempotency-offset`；CODE_REVIEW_APPROVED Round 2 P0=0 P1=0；scoped 61 passed（unit/contract 45、Mongo/migration 5、Kafka 8）；Ruff/Mypy PASS；**不得**启动 STM-012；**不得**触碰 DEV-006/PR#13）。
+- **状态备注**：`completed`（Human PLAN_APPROVED Round 2；plan_commit `6f716946638d9585f0aa53854723559b9f8044bb`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；record `b16c2e05c351cf5402489262a601f9e3afcd20ba`；PR #34 MERGED https://github.com/xu-jia-ming/memory_system/pull/34 merge `ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`；`workflow_mode=NORMAL`）；ExtractionTask schema + Mongo upsert by `archive_id` + Kafka consumer exact six-key validation + key mismatch fail-closed + Offset 门禁；scoped 61 passed（unit/contract 49、Mongo/migration 5、Kafka 8）；Ruff/Mypy PASS；CODE_REVIEW_APPROVED Round 2 P0=0 P1=0 P2=0 P3=1；feat 分支待删；STM-012 prerequisites **SATISFIED** — **READY_FOR_PLANNING only**；**不得**自动启动 STM-012；**不得**触碰 DEV-006/PR#13）。
 
 #### EXT-002–EXT-006（摘要）
 
@@ -1057,6 +1057,16 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-013`（`planned`；`plan_review_round: 2`；`next_action=计划审查`）；**不** 自动实施 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner Round 2 remediation |
+
+### CHANGE-052
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-11 |
+| 原因 | EXT-001 POST_MERGE_CLEANUP：PR #34 MERGED（`ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`）；docs(status): complete on main；删 exact feat |
+| 受影响任务 | `EXT-001`（`completed`）；`STM-012` prerequisites **SATISFIED** — `planned` / **READY_FOR_PLANNING only**（**不** 自动启动）；`EXT-002` remains `planned`；**不** 触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否** |
+| 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-012 READY_FOR_PLANNING only; do NOT auto-start until explicit human authorization` |
 
 ### CHANGE-051
 
