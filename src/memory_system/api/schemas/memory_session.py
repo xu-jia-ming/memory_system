@@ -14,3 +14,9 @@ class CreateSessionRequest(BaseModel):
 class CreateSessionResponse(BaseModel):
     session_id: str
     status: Literal["created"]
+
+
+class CloseSessionResponse(BaseModel):
+    session_id: str
+    archive_ids: list[str]
+    status: Literal["closed"]
