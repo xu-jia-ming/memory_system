@@ -24,6 +24,7 @@ EXPECTED_DEPENDENCIES = [
     "neo4j>=5.28,<6",
     "elasticsearch[async]>=9.4,<9.5",
     "apscheduler>=3.11,<4",
+    "cramjam>=2.8,<3",
     "structlog>=26.1,<27",
     "prometheus-client>=0.25,<0.26",
 ]

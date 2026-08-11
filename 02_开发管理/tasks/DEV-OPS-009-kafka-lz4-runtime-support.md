@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-009
 task_name: Restore authoritative Kafka LZ4 runtime support for memory-api test/runtime image
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -402,6 +402,28 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-11 05:30 UTC | Planner 初版 | 创建 Task Plan；progress/master_plan 规划态回写 | 未运行（规划-only） | 根因=A 缺失 cramjam；Dockerfile 默认不变 |
+| 2026-08-11 16:55 UTC | Fresh build + validation (network remediated) | 无新增 prod 变更 | build FINISHED ~32s；cramjam 2.11.0 in image；integration I1/I2 PASS；unit 450；contract 101；ruff；mypy | image `0a9facfafa79`；lz4 init OK；/health/ready blocked C1 (DEV-OPS-008 not on branch) |
+
+**Provenance（fixed image — authoritative lz4, NO gzip override）**
+
+```yaml
+implementation_source_branch: feat/DEV-OPS-009-kafka-lz4-runtime-support
+plan_commit: 8367e7b6953fe6776d35865375a9aa48b02877f0
+implementation_source_sha: 8367e7b6953fe6776d35865375a9aa48b02877f0 + uncommitted cramjam impl (pre-commit)
+fixed_image_tag: memory-api:devops009-fixed
+fixed_image_id: sha256:0a9facfafa79b8d8d78955a118443e624c999dd91b66d01ae3bb7acf6bcb20a9
+fixed_container_id: 1c1e3b41d1a7
+fixed_effective_compression_type: lz4
+NO_GZIP_OVERRIDE: true
+NO_KAFKA_PRODUCER_COMPRESSION_TYPE_ENV: true
+lz4_runtime_error: false
+cramjam_in_image: "2.11.0; has_lz4=True"
+kafka_lz4_integration: "I1 send_and_wait + consumer readback PASS; I2 compression_type=lz4 PASS"
+memory_api_startup: "past AIOKafkaProducer(lz4) init; failed DEV-OPS-008 C1 AttributeError bootstrap_connected"
+fixed_health_ready: "HTTP 000 — C1 blocker (out of DEV-OPS-009 scope)"
+build_command: "docker build --progress=plain --no-cache --network=host --build-arg HTTP_PROXY=http://127.0.0.1:17890 --build-arg HTTPS_PROXY=http://127.0.0.1:17890 -t memory-api:devops009-fixed ."
+LOCAL_BUILD_NETWORK_FAILURE: false
+```
 
 ---
 
@@ -411,44 +433,49 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `pyproject.toml` | 追加 `cramjam>=2.8,<3` 生产依赖 |
+| `uv.lock` | `cramjam==2.11.0` via `uv lock` |
+| `tests/unit/test_dependency_contract.py` | EXPECTED_DEPENDENCIES 同步 |
+| `tests/unit/test_kafka_lz4_compression_runtime.py` | 新建 U1–U3 |
+| `tests/integration/test_kafka_lz4_producer.py` | 新建 I1–I2 |
 
 ### 与原计划的差异
 
-暂无。
+- `/health/ready` 全绿须 DEV-OPS-008 C1 merge 后；本任务 lz4 维度已 PASS。
+- 本地验证网络使用 ephemeral `172.28.0.0/16`（避免占用 `172.27.0.0/16`）；非 repo 变更。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit lz4 |  |  |
-| Integration lz4 Kafka |  |  |
-| Full unit |  |  |
-| Contract |  |  |
-| Fresh image baseline |  |  |
-| Fresh image fixed |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit lz4 | `uv run pytest tests/unit/test_kafka_lz4_compression_runtime.py tests/unit/test_dependency_contract.py -q` | 9 passed |
+| Integration lz4 Kafka | `uv run pytest tests/integration/test_kafka_lz4_producer.py -m integration -q` | 2 passed |
+| Full unit | `uv run pytest tests/unit -q` | 450 passed |
+| Contract | `uv run pytest tests/contract -q` | 101 passed |
+| Fresh image baseline | plan commit 8367e7b pre-cramjam | RuntimeError lz4 not found |
+| Fresh image fixed | `memory-api:devops009-fixed` | cramjam 2.11.0 has_lz4=True；无 lz4 RuntimeError |
+| Ruff | `uv run ruff check .` | PASS |
+| Mypy | `uv run mypy` | PASS |
 
 ### Review 结果
 
 ```yaml
 p0: 0
 p1: 0
-p2: 0
-p3: 0
-review_report: null
+p2: 1
+p3: 2
+review_report: CODE_REVIEW_APPROVED
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/DEV-OPS-009-kafka-lz4-runtime-support
+plan_commit: 8367e7b6953fe6776d35865375a9aa48b02877f0
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`planned`
+`tested`
