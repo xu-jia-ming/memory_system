@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-013 planned
+current_phase: Phase 1 — STM-013 implementation
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-013
-current_task_status: planned
-current_branch: main
+current_task_status: implemented
+current_branch: feat/STM-013-short-term-memory-e2e
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -23,11 +23,13 @@ dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/STM-013-short-term-memory-e2e.md
 workflow_mode_for_this_task: NORMAL
-formal_STM-013_status: planned
+formal_STM-013_status: implemented
+formal_STM-013_plan_commit: 39fab9e564d005d7a8c6409c7b293a6d337741f8
+formal_STM-013_branch: feat/STM-013-short-term-memory-e2e
 formal_STM-013_plan_file: 02_开发管理/tasks/STM-013-short-term-memory-e2e.md
 formal_STM-013_prerequisite: SATISFIED
 formal_STM-013_workflow_mode: NORMAL
-formal_STM-013_note: "STM 垂直切片 E2E（公共 HTTP）；E1 Happy Path + E2 幂等 + E3 write-vs-close + E4 LLM 失败；跨 HTTP/Redis/Mongo/Kafka；FakeLlmClient 默认；闭合 v0.2.0-short-term-memory；STM-011/012 非 blocker；默认无 src 变更；HALT on STM defect；Round 2：tests/e2e + @pytest.mark.integration；Fixture A config parity；Kafka 矩阵 §5.0#6=§8.4；compose test 栈 container IP"
+formal_STM-013_note: "E2E E1–E4 PASS；tests/e2e + @pytest.mark.integration；Fixture A/B；E2E 暴露 aiokafka bootstrap_connected + ES element_type 兼容性修复；scoped E2E 79s；unit+contract 547 PASS；ruff PASS；mypy PASS；.env 备份恢复 verified"
 formal_STM-013_plan_review_round: 2
 formal_STM-010_status: completed
 formal_STM-010_plan_file: 02_开发管理/tasks/STM-010-session-close.md
@@ -464,8 +466,8 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 deferred_business_task: null
 deferred_business_task_status: null
 deferred_business_task_note: null
-next_action: "计划审查"
-last_role_result: RELEASE_COMPLETED
+next_action: "Code Review"
+last_role_result: READY_FOR_CODE_REVIEW
 blocking_reason: null
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
 human_plan_approved_at: "2026-08-10T12:35:00Z"
