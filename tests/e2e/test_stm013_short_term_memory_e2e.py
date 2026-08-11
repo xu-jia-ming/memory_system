@@ -10,6 +10,15 @@ import httpx
 import pytest
 import redis.asyncio as aioredis
 from pymongo import AsyncMongoClient
+
+from memory_system.domain.enums.compression_coordinator import CompressionStatus
+from memory_system.domain.enums.working_memory import SessionStatus
+from memory_system.infrastructure.redis.keys import (
+    compression_lock_key,
+    working_memory_message_ids_key,
+    working_memory_messages_key,
+    working_memory_meta_key,
+)
 from tests.e2e.conftest import FullContainerStack, InfraStack
 from tests.e2e.helpers.stm_e2e_helpers import (
     assert_archive_event_schema,
@@ -24,15 +33,6 @@ from tests.e2e.helpers.stm_e2e_helpers import (
     read_wm_meta,
     seed_messages_via_http,
     write_until_compression_trigger,
-)
-
-from memory_system.domain.enums.compression_coordinator import CompressionStatus
-from memory_system.domain.enums.working_memory import SessionStatus
-from memory_system.infrastructure.redis.keys import (
-    compression_lock_key,
-    working_memory_message_ids_key,
-    working_memory_messages_key,
-    working_memory_meta_key,
 )
 
 

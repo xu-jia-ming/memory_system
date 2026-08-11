@@ -20,12 +20,12 @@ import pytest
 import redis.asyncio as aioredis
 from httpx import ASGITransport
 from pymongo import AsyncMongoClient
-from tests.e2e.helpers.stm_e2e_helpers import API_KEY, TOPIC, default_headers
 
 from memory_system.api.app import create_app
 from memory_system.infrastructure.llm import FakeLlmClient
 from memory_system.infrastructure.runtime import create_app_state, shutdown_app_state
 from memory_system.settings import get_settings
+from tests.e2e.helpers.stm_e2e_helpers import API_KEY, TOPIC, default_headers
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 COMPOSE_SH = REPO_ROOT / "scripts" / "compose.sh"
