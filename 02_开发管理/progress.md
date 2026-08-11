@@ -89,6 +89,8 @@ formal_STM-012_merge_commit: d73207752bbf004a4b20bf8fff00720cc0ca456b
 formal_STM-012_merged_at: "2026-08-11T15:20:30Z"
 formal_STM-012_record_commit: c99dcf45189da1f5779bda6bf6d35d5853d8bc1b
 formal_STM-012_status_record_committed: c99dcf45189da1f5779bda6bf6d35d5853d8bc1b
+formal_STM-012_governance_completion_commit: 3f063674cea49115309a867f98bdbb2610a9ff0a
+formal_STM-012_status_record_completed: 3f063674cea49115309a867f98bdbb2610a9ff0a
 formal_STM-012_code_review: CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2
 formal_STM-012_p0: 0
 formal_STM-012_p1: 0
