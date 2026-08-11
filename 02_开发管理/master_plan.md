@@ -459,9 +459,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | EXT-008 | Extraction 管理 GET/Retry | §2.1.14 | EXT-007, DEV-005 | planned |
 | EXT-009 | Extraction E2E + 失败注入 | §2.1.15, §3.28 | EXT-008 | planned |
 
-#### EXT-001–EXT-006（摘要）
+#### EXT-001
 
-- 各自单 Commit：任务状态机与 Offset；预处理；LLM；实体对齐；和解；图谱事务。
+- **目标**：`memory_extraction_task` Schema（§2.1.3 字段全集）+ Kafka Consumer 幂等 Upsert（`$setOnInsert` / `archive_id` unique）+ §2.1.4 状态分支与 Offset 门禁（`enable_auto_commit=false`；终态 Mongo 成功后才 Commit；group=`memory-extraction-group`）；可注入 `ExtractionPipelinePort`（真实 Pipeline 属 EXT-002+）。
+- **非目标**：STM-012；EXT-002+ Archive/LLM/Neo4j/ES；人工重试 API；修改 Migration 001/004；发明 task 字段（`session_id`/`event_id` 落库）；DEV-006/PR#13。
+- **计划文件**：`02_开发管理/tasks/EXT-001-task-schema-kafka-consumer-idempotency-offset.md`
+- **正式前置依赖**：STM-006 — **SATISFIED**；DEV-004 — **SATISFIED**（001 indexes + 004 topic 复核 MATCH；migrate 测试补 `memory_extraction_task` 索引断言）。
+- **规划备注**：Round 2 remediation（Amendment 001）；`workflow_mode=NORMAL`（explicit）；baseline `f4015cdca8694c3c2be96992a4957b2838c873e4`；MF-001 consumer-boundary exact six-key（不改 `ArchiveCreatedEvent`）；MF-002 key≠user_id fail-closed；SF-001 `main()` exit≠0；OI-001/002/003 open；OI-004 plan-resolved；C6 四类幂等语义保留。
+- **状态备注**：`planned`（Round 1 `PLAN_REJECTED` → Planner Round 2 remediation ready；`next_action=计划审查`；**不得**自动开始 STM-012 或实施）。
+
+#### EXT-002–EXT-006（摘要）
+
+- 各自单 Commit：预处理；LLM；实体对齐；和解；图谱事务（在 EXT-001 任务状态机与 Offset 之后）。
 - **风险**：OI-006（`reconciliation_plan_conflict` 运维清理无 Contract）——EXT-008 前需规格确认，不得自行发明 API。
 
 #### EXT-007 Retrieval Document 同步

@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-013 completed (v0.2.0-short-term-memory milestone)
+current_phase: Phase 2 — EXT-001 planned (STM Phase 1 milestone closed; STM-012 blocked on EXT-001)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: STM-011
-current_task_status: completed
+current_task: EXT-001
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,8 +21,25 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/STM-011-republish-archive-event.md
+current_plan_file: 02_开发管理/tasks/EXT-001-task-schema-kafka-consumer-idempotency-offset.md
 workflow_mode_for_this_task: NORMAL
+workflow_mode_source: explicit
+formal_EXT-001_status: approved
+formal_EXT-001_plan_file: 02_开发管理/tasks/EXT-001-task-schema-kafka-consumer-idempotency-offset.md
+formal_EXT-001_prerequisite: SATISFIED  # STM-006 + DEV-004 completed; DEV-004 index/topic re-verified MATCH
+formal_EXT-001_workflow_mode: NORMAL
+formal_EXT-001_baseline: f4015cdca8694c3c2be96992a4957b2838c873e4
+formal_EXT-001_branch: feat/EXT-001-task-schema-kafka-consumer-idempotency-offset
+formal_EXT-001_note: "Human PLAN_APPROVED Round 2；proceed NORMAL PLAN_LANDING→Developer→Code Review→Commit Recorder→IMPLEMENTATION_RELEASE；fail-closed offset + exact six-key + no STM-006 model edit；不得启动 STM-012；不得触碰 DEV-006/PR#13"
+formal_EXT-001_plan_review: PLAN_APPROVED
+formal_EXT-001_plan_review_blocker: 0
+formal_EXT-001_plan_review_must_fix: 0
+formal_EXT-001_plan_review_should_fix: 1
+formal_EXT-001_plan_review_round: 2
+formal_EXT-001_plan_review_note: "SF-R2-001: §2 concept chain omits empty session_id vs C4; non-blocking"
+formal_EXT-001_remediation: "Amendment 001 — MF-001/MF-002 + SF-001..005"
+formal_EXT-001_human_plan_approved: true
+formal_EXT-001_human_plan_approved_at: "2026-08-11T12:51:00Z"
 formal_STM-011_status: completed
 formal_STM-011_plan_file: 02_开发管理/tasks/STM-011-republish-archive-event.md
 formal_STM-011_plan_commit: 68cee46011f011f3074662f846c64da670741cb3
@@ -575,8 +592,8 @@ formal_DEV-OPS-008_ruff: PASS
 formal_DEV-OPS-008_mypy: PASS
 formal_DEV-OPS-008_kafka_lz4_integration: "2 passed"
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
-next_action: "STM-012 NOT ready (needs EXT-001); do NOT auto-start STM-012 or EXT-001"
-last_role_result: POST_MERGE_CLEANUP
+next_action: "EXT-001 PLAN_LANDING (docs(plan) on main + create feat branch); then Developer; do NOT auto-start STM-012; do NOT touch DEV-006/PR#13"
+last_role_result: HUMAN_PLAN_APPROVED
 blocking_reason: null
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
 human_plan_approved_at: "2026-08-10T12:35:00Z"
@@ -706,7 +723,7 @@ stm_013_scope_remediation:
 
 **DEV-OPS-007**：**completed** — Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；Ruff E501 L174–175 换行（零语义变更）；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；record `c48a70d`；PR [#24](https://github.com/xu-jia-ming/memory_system/pull/24) **MERGED**（merge `de95f3a2f0107f791f89441177841754b1d4f82c` mergedAt `2026-08-10T11:54:41Z`）；ZERO_STALE_AUTHORITATIVE_REFERENCES **PASS**；FULL_RUFF **PASS**；integration context-read **14 passed**；mypy **PASS**；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；production `src/**` changes **none**；Phase 1 DEV-OPS-007 **completed**。
 
-**下游**：**STM-013** **completed** — PR #30 MERGED `f473c19`；`v0.2.0-short-term-memory` milestone **closed**；**STM-011** **completed**（PR #33 MERGED `19fdb55` mergedAt `2026-08-11T12:17:49Z`；implementation `23939a3f3d25f5243978e967949beb4fe6282e2f`）；**STM-012** NOT ready（needs EXT-001；STM-011 prerequisite **SATISFIED**）；**EXT-001** `planned`（not started）；**不得触碰 DEV-006/PR#13**。
+**下游**：**STM-013** **completed**；**STM-011** **completed**；**EXT-001** **planned**（Round 2 remediation Amendment 001；plan `02_开发管理/tasks/EXT-001-task-schema-kafka-consumer-idempotency-offset.md`；baseline `f4015cd`；`next_action=计划审查`；STM-006+DEV-004 **SATISFIED**）；**STM-012** NOT ready（needs EXT-001 completed）；**不得触碰 DEV-006/PR#13**。
 
 ## 实施前置条件
 
