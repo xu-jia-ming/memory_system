@@ -589,7 +589,7 @@ pr_url: "https://github.com/xu-jia-ming/memory_system/pull/33"
 pr_state: MERGED
 merge_commit: 19fdb55359acd97380a8b5f0d8ae788134f75307
 merged_at: "2026-08-11T12:17:49Z"
-status_record_completed: null  # pending this docs(status): complete commit SHA
+status_record_completed: 7f8fd0a89c28b17984ca5b1bc288166daef39e83
 ```
 
 ### 最终状态

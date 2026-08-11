@@ -34,7 +34,7 @@ formal_STM-011_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/33"
 formal_STM-011_pr_state: MERGED
 formal_STM-011_merge_commit: 19fdb55359acd97380a8b5f0d8ae788134f75307
 formal_STM-011_merged_at: "2026-08-11T12:17:49Z"
-formal_STM-011_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_STM-011_status_record_completed: 7f8fd0a89c28b17984ca5b1bc288166daef39e83
 formal_STM-011_baseline: 26f31bdf44e879881c8a160ec3855fab88d4e86e
 formal_STM-011_workflow_mode: NORMAL
 formal_STM-011_code_review: CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=3
