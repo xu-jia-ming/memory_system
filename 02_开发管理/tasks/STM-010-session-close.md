@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-010
 task_name: Session Close
-status: tested
+status: completed
 plan_review_round: 2
 workflow_mode: NORMAL
 workflow_mode_source: explicit
@@ -519,6 +519,7 @@ async def persist_suffix_batch(close_plan: ClosePlan, batch: CloseArchiveBatch) 
 | `src/memory_system/infrastructure/redis/scripts/session_close_revert_active.lua` | 创建 | 早失败回滚 active |
 | `src/memory_system/infrastructure/redis/scripts/session_close_terminal.lua` | 创建 | 原子删 WM Keys |
 | `src/memory_system/infrastructure/redis/session_close_repository.py` | 创建 | Lua 注册/调用 |
+| `src/memory_system/infrastructure/redis/session_close_script.py` | 创建 | Lua loader helper（P2 approved loader；WHITELIST_DOCUMENTATION_DRIFT_ONLY） |
 | `src/memory_system/api/schemas/memory_session.py` | 修改 | Close 响应 Schema |
 | `src/memory_system/api/routes/memory_session.py` | 修改 | Close HTTP 路由 |
 | `tests/unit/test_session_close_split.py` | 创建 | 后缀拆分纯函数 |
@@ -754,7 +755,8 @@ out_of_scope_changes:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
-| 2026-08-11 | Step 1–6 | domain enums/models/service, Lua×3, repository, API route/schema, tests | unit 31 + contract 11 + integration 19 PASS | 无 |
+| 2026-08-11 | Step 1–6 | domain enums/models/service, Lua×3, repository, session_close_script.py, API route/schema, tests | scoped unit 36 + contract 11 + integration 19 PASS；full unit 446 + contract 101 PASS | whitelist drift：session_close_script.py P2 approved loader |
+| 2026-08-11 | POST_MERGE_CLEANUP | governance docs(status): complete on main | — | PR #29 MERGED merge `722e42d9e24d085b0ed671478730952ef7c92ad6`；OI-004 resolved |
 
 ---
 
@@ -764,19 +766,35 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `src/memory_system/domain/enums/session_close.py` | 创建 |
+| `src/memory_system/domain/models/session_close.py` | 创建 |
+| `src/memory_system/domain/services/session_close_service.py` | 创建 |
+| `src/memory_system/infrastructure/redis/scripts/session_close_enter.lua` | 创建 |
+| `src/memory_system/infrastructure/redis/scripts/session_close_revert_active.lua` | 创建 |
+| `src/memory_system/infrastructure/redis/scripts/session_close_terminal.lua` | 创建 |
+| `src/memory_system/infrastructure/redis/session_close_repository.py` | 创建 |
+| `src/memory_system/infrastructure/redis/session_close_script.py` | 创建（P2 approved loader；WHITELIST_DOCUMENTATION_DRIFT_ONLY） |
+| `src/memory_system/api/schemas/memory_session.py` | 修改 |
+| `src/memory_system/api/routes/memory_session.py` | 修改 |
+| `tests/unit/test_session_close_split.py` | 创建 |
+| `tests/unit/test_session_close_service.py` | 创建 |
+| `tests/unit/test_session_close_status_mapping.py` | 创建 |
+| `tests/contract/test_stm010_contract.py` | 创建 |
+| `tests/integration/test_session_close_redis.py` | 创建 |
 
 ### 与原计划的差异
 
-暂无。
+- `session_close_script.py` 为 Code Review P2 批准的 Lua loader helper；Task Plan §6 白名单表事后补登（WHITELIST_DOCUMENTATION_DRIFT_ONLY）。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | `uv run pytest tests/unit/test_session_close_*.py` | 35 passed |
+| Unit | `uv run pytest tests/unit/test_session_close_*.py` | 36 passed |
 | Contract | `uv run pytest tests/contract/test_stm010_contract.py` | 11 passed |
 | Integration | `uv run pytest tests/integration/test_session_close_redis.py` | 19 passed |
+| Full Unit | `uv run pytest tests/unit -q` | 446 passed |
+| Full Contract | `uv run pytest tests/contract -q` | 101 passed |
 | E2E | — | 非本任务目标 |
 | Ruff | `uv run ruff check .` | PASS |
 | Mypy | `uv run mypy src tests scripts` | PASS |
@@ -786,20 +804,25 @@ out_of_scope_changes:
 ```yaml
 p0: 0
 p1: 0
-p2: 0
-p3: 0
-review_report: null
+p2: 3
+p3: 3
+review_report: CODE_REVIEW_APPROVED
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/STM-010-session-close
+plan_commit: abd6d8be7d3807710a3cc24d65d2af81576a482d
+implementation_commit: ebb90e49c4eed8b7fd64a35611d7af87521d3d5a
+implementation_commit_message: "feat(stm): add session close state machine and API"
+pr: "#29"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/29"
+pr_state: MERGED
+merge_commit: 722e42d9e24d085b0ed671478730952ef7c92ad6
+merged_at: "2026-08-11T02:14:24Z"
 ```
 
 ### 最终状态
 
-`tested`
+`completed`

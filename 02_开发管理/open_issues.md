@@ -107,7 +107,9 @@ spec_sections:
 impact: "Archive 文档未持久化 estimated_tokens 时，选择/切分所用 token 应从 Redis 消息还是重算"
 blocks_current_task: false
 resolve_by_task: "STM-005 / STM-010"
-status: open
+status: resolved
+resolved_at: "2026-08-11T02:14:24Z"
+resolved_by_task: STM-010
 ```
 
 **问题描述：** Mongo Archive 消息 schema 未包含 `estimated_tokens`，但归档选择与 Close 切分依赖 token 边界。
@@ -116,9 +118,18 @@ status: open
 
 **决议记录：**
 
-- **2026-08-10** — STM-005 POST_MERGE_CLEANUP evidence：Mongo archive messages persist 4 fields only（no `estimated_tokens`）；create/reuse contract delivered；full token-boundary resolution deferred to STM-010；**status remains open**。
-- **2026-08-11** — STM-009 POST_MERGE_CLEANUP evidence：Coordinator 侧所有 token 边界计算仅使用 Redis WM `WorkingMemoryMessage.estimated_tokens` 求和；Mongo 四字段不含 tokens；Finalize `archived_message_tokens == pending_archive_estimated_tokens`；**full token-boundary closure deferred to STM-010**；**status remains open**。
-- **2026-08-11** — STM-010 Task Plan §10.4：七项 resolution criteria 已映射至 `split_close_suffix_batches`（Redis `estimated_tokens` 精确和）、Pending `pending_archive_estimated_tokens`、后缀全归档、OI4 Integration 验收；**正式 closure 待 STM-010 实现 + OI4 测试 PASS**；**status remains open**。
+- **2026-08-10** — STM-005 POST_MERGE_CLEANUP evidence：Mongo archive messages persist 4 fields only（no `estimated_tokens`）；create/reuse contract delivered；full token-boundary resolution deferred to STM-010。
+- **2026-08-11** — STM-009 POST_MERGE_CLEANUP evidence：Coordinator 侧所有 token 边界计算仅使用 Redis WM `WorkingMemoryMessage.estimated_tokens` 求和；Mongo 四字段不含 tokens；Finalize `archived_message_tokens == pending_archive_estimated_tokens`。
+- **2026-08-11** — STM-010 Task Plan §10.4：七项 resolution criteria 已映射至 `split_close_suffix_batches`（Redis `estimated_tokens` 精确和）、Pending `pending_archive_estimated_tokens`、后缀全归档、OI4 Integration 验收。
+- **2026-08-11** — STM-010 POST_MERGE_CLEANUP evidence（PR #29 MERGED merge `722e42d9e24d085b0ed671478730952ef7c92ad6`；implementation on main `ebb90e49c4eed8b7fd64a35611d7af87521d3d5a`；`test_oi4_token_boundary_closure` PASS）：
+  1. Mongo 4-field only — I-C
+  2. Token from Redis WM — U14, I-D, OI4
+  3. No Mongo content re-estimate — Unit + OI4
+  4. `archived_message_tokens` = Redis sum — OI4
+  5. Final archive boundary closed — U6, U15, OI4
+  6. Finalize consistency（close no Finalize）— I-L
+  7. Post-close no token ambiguity — I-A, I-H
+- **status**: resolved
 
 ---
 
@@ -357,7 +368,7 @@ resolved_by_task: OI-012
 | OI-001 | STM-009 | 否 | resolved |
 | OI-002 | STM-009 | 否 | resolved |
 | OI-003 | STM-010 | 否 | resolved |
-| OI-004 | STM-005 / STM-010 | 否 | open |
+| OI-004 | STM-005 / STM-010 | 否 | resolved |
 | OI-005 | STM-006 | 否 | resolved |
 | OI-006 | EXT-008 前需规格确认 | 否 | open |
 | OI-007 | STM-011 | 否 | open |

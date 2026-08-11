@@ -278,7 +278,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-007 | Compression LLM Client + Structured Output | §1.2.5, §3.9 | DEV-002 | completed |
 | STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | completed |
 | STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | completed |
-| STM-010 | Session Close | §1.2.3, §1.2.7 | STM-006, STM-009 | planned |
+| STM-010 | Session Close | §1.2.3, §1.2.7 | STM-006, STM-009 | completed |
 | STM-011 | `republish_archive_event.py` 补发脚本 | §1.2.4, §3.4 | STM-006 | planned |
 | STM-012 | 补发事件消费验证 | §1.2.4, §2.1.4 | STM-011, EXT-001 | planned |
 | STM-013 | 短期记忆阶段 E2E + 关键失败注入 | §1, §3.28 | STM-010 | planned |
@@ -387,7 +387,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **正式前置依赖**：STM-006、STM-009 — **SATISFIED**。
 - **测试**：Unit 22 + Contract 10 + Integration A–R + OI-004 专用 OI4；含 `base_compression_version` 快照/冻结/REUSED；失败注入/并发 write-vs-close；**无** STM-013 全 E2E。
 - **规划备注**：`plan_review_round: 2`（MF-1 `base_compression_version` 闭合；吸收 SF-1–SF-4）；同步 HTTP 200 `closed` / 503 `close_incomplete`（OI-003 决议）；`closing` 重试恢复非 409；终端重复 404 `session_not_found`；STM-011 **非** blocker；`pr_sizing: single PR, medium-sized scoped change`。
-- **状态备注**：`planned` — Task Plan 已创建；`next_action=计划审查`；**不得自动实施**。
+- **状态备注**：`completed`（plan_commit `abd6d8be7d3807710a3cc24d65d2af81576a482d`；implementation `ebb90e49c4eed8b7fd64a35611d7af87521d3d5a`；PR #29 MERGED https://github.com/xu-jia-ming/memory_system/pull/29 merge `722e42d9e24d085b0ed671478730952ef7c92ad6` mergedAt `2026-08-11T02:14:24Z`；`workflow_mode=NORMAL`）；Session Close enter/revert/terminal Lua + `close_session` 编排 + `ClosePlan.base_compression_version` 快照/冻结；`POST /api/v1/memory/session/{user_id}/{session_id}/close`；HTTP 200 `closed` / 503 `close_incomplete`（OI-003）；suffix 全归档 `split_close_suffix_batches`；不复用 Coordinator/LLM/Finalize；OI-004 resolved（OI4 test PASS）；scoped unit 36 / contract 11 / integration 19；full unit 446 / contract 101；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=3；whitelist drift `session_close_script.py` P2 approved；feat 分支待删；**STM-011 READY_FOR_PLANNING only**；**STM-013 READY_FOR_PLANNING only**（STM-010 **SATISFIED**）；**STM-012 NOT ready**（needs STM-011 + EXT-001）；**不得触碰 DEV-006/PR#13**。
 
 #### STM-011
 
@@ -400,14 +400,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 #### STM-012
 
 - **目标**：补发事件被 Extraction Consumer 消费的 Integration/E2E 验证（任务幂等创建等）。
-- **前置**：STM-011, EXT-001。
+- **前置**：STM-011, EXT-001 — **NOT ready**（needs STM-011 + EXT-001 completed）。
 - **非目标**：修改补发脚本业务语义（除非缺陷修复）。
+- **状态备注**：`planned` — **NOT ready**（needs STM-011 + EXT-001）。
 
 #### STM-013
 
 - **目标**：STM 阶段端到端：Session → Message → Archive → Compression → Close；含规格要求的 STM 相关失败注入。
-- **前置**：STM-010 — **NOT ready**（needs STM-010 completed）。
-- **状态备注**：`planned` — **NOT ready**（needs STM-010 completed）。
+- **前置**：STM-010 — **SATISFIED**。
+- **状态备注**：`planned` — **READY_FOR_PLANNING only**（STM-010 completed；**不得自动开始**）。
 - **测试**：E2E。
 
 ---
@@ -995,5 +996,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-008`（`completed`）；`STM-009`（prerequisites STM-003+STM-004+STM-008 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-011`（prerequisite STM-006 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-010` NOT ready（needs STM-009）；OI-004/OI-005 remain open；**不** 自动启动 STM-009/011；**不** 触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否** |
 | 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-009 READY_FOR_PLANNING only` |
+
+### CHANGE-048
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-11 |
+| 原因 | STM-010 POST_MERGE_CLEANUP：PR #29 MERGED（`722e42d9e24d085b0ed671478730952ef7c92ad6` mergedAt `2026-08-11T02:14:24Z`）；docs(status): complete on main；删 exact feat；OI-004 resolved |
+| 受影响任务 | `STM-010`（`completed`）；`STM-011`（prerequisite STM-006 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-013`（prerequisite STM-010 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-012` NOT ready（needs STM-011 + EXT-001）；OI-003/OI-004 resolved；**不** 自动启动 STM-011/013；**不** 触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否** |
+| 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-011 READY_FOR_PLANNING only; STM-013 READY_FOR_PLANNING only` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
