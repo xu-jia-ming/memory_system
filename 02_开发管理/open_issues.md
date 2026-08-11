@@ -21,14 +21,21 @@ spec_sections:
 impact: "capacity_exceeded 后触发的「压缩协调一次」指整次多轮 Coordinator 还是单轮压缩"
 blocks_current_task: false
 resolve_by_task: STM-009
-status: open
+status: resolved
+resolved_at: "2026-08-11T01:17:29Z"
+resolved_by_task: STM-009
 ```
 
 **问题描述：** 规格在容量背压路径要求运行压缩协调；“一次”与 `max_compression_rounds_per_request` 的关系未写死，影响 STM-009 实现与测试断言。
 
 **禁止行为：** 不得在未解决前自行定为新 Contract。
 
-**决议记录：** （空）
+**决议记录：**
+
+- **2026-08-11** — STM-009 PR #28 MERGED（merge `924ca8c8af94793e76be9376c4514ef417ce5e33`）
+- **Planner 决议（STM-009 Task Plan §10.1）**：「一次压缩协调流程」= 单次 `run_compression_coordination(...)` 调用，其内部可执行至多 `context.max_compression_rounds_per_request` 轮；容量路径与触发路径共用该函数
+- **验收证据**：Unit U5/U20；Integration I-B（可配置 `max_compression_rounds_per_request`）
+- **status**: resolved
 
 ---
 
@@ -42,14 +49,21 @@ spec_sections:
 impact: "容量路径遇到压缩锁被其他持有者占用时，是否在重试后直接返回 working_memory_full"
 blocks_current_task: false
 resolve_by_task: STM-009
-status: open
+status: resolved
+resolved_at: "2026-08-11T01:17:29Z"
+resolved_by_task: STM-009
 ```
 
 **问题描述：** 锁被占用导致无法压缩时，容量路径的最终 HTTP/错误语义需要与规格失败矩阵对齐，正文未单独展开该交叉场景。
 
 **禁止行为：** 不得在未解决前自行定为新 Contract。
 
-**决议记录：** （空）
+**决议记录：**
+
+- **2026-08-11** — STM-009 PR #28 MERGED（merge `924ca8c8af94793e76be9376c4514ef417ce5e33`）
+- **Planner 决议（STM-009 Task Plan §10.2）**：容量路径必须先调用 `run_compression_coordination`；压缩侧 `skipped_lock`/`failed` 等仍必须用相同 `message_id` 重试 STM-003；仅当 retry 仍 `capacity_exceeded` 时返回 HTTP 503 `working_memory_full`
+- **验收证据**：Unit U6；Integration lock scenario（锁占用 + 满 WM → 503 且消息未写入）
+- **status**: resolved
 
 ---
 
@@ -94,6 +108,7 @@ status: open
 **决议记录：**
 
 - **2026-08-10** — STM-005 POST_MERGE_CLEANUP evidence：Mongo archive messages persist 4 fields only（no `estimated_tokens`）；create/reuse contract delivered；full token-boundary resolution deferred to STM-010；**status remains open**。
+- **2026-08-11** — STM-009 POST_MERGE_CLEANUP evidence：Coordinator 侧所有 token 边界计算仅使用 Redis WM `WorkingMemoryMessage.estimated_tokens` 求和；Mongo 四字段不含 tokens；Finalize `archived_message_tokens == pending_archive_estimated_tokens`；**full token-boundary closure deferred to STM-010**；**status remains open**。
 
 ---
 
@@ -106,7 +121,9 @@ spec_sections:
 impact: "文档中的 Context Archive Service 命名与进程内 Archive 逻辑是否仅为称谓"
 blocks_current_task: false
 resolve_by_task: STM-006
-status: open
+status: resolved
+resolved_at: "2026-08-11T01:17:29Z"
+resolved_by_task: STM-009
 ```
 
 **问题描述：** 事件生产者描述出现 “Memory API / Context Archive Service” 表述，而工程上 Compression/Archive 协调在 `memory-api` 进程内；需确认无额外独立服务 Contract。
@@ -116,6 +133,7 @@ status: open
 **决议记录：**
 
 - **2026-08-10** — STM-006 POST_MERGE_CLEANUP partial evidence：`archive_created_publisher` 与 `compression_preparation_service` 均在 `memory-api` 进程内；未创建独立 Context Archive Service 网络组件；Kafka publish 复用 `AppState.kafka_producer`。**status remains open**（正式治理落盘 OI-005 决议段待人工/后续 OI task 闭合）。
+- **2026-08-11** — STM-009 PR #28 MERGED（merge `924ca8c8af94793e76be9376c4514ef417ce5e33`）+ STM-006 partial evidence：`compression_coordinator_service` 在 `memory-api` 进程内编排；`AppState.kafka_producer`；**无**独立 Context Archive Service 网络组件；**status**: resolved
 
 ---
 
@@ -326,11 +344,11 @@ resolved_by_task: OI-012
 
 | 问题 ID | 最迟解决任务 | 是否阻塞当前任务 | 状态 |
 |---|---|---|---|
-| OI-001 | STM-009 | 否 | open |
-| OI-002 | STM-009 | 否 | open |
+| OI-001 | STM-009 | 否 | resolved |
+| OI-002 | STM-009 | 否 | resolved |
 | OI-003 | STM-010 | 否 | open |
 | OI-004 | STM-005 / STM-010 | 否 | open |
-| OI-005 | STM-006 | 否 | open |
+| OI-005 | STM-006 | 否 | resolved |
 | OI-006 | EXT-008 前需规格确认 | 否 | open |
 | OI-007 | STM-011 | 否 | open |
 | OI-008 | RET-005 | 否 | open |

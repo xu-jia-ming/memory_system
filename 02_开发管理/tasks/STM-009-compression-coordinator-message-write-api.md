@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-009
 task_name: Compression Coordinator + Message Write API Wiring
-status: committed
+status: completed
 plan_review_round: 1
 workflow_mode: NORMAL
 workflow_mode_source: explicit
@@ -684,15 +684,18 @@ async def write_working_message_with_coordination(
 ```
 
 ```yaml
-RELEASE_PHASE: IMPLEMENTATION_RELEASE  # 实施起
+RELEASE_PHASE: POST_MERGE_CLEANUP
 workflow_mode: NORMAL
 branch: feat/STM-009-compression-coordinator-message-write-api
 plan_commit: "8609f15b47a318e885fab9cd073b616863b8d5b5"
 implementation_commit: "1b6270b663b6326efb32f096a0e67e2742bb6794"
 implementation_commit_message: "feat(stm): add compression coordinator and message write API"
+status_record_committed: "63232d837add2b4a6c6918d145f115f4762b88f7"
 pr: "#28"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/28"
-pr_state: OPEN
+pr_state: MERGED
+merge_commit: "924ca8c8af94793e76be9376c4514ef417ce5e33"
+merged_at: "2026-08-11T01:17:29Z"
 ```
 
 ---
@@ -717,4 +720,5 @@ pr_state: OPEN
 | 日期 | 版本 | 说明 |
 |---|---|---|
 | 2026-08-11 | 1.1 | Developer 实施完成；21 unit + 10 contract + 12 integration；FULL_RUFF/mypy PASS |
+| 2026-08-11 | 1.3 | POST_MERGE_CLEANUP；PR #28 MERGED merge `924ca8c8af94793e76be9376c4514ef417ce5e33`；status=completed；OI-001/OI-002/OI-005 resolved |
 | 2026-08-11 | 1.2 | IMPLEMENTATION_RELEASE；implementation `1b6270b`；PR #28 OPEN；status=committed |

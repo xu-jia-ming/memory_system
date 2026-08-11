@@ -277,7 +277,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-006 | 压缩锁、pending archive、Kafka 发布 | §1.2.4, §1.2.6 | STM-005 | completed |
 | STM-007 | Compression LLM Client + Structured Output | §1.2.5, §3.9 | DEV-002 | completed |
 | STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | completed |
-| STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | planned（plan_review_round 1） |
+| STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | completed |
 | STM-010 | Session Close | §1.2.3, §1.2.7 | STM-006, STM-009 | planned |
 | STM-011 | `republish_archive_event.py` 补发脚本 | §1.2.4, §3.4 | STM-006 | planned |
 | STM-012 | 补发事件消费验证 | §1.2.4, §2.1.4 | STM-011, EXT-001 | planned |
@@ -376,14 +376,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **正式前置依赖**：STM-003、STM-004、STM-005、STM-006、STM-007、STM-008、DEV-005 — **SATISFIED**。
 - **规划备注**：§5.0 二十三项 Contract 闭合；OI-001/OI-002 Planner 决议 §10.1–10.2；OI-004 局部不阻塞；OI-005 进程内生产者闭合；成功响应仅 `message_id`/`status`/`compression_status`；触发 `estimated_tokens >= compression_trigger_tokens`；Kafka `publish_failed` 不阻断 LLM；MUST_FIX=0。
 - **测试**：Unit 20（Coordinator）+ Contract 10（HTTP）+ Integration A–L（Redis/Mongo/Kafka + FakeLlmClient）。
-- **状态备注**：`planned` — `plan_review_round: 1`；`workflow_mode=NORMAL`；baseline `a15a2e4`；`next_action=计划审查`；**不得自动实施**。
+- **状态备注**：`completed`（plan_commit `8609f15b47a318e885fab9cd073b616863b8d5b5`；implementation `1b6270b663b6326efb32f096a0e67e2742bb6794`；record `63232d837add2b4a6c6918d145f115f4762b88f7`；PR #28 MERGED https://github.com/xu-jia-ming/memory_system/pull/28 merge `924ca8c8af94793e76be9376c4514ef417ce5e33` mergedAt `2026-08-11T01:17:29Z`；`workflow_mode=NORMAL`）；CompressionCoordinatorService 编排 STM-004/005/006/007/008 公共边界；`POST /api/v1/memory/working/message` HTTP 接线；`compression_status` 七值；容量背压先协调再同 `message_id` 重试；触发 `estimated_tokens>=compression_trigger_tokens`；Archive 头部前缀选择+Pending 复用；Kafka `publish_failed` 继续 LLM；消息已写入后压缩失败 HTTP 200 不回滚；多轮 `partial_completed`；FakeLlmClient 默认注入；scoped unit 21 / contract 10 / redis int 10 / kafka int 2；full unit 410 / contract 90；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=3；OI-001/OI-002/OI-005 resolved；OI-004 remains open；NOT implemented: STM-010 Close / STM-011 republish / STM-013 E2E；feat 分支待删；**STM-010 READY_FOR_PLANNING only**（STM-006+STM-009 **SATISFIED**；不得自动开始）；**不得触碰 DEV-006/PR#13**。
 
 #### STM-010
 
 - **目标**：Close 状态机、切分、resume、早失败回滚、原子删 Redis；`close_incomplete`（HTTP 映射见 OI-003，不得臆造）。
 - **非目标**：Extraction。
-- **正式前置依赖**：STM-006、STM-009 — STM-006 **SATISFIED**；STM-009 **NOT ready**（needs STM-009 completed）。
-- **状态备注**：`planned` — **NOT ready**（needs STM-009 completed）。
+- **正式前置依赖**：STM-006、STM-009 — **SATISFIED**。
+- **状态备注**：`planned` — **READY_FOR_PLANNING only**（STM-006+STM-009 **SATISFIED**；**不得自动开始**）。
 - **测试**：Integration/E2E 片段；部分失败与恢复。
 
 #### STM-011
@@ -403,7 +403,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 #### STM-013
 
 - **目标**：STM 阶段端到端：Session → Message → Archive → Compression → Close；含规格要求的 STM 相关失败注入。
-- **前置**：STM-010。
+- **前置**：STM-010 — **NOT ready**（needs STM-010 completed）。
+- **状态备注**：`planned` — **NOT ready**（needs STM-010 completed）。
 - **测试**：E2E。
 
 ---
