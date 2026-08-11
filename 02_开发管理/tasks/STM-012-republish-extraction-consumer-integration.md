@@ -363,10 +363,13 @@ review_report: "Round 3 independent Plan Review PLAN_APPROVED; MF-001 CLOSED; im
 ```yaml
 branch: feat/STM-012-republish-extraction-consumer-integration
 plan_commit: b0cc223c60d0d8a1011a7a92e8f705285726792d
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 26aa710d62123d341fb79349c9ad86fc5d58c0a6
+implementation_commit_message: "test(integration): verify republish event extraction consumer idempotency"
+pr: "#35"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/35"
+pr_state: OPEN
 ```
 
 ### 最终状态
 
-`tested`
+`committed`
