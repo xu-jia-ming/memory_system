@@ -55,7 +55,7 @@ formal_DEV-OPS-008_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/31
 formal_DEV-OPS-008_pr_state: MERGED
 formal_DEV-OPS-008_merge_commit: 49719b91e4be6c552c342fef45504166c919febd
 formal_DEV-OPS-008_merged_at: "2026-08-11T10:32:18Z"
-formal_DEV-OPS-008_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_DEV-OPS-008_status_record_completed: 37d803c308c2f492637bee6047339cb04a846100
 formal_DEV-OPS-008_revalidated_source_sha: 9f47597abeb0b69930f1cd18734049c2ee5a4497
 formal_DEV-OPS-008_revalidated_main_base: e5ed43bee0310f3c42d977d5bd109f96d7522cb2
 formal_DEV-OPS-008_revalidated_image_id: sha256:bf1edf179be9babd435a390f84c7862c9e745f08b77110690baed240b5aef176
