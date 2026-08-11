@@ -365,7 +365,6 @@ async def test_e4_llm_failure_post_write_http_200_compression_failed(
         meta_before = await read_wm_meta(redis_client, user_id, session_id)
         assert meta_before is not None
         version_before = meta_before.compression_version
-        messages_before = await redis_client.llen(working_memory_messages_key(user_id, session_id))
 
         await seed_messages_via_http(
             hybrid_api_client,
@@ -374,6 +373,10 @@ async def test_e4_llm_failure_post_write_http_200_compression_failed(
             count=3,
             tokens_each=60,
         )
+        messages_after_seed = await redis_client.llen(
+            working_memory_messages_key(user_id, session_id)
+        )
+        assert messages_after_seed == 3
 
         fail_resp = await post_message(
             hybrid_api_client,
@@ -392,9 +395,10 @@ async def test_e4_llm_failure_post_write_http_200_compression_failed(
         assert meta_after_fail.compression_version == version_before
         assert meta_after_fail.pending_archive_id
         assert meta_after_fail.pending_archive_message_count > 0
-        assert await redis_client.llen(working_memory_messages_key(user_id, session_id)) >= (
-            messages_before
+        messages_after_fail = await redis_client.llen(
+            working_memory_messages_key(user_id, session_id)
         )
+        assert messages_after_fail == messages_after_seed + 1
 
         pending_archive_id = meta_after_fail.pending_archive_id
         events = await consume_kafka_events(
