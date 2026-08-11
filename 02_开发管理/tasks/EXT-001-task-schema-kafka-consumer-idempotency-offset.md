@@ -5,7 +5,7 @@
 ```yaml
 task_id: EXT-001
 task_name: Task Schema + Kafka Consumer Idempotency / Offset
-status: approved
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 plan_review_round: 2
@@ -37,8 +37,8 @@ branch: "feat/EXT-001-task-schema-kafka-consumer-idempotency-offset"
 created_at: "2026-08-11 12:31 UTC"
 updated_at: "2026-08-11 12:44 UTC"
 approval_gates:
-  planning_docs: "Round 2 remediation ready for Plan Review（Round 1 PLAN_REJECTED BLOCKER=0 MUST_FIX=2 SHOULD_FIX=5）"
-  implementation_plan: pending
+  planning_docs: "Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；Human PLAN_APPROVED Amendment 001"
+  implementation_plan: "status=tested; human PLAN_APPROVED Round 2; awaiting Code Review remediation close-out"
 ```
 
 ### 1.1 编排与门禁（本轮）
@@ -679,6 +679,7 @@ RELEASE_PHASE_NOTES:
 |---|---|---|---|---|
 | 2026-08-11 12:31 UTC | Planner 初版计划 | 本文件 + progress/master_plan 规划态 | N/A | Open Issues 001–004 |
 | 2026-08-11 12:44 UTC | Planner Round 2 remediation（Amendment 001） | MF-001/MF-002 + SF-001..005；OI 状态更新；progress/master_plan 规划态 | N/A | OI-004 plan-resolved；OI-001/002/003 remain open |
+| 2026-08-11 13:18–13:24 UTC | Developer implementation and test completion | Implemented all approved EXT-001 production/test files; corrected Kafka integration record isolation to assign the published partition and use committed offsets for redelivery checks; added only approved task-index assertions | Unit/contract 45 passed; Mongo/migration integration 5 passed; Kafka integration 8 passed; Ruff and Mypy passed | No contract/spec deviation; Docker test stack was run sequentially |
 
 ---
 
@@ -688,22 +689,36 @@ RELEASE_PHASE_NOTES:
 
 | 文件 | 结果 |
 |---|---|
-| | |
+| `src/memory_system/domain/enums/extraction_task.py` | Created |
+| `src/memory_system/domain/models/extraction_task.py` | Created |
+| `src/memory_system/domain/services/extraction_pipeline_port.py` | Created |
+| `src/memory_system/domain/services/extraction_task_consumer_service.py` | Created |
+| `src/memory_system/infrastructure/mongodb/extraction_task_repository.py` | Created |
+| `src/memory_system/infrastructure/kafka/archive_created_consumer.py` | Created |
+| `src/memory_system/entrypoints/extraction_worker.py` | Updated refusal-only entrypoint |
+| `tests/unit/test_extraction_task_models.py` | Created |
+| `tests/unit/test_extraction_task_repository.py` | Created |
+| `tests/unit/test_extraction_task_consumer_service.py` | Created |
+| `tests/unit/test_archive_created_consumer_boundary.py` | Created |
+| `tests/contract/test_ext001_contract.py` | Created |
+| `tests/integration/test_extraction_task_mongo.py` | Created |
+| `tests/integration/test_extraction_consumer_kafka.py` | Created and corrected record isolation |
+| `tests/integration/test_migrate_infra.py` | Added approved task-index assertions only |
 
 ### 与原计划的差异
 
-暂无。
+Integration tests required sequential real test-stack execution; no implementation or Contract deviation.
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
+| Unit + Contract | `uv run pytest -q tests/unit/test_extraction_task_models.py tests/unit/test_extraction_task_repository.py tests/unit/test_extraction_task_consumer_service.py tests/unit/test_archive_created_consumer_boundary.py tests/contract/test_ext001_contract.py` | 45 passed |
+| Integration Mongo/migration | `uv run pytest -q tests/integration/test_extraction_task_mongo.py tests/integration/test_migrate_infra.py` | 5 passed |
+| Integration Kafka | `uv run pytest -q tests/integration/test_extraction_consumer_kafka.py` | 8 passed |
 | E2E | N/A |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Ruff | `uv run ruff check <all changed scoped files>` | PASS |
+| Mypy | `uv run mypy <7 changed production files>` | PASS |
 
 ### Review 结果
 
@@ -718,12 +733,15 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/EXT-001-task-schema-kafka-consumer-idempotency-offset
+plan_commit: 6f716946638d9585f0aa53854723559b9f8044bb
+implementation_commit: afd8b64dfd4856b4a2f00f82846dace76617e0d1
+implementation_commit_message: "feat(ext): add extraction task schema and kafka consumer idempotency"
+pr: "#34"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/34"
+pr_state: OPEN
 ```
 
 ### 最终状态
 
-`planned`
+`committed`
