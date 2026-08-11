@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-009
 task_name: Compression Coordinator + Message Write API Wiring
-status: tested
+status: committed
 plan_review_round: 1
 workflow_mode: NORMAL
 workflow_mode_source: explicit
@@ -688,6 +688,11 @@ RELEASE_PHASE: IMPLEMENTATION_RELEASE  # 实施起
 workflow_mode: NORMAL
 branch: feat/STM-009-compression-coordinator-message-write-api
 plan_commit: "8609f15b47a318e885fab9cd073b616863b8d5b5"
+implementation_commit: "1b6270b663b6326efb32f096a0e67e2742bb6794"
+implementation_commit_message: "feat(stm): add compression coordinator and message write API"
+pr: "#28"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/28"
+pr_state: OPEN
 ```
 
 ---
@@ -712,3 +717,4 @@ plan_commit: "8609f15b47a318e885fab9cd073b616863b8d5b5"
 | 日期 | 版本 | 说明 |
 |---|---|---|
 | 2026-08-11 | 1.1 | Developer 实施完成；21 unit + 10 contract + 12 integration；FULL_RUFF/mypy PASS |
+| 2026-08-11 | 1.2 | IMPLEMENTATION_RELEASE；implementation `1b6270b`；PR #28 OPEN；status=committed |
