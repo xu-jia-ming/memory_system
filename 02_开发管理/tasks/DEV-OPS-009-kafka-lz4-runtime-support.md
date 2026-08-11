@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-009
 task_name: Restore authoritative Kafka LZ4 runtime support for memory-api test/runtime image
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -472,10 +472,16 @@ review_report: CODE_REVIEW_APPROVED
 ```yaml
 branch: feat/DEV-OPS-009-kafka-lz4-runtime-support
 plan_commit: 8367e7b6953fe6776d35865375a9aa48b02877f0
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 90cd79cbc7235cc444b8ff67357a4d229399af1f
+implementation_commit_message: "fix(ops): add cramjam for authoritative Kafka LZ4 runtime support"
+pr: "#32"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/32"
+pr_state: MERGED
+merge_commit: f754db8a9b406f62180f33d8a09e412ccc7c605b
+merged_at: "2026-08-11T09:36:27Z"
+status_record_completed: null  # pending POST_MERGE_CLEANUP docs(status): complete commit SHA
 ```
 
 ### 最终状态
 
-`tested`
+`completed`

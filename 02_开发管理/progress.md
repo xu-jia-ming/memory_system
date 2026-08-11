@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — DEV-OPS-009 tested (STM-013 blocked)
+current_phase: Phase 1 — DEV-OPS-009 completed (STM-013 blocked)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: DEV-OPS-009
-current_task_status: tested
-current_branch: feat/DEV-OPS-009-kafka-lz4-runtime-support
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -23,13 +23,23 @@ dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md
 workflow_mode_for_this_task: NORMAL
-formal_DEV-OPS-009_status: tested
+formal_DEV-OPS-009_status: completed
 formal_DEV-OPS-009_plan_file: 02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md
+formal_DEV-OPS-009_plan_commit: 8367e7b6953fe6776d35865375a9aa48b02877f0
 formal_DEV-OPS-009_branch: feat/DEV-OPS-009-kafka-lz4-runtime-support
 formal_DEV-OPS-009_branch_from: "main（NOT feat/STM-013；NOT feat/DEV-OPS-008；PLAN_LANDING 后创建）"
 formal_DEV-OPS-009_workflow_mode: NORMAL
-formal_DEV-OPS-009_note: "缺失 cramjam 导致权威 lz4 下 AIOKafkaProducer 初始化 RuntimeError；修复后 DEV-OPS-008 resume authoritative-runtime validation；不吸收 C1/C2"
+formal_DEV-OPS-009_note: "POST_MERGE_CLEANUP；cramjam>=2.8,<3 闭合权威 lz4；AIOKafkaProducer lz4 init + Kafka lz4 send 测试；unblocks DEV-OPS-008 authoritative-runtime validation；不吸收 C1/C2；PR #32 MERGED；feat 分支已删"
 formal_DEV-OPS-009_root_cause: "A — pyproject/uv.lock 未声明 aiokafka 0.13 LZ4 后端 cramjam>=2.8"
+formal_DEV-OPS-009_implementation_commit: 90cd79cbc7235cc444b8ff67357a4d229399af1f
+formal_DEV-OPS-009_implementation_commit_message: "fix(ops): add cramjam for authoritative Kafka LZ4 runtime support"
+formal_DEV-OPS-009_pr: "#32"
+formal_DEV-OPS-009_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/32"
+formal_DEV-OPS-009_pr_state: MERGED
+formal_DEV-OPS-009_merge_commit: f754db8a9b406f62180f33d8a09e412ccc7c605b
+formal_DEV-OPS-009_merged_at: "2026-08-11T09:36:27Z"
+formal_DEV-OPS-009_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_DEV-OPS-009_code_review: CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2
 formal_DEV-OPS-008_status: tested
 formal_DEV-OPS-008_plan_file: 02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md
 formal_DEV-OPS-008_branch: feat/DEV-OPS-008-compose-test-stack-runtime-compatibility
@@ -43,8 +53,8 @@ formal_STM-013_pr: "#30"
 formal_STM-013_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/30"
 formal_STM-013_pr_state: OPEN
 formal_STM-013_release_gate: BLOCKED_BY_DEFECT_FIX
-formal_STM-013_blocking_task: DEV-OPS-009
-formal_STM-013_blocking_reason: "lz4 runtime (cramjam missing) blocks authoritative compression_type=lz4 startup; plus DEV-OPS-008 C1/C2 pending merge+revalidation; PR #30 production fixes OUT_OF_SCOPE"
+formal_STM-013_blocking_task: DEV-OPS-008
+formal_STM-013_blocking_reason: "DEV-OPS-008 C1/C2 pending merge+authoritative revalidation; PR #30 production fixes OUT_OF_SCOPE; lz4 dimension SATISFIED by DEV-OPS-009 merge"
 formal_STM-013_code_review: "CODE_REVIEW_APPROVED superseded by remediation diff; P0=0 P1=0 on 975e6029 only"
 formal_STM-013_code_review_required: REQUIRED_AFTER_DEV_OPS_008_AND_REVALIDATION
 formal_STM-013_tests_init_py: "tests/__init__.py — mypy package resolution only (test-tooling adjunct; not production)"
@@ -54,7 +64,7 @@ formal_STM-013_branch: feat/STM-013-short-term-memory-e2e
 formal_STM-013_plan_file: 02_开发管理/tasks/STM-013-short-term-memory-e2e.md
 formal_STM-013_prerequisite: SATISFIED
 formal_STM-013_workflow_mode: NORMAL
-formal_STM-013_note: "E2E implemented on feat; scope remediation removed C1/C2 from PR #30; BLOCKED_BY_DEFECT_FIX until DEV-OPS-009 merge → DEV-OPS-008 revalidate/merge → STM-013 sync main → E1–E4 → new Code Review"
+formal_STM-013_note: "E2E implemented on feat; scope remediation removed C1/C2 from PR #30; BLOCKED_BY_DEFECT_FIX until DEV-OPS-008 revalidate/merge → STM-013 sync main → E1–E4 → new Code Review; DEV-OPS-009 lz4 merge SATISFIED"
 formal_STM-013_plan_review_round: 2
 formal_STM-010_status: completed
 formal_STM-010_plan_file: 02_开发管理/tasks/STM-010-session-close.md
@@ -509,11 +519,11 @@ formal_DEV-OPS-008_full_contract: "101 passed"
 formal_DEV-OPS-008_ruff: PASS
 formal_DEV-OPS-008_mypy: PASS
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
-next_action: 实施
-last_role_result: HUMAN_PLAN_APPROVED
+next_action: "DEV-OPS-008 authoritative-runtime validation on merged main + fresh image（DEV-OPS-009 lz4 SATISFIED）；STM-013 remains BLOCKED_BY_DEFECT_FIX pending DEV-OPS-008 merge"
+last_role_result: POST_MERGE_CLEANUP
 human_plan_approved_at: "2026-08-11T13:38:00+08:00"
 human_plan_approved_note: "Human PLAN_APPROVED DEV-OPS-009; Plan Reviewer BLOCKER=0 MUST_FIX=0; cramjam lz4 runtime support plan"
-blocking_reason: "BLOCKED_BY_DEFECT_FIX — DEV-OPS-009 (lz4/cramjam); DEV-OPS-008 authoritative validation pending DEV-OPS-009 merge; PR #30 OPEN must not merge"
+blocking_reason: "BLOCKED_BY_DEFECT_FIX — DEV-OPS-008 C1/C2 pending merge+revalidation; PR #30 OPEN must not merge; DEV-OPS-009 lz4 dimension completed"
 oi012_amendment: "Amendment 002.1（Round 2 MF-1 SHA + SF-1～4；Round 3 PLAN_APPROVED）"
 insertion_override:
   prior_current_task: DEV-OPS-007
@@ -968,6 +978,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 14:05 UTC | STM-007 | planned | 创建 Task Plan `02_开发管理/tasks/STM-007-compression-llm-client-structured-output.md`；master_plan CHANGE-043；progress 规划态回写 | baseline `dc74311`；§5.0 十六项 Contract 闭合；OI-004/OI-005 OUT OF SCOPE | `next_action=计划审查`；未实施、未 Git 写；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 22:40 UTC | STM-007 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `87dc9c4a442aff113ac220b9604010aa135f721e`；PR #26 OPEN；docs(status): record on feat | scoped 29 / full unit 369 / contract 76；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-11 12:30 UTC | DEV-OPS-008 | planned | 创建 Task Plan `02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md`；master_plan CHANGE-050；C1/C2 contract 闭合；SOURCE-ALIGNED fresh image gate；blocks STM-013 PR #30 | baseline main `390af52`；aiokafka 0.13.0 无 `bootstrap_connected`；ES 9.4.4 GET mapping 省略 element_type | `next_action=计划审查`；未实施、未 Git 写；**不得 merge PR #30**；**不得触碰 DEV-006/PR#13** |
+| 2026-08-11 09:36 UTC | DEV-OPS-009 | committed → completed | PR #32 MERGED（`f754db8a9b406f62180f33d8a09e412ccc7c605b` mergedAt `2026-08-11T09:36:27Z`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | implementation `90cd79cbc7235cc444b8ff67357a4d229399af1f`；cramjam>=2.8,<3；unit lz4 9 / integration lz4 2 / full unit 450 / contract 101；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；unblocks DEV-OPS-008 authoritative validation；STM-013 lz4 SATISFIED；**不得 merge PR #30/#31**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-11 05:30 UTC | DEV-OPS-009 | planned | 创建 Task Plan `02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md`；master_plan CHANGE-051；根因=缺失 cramjam（aiokafka 0.13 lz4 extra）；blocks DEV-OPS-008 authoritative lz4 validation + STM-013 | pyproject/uv.lock 无 cramjam；权威 lz4 下 RuntimeError；DEV-OPS-008 本地验证曾用 ephemeral gzip 绕过 | `next_action=计划审查`；未实施、未 Git 写；**不得修改 PR #30/#31**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-11 04:12 UTC | STM-013 | scope remediation | REMEDIATION_PLAN_APPROVED；SCOPE_REMEDIATION：C1/C2 从 PR #30 effective diff 移除；`release_gate=BLOCKED_BY_DEFECT_FIX`；blocking `DEV-OPS-008`；provenance `975e6029` 记入 progress | 待 remediation commit push；E2E 预期 FAIL；PR #30 OPEN 不得 merge；CODE_REVIEW superseded | **不得 merge PR #30**；**不得实施 DEV-OPS-008 本轮**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-11 02:14 UTC | STM-010 | committed → completed | POST_MERGE_CLEANUP：PR #29 MERGED（`722e42d9e24d085b0ed671478730952ef7c92ad6` mergedAt `2026-08-11T02:14:24Z`）；docs(status): complete on main；删 exact feat | scoped unit 36 / contract 11 / integration 19；full unit 446 / contract 101；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=3；OI-003/OI-004 resolved；STM-011/STM-013 READY_FOR_PLANNING only；STM-012 NOT ready；**不得触碰 DEV-006/PR#13** |

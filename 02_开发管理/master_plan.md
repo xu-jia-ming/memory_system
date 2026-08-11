@@ -72,7 +72,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-006 | Phase 0 Baseline Hygiene Before STM-001 | 非业务：unit compose-wrapper allowlist + progress DOC_CODE_DRIFT hygiene | DEV-007, OI-011 | completed |
 | DEV-OPS-007 | Phase 1 Baseline Hygiene Before STM-006 | 非业务：STM-005 orphan SHA metadata 更正 + Ruff E501 torn-read helper 换行 | STM-005 | completed |
 | DEV-OPS-008 | Compose test-stack runtime compatibility (aiokafka 0.13 + ES 9.4 mapping API) | 非业务：C1 runtime kafka readiness + C2 ES mapping readback compat；blocks STM-013 | STM-010 | tested |
-| DEV-OPS-009 | Restore authoritative Kafka LZ4 runtime support for memory-api test/runtime image | 非业务：cramjam 生产依赖闭合权威 lz4；unblocks DEV-OPS-008 authoritative validation | main | approved |
+| DEV-OPS-009 | Restore authoritative Kafka LZ4 runtime support for memory-api test/runtime image | 非业务：cramjam 生产依赖闭合权威 lz4；unblocks DEV-OPS-008 authoritative validation | main | completed |
 
 #### DEV-OPS-009 Restore authoritative Kafka LZ4 runtime support for memory-api test/runtime image
 
@@ -83,7 +83,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **关键修复**：`pyproject.toml` 追加 `cramjam>=2.8,<3` + `uv lock`；lz4 codec/producer init 单测 + Kafka lz4 发送集成测。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md`
 - **插入说明**：用户显式 NEW_TASK；`workflow_mode=NORMAL`（explicit）；分支必须从 **main** 创建（NOT feat/STM-013；NOT feat/DEV-OPS-008）。
-- **状态备注**：`approved`（human PLAN_APPROVED）；`next_action=实施`；PLAN_LANDING 进行中。
+- **状态备注**：`completed`（plan_commit `8367e7b6953fe6776d35865375a9aa48b02877f0`；implementation `90cd79cbc7235cc444b8ff67357a4d229399af1f`；PR #32 MERGED `f754db8a9b406f62180f33d8a09e412ccc7c605b` mergedAt `2026-08-11T09:36:27Z`；cramjam>=2.8,<3 + lz4 unit/integration tests；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；`workflow_mode=NORMAL`；feat 分支待删）；**unblocks DEV-OPS-008 authoritative-runtime validation**；STM-013 lz4 维度 SATISFIED。
 
 #### DEV-OPS-008 Compose test-stack runtime compatibility (aiokafka 0.13 + Elasticsearch 9.4 mapping API)
 
