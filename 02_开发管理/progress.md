@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — DEV-OPS-008 completed (STM-013 blocked pending revalidation)
+current_phase: Phase 1 — STM-013 completed (v0.2.0-short-term-memory milestone)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-013
-current_task_status: blocked
-current_branch: feat/STM-013-short-term-memory-e2e
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -63,17 +63,35 @@ formal_DEV-OPS-008_revalidated_container_id: 7dbc9f5a222659d1ca4eb427fbbeeb68072
 formal_DEV-OPS-008_authoritative_compression_type: lz4
 formal_DEV-OPS-008_gzip_override_used: false
 formal_DEV-OPS-008_code_review: CODE_REVIEW_APPROVED P0=0 P1=0 P2=4 P3=2
-formal_STM-013_status: blocked
-formal_STM-013_implementation_commit: 975e6029d9aef98988c65a0556cb74695d61adf6
-formal_STM-013_implementation_commit_note: "superseded by scope remediation; production paths reverted on feat"
+formal_STM-013_status: completed
+formal_STM-013_implementation_commit: 91f8fd1c147e370b8b264b8b896163047df77163
+formal_STM-013_implementation_commit_message: "test(e2e): fix E4 Redis message retention assertion after seed"
+formal_STM-013_final_source_sha: 91f8fd1c147e370b8b264b8b896163047df77163
+formal_STM-013_final_image_id: sha256:fa55a730a79a2332fffc9baf43691217570034ec7cca48de1355bd5831e252ec
+formal_STM-013_authoritative_compression_type: lz4
+formal_STM-013_gzip_override_used: false
 formal_STM-013_pr: "#30"
 formal_STM-013_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/30"
-formal_STM-013_pr_state: OPEN
-formal_STM-013_release_gate: BLOCKED_PENDING_REVALIDATION
+formal_STM-013_pr_state: MERGED
+formal_STM-013_merge_commit: f473c194dd092fe3b30be5cf356ec533fc32fef8
+formal_STM-013_merged_at: "2026-08-11T11:17:33Z"
+formal_STM-013_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_STM-013_release_gate: WAITING_FOR_PR_MERGE
 formal_STM-013_blocking_task: null
-formal_STM-013_blocking_reason: "DEV-OPS-008 MERGED (C1/C2 SATISFIED); pending feat/STM-013 sync main + E1–E4 revalidation + new CODE_REVIEW; PR #30 MUST NOT MERGE until revalidated"
-formal_STM-013_code_review: "CODE_REVIEW_APPROVED superseded by remediation diff; P0=0 P1=0 on 975e6029 only"
-formal_STM-013_code_review_required: REQUIRED_AFTER_DEV_OPS_008_AND_REVALIDATION
+formal_STM-013_blocking_reason: null
+formal_STM-013_code_review: CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2
+formal_STM-013_code_review_required: SATISFIED
+formal_STM-013_scoped_e2e: "4 passed"
+formal_STM-013_full_unit: "459 passed"
+formal_STM-013_full_contract: "101 passed"
+formal_STM-013_ruff: PASS
+formal_STM-013_mypy: PASS
+formal_STM-013_readiness: "HTTP 200; kafka_producer=ready; elasticsearch=ready; compression_type=lz4"
+formal_STM-013_e1: PASS
+formal_STM-013_e2: PASS
+formal_STM-013_e3: PASS
+formal_STM-013_e4: PASS
+formal_STM-013_shim_cleanup: "_patch_aiokafka_bootstrap_connected REMOVED; no gzip override"
 formal_STM-013_tests_init_py: "tests/__init__.py — mypy package resolution only (test-tooling adjunct; not production)"
 formal_DEV-OPS-008_candidate_title: "Compose test-stack runtime compatibility (aiokafka 0.13 + ES 9.4 mapping API)"
 formal_STM-013_plan_commit: 39fab9e564d005d7a8c6409c7b293a6d337741f8
@@ -81,7 +99,7 @@ formal_STM-013_branch: feat/STM-013-short-term-memory-e2e
 formal_STM-013_plan_file: 02_开发管理/tasks/STM-013-short-term-memory-e2e.md
 formal_STM-013_prerequisite: SATISFIED
 formal_STM-013_workflow_mode: NORMAL
-formal_STM-013_note: "E2E on feat; scope remediation removed C1/C2 from PR #30; DEV-OPS-008+DEV-OPS-009 blockers SATISFIED on main; pending sync main + E1–E4 + new Code Review; PR #30 OPEN MUST NOT MERGE until revalidated"
+formal_STM-013_note: "POST_MERGE_CLEANUP；E2E E1–E4 PASS on source-aligned image fa55a730；scope remediation retained（tests-only）；shim removed；PR #30 MERGED merge f473c19；feat 分支已删；closes v0.2.0-short-term-memory milestone"
 formal_STM-013_plan_review_round: 2
 formal_STM-010_status: completed
 formal_STM-010_plan_file: 02_开发管理/tasks/STM-010-session-close.md
@@ -536,9 +554,9 @@ formal_DEV-OPS-008_ruff: PASS
 formal_DEV-OPS-008_mypy: PASS
 formal_DEV-OPS-008_kafka_lz4_integration: "2 passed"
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
-next_action: "STM-013 sync main + revalidation (E1–E4); do NOT merge PR #30 until CODE_REVIEW_APPROVED"
+next_action: "STM-011 READY_FOR_PLANNING only; STM-012 NOT ready (needs STM-011 + EXT-001); do NOT auto-start"
 last_role_result: POST_MERGE_CLEANUP
-blocking_reason: "STM-013 blocked pending sync/revalidation; PR #30 OPEN must not merge"
+blocking_reason: null
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
 human_plan_approved_at: "2026-08-10T12:35:00Z"
 human_plan_approved_note: "Human PLAN_APPROVED STM-006 Amendment 001；Round 2 Plan Reviewer PLAN_APPROVED BLOCKER=0 MUST_FIX=0；absorb R2 SHOULD_FIX count/tokens fail-closed；scope lock+pending+Kafka only"
@@ -667,7 +685,7 @@ stm_013_scope_remediation:
 
 **DEV-OPS-007**：**completed** — Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；Ruff E501 L174–175 换行（零语义变更）；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；record `c48a70d`；PR [#24](https://github.com/xu-jia-ming/memory_system/pull/24) **MERGED**（merge `de95f3a2f0107f791f89441177841754b1d4f82c` mergedAt `2026-08-10T11:54:41Z`）；ZERO_STALE_AUTHORITATIVE_REFERENCES **PASS**；FULL_RUFF **PASS**；integration context-read **14 passed**；mypy **PASS**；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；production `src/**` changes **none**；Phase 1 DEV-OPS-007 **completed**。
 
-**下游**：**STM-013** `planned` — Task Plan `02_开发管理/tasks/STM-013-short-term-memory-e2e.md`；prerequisite STM-010 **SATISFIED**；`next_action=计划审查`；**STM-011** `READY_FOR_PLANNING only`（非 STM-013 blocker）；**STM-012** NOT ready（needs STM-011 + EXT-001）；**STM-010** `completed`（PR #29 MERGED）；**不得触碰 DEV-006/PR#13**。
+**下游**：**STM-013** **completed** — PR #30 MERGED `f473c19`；`v0.2.0-short-term-memory` milestone **closed**；**STM-011** `READY_FOR_PLANNING only`；**STM-012** NOT ready（needs STM-011 + EXT-001）；**不得触碰 DEV-006/PR#13**。
 
 ## 实施前置条件
 

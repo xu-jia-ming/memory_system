@@ -305,7 +305,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-010 | Session Close | §1.2.3, §1.2.7 | STM-006, STM-009 | completed |
 | STM-011 | `republish_archive_event.py` 补发脚本 | §1.2.4, §3.4 | STM-006 | planned |
 | STM-012 | 补发事件消费验证 | §1.2.4, §2.1.4 | STM-011, EXT-001 | planned |
-| STM-013 | 短期记忆阶段 E2E + 关键失败注入 | §1, §3.28 | STM-010 | blocked |
+| STM-013 | 短期记忆阶段 E2E + 关键失败注入 | §1, §3.28 | STM-010 | completed |
 
 #### STM-001
 
@@ -438,7 +438,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **非 blocker**：STM-011（republish 非 E2E 前提）；STM-012（需 EXT-001）。
 - **测试**：E2E only（`tests/e2e/test_stm013_short_term_memory_e2e.py`）；`@pytest.mark.integration`；scoped `pytest tests/e2e/...`（**非** `-m e2e`）；E1–E4；compose.test.yaml + memory-api；E4 hybrid in-process `FakeLlmClient(mode=timeout)`。
 - **规划备注**：TEST/E2E FIRST；`plan_review_round: 2`（MF-1 OPTION 2 + SF-1 config parity + SF-2 Kafka 矩阵 + SF-3 compose 启动序）；Fixture A settings == memory-api runtime；test 栈 HTTP 经 container IP；bounded Kafka poll 过滤 `user_id`/`session_id`/`archive_id`；`workflow_mode=NORMAL`。
-- **状态备注**：`blocked` — `release_gate=BLOCKED_PENDING_REVALIDATION`；DEV-OPS-008 **MERGED**（C1/C2 SATISFIED）；PR #30 OPEN **MUST NOT MERGE** until feat sync main + E1–E4 revalidation + new CODE_REVIEW；scope remediation 已将 C1/C2 生产修复移出 PR #30 effective diff；E2E 在 feat 保留。
+- **状态备注**：`completed`（plan_commit `39fab9e564d005d7a8c6409c7b293a6d337741f8`；implementation `91f8fd1c147e370b8b264b8b896163047df77163`；PR #30 MERGED `f473c194dd092fe3b30be5cf356ec533fc32fef8` mergedAt `2026-08-11T11:17:33Z`；final image `sha256:fa55a730…`；authoritative lz4；E1–E4 PASS；scoped E2E 4 / unit 459 / contract 101；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；shim removed；`workflow_mode=NORMAL`；feat 分支已删）；**closes `v0.2.0-short-term-memory` milestone**；**STM-011 READY_FOR_PLANNING only**；**STM-012 NOT ready**。
 
 ---
 
