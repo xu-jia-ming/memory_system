@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — STM-012 planned (STM-011 + EXT-001 completed)
+current_phase: Phase 2 — STM-012 tested (STM-011 + EXT-001 completed)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-012
-current_task_status: approved
-current_branch: main
+current_task_status: tested
+current_branch: feat/STM-012-republish-extraction-consumer-integration
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -61,8 +61,10 @@ formal_EXT-001_plan_review_note: "SF-R2-001: §2 concept chain omits empty sessi
 formal_EXT-001_remediation: "Amendment 001 — MF-001/MF-002 + SF-001..005"
 formal_EXT-001_human_plan_approved: true
 formal_EXT-001_human_plan_approved_at: "2026-08-11T12:51:00Z"
-formal_STM-012_status: planned
+formal_STM-012_status: tested
 formal_STM-012_plan_file: 02_开发管理/tasks/STM-012-republish-extraction-consumer-integration.md
+formal_STM-012_branch: feat/STM-012-republish-extraction-consumer-integration
+formal_STM-012_plan_commit: b0cc223c60d0d8a1011a7a92e8f705285726792d
 formal_STM-012_prerequisite: "SATISFIED — STM-011 + EXT-001 completed"
 formal_STM-012_workflow_mode: NORMAL
 formal_STM-012_baseline: d6e7941eeaa2a8409b09eaf181d2924eb3865138
@@ -78,7 +80,10 @@ formal_STM-012_plan_review_prior_result: "Round 2 BLOCKER=0 MUST_FIX=1 SHOULD_FI
 formal_STM-012_mf001_status: CLOSED
 formal_STM-012_human_plan_approved: true
 formal_STM-012_human_plan_approved_at: "2026-08-11T14:55:45Z"
-formal_STM-012_note: "Round 3 PLAN_APPROVED; MF-001 CLOSED; human PLAN_APPROVED granted; production_delta NONE; real CLI→Kafka→EXT-001 consumer→Mongo; no EXT-002; do not touch DEV-006/PR#13"
+formal_STM-012_note: "implementation tested; integration 1 passed (59.97s); ruff+mypy PASS; production_delta NONE; CLI→Kafka→EXT-001 consumer→Mongo idempotency verified; test-only sitecustomize for CLI subprocess kafka DNS; do not touch DEV-006/PR#13"
+formal_STM-012_integration: "1 passed"
+formal_STM-012_ruff: PASS
+formal_STM-012_mypy: PASS
 formal_STM-011_status: completed
 formal_STM-011_plan_file: 02_开发管理/tasks/STM-011-republish-archive-event.md
 formal_STM-011_plan_commit: 68cee46011f011f3074662f846c64da670741cb3
@@ -631,8 +636,8 @@ formal_DEV-OPS-008_ruff: PASS
 formal_DEV-OPS-008_mypy: PASS
 formal_DEV-OPS-008_kafka_lz4_integration: "2 passed"
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
-next_action: "PLAN_LANDING then Developer（STM-012）；EXT-002 remains planned; do NOT touch DEV-006/PR#13"
-last_role_result: PLANNER
+next_action: "CODE_REVIEW for STM-012; EXT-002 remains planned; do NOT touch DEV-006/PR#13"
+last_role_result: DEVELOPER
 blocking_reason: null
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
 human_plan_approved_at: "2026-08-10T12:35:00Z"

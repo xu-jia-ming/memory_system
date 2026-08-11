@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-012
 task_name: Republish Archive Event → Extraction Consumer Integration Verification
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 plan_review_round: 3
@@ -27,11 +27,11 @@ prerequisites:
   baseline_main_sha: "d6e7941eeaa2a8409b09eaf181d2924eb3865138"
 branch: "feat/STM-012-republish-extraction-consumer-integration"
 created_at: "2026-08-11 14:11 UTC"
-updated_at: "2026-08-11 14:47 UTC"
-human_plan_approved: false
+updated_at: "2026-08-11 15:10 UTC"
+human_plan_approved: true
 approval_gates:
   plan_review: "Round 3 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0 SHOULD_FIX=3）；MF-001 CLOSED"
-  human_plan_approval: "required; not yet granted"
+  human_plan_approval: "granted 2026-08-11T14:55:45Z"
   implementation_review: "required; no P0/P1"
 release_phase: "IMPLEMENTATION_RELEASE"
 ```
@@ -317,6 +317,8 @@ release_sequence:
 | 2026-08-11 14:18 UTC | planning remediation | 追加 Amendment 001；仅更新计划内容 | 未执行（planning-only） | MF-001/MF-001-related SHOULD_FIX closure；等待 Round 2 PLAN_REVIEW |
 | 2026-08-11 14:27 UTC | planning remediation Round 3 | 追加 Amendment 002；核查实际 Settings env 名称/优先级、CLI、ExtractionPipelinePort 和 FakeCompletePipeline；仅规划文件治理更新 | 未执行（planning-only） | 关闭 Round 2 MF-001；吸收 raw-reader/Fake/CLI SHOULD_FIX；等待 Round 3 PLAN_REVIEW |
 | 2026-08-11 14:47 UTC | plan review metadata sync Round 3 | 回写 Round 3 PLAN_APPROVED；BLOCKER=0 MUST_FIX=0 SHOULD_FIX=3；MF-001 CLOSED；human PLAN_APPROVED 仍为 pending | 未执行（planning-only） | 仅治理元数据同步；不修改实质性计划语义；不实施 SHOULD_FIX 抛光项 |
+| 2026-08-11 15:05 UTC | PLAN_LANDING | docs(plan) `b0cc223c60d0d8a1011a7a92e8f705285726792d` on main；创建 `feat/STM-012-republish-extraction-consumer-integration` | 未执行 | human PLAN_APPROVED granted |
+| 2026-08-11 15:10 UTC | implementation | 创建 `tests/integration/test_stm012_republish_extraction_consumer_integration.py`；CLI subprocess sanitized env + sitecustomize kafka DNS bridge；Mongo fixture → CLI → Kafka raw reader → EXT-001 consumer → Mongo assertions | `uv run pytest -q tests/integration/test_stm012_republish_extraction_consumer_integration.py -m integration` **1 passed**（59.97s）；ruff **PASS**；mypy **PASS** | production_delta **NONE**；test-only sitecustomize via PYTHONPATH for CLI subprocess kafka hostname resolution（in-process tests use socket patch；Amendment 002 CLI env unchanged） |
 
 ## 14. 实际执行结果
 
@@ -325,21 +327,22 @@ release_sequence:
 | 文件 | 结果 |
 |---|---|
 | `02_开发管理/tasks/STM-012-republish-extraction-consumer-integration.md` | 本轮创建；仅计划 |
+| `tests/integration/test_stm012_republish_extraction_consumer_integration.py` | 创建；STM-012 Integration/E2E |
 
 ### 与原计划的差异
 
-暂无。
+- CLI subprocess 增加 test-only `sitecustomize`（经 `PYTHONPATH` temp dir）将 broker metadata 的 `kafka` 主机名解析到 `KAFKA__BOOTSTRAP_SERVERS` IP；不修改 `src/**` 或 STM-011 CLI 本体；与 in-process integration 的 `socket.getaddrinfo` patch 等效。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | — | 未执行（planning-only） |
-| Contract | — | 未执行（planning-only） |
-| Integration | — | 未执行（planning-only） |
-| E2E | — | 未执行（planning-only） |
-| Ruff | — | 未执行（planning-only） |
-| Mypy | — | 未执行（planning-only） |
+| Unit | — | 无新增 |
+| Contract | — | 无新增 |
+| Integration | `uv run pytest -q tests/integration/test_stm012_republish_extraction_consumer_integration.py -m integration` | **1 passed**（59.97s） |
+| E2E | — | 同上（vertical slice in integration test） |
+| Ruff | `uv run ruff check tests/integration/test_stm012_republish_extraction_consumer_integration.py` | **PASS** |
+| Mypy | `uv run mypy tests/integration/test_stm012_republish_extraction_consumer_integration.py` | **PASS** |
 
 ### Review 结果
 
@@ -350,20 +353,20 @@ blocker: 0
 must_fix: 0
 should_fix: 3
 mf001_status: CLOSED
-human_plan_approved: false
+human_plan_approved: true
 production_delta_expected: NONE
-review_report: "Round 3 independent Plan Review PLAN_APPROVED; MF-001 CLOSED; SF-R3-001 §2 goal still references python -m (superseded by Amendment 002 script-path CLI); SF-R3-002 Step 3 CompleteForBoundaryPipeline vs FakeCompletePipeline naming drift; SF-R3-003 implementer guidance may cite VALID_ENV pattern and explicit PYTHONPATH={REPO_ROOT}/src (non-blocking)"
+review_report: "Round 3 independent Plan Review PLAN_APPROVED; MF-001 CLOSED; implementation tested — integration 1 passed; ruff+mypy PASS; production_delta NONE"
 ```
 
 ### Git 记录
 
 ```yaml
-branch: main
-plan_commit: null
+branch: feat/STM-012-republish-extraction-consumer-integration
+plan_commit: b0cc223c60d0d8a1011a7a92e8f705285726792d
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`planned`
+`tested`
