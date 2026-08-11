@@ -35,14 +35,53 @@ def test_mapping_dense_vector_int8_hnsw() -> None:
     assert opts["ef_construction"] == 128
 
 
-def test_assert_mapping_compatible_rejects_wrong_dims() -> None:
+def _copy_mapping_properties() -> dict[str, Any]:
     props: dict[str, Any] = {}
     for key, value in MEMORY_RETRIEVAL_V1_MAPPINGS["properties"].items():
         props[key] = dict(value) if isinstance(value, dict) else value
     emb = dict(props["embedding"])
-    emb["dims"] = 768
     emb["index_options"] = dict(emb["index_options"])
     props["embedding"] = emb
+    return props
+
+
+def test_assert_mapping_compatible_accepts_omitted_element_type() -> None:
+    props = _copy_mapping_properties()
+    props["embedding"].pop("element_type")
+    assert_mapping_compatible({"properties": props})
+
+
+def test_assert_mapping_compatible_accepts_explicit_float_element_type() -> None:
+    props = _copy_mapping_properties()
+    assert props["embedding"]["element_type"] == "float"
+    assert_mapping_compatible({"properties": props})
+
+
+def test_assert_mapping_compatible_rejects_wrong_element_type() -> None:
+    props = _copy_mapping_properties()
+    props["embedding"]["element_type"] = "byte"
+    try:
+        assert_mapping_compatible({"properties": props})
+        raised = False
+    except ValueError:
+        raised = True
+    assert raised
+
+
+def test_assert_mapping_compatible_rejects_wrong_similarity() -> None:
+    props = _copy_mapping_properties()
+    props["embedding"]["similarity"] = "dot_product"
+    try:
+        assert_mapping_compatible({"properties": props})
+        raised = False
+    except ValueError:
+        raised = True
+    assert raised
+
+
+def test_assert_mapping_compatible_rejects_wrong_dims() -> None:
+    props = _copy_mapping_properties()
+    props["embedding"]["dims"] = 768
     try:
         assert_mapping_compatible({"properties": props})
         raised = False

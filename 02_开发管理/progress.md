@@ -12,7 +12,7 @@ phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: DEV-OPS-008
-current_task_status: approved
+current_task_status: tested
 current_branch: feat/DEV-OPS-008-compose-test-stack-runtime-compatibility
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -484,10 +484,25 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 deferred_business_task: null
 deferred_business_task_status: null
 deferred_business_task_note: null
-next_action: PLAN_LANDING then implementation
-last_role_result: HUMAN_PLAN_APPROVED
-human_plan_approved_at: "2026-08-11T12:28:00+08:00"
-human_plan_approved_note: "Human PLAN_APPROVED DEV-OPS-008; Plan Reviewer BLOCKER=0 MUST_FIX=0; absorb C1 client=None fail-closed + C1-U5 + STM-013 shim cleanup record + single impl commit preference"
+current_task_status: tested
+formal_DEV-OPS-008_status: tested
+formal_DEV-OPS-008_plan_commit: a464952021e3778bb8f29b96f867fc61619b8f76
+formal_DEV-OPS-008_baseline_source_sha: a464952021e3778bb8f29b96f867fc61619b8f76
+formal_DEV-OPS-008_baseline_image_id: sha256:fa1c24f18550f1e776b0a900d7e22c4b175aa3dd9df9b2b571476b8a37e956
+formal_DEV-OPS-008_baseline_container_id: db6c92e25d51
+formal_DEV-OPS-008_baseline_failure: "AttributeError AIOKafkaClient bootstrap_connected (C1)"
+formal_DEV-OPS-008_fixed_image_id: sha256:b2d94086f63c94b8e3443cc6817b5540c684405b5bb20a627f99b99ccd302815
+formal_DEV-OPS-008_fixed_container_id: 0875143c22ff
+formal_DEV-OPS-008_readiness: "HTTP 200; kafka_producer=ready; elasticsearch=ready"
+formal_DEV-OPS-008_scoped_unit_c1: "5 passed"
+formal_DEV-OPS-008_scoped_unit_c2: "7 passed"
+formal_DEV-OPS-008_full_unit: "455 passed"
+formal_DEV-OPS-008_full_contract: "101 passed"
+formal_DEV-OPS-008_ruff: PASS
+formal_DEV-OPS-008_mypy: PASS
+formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
+next_action: Code Review
+last_role_result: READY_FOR_CODE_REVIEW
 blocking_reason: "BLOCKED_BY_DEFECT_FIX — DEV-OPS-008 (C1+C2); PR #30 OPEN must not merge"
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
 human_plan_approved_at: "2026-08-10T12:35:00Z"

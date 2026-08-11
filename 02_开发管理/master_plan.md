@@ -71,7 +71,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 非业务：人类日常操作手册 + 契约测试；不改 Orchestrator/mode/业务 | DEV-OPS-003, DEV-OPS-004, DEV-004 | completed |
 | DEV-OPS-006 | Phase 0 Baseline Hygiene Before STM-001 | 非业务：unit compose-wrapper allowlist + progress DOC_CODE_DRIFT hygiene | DEV-007, OI-011 | completed |
 | DEV-OPS-007 | Phase 1 Baseline Hygiene Before STM-006 | 非业务：STM-005 orphan SHA metadata 更正 + Ruff E501 torn-read helper 换行 | STM-005 | completed |
-| DEV-OPS-008 | Compose test-stack runtime compatibility (aiokafka 0.13 + ES 9.4 mapping API) | 非业务：C1 runtime kafka readiness + C2 ES mapping readback compat；blocks STM-013 | STM-010 | planned |
+| DEV-OPS-008 | Compose test-stack runtime compatibility (aiokafka 0.13 + ES 9.4 mapping API) | 非业务：C1 runtime kafka readiness + C2 ES mapping readback compat；blocks STM-013 | STM-010 | tested |
 
 #### DEV-OPS-008 Compose test-stack runtime compatibility (aiokafka 0.13 + Elasticsearch 9.4 mapping API)
 
@@ -82,7 +82,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **关键修复**：`runtime.py` hasattr guard + start() fallback；`assert_mapping_compatible` element_type 仅双方非 None 且不等时 fail-closed（prototype 975e6029 evidence）。
 - **计划文件**：`02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md`
 - **插入说明**：用户显式 NEW_TASK；`workflow_mode=NORMAL`（explicit）；分支必须从 **main @ 390af52** 创建（**NOT** feat/STM-013）；STM-013 保持 blocked。
-- **状态备注**：`planned` — `next_action=计划审查`；**不得自动开始实施**；**不得 merge PR #30**。
+- **状态备注**：`tested` — plan_commit `a464952`；CODE_REVIEW_APPROVED P0=0 P1=0；baseline C1 AttributeError reproduced；fixed image readiness PASS；**不得 merge PR #30**；awaiting IMPLEMENTATION_RELEASE。
 
 #### DEV-OPS-007 Phase 1 Baseline Hygiene Before STM-006
 

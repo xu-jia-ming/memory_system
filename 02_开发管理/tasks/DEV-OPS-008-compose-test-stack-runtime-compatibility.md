@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-008
 task_name: Compose test-stack runtime compatibility (aiokafka 0.13 + Elasticsearch 9.4 mapping API)
-status: approved
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -473,7 +473,21 @@ out_of_scope_changes:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 2026-08-11 05:10 UTC | PLAN_LANDING | plan_commit `a464952` on main；feat 分支创建 | — | progress stash conflict resolved |
+| 2026-08-11 05:16 UTC | Baseline reproduction | 无代码变更 | baseline image `fa1c24f18550` @ source `a464952`；container `db6c92e25d51`；**C1 AttributeError** `bootstrap_connected` | 本地 ephemeral `KAFKA_PRODUCER__COMPRESSION_TYPE=gzip` 仅用于绕过镜像缺 lz4 原生库以到达 C1 路径；**非 repo 变更** |
+| 2026-08-11 05:16 UTC | C1/C2 implementation | `runtime.py`；`003_elasticsearch_memory_v1.py`；unit tests | C1-U1～U5 + C2-U1～U5 PASS；full unit 455；contract 101；FULL_RUFF PASS；mypy PASS | client=None fail-closed |
+| 2026-08-11 05:16 UTC | Fixed image validation | 无额外 prod 变更 | image `b2d94086f63c`；container `0875143c22ff`；`/health/ready` HTTP 200；kafka_producer=ready；elasticsearch=ready | 同上 ephemeral gzip compression 仅本地验证 |
+
+### 镜像 provenance（SOURCE-ALIGNED）
+
+| 阶段 | source commit | image tag / ID | container ID | 结果 |
+|---|---|---|---|---|
+| Baseline（无 C1/C2 fix） | `a464952021e3778bb8f29b96f867fc61619b8f76` | `devops008-baseline-a464952` / `sha256:fa1c24f18550…` | `db6c92e25d51` | C1 `AttributeError: bootstrap_connected`；lifespan startup failed |
+| Fixed（C1+C2 实施） | `a464952` + uncommitted impl（待 commit） | `devops008-fixed-a464952-uncommitted` / `sha256:b2d94086f63c…` | `0875143c22ff` | `/health/ready` 200；`kafka_producer=ready`；`elasticsearch=ready` |
+
+**本地 build 参数（ephemeral；非 repo 变更）**：`docker build --network=host --no-cache --build-arg HTTP_PROXY=http://127.0.0.1:17890 --build-arg HTTPS_PROXY=http://127.0.0.1:17890`
+
+**STM-013 shim cleanup note**：merge 后 STM-013 revalidation 须检查 `tests/e2e/conftest.py::_patch_aiokafka_bootstrap_connected`；若存在由 STM-013 scope 清理；DEV-OPS-008 不修改 `tests/e2e/**`
 
 ---
 
