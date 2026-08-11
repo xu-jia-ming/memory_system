@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-011
 task_name: scripts/republish_archive_event.py (publishing-side)
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 plan_review_round: 1
@@ -584,8 +584,14 @@ branch: feat/STM-011-republish-archive-event
 plan_commit: 68cee46011f011f3074662f846c64da670741cb3
 implementation_commit: 23939a3f3d25f5243978e967949beb4fe6282e2f
 implementation_commit_message: "feat(stm): add republish_archive_event CLI and service"
+pr: "#33"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/33"
+pr_state: MERGED
+merge_commit: 19fdb55359acd97380a8b5f0d8ae788134f75307
+merged_at: "2026-08-11T12:17:49Z"
+status_record_completed: null  # pending this docs(status): complete commit SHA
 ```
 
 ### 最终状态
 
-`committed`
+`completed`

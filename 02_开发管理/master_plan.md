@@ -303,7 +303,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-008 | Compression Finalize Lua | §1.2.5, §1.2.6 | STM-006, STM-007 | completed |
 | STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | completed |
 | STM-010 | Session Close | §1.2.3, §1.2.7 | STM-006, STM-009 | completed |
-| STM-011 | `republish_archive_event.py` 补发脚本 | §1.2.4, §3.4 | STM-006 | planned |
+| STM-011 | `republish_archive_event.py` 补发脚本 | §1.2.4, §3.4 | STM-006 | completed |
 | STM-012 | 补发事件消费验证 | §1.2.4, §2.1.4 | STM-011, EXT-001 | planned |
 | STM-013 | 短期记忆阶段 E2E + 关键失败注入 | §1, §3.28 | STM-010 | completed |
 
@@ -421,15 +421,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **正式前置依赖**：STM-006 — **SATISFIED**；STM-005（Mongo archive 模型）— **SATISFIED**。
 - **计划文件**：`02_开发管理/tasks/STM-011-republish-archive-event.md`
 - **规划备注**：Round 1；单 `archive_id` CLI MVP；`created_time` 取 Mongo `archive.created_time`（OI-STM-011-002）；复用 STM-006 publisher；新增 `find_context_archive_by_id` + `archive_event_republish_service`；测试 Unit/Contract/Kafka Integration；**无** EXT consumer 断言。
-- **状态备注**：`planned` — Task Plan 已编写；`next_action=计划审查`；**不得自动进入 Developer**。
+- **状态备注**：`completed`（plan_commit `68cee46011f011f3074662f846c64da670741cb3`；implementation `23939a3f3d25f5243978e967949beb4fe6282e2f`；PR #33 MERGED https://github.com/xu-jia-ming/memory_system/pull/33 merge `19fdb55359acd97380a8b5f0d8ae788134f75307` mergedAt `2026-08-11T12:17:49Z`；`workflow_mode=NORMAL`）；`scripts/republish_archive_event.py` + `archive_event_republish_service`；`find_context_archive_by_id`；`ArchiveCreatedEvent` + `publish_archive_created_event`；exit 0/1/2；scoped unit 16 / contract 3 / kafka int 5；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=3；feat 分支待删；**STM-012 NOT ready**（needs EXT-001）；**不得触碰 DEV-006/PR#13**。
 - **测试**：Unit（malformed input / not found / ownership / invalid / success / publish fail / payload exactness / exit codes）+ Contract（枚举/六字段）+ Kafka Integration；不依赖 EXT-001。
 
 #### STM-012
 
 - **目标**：补发事件被 Extraction Consumer 消费的 Integration/E2E 验证（任务幂等创建等）。
-- **前置**：STM-011, EXT-001 — **NOT ready**（needs STM-011 + EXT-001 completed）。
+- **前置**：STM-011 — **SATISFIED**；EXT-001 — **NOT ready**（planned；not started）。
 - **非目标**：修改补发脚本业务语义（除非缺陷修复）。
-- **状态备注**：`planned` — **NOT ready**（needs STM-011 + EXT-001）。
+- **状态备注**：`planned` — **NOT ready**（needs EXT-001 completed；STM-011 prerequisite **SATISFIED**）。
 
 #### STM-013
 
@@ -441,7 +441,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **非 blocker**：STM-011（republish 非 E2E 前提）；STM-012（需 EXT-001）。
 - **测试**：E2E only（`tests/e2e/test_stm013_short_term_memory_e2e.py`）；`@pytest.mark.integration`；scoped `pytest tests/e2e/...`（**非** `-m e2e`）；E1–E4；compose.test.yaml + memory-api；E4 hybrid in-process `FakeLlmClient(mode=timeout)`。
 - **规划备注**：TEST/E2E FIRST；`plan_review_round: 2`（MF-1 OPTION 2 + SF-1 config parity + SF-2 Kafka 矩阵 + SF-3 compose 启动序）；Fixture A settings == memory-api runtime；test 栈 HTTP 经 container IP；bounded Kafka poll 过滤 `user_id`/`session_id`/`archive_id`；`workflow_mode=NORMAL`。
-- **状态备注**：`completed`（plan_commit `39fab9e564d005d7a8c6409c7b293a6d337741f8`；implementation `91f8fd1c147e370b8b264b8b896163047df77163`；PR #30 MERGED `f473c194dd092fe3b30be5cf356ec533fc32fef8` mergedAt `2026-08-11T11:17:33Z`；final image `sha256:fa55a730…`；authoritative lz4；E1–E4 PASS；scoped E2E 4 / unit 459 / contract 101；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；shim removed；`workflow_mode=NORMAL`；feat 分支已删）；**closes `v0.2.0-short-term-memory` milestone**；**STM-011 READY_FOR_PLANNING only**；**STM-012 NOT ready**。
+- **状态备注**：`completed`（plan_commit `39fab9e564d005d7a8c6409c7b293a6d337741f8`；implementation `91f8fd1c147e370b8b264b8b896163047df77163`；PR #30 MERGED `f473c194dd092fe3b30be5cf356ec533fc32fef8` mergedAt `2026-08-11T11:17:33Z`；final image `sha256:fa55a730…`；authoritative lz4；E1–E4 PASS；scoped E2E 4 / unit 459 / contract 101；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；shim removed；`workflow_mode=NORMAL`；feat 分支已删）；**closes `v0.2.0-short-term-memory` milestone**；**STM-012 NOT ready**（needs EXT-001）。
 
 ---
 
@@ -1048,6 +1048,16 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-013`（`planned`；`plan_review_round: 2`；`next_action=计划审查`）；**不** 自动实施 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner Round 2 remediation |
+
+### CHANGE-051
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-11 |
+| 原因 | STM-011 POST_MERGE_CLEANUP：PR #33 MERGED（`19fdb55359acd97380a8b5f0d8ae788134f75307` mergedAt `2026-08-11T12:17:49Z`）；docs(status): complete on main；删 exact feat |
+| 受影响任务 | `STM-011`（`completed`）；`STM-012` NOT ready（needs EXT-001；STM-011 prerequisite **SATISFIED**）；`EXT-001` `planned`（not started）；**不** 自动启动 STM-012/EXT-001；**不** 触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否** |
+| 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-012 NOT ready; do NOT auto-start STM-012 or EXT-001` |
 
 ### CHANGE-050
 
