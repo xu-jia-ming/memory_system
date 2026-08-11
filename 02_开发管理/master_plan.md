@@ -406,10 +406,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-013
 
-- **目标**：STM 阶段端到端：Session → Message → Archive → Compression → Close；含规格要求的 STM 相关失败注入。
-- **前置**：STM-010 — **SATISFIED**。
-- **状态备注**：`planned` — **READY_FOR_PLANNING only**（STM-010 completed；**不得自动开始**）。
-- **测试**：E2E。
+- **目标**：STM 阶段端到端（**公共 HTTP API** 驱动）：Session Create → Message Write → Archive → Compression（Coordinator + FakeLlmClient）→ 压缩后继续写入 → Session Close；含 §3.28 STM 子集失败注入（E2 幂等 / E3 并发 write-vs-close / E4 LLM 失败 HTTP 200）；跨 HTTP + Redis + Mongo + Kafka 断言；**闭合 `v0.2.0-short-term-memory` 里程碑**。
+- **非目标**：修改 STM-001~010 核心 Contract；STM-011 republish；STM-012 EXT 消费；§3.32 全链路 EXT/RET E2E；真实 DeepSeek/SiliconFlow/TEI；默认 **无** `src/**` 生产变更（缺陷 HALT）。
+- **计划文件**：`02_开发管理/tasks/STM-013-short-term-memory-e2e.md`
+- **规格章节**：§1.2.1–§1.2.7、§1.2.4、§3.23、§3.28（STM 子集）、§3.32（STM 垂直切片）。
+- **正式前置依赖**：**STM-010** — **SATISFIED**。
+- **非 blocker**：STM-011（republish 非 E2E 前提）；STM-012（需 EXT-001）。
+- **测试**：E2E only（`tests/e2e/test_stm013_short_term_memory_e2e.py`）；`@pytest.mark.integration`；scoped `pytest tests/e2e/...`（**非** `-m e2e`）；E1–E4；compose.test.yaml + memory-api；E4 hybrid in-process `FakeLlmClient(mode=timeout)`。
+- **规划备注**：TEST/E2E FIRST；`plan_review_round: 2`（MF-1 OPTION 2 + SF-1 config parity + SF-2 Kafka 矩阵 + SF-3 compose 启动序）；Fixture A settings == memory-api runtime；test 栈 HTTP 经 container IP；bounded Kafka poll 过滤 `user_id`/`session_id`/`archive_id`；`workflow_mode=NORMAL`。
+- **状态备注**：`planned` — Round 2 Task Plan 修订；`next_action=计划审查`；**不得自动开始实施**。
 
 ---
 
@@ -1006,5 +1011,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-010`（`completed`）；`STM-011`（prerequisite STM-006 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-013`（prerequisite STM-010 **SATISFIED** — **READY_FOR_PLANNING only**）；`STM-012` NOT ready（needs STM-011 + EXT-001）；OI-003/OI-004 resolved；**不** 自动启动 STM-011/013；**不** 触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否** |
 | 审批 | Release Operator POST_MERGE_CLEANUP；`next_action=STM-011 READY_FOR_PLANNING only; STM-013 READY_FOR_PLANNING only` |
+
+### CHANGE-049
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-11 |
+| 原因 | STM-013 Plan Remediation Round 2：MF-1（`tests/e2e/` + `@pytest.mark.integration`；禁 `e2e` marker / `pyproject.toml`）；SF-1 Fixture A config parity；SF-2 Kafka 矩阵 §5.0#6=§8.4；SF-3 compose test 栈启动序与 container IP |
+| 受影响任务 | `STM-013`（`planned`；`plan_review_round: 2`；`next_action=计划审查`）；**不** 自动实施 |
+| 是否改变技术规格 | **否** |
+| 审批 | Planner Round 2 remediation |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
