@@ -301,6 +301,19 @@ def test_migrate_first_run_idempotent_checksum_and_stores(test_stack: None) -> N
     assert "archive_id_unique" in index_names
     assert "archive_batch_key_unique" in index_names
 
+    task_idx = _docker_exec(
+        "memory-system-mongodb-test",
+        "mongosh",
+        "--quiet",
+        "memory_system",
+        "--eval",
+        "JSON.stringify(db.memory_extraction_task.getIndexes().map(i => i.name))",
+    )
+    assert task_idx.returncode == 0
+    task_index_names = json.loads(task_idx.stdout)
+    assert "archive_id_unique" in task_index_names
+    assert "status_updated_time" in task_index_names
+
     # Neo4j constraints / indexes — exact §2.1.9 names
     neo4j = _docker_exec(
         "memory-system-neo4j-test",
