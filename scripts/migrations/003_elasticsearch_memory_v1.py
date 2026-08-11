@@ -71,12 +71,23 @@ def assert_mapping_compatible(actual_mappings: dict[str, Any]) -> None:
                 f"{actual.get('analyzer')!r} != {expected['analyzer']!r}"
             )
         if expected.get("type") == "dense_vector":
-            for key in ("dims", "element_type", "similarity"):
+            for key in ("dims", "similarity"):
                 if actual.get(key) != expected.get(key):
                     raise ValueError(
                         f"incompatible dense_vector.{key} for embedding: "
                         f"{actual.get(key)!r} != {expected.get(key)!r}"
                     )
+            expected_element = expected.get("element_type")
+            actual_element = actual.get("element_type")
+            if (
+                expected_element is not None
+                and actual_element is not None
+                and actual_element != expected_element
+            ):
+                raise ValueError(
+                    f"incompatible dense_vector.element_type for embedding: "
+                    f"{actual_element!r} != {expected_element!r}"
+                )
             if actual.get("index") is not True:
                 raise ValueError("incompatible dense_vector.index for embedding: expected true")
             actual_opts = actual.get("index_options")
