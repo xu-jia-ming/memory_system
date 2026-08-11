@@ -86,6 +86,17 @@ async def find_context_archive_by_batch_key(
     return context_archive_from_document(document)
 
 
+async def find_context_archive_by_id(
+    mongodb: AsyncMongoClient[Any],
+    archive_id: str,
+) -> ContextArchive | None:
+    """Find archive by archive_id (unique index)."""
+    document = await _collection(mongodb).find_one({"archive_id": archive_id})
+    if document is None:
+        return None
+    return context_archive_from_document(document)
+
+
 async def count_by_batch_key(mongodb: AsyncMongoClient[Any], archive_batch_key: str) -> int:
     """Count physical documents for a batch key (integration assertions)."""
     count = await _collection(mongodb).count_documents({"archive_batch_key": archive_batch_key})
