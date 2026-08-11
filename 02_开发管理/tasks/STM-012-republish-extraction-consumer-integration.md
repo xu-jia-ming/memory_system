@@ -319,6 +319,8 @@ release_sequence:
 | 2026-08-11 14:47 UTC | plan review metadata sync Round 3 | 回写 Round 3 PLAN_APPROVED；BLOCKER=0 MUST_FIX=0 SHOULD_FIX=3；MF-001 CLOSED；human PLAN_APPROVED 仍为 pending | 未执行（planning-only） | 仅治理元数据同步；不修改实质性计划语义；不实施 SHOULD_FIX 抛光项 |
 | 2026-08-11 15:05 UTC | PLAN_LANDING | docs(plan) `b0cc223c60d0d8a1011a7a92e8f705285726792d` on main；创建 `feat/STM-012-republish-extraction-consumer-integration` | 未执行 | human PLAN_APPROVED granted |
 | 2026-08-11 15:10 UTC | implementation | 创建 `tests/integration/test_stm012_republish_extraction_consumer_integration.py`；CLI subprocess sanitized env + sitecustomize kafka DNS bridge；Mongo fixture → CLI → Kafka raw reader → EXT-001 consumer → Mongo assertions | `uv run pytest -q tests/integration/test_stm012_republish_extraction_consumer_integration.py -m integration` **1 passed**（59.97s）；ruff **PASS**；mypy **PASS** | production_delta **NONE**；test-only sitecustomize via PYTHONPATH for CLI subprocess kafka hostname resolution（in-process tests use socket patch；Amendment 002 CLI env unchanged） |
+| 2026-08-11 15:15 UTC | IMPLEMENTATION_RELEASE | implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；record `c99dcf45189da1f5779bda6bf6d35d5853d8bc1b`；PR #35 OPEN | integration 1 passed；ruff PASS；mypy PASS | CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2 |
+| 2026-08-11 15:20 UTC | POST_MERGE_CLEANUP | PR #35 MERGED merge `d73207752bbf004a4b20bf8fff00720cc0ca456b`；docs(status): complete on main；删 exact feat | N/A | EXT-002 remains planned — NOT auto-started |
 
 ## 14. 实际执行结果
 
@@ -355,7 +357,12 @@ should_fix: 3
 mf001_status: CLOSED
 human_plan_approved: true
 production_delta_expected: NONE
-review_report: "Round 3 independent Plan Review PLAN_APPROVED; MF-001 CLOSED; implementation tested — integration 1 passed; ruff+mypy PASS; production_delta NONE"
+code_review: CODE_REVIEW_APPROVED
+code_review_p0: 0
+code_review_p1: 0
+code_review_p2: 1
+code_review_p3: 2
+review_report: "Round 3 independent Plan Review PLAN_APPROVED; MF-001 CLOSED; CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2; integration 1 passed; ruff+mypy PASS; production_delta NONE"
 ```
 
 ### Git 记录
@@ -365,11 +372,14 @@ branch: feat/STM-012-republish-extraction-consumer-integration
 plan_commit: b0cc223c60d0d8a1011a7a92e8f705285726792d
 implementation_commit: 26aa710d62123d341fb79349c9ad86fc5d58c0a6
 implementation_commit_message: "test(integration): verify republish event extraction consumer idempotency"
+record_commit: c99dcf45189da1f5779bda6bf6d35d5853d8bc1b
 pr: "#35"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/35"
-pr_state: OPEN
+pr_state: MERGED
+merge_commit: d73207752bbf004a4b20bf8fff00720cc0ca456b
+merged_at: "2026-08-11T15:20:30Z"
 ```
 
 ### 最终状态
 
-`committed`
+`completed`

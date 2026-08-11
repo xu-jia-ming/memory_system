@@ -304,7 +304,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-009 | Compression Coordinator + 写入 API 接线 | §1.2.3, §1.2.6 | STM-003, STM-004, STM-008 | completed |
 | STM-010 | Session Close | §1.2.3, §1.2.7 | STM-006, STM-009 | completed |
 | STM-011 | `republish_archive_event.py` 补发脚本 | §1.2.4, §3.4 | STM-006 | completed |
-| STM-012 | 补发事件消费验证 | §1.2.4, §2.1.4 | STM-011, EXT-001 | committed |
+| STM-012 | 补发事件消费验证 | §1.2.4, §2.1.4 | STM-011, EXT-001 | completed |
 | STM-013 | 短期记忆阶段 E2E + 关键失败注入 | §1, §3.28 | STM-010 | completed |
 
 #### STM-001
@@ -433,7 +433,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规格章节**：§1.2.4、§2.1.1、§2.1.3–§2.1.5、§3.4、§3.6、§3.19–§3.20、§3.32。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；baseline `d6e7941eeaa2a8409b09eaf181d2924eb3865138`；production delta **NONE**；Round 2 remediation（prior review BLOCKER=0 / MUST_FIX=1 / SHOULD_FIX=3）固定 CLI `uv run python scripts/republish_archive_event.py --archive-id <id> --user-id <id>`；test-only subprocess env 显式覆盖 `APP_ENV=test`、Mongo `<mongo_ip>:27017`、Kafka `<kafka_ip>:9092`、DB `memory_system`、topic `context.archive.created`、non-secret runtime settings，并明确覆盖 Docker-internal `mongodb`/`kafka` names；EXT-001 `group_id` 显式注入唯一 test group，production default 保持 `memory-extraction-group`；真实 Mongo/Kafka 与 STM-011 CLI；EXT-001 library consumer；test-only `ExtractionPipelinePort` Fake 仅返回 `PipelineTerminalDecision.complete()`；首次/重复补发断言新 event_id、稳定 archive_id、topic/key/精确六字段、单 task、非破坏性重复；offset 仅证明 valid event consumed、terminal Mongo state exists、that record commit passed，不声明 Mongo/Kafka atomicity；malformed/key-mismatch 不复制 EXT-001 suite；exact whitelist 未扩展；PLAN_REVIEW + human PLAN_APPROVED 后方可实施。
 - **Amendment 002 规划登记（Round 3）**：实际 `Settings` env names 为 `_REQUIRED_ENV_KEYS` 加 `KAFKA__TOPIC`，precedence 为 `env > dotenv > YAML > init/defaults`；CLI 固定为 repository-root `python scripts/republish_archive_event.py --archive-id <id> --user-id <id>`，sanitized subprocess env 仅允许 `PATH`/`PYTHONPATH` 与 exact pinned non-secret application values，禁止 `os.environ.copy()`；host-reachable Mongo/Kafka endpoints、finite timeout、captured diagnostics、unique bounded raw reader、exact test-only `ExtractionPipelinePort` Fake（first=1，duplicate total=1）均为实施门禁；baseline、exact whitelist、production delta **NONE** 不变。
-- **状态备注**：`committed`（plan_commit `b0cc223c60d0d8a1011a7a92e8f705285726792d`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；PR #35 OPEN https://github.com/xu-jia-ming/memory_system/pull/35；branch `feat/STM-012-republish-extraction-consumer-integration`；integration **1 passed**（59.97s）；ruff **PASS**；mypy **PASS**；production delta **NONE**；CODE_REVIEW_APPROVED P0=0 P1=0；`next_action=WAITING_FOR_PR_MERGE`）；**不得触碰 DEV-006/PR#13**。
+- **状态备注**：`completed`（plan_commit `b0cc223c60d0d8a1011a7a92e8f705285726792d`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；record `c99dcf45189da1f5779bda6bf6d35d5853d8bc1b`；PR #35 MERGED https://github.com/xu-jia-ming/memory_system/pull/35 merge `d73207752bbf004a4b20bf8fff00720cc0ca456b` mergedAt `2026-08-11T15:20:30Z`；`workflow_mode=NORMAL`）；integration **1 passed**（59.97s）；ruff **PASS**；mypy **PASS**；production delta **NONE**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2；feat 分支已删；**EXT-002 remains planned** — **NOT auto-started**；**不得触碰 DEV-006/PR#13**。
 
 #### STM-013
 
