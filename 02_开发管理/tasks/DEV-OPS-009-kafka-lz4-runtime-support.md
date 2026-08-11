@@ -5,7 +5,7 @@
 ```yaml
 task_id: DEV-OPS-009
 task_name: Restore authoritative Kafka LZ4 runtime support for memory-api test/runtime image
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 spec_sections:
@@ -472,10 +472,10 @@ review_report: CODE_REVIEW_APPROVED
 ```yaml
 branch: feat/DEV-OPS-009-kafka-lz4-runtime-support
 plan_commit: 8367e7b6953fe6776d35865375a9aa48b02877f0
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: f4b57d3c0e73640ed8b1d22ff1bf52a8d1403f95
+implementation_commit_message: "test(ops): kafka lz4 codec and broker send coverage"
 ```
 
 ### 最终状态
 
-`tested`
+`committed`

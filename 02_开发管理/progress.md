@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — DEV-OPS-009 tested (STM-013 blocked)
+current_phase: Phase 1 — DEV-OPS-009 committed (STM-013 blocked)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: DEV-OPS-009
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/DEV-OPS-009-kafka-lz4-runtime-support
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -23,13 +23,15 @@ dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md
 workflow_mode_for_this_task: NORMAL
-formal_DEV-OPS-009_status: tested
+formal_DEV-OPS-009_status: committed
 formal_DEV-OPS-009_plan_file: 02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md
 formal_DEV-OPS-009_branch: feat/DEV-OPS-009-kafka-lz4-runtime-support
 formal_DEV-OPS-009_branch_from: "main（NOT feat/STM-013；NOT feat/DEV-OPS-008；PLAN_LANDING 后创建）"
 formal_DEV-OPS-009_workflow_mode: NORMAL
 formal_DEV-OPS-009_note: "缺失 cramjam 导致权威 lz4 下 AIOKafkaProducer 初始化 RuntimeError；修复后 DEV-OPS-008 resume authoritative-runtime validation；不吸收 C1/C2"
 formal_DEV-OPS-009_root_cause: "A — pyproject/uv.lock 未声明 aiokafka 0.13 LZ4 后端 cramjam>=2.8"
+formal_DEV-OPS-009_implementation_commit: f4b57d3c0e73640ed8b1d22ff1bf52a8d1403f95
+formal_DEV-OPS-009_implementation_commit_message: "test(ops): kafka lz4 codec and broker send coverage"
 formal_DEV-OPS-008_status: tested
 formal_DEV-OPS-008_plan_file: 02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md
 formal_DEV-OPS-008_branch: feat/DEV-OPS-008-compose-test-stack-runtime-compatibility
@@ -509,8 +511,8 @@ formal_DEV-OPS-008_full_contract: "101 passed"
 formal_DEV-OPS-008_ruff: PASS
 formal_DEV-OPS-008_mypy: PASS
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
-next_action: 实施
-last_role_result: HUMAN_PLAN_APPROVED
+next_action: WAITING_FOR_PR_MERGE
+last_role_result: RELEASE_COMPLETED
 human_plan_approved_at: "2026-08-11T13:38:00+08:00"
 human_plan_approved_note: "Human PLAN_APPROVED DEV-OPS-009; Plan Reviewer BLOCKER=0 MUST_FIX=0; cramjam lz4 runtime support plan"
 blocking_reason: "BLOCKED_BY_DEFECT_FIX — DEV-OPS-009 (lz4/cramjam); DEV-OPS-008 authoritative validation pending DEV-OPS-009 merge; PR #30 OPEN must not merge"
