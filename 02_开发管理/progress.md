@@ -23,6 +23,24 @@ dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md
 workflow_mode_for_this_task: NORMAL
+formal_DEV-OPS-009_status: completed
+formal_DEV-OPS-009_plan_file: 02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md
+formal_DEV-OPS-009_plan_commit: 8367e7b6953fe6776d35865375a9aa48b02877f0
+formal_DEV-OPS-009_branch: feat/DEV-OPS-009-kafka-lz4-runtime-support
+formal_DEV-OPS-009_branch_from: "main（NOT feat/STM-013；NOT feat/DEV-OPS-008；PLAN_LANDING 后创建）"
+formal_DEV-OPS-009_workflow_mode: NORMAL
+formal_DEV-OPS-009_note: "POST_MERGE_CLEANUP；cramjam>=2.8,<3 闭合权威 lz4；AIOKafkaProducer lz4 init + Kafka lz4 send 测试；unblocks DEV-OPS-008 authoritative-runtime validation；不吸收 C1/C2；PR #32 MERGED；feat 分支已删"
+formal_DEV-OPS-009_root_cause: "A — pyproject/uv.lock 未声明 aiokafka 0.13 LZ4 后端 cramjam>=2.8"
+formal_DEV-OPS-009_implementation_commit: 90cd79cbc7235cc444b8ff67357a4d229399af1f
+formal_DEV-OPS-009_implementation_commit_message: "fix(ops): add cramjam for authoritative Kafka LZ4 runtime support"
+formal_DEV-OPS-009_pr: "#32"
+formal_DEV-OPS-009_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/32"
+formal_DEV-OPS-009_pr_state: MERGED
+formal_DEV-OPS-009_merge_commit: f754db8a9b406f62180f33d8a09e412ccc7c605b
+formal_DEV-OPS-009_merged_at: "2026-08-11T09:36:27Z"
+formal_DEV-OPS-009_governance_completion_commit: e5ed43bee0310f3c42d977d5bd109f96d7522cb2
+formal_DEV-OPS-009_status_record_completed: e5ed43bee0310f3c42d977d5bd109f96d7522cb2
+formal_DEV-OPS-009_code_review: CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2
 formal_DEV-OPS-008_status: WAITING_FOR_PR_MERGE
 formal_DEV-OPS-008_plan_file: 02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md
 formal_DEV-OPS-008_branch: feat/DEV-OPS-008-compose-test-stack-runtime-compatibility
@@ -46,7 +64,7 @@ formal_STM-013_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/30"
 formal_STM-013_pr_state: OPEN
 formal_STM-013_release_gate: BLOCKED_BY_DEFECT_FIX
 formal_STM-013_blocking_task: DEV-OPS-008
-formal_STM-013_blocking_reason: "C1 aiokafka 0.13 runtime bootstrap_connected compatibility + C2 Elasticsearch 9.4 mapping-read element_type compatibility; production fixes OUT_OF_SCOPE; removed from PR #30 effective diff"
+formal_STM-013_blocking_reason: "DEV-OPS-008 C1/C2 pending merge; PR #30 production fixes OUT_OF_SCOPE; lz4 dimension SATISFIED by DEV-OPS-009 merge"
 formal_STM-013_code_review: "CODE_REVIEW_APPROVED superseded by remediation diff; P0=0 P1=0 on 975e6029 only"
 formal_STM-013_code_review_required: REQUIRED_AFTER_DEV_OPS_008_AND_REVALIDATION
 formal_STM-013_tests_init_py: "tests/__init__.py — mypy package resolution only (test-tooling adjunct; not production)"
@@ -56,7 +74,7 @@ formal_STM-013_branch: feat/STM-013-short-term-memory-e2e
 formal_STM-013_plan_file: 02_开发管理/tasks/STM-013-short-term-memory-e2e.md
 formal_STM-013_prerequisite: SATISFIED
 formal_STM-013_workflow_mode: NORMAL
-formal_STM-013_note: "E2E implemented on feat; scope remediation removed C1/C2 from PR #30; BLOCKED_BY_DEFECT_FIX until DEV-OPS-008 merges; E1–E4 E2E expected FAIL on current main without blocker fixes"
+formal_STM-013_note: "E2E implemented on feat; scope remediation removed C1/C2 from PR #30; BLOCKED_BY_DEFECT_FIX until DEV-OPS-008 merge → STM-013 sync main → E1–E4 → new Code Review; DEV-OPS-009 lz4 merge SATISFIED"
 formal_STM-013_plan_review_round: 2
 formal_STM-010_status: completed
 formal_STM-010_plan_file: 02_开发管理/tasks/STM-010-session-close.md
@@ -493,8 +511,6 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 deferred_business_task: null
 deferred_business_task_status: null
 deferred_business_task_note: null
-current_task_status: tested
-formal_DEV-OPS-008_status: WAITING_FOR_PR_MERGE
 formal_DEV-OPS-008_plan_commit: a464952021e3778bb8f29b96f867fc61619b8f76
 formal_DEV-OPS-008_implementation_commit: b2f29ee5eab17c02983ce5c041c7c821b8db8318
 formal_DEV-OPS-008_sync_commit: 9f47597abeb0b69930f1cd18734049c2ee5a4497
