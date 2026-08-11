@@ -449,7 +449,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| EXT-001 | Task Schema + Kafka Consumer 幂等/Offset | §2.1.3, §2.1.4 | STM-006, DEV-004 | planned |
+| EXT-001 | Task Schema + Kafka Consumer 幂等/Offset | §2.1.3, §2.1.4 | STM-006, DEV-004 | committed |
 | EXT-002 | Archive 读取/预处理/脱敏 | §2.1.5 | EXT-001 | planned |
 | EXT-003 | LLM Extraction + Fingerprint | §2.1.6–2.1.8 | EXT-002, STM-007 | planned |
 | EXT-004 | Entity Alignment + Neo4j 模型基础 | §2.1.9, §2.1.10 | EXT-003, DEV-004 | planned |
@@ -466,7 +466,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **计划文件**：`02_开发管理/tasks/EXT-001-task-schema-kafka-consumer-idempotency-offset.md`
 - **正式前置依赖**：STM-006 — **SATISFIED**；DEV-004 — **SATISFIED**（001 indexes + 004 topic 复核 MATCH；migrate 测试补 `memory_extraction_task` 索引断言）。
 - **规划备注**：Round 2 remediation（Amendment 001）；`workflow_mode=NORMAL`（explicit）；baseline `f4015cdca8694c3c2be96992a4957b2838c873e4`；MF-001 consumer-boundary exact six-key（不改 `ArchiveCreatedEvent`）；MF-002 key≠user_id fail-closed；SF-001 `main()` exit≠0；OI-001/002/003 open；OI-004 plan-resolved；C6 四类幂等语义保留。
-- **状态备注**：`planned`（Round 1 `PLAN_REJECTED` → Planner Round 2 remediation ready；`next_action=计划审查`；**不得**自动开始 STM-012 或实施）。
+- **状态备注**：`committed`（Human PLAN_APPROVED Round 2；plan_commit `6f716946638d9585f0aa53854723559b9f8044bb`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；PR #34 OPEN https://github.com/xu-jia-ming/memory_system/pull/34；feat `feat/EXT-001-task-schema-kafka-consumer-idempotency-offset`；CODE_REVIEW_APPROVED Round 2 P0=0 P1=0；scoped 61 passed（unit/contract 45、Mongo/migration 5、Kafka 8）；Ruff/Mypy PASS；**不得**启动 STM-012；**不得**触碰 DEV-006/PR#13）。
 
 #### EXT-002–EXT-006（摘要）
 
