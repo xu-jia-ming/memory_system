@@ -426,10 +426,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-012
 
-- **目标**：补发事件被 Extraction Consumer 消费的 Integration/E2E 验证（任务幂等创建等）。
+- **目标**：补发事件被 Extraction Consumer 消费的 Integration/E2E 验证（任务幂等创建等）；主路径为真实 STM-011 CLI → Kafka → EXT-001 consumer adapter → Mongo。
 - **前置**：STM-011 — **SATISFIED**；EXT-001 — **SATISFIED**。
-- **非目标**：修改补发脚本业务语义（除非缺陷修复）。
-- **状态备注**：`planned` — prerequisites **SATISFIED**（STM-011+EXT-001 **completed**）；**READY_FOR_PLANNING only** — **do NOT auto-start** until explicit human authorization。
+- **非目标**：修改补发脚本业务语义、EXT-001/STM-011 Contract、生产 Extraction Pipeline；不要求 EXT-002；不触碰 DEV-006/PR#13。
+- **计划文件**：`02_开发管理/tasks/STM-012-republish-extraction-consumer-integration.md`
+- **规格章节**：§1.2.4、§2.1.1、§2.1.3–§2.1.5、§3.4、§3.6、§3.19–§3.20、§3.32。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；baseline `d6e7941eeaa2a8409b09eaf181d2924eb3865138`；production delta **NONE**；Round 2 remediation（prior review BLOCKER=0 / MUST_FIX=1 / SHOULD_FIX=3）固定 CLI `uv run python scripts/republish_archive_event.py --archive-id <id> --user-id <id>`；test-only subprocess env 显式覆盖 `APP_ENV=test`、Mongo `<mongo_ip>:27017`、Kafka `<kafka_ip>:9092`、DB `memory_system`、topic `context.archive.created`、non-secret runtime settings，并明确覆盖 Docker-internal `mongodb`/`kafka` names；EXT-001 `group_id` 显式注入唯一 test group，production default 保持 `memory-extraction-group`；真实 Mongo/Kafka 与 STM-011 CLI；EXT-001 library consumer；test-only `ExtractionPipelinePort` Fake 仅返回 `PipelineTerminalDecision.complete()`；首次/重复补发断言新 event_id、稳定 archive_id、topic/key/精确六字段、单 task、非破坏性重复；offset 仅证明 valid event consumed、terminal Mongo state exists、that record commit passed，不声明 Mongo/Kafka atomicity；malformed/key-mismatch 不复制 EXT-001 suite；exact whitelist 未扩展；PLAN_REVIEW + human PLAN_APPROVED 后方可实施。
+- **Amendment 002 规划登记（Round 3）**：实际 `Settings` env names 为 `_REQUIRED_ENV_KEYS` 加 `KAFKA__TOPIC`，precedence 为 `env > dotenv > YAML > init/defaults`；CLI 固定为 repository-root `python scripts/republish_archive_event.py --archive-id <id> --user-id <id>`，sanitized subprocess env 仅允许 `PATH`/`PYTHONPATH` 与 exact pinned non-secret application values，禁止 `os.environ.copy()`；host-reachable Mongo/Kafka endpoints、finite timeout、captured diagnostics、unique bounded raw reader、exact test-only `ExtractionPipelinePort` Fake（first=1，duplicate total=1）均为实施门禁；baseline、exact whitelist、production delta **NONE** 不变。
+- **状态备注**：`planned`；prerequisites **SATISFIED**（STM-011+EXT-001 **completed**）；**Round 3 PLAN_APPROVED**（BLOCKER=0 MUST_FIX=0 SHOULD_FIX=3；MF-001 CLOSED）；human PLAN_APPROVED **pending**；production delta **NONE**；不得 PLAN_LANDING/Developer 直至人工批准；**不得触碰 DEV-006/PR#13**。
 
 #### STM-013
 
