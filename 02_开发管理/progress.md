@@ -75,7 +75,7 @@ formal_STM-013_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/30"
 formal_STM-013_pr_state: MERGED
 formal_STM-013_merge_commit: f473c194dd092fe3b30be5cf356ec533fc32fef8
 formal_STM-013_merged_at: "2026-08-11T11:17:33Z"
-formal_STM-013_status_record_completed: null  # pending this docs(status): complete commit SHA
+formal_STM-013_status_record_completed: bbffc776eac12338461cd94b58a231c8ab99b22c
 formal_STM-013_release_gate: WAITING_FOR_PR_MERGE
 formal_STM-013_blocking_task: null
 formal_STM-013_blocking_reason: null
