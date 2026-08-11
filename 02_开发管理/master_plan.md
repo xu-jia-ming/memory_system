@@ -71,6 +71,30 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 非业务：人类日常操作手册 + 契约测试；不改 Orchestrator/mode/业务 | DEV-OPS-003, DEV-OPS-004, DEV-004 | completed |
 | DEV-OPS-006 | Phase 0 Baseline Hygiene Before STM-001 | 非业务：unit compose-wrapper allowlist + progress DOC_CODE_DRIFT hygiene | DEV-007, OI-011 | completed |
 | DEV-OPS-007 | Phase 1 Baseline Hygiene Before STM-006 | 非业务：STM-005 orphan SHA metadata 更正 + Ruff E501 torn-read helper 换行 | STM-005 | completed |
+| DEV-OPS-008 | Compose test-stack runtime compatibility (aiokafka 0.13 + ES 9.4 mapping API) | 非业务：C1 runtime kafka readiness + C2 ES mapping readback compat；blocks STM-013 | STM-010 | completed |
+| DEV-OPS-009 | Restore authoritative Kafka LZ4 runtime support for memory-api test/runtime image | 非业务：cramjam 生产依赖闭合权威 lz4；unblocks DEV-OPS-008 authoritative validation | main | completed |
+
+#### DEV-OPS-009 Restore authoritative Kafka LZ4 runtime support for memory-api test/runtime image
+
+- **目标**：在保持权威 `kafka_producer.compression_type=lz4` 前提下，补齐 aiokafka 0.13 LZ4 后端（`cramjam>=2.8`），使 memory-api runtime/test 镜像内 `AIOKafkaProducer` 可初始化、lifespan 可启动、`/health/ready` 可达且可向 test Kafka 真实发送 lz4 记录。
+- **根因**：**A** — `pyproject.toml`/`uv.lock` 仅声明 `aiokafka>=0.13,<0.14`，未安装 aiokafka `lz4` extra 解析的 `cramjam`；Dockerfile runtime 完整复制 `.venv`，非 stage 遗漏。
+- **非目标**：改 gzip/null 压缩；修改 `configs/base.yaml`；吸收 DEV-OPS-008 C1/C2；修改 STM-006/PR #30；merge PR #30/#31。
+- **阻塞关系**：**blocks DEV-OPS-008 authoritative-runtime validation**；**blocks STM-013**（lz4 维度）；merge 顺序：DEV-OPS-009 → DEV-OPS-008 revalidate/merge → STM-013 sync main → E1–E4 → new Code Review。
+- **关键修复**：`pyproject.toml` 追加 `cramjam>=2.8,<3` + `uv lock`；lz4 codec/producer init 单测 + Kafka lz4 发送集成测。
+- **计划文件**：`02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md`
+- **插入说明**：用户显式 NEW_TASK；`workflow_mode=NORMAL`（explicit）；分支必须从 **main** 创建（NOT feat/STM-013；NOT feat/DEV-OPS-008）。
+- **状态备注**：`completed`（plan_commit `8367e7b6953fe6776d35865375a9aa48b02877f0`；implementation `90cd79cbc7235cc444b8ff67357a4d229399af1f`；governance completion `e5ed43bee0310f3c42d977d5bd109f96d7522cb2`；PR #32 MERGED `f754db8a9b406f62180f33d8a09e412ccc7c605b` mergedAt `2026-08-11T09:36:27Z`；cramjam>=2.8,<3 + lz4 unit/integration tests；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；`workflow_mode=NORMAL`；feat 分支已删）；**unblocks DEV-OPS-008 authoritative-runtime validation**；STM-013 lz4 维度 SATISFIED。
+
+#### DEV-OPS-008 Compose test-stack runtime compatibility (aiokafka 0.13 + Elasticsearch 9.4 mapping API)
+
+- **目标**：修复 compose test stack 上 `memory-api` lifespan/readiness 与 pinned **aiokafka 0.13.0** / **Elasticsearch 9.4.4** 不兼容（C1 `bootstrap_connected` AttributeError；C2 `element_type` GET mapping 省略导致 `assert_mapping_compatible` ValueError）；**SOURCE-ALIGNED fresh image** 可审计验证。
+- **根因**：C1 — aiokafka 0.13 移除 `AIOKafkaClient.bootstrap_connected`；C2 — ES 9.4 GET mapping 省略默认 `element_type`。
+- **非目标**：修改 `MEMORY_RETRIEVAL_V1_MAPPINGS` CREATE schema；Kafka producer 配置/生命周期/STM-006 publish；`tests/e2e/**`；merge PR #30；DEV-006/PR#13。
+- **阻塞关系**：**blocks STM-013**（`release_gate=BLOCKED_BY_DEFECT_FIX`；PR #30 OPEN MUST NOT MERGE）。
+- **关键修复**：`runtime.py` hasattr guard + start() fallback；`assert_mapping_compatible` element_type 仅双方非 None 且不等时 fail-closed（prototype 975e6029 evidence）。
+- **计划文件**：`02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md`
+- **插入说明**：用户显式 NEW_TASK；`workflow_mode=NORMAL`（explicit）；分支必须从 **main @ 390af52** 创建（**NOT** feat/STM-013）；STM-013 保持 blocked。
+- **状态备注**：`completed`（plan_commit `a464952021e3778bb8f29b96f867fc61619b8f76`；implementation `b2f29ee5eab17c02983ce5c041c7c821b8db8318`；PR #31 MERGED `49719b91e4be6c552c342fef45504166c919febd` mergedAt `2026-08-11T10:32:18Z`；POST_DEV-OPS-009 authoritative lz4 revalidation PASS；scoped C1 5 / C2 7 / unit 459 / contract 101；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；`workflow_mode=NORMAL`；feat 分支已删）；**C1/C2 blocker SATISFIED**；STM-013 pending sync/revalidation；**不得 merge PR #30** until revalidated。
 
 #### DEV-OPS-007 Phase 1 Baseline Hygiene Before STM-006
 
@@ -281,7 +305,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | STM-010 | Session Close | §1.2.3, §1.2.7 | STM-006, STM-009 | completed |
 | STM-011 | `republish_archive_event.py` 补发脚本 | §1.2.4, §3.4 | STM-006 | planned |
 | STM-012 | 补发事件消费验证 | §1.2.4, §2.1.4 | STM-011, EXT-001 | planned |
-| STM-013 | 短期记忆阶段 E2E + 关键失败注入 | §1, §3.28 | STM-010 | planned |
+| STM-013 | 短期记忆阶段 E2E + 关键失败注入 | §1, §3.28 | STM-010 | blocked |
 
 #### STM-001
 
@@ -414,7 +438,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **非 blocker**：STM-011（republish 非 E2E 前提）；STM-012（需 EXT-001）。
 - **测试**：E2E only（`tests/e2e/test_stm013_short_term_memory_e2e.py`）；`@pytest.mark.integration`；scoped `pytest tests/e2e/...`（**非** `-m e2e`）；E1–E4；compose.test.yaml + memory-api；E4 hybrid in-process `FakeLlmClient(mode=timeout)`。
 - **规划备注**：TEST/E2E FIRST；`plan_review_round: 2`（MF-1 OPTION 2 + SF-1 config parity + SF-2 Kafka 矩阵 + SF-3 compose 启动序）；Fixture A settings == memory-api runtime；test 栈 HTTP 经 container IP；bounded Kafka poll 过滤 `user_id`/`session_id`/`archive_id`；`workflow_mode=NORMAL`。
-- **状态备注**：`planned` — Round 2 Task Plan 修订；`next_action=计划审查`；**不得自动开始实施**。
+- **状态备注**：`blocked` — `release_gate=BLOCKED_PENDING_REVALIDATION`；DEV-OPS-008 **MERGED**（C1/C2 SATISFIED）；PR #30 OPEN **MUST NOT MERGE** until feat sync main + E1–E4 revalidation + new CODE_REVIEW；scope remediation 已将 C1/C2 生产修复移出 PR #30 effective diff；E2E 在 feat 保留。
 
 ---
 
@@ -1021,5 +1045,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `STM-013`（`planned`；`plan_review_round: 2`；`next_action=计划审查`）；**不** 自动实施 |
 | 是否改变技术规格 | **否** |
 | 审批 | Planner Round 2 remediation |
+
+### CHANGE-050
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-11 |
+| 原因 | 用户显式 NEW_TASK：**DEV-OPS-008** Compose test-stack runtime compatibility（C1 aiokafka 0.13 `bootstrap_connected` + C2 ES 9.4 mapping readback `element_type`）；STM-013 scope remediation 已将生产修复移出 PR #30；blocks STM-013 |
+| 受影响任务 | 新增 `DEV-OPS-008`（`planned`；plan `02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md`）；`STM-013`（`blocked`；PR #30 OPEN MUST NOT MERGE）；**不** commit `tests/e2e/**`；**不** cherry-pick `975e6029` wholesale；**不** 触碰 DEV-006/PR #13；分支从 main @ `390af52` 创建（NOT feat/STM-013） |
+| 是否改变技术规格 | **否**（读回兼容与 runtime 探针对齐 pinned 依赖；CREATE mapping 不变） |
+| 审批 | Planner；`next_action=计划审查` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

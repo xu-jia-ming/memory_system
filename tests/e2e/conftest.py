@@ -46,7 +46,6 @@ COORDINATED_BUNDLE: dict[str, str] = {
     "CONTEXT__MAX_COMPRESSED_CONTEXT_ESTIMATED_TOKENS": "100",
     "CONTEXT__PREFERRED_RECENT_MESSAGES": "2",
     "CONTEXT__ABSOLUTE_MIN_RECENT_MESSAGES": "2",
-    "KAFKA_PRODUCER__COMPRESSION_TYPE": "gzip",
 }
 
 
@@ -216,27 +215,6 @@ def _assert_config_parity(container_trigger: int) -> None:
         f"host/container ContextSettings mismatch: host={host_trigger} "
         f"container={container_trigger}"
     )
-
-
-@contextmanager
-def _patch_aiokafka_bootstrap_connected() -> Iterator[None]:
-    """Shim aiokafka 0.13 where ``AIOKafkaClient.bootstrap_connected`` was removed."""
-    from aiokafka import AIOKafkaProducer  # type: ignore[import-untyped]
-
-    producer_cls = AIOKafkaProducer
-    original_start = producer_cls.start
-
-    async def patched_start(producer_self: Any) -> None:
-        await original_start(producer_self)
-        client = producer_self.client
-        if client is not None and not hasattr(client, "bootstrap_connected"):
-            client.bootstrap_connected = lambda: True
-
-    producer_cls.start = patched_start
-    try:
-        yield
-    finally:
-        producer_cls.start = original_start
 
 
 async def _poll_api_ready(base_url: str, *, deadline_seconds: float = 180.0) -> None:
@@ -561,7 +539,7 @@ async def hybrid_api_client(
         monkeypatch.setenv(key, value)
 
     get_settings.cache_clear()
-    with _patch_kafka_resolution(infra_stack.kafka_ip), _patch_aiokafka_bootstrap_connected():
+    with _patch_kafka_resolution(infra_stack.kafka_ip):
         settings = get_settings()
         app_state = await create_app_state(settings)
         app = create_app(
