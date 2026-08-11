@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-009 planned
+current_phase: Phase 1 — STM-009 committed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: STM-009
-current_task_status: planned
-current_branch: main
+current_task_status: committed
+current_branch: feat/STM-009-compression-coordinator-message-write-api
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -23,11 +23,29 @@ dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md
 workflow_mode_for_this_task: NORMAL
-formal_STM-009_status: planned
+formal_STM-009_status: committed
 formal_STM-009_plan_file: 02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md
-formal_STM-009_prerequisite: SATISFIED  # STM-003 + STM-004 + STM-008 completed
+formal_STM-009_plan_commit: 8609f15b47a318e885fab9cd073b616863b8d5b5
+formal_STM-009_implementation_commit: 1b6270b663b6326efb32f096a0e67e2742bb6794
+formal_STM-009_implementation_commit_message: "feat(stm): add compression coordinator and message write API"
+formal_STM-009_branch: feat/STM-009-compression-coordinator-message-write-api
+formal_STM-009_pr: "#28"
+formal_STM-009_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/28"
+formal_STM-009_pr_state: OPEN
+formal_STM-009_scoped_unit: "21 passed"
+formal_STM-009_scoped_contract: "10 passed"
+formal_STM-009_integration_redis: "10 passed"
+formal_STM-009_integration_kafka: "2 passed (I-I mandatory)"
+formal_STM-009_full_unit: "410 passed"
+formal_STM-009_full_contract: "90 passed"
+formal_STM-009_ruff: PASS
+formal_STM-009_mypy: PASS
+formal_STM-009_prerequisite: SATISFIED
 formal_STM-009_workflow_mode: NORMAL
-formal_STM-009_note: "规划轮次；Compression Coordinator + POST /api/v1/memory/working/message；OI-001/OI-002 Planner 决议 §10；OI-004 不阻塞；OI-005 进程内闭合；23 项 Contract §5.0；Unit 20 + Contract + Integration A–L；默认 FakeLlmClient；不得触碰 DEV-006/PR#13"
+formal_STM-009_code_review: CODE_REVIEW_APPROVED
+formal_STM-009_p0: 0
+formal_STM-009_p1: 0
+formal_STM-009_note: "IMPLEMENTATION_RELEASE；Compression Coordinator + POST /api/v1/memory/working/message；STM-003–008 编排；FakeLlmClient 注入；Kafka publish_failed 继续 LLM；多轮 partial fail 不回滚；HEAD prefix cap-shrink；PR #28 OPEN；WAITING_FOR_PR_MERGE；OI-004 remains open"
 formal_STM-008_status: completed
 formal_STM-008_plan_file: 02_开发管理/tasks/STM-008-compression-finalize-lua.md
 formal_STM-008_plan_commit: fa3e1bf33e889dbb6180315eda896b954a02df8f
@@ -517,7 +535,7 @@ governance_deviation:
 
 **DEV-OPS-007**：**completed** — Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；Ruff E501 L174–175 换行（零语义变更）；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；record `c48a70d`；PR [#24](https://github.com/xu-jia-ming/memory_system/pull/24) **MERGED**（merge `de95f3a2f0107f791f89441177841754b1d4f82c` mergedAt `2026-08-10T11:54:41Z`）；ZERO_STALE_AUTHORITATIVE_REFERENCES **PASS**；FULL_RUFF **PASS**；integration context-read **14 passed**；mypy **PASS**；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；production `src/**` changes **none**；Phase 1 DEV-OPS-007 **completed**。
 
-**下游**：**STM-009** `planned` — Task Plan 已创建；`next_action=计划审查`；**不得自动实施**；**STM-011** `READY_FOR_PLANNING only`（STM-006 satisfied）；**STM-010** NOT ready（needs STM-009）；**不得触碰 DEV-006/PR#13**。
+**下游**：**STM-009** `committed` — PR [#28](https://github.com/xu-jia-ming/memory_system/pull/28) **OPEN**；implementation `1b6270b663b6326efb32f096a0e67e2742bb6794`；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；**STM-010** NOT ready（needs STM-009 completed）；**STM-011** `READY_FOR_PLANNING only`；**不得触碰 DEV-006/PR#13**。
 
 ## 实施前置条件
 
@@ -845,6 +863,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 08:02 UTC | STM-004 | committed → completed | PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；OI-009 resolved | STM-005 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 14:05 UTC | STM-007 | planned | 创建 Task Plan `02_开发管理/tasks/STM-007-compression-llm-client-structured-output.md`；master_plan CHANGE-043；progress 规划态回写 | baseline `dc74311`；§5.0 十六项 Contract 闭合；OI-004/OI-005 OUT OF SCOPE | `next_action=计划审查`；未实施、未 Git 写；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 22:40 UTC | STM-007 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `87dc9c4a442aff113ac220b9604010aa135f721e`；PR #26 OPEN；docs(status): record on feat | scoped 29 / full unit 369 / contract 76；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；**不得触碰 DEV-006/PR#13** |
+| 2026-08-11 01:12 UTC | STM-009 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `1b6270b663b6326efb32f096a0e67e2742bb6794`；PR #28 OPEN；docs(status): record on feat | scoped unit 21 / contract 10 / integration 12；full unit 410 / contract 90；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；OI-004 remains open；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 15:48 UTC | STM-008 | committed → completed | PR #27 MERGED（`ac61680098d2ae2644bc8b990f057816c3218fca` mergedAt `2026-08-10T15:48:17Z`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped unit 20 / contract 4 / integration 27；full unit 393 / contract 80；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2；单 Lua Finalize + token 公式 I18/I27 + safety/idempotency；无 Kafka/Mongo/LLM；OI-004/OI-005 remain open | STM-009 READY_FOR_PLANNING only（prerequisites SATISFIED）；STM-011 READY_FOR_PLANNING only；STM-010 NOT ready（needs STM-009）；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 23:50 UTC | STM-008 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `d619ca2f7e2e20d2d944794c2ca21e8e6d5752ef`；PR #27 OPEN；docs(status): record on feat | scoped unit 20 / contract 4 / integration 27；full unit 393 / contract 80；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 23:01 UTC | STM-008 | planned | 创建 Task Plan `02_开发管理/tasks/STM-008-compression-finalize-lua.md`；master_plan CHANGE-045；progress 规划态回写 | baseline `ff9a609`；§5.0 十六项 Contract；23 Integration 场景；OI-004/OI-005 open acknowledged | `next_action=计划审查`；未实施、未 Git 写；**不得触碰 DEV-006/PR#13** |
@@ -897,7 +916,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **STM-009**：`planned` — Compression Coordinator + HTTP 接线；Task Plan `02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md`；`next_action=计划审查`；**不得自动实施**；**不得触碰 DEV-006/PR#13**。
+1. **STM-009**：`committed` — Compression Coordinator + `POST /api/v1/memory/working/message`；PR [#28](https://github.com/xu-jia-ming/memory_system/pull/28) **OPEN**；implementation `1b6270b663b6326efb32f096a0e67e2742bb6794`；scoped unit **21** / contract **10** / integration **12**；full unit **410** / contract **90**；ruff **PASS**；mypy **PASS**；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；**不得触碰 DEV-006/PR#13**。
 2. **STM-011**：`READY_FOR_PLANNING only` — prerequisite STM-006 **SATISFIED**；`republish_archive_event.py`；**不得自动开始**。
 3. **STM-010**：NOT ready — needs STM-009 completed。
 4. **STM-008**：`completed`（PR #27 MERGED `ac61680098d2ae2644bc8b990f057816c3218fca` mergedAt `2026-08-10T15:48:17Z`；implementation `d619ca2f7e2e20d2d944794c2ca21e8e6d5752ef`；record `a938220f8937b0e8af7e52dd34019ad1b558e789`；scoped unit **20** / contract **4** / integration **27**；full unit **393** / contract **80**；ruff **PASS**；mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2；OI-004/OI-005 remain open；feat 分支待删）。

@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-009
 task_name: Compression Coordinator + Message Write API Wiring
-status: planned
+status: committed
 plan_review_round: 1
 workflow_mode: NORMAL
 workflow_mode_source: explicit
@@ -36,10 +36,10 @@ prerequisites:
     - "Authoritative baseline：main == origin/main == a15a2e4cd4b0f937a9f15aa9f4a1481ddb867466；working tree clean；FULL_RUFF PASS；mypy PASS"
 branch: "feat/STM-009-compression-coordinator-message-write-api"
 created_at: "2026-08-11 08:34 UTC"
-updated_at: "2026-08-11 08:34 UTC"
+updated_at: "2026-08-11 09:10 UTC"
 approval_gates:
-  planning_docs: pending
-  implementation_plan: pending
+  planning_docs: approved
+  implementation_plan: approved
 ```
 
 ### 1.1 编排与门禁（本轮）
@@ -687,8 +687,28 @@ async def write_working_message_with_coordination(
 RELEASE_PHASE: IMPLEMENTATION_RELEASE  # 实施起
 workflow_mode: NORMAL
 branch: feat/STM-009-compression-coordinator-message-write-api
-plan_commit: null  # PLAN_LANDING 后填入
+plan_commit: "8609f15b47a318e885fab9cd073b616863b8d5b5"
+implementation_commit: "1b6270b663b6326efb32f096a0e67e2742bb6794"
+implementation_commit_message: "feat(stm): add compression coordinator and message write API"
+pr: "#28"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/28"
+pr_state: OPEN
 ```
+
+---
+
+## 14. 测试结果
+
+| 测试 | 命令 | 结果 |
+|---|---|---|
+| STM-009 Unit | `uv run pytest tests/unit/test_compression_coordinator_service.py -q` | **PASS**（21） |
+| STM-009 Contract | `uv run pytest tests/contract/test_stm009_contract.py -q` | **PASS**（10） |
+| Integration Redis | `uv run pytest tests/integration/test_message_write_coordinator_redis.py -q` | **PASS**（10；Docker Redis+Mongo） |
+| Integration Kafka | `uv run pytest tests/integration/test_message_write_coordinator_kafka.py -q` | **PASS**（2；Docker Redis+Kafka+Mongo；I-I mandatory） |
+| Full unit | `uv run pytest tests/unit -q` | **PASS**（410） |
+| Full contract | `uv run pytest tests/contract -q` | **PASS**（90） |
+| Ruff | `uv run ruff check .` | **PASS** |
+| Mypy | `uv run mypy src tests scripts` | **PASS** |
 
 ---
 
@@ -696,4 +716,5 @@ plan_commit: null  # PLAN_LANDING 后填入
 
 | 日期 | 版本 | 说明 |
 |---|---|---|
-| 2026-08-11 | 1.0 | 初版 Task Plan；OI-001/002 Planner 决议；23 项 Contract 闭合 |
+| 2026-08-11 | 1.1 | Developer 实施完成；21 unit + 10 contract + 12 integration；FULL_RUFF/mypy PASS |
+| 2026-08-11 | 1.2 | IMPLEMENTATION_RELEASE；implementation `1b6270b`；PR #28 OPEN；status=committed |
