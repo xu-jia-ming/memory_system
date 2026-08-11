@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — DEV-OPS-009 planned (STM-013 blocked)
+current_phase: Phase 1 — DEV-OPS-009 tested (STM-013 blocked)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: DEV-OPS-009
-current_task_status: approved
+current_task_status: tested
 current_branch: feat/DEV-OPS-009-kafka-lz4-runtime-support
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -23,7 +23,7 @@ dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
 current_plan_file: 02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md
 workflow_mode_for_this_task: NORMAL
-formal_DEV-OPS-009_status: approved
+formal_DEV-OPS-009_status: tested
 formal_DEV-OPS-009_plan_file: 02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md
 formal_DEV-OPS-009_branch: feat/DEV-OPS-009-kafka-lz4-runtime-support
 formal_DEV-OPS-009_branch_from: "main（NOT feat/STM-013；NOT feat/DEV-OPS-008；PLAN_LANDING 后创建）"
