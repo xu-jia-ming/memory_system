@@ -5,7 +5,7 @@
 ```yaml
 task_id: STM-011
 task_name: scripts/republish_archive_event.py (publishing-side)
-status: planned
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 plan_review_round: 1
@@ -533,7 +533,7 @@ out_of_scope_changes:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 2026-08-11 19:55 UTC | Step 1-4 implement + test | 9 whitelist files | unit 16 / contract 3 / integration 5 PASS; ruff+mypy PASS | none |
 
 ---
 
@@ -543,7 +543,15 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `scripts/republish_archive_event.py` | created |
+| `src/memory_system/domain/services/archive_event_republish_service.py` | created |
+| `src/memory_system/domain/enums/archive_event_republish.py` | created |
+| `src/memory_system/domain/models/archive_event_republish.py` | created |
+| `src/memory_system/infrastructure/mongodb/context_archive_repository.py` | modified |
+| `tests/unit/test_archive_event_republish_service.py` | created |
+| `tests/unit/test_republish_archive_event_script.py` | created |
+| `tests/contract/test_stm011_contract.py` | created |
+| `tests/integration/test_republish_archive_event_kafka.py` | created |
 
 ### 与原计划的差异
 
@@ -553,32 +561,31 @@ out_of_scope_changes:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit | `uv run pytest tests/unit/test_archive_event_republish_service.py tests/unit/test_republish_archive_event_script.py -q` | PASS (16) |
+| Contract | `uv run pytest tests/contract/test_stm011_contract.py -q` | PASS (3) |
+| Integration | `uv run pytest tests/integration/test_republish_archive_event_kafka.py -q` | PASS (5) |
+| Ruff | `uv run ruff check .` | PASS |
+| Mypy | `uv run mypy src tests scripts` | PASS |
 
 ### Review 结果
 
 ```yaml
 p0: 0
 p1: 0
-p2: 0
-p3: 0
+p2: 2
+p3: 3
 review_report: null
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/STM-011-republish-archive-event
+plan_commit: 68cee46011f011f3074662f846c64da670741cb3
+implementation_commit: 23939a3f3d25f5243978e967949beb4fe6282e2f
+implementation_commit_message: "feat(stm): add republish_archive_event CLI and service"
 ```
 
 ### 最终状态
 
-`planned`
+`committed`
