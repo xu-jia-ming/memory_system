@@ -71,7 +71,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | DEV-OPS-005 | 人类 Prompt Playbook 与 Recovery 操作手册 | 非业务：人类日常操作手册 + 契约测试；不改 Orchestrator/mode/业务 | DEV-OPS-003, DEV-OPS-004, DEV-004 | completed |
 | DEV-OPS-006 | Phase 0 Baseline Hygiene Before STM-001 | 非业务：unit compose-wrapper allowlist + progress DOC_CODE_DRIFT hygiene | DEV-007, OI-011 | completed |
 | DEV-OPS-007 | Phase 1 Baseline Hygiene Before STM-006 | 非业务：STM-005 orphan SHA metadata 更正 + Ruff E501 torn-read helper 换行 | STM-005 | completed |
-| DEV-OPS-008 | Compose test-stack runtime compatibility (aiokafka 0.13 + ES 9.4 mapping API) | 非业务：C1 runtime kafka readiness + C2 ES mapping readback compat；blocks STM-013 | STM-010 | planned |
+| DEV-OPS-008 | Compose test-stack runtime compatibility (aiokafka 0.13 + ES 9.4 mapping API) | 非业务：C1 runtime kafka readiness + C2 ES mapping readback compat；blocks STM-013 | STM-010 | tested |
+| DEV-OPS-009 | Restore authoritative Kafka LZ4 runtime support for memory-api test/runtime image | 非业务：cramjam 生产依赖闭合权威 lz4；unblocks DEV-OPS-008 authoritative validation | main | approved |
+
+#### DEV-OPS-009 Restore authoritative Kafka LZ4 runtime support for memory-api test/runtime image
+
+- **目标**：在保持权威 `kafka_producer.compression_type=lz4` 前提下，补齐 aiokafka 0.13 LZ4 后端（`cramjam>=2.8`），使 memory-api runtime/test 镜像内 `AIOKafkaProducer` 可初始化、lifespan 可启动、`/health/ready` 可达且可向 test Kafka 真实发送 lz4 记录。
+- **根因**：**A** — `pyproject.toml`/`uv.lock` 仅声明 `aiokafka>=0.13,<0.14`，未安装 aiokafka `lz4` extra 解析的 `cramjam`；Dockerfile runtime 完整复制 `.venv`，非 stage 遗漏。
+- **非目标**：改 gzip/null 压缩；修改 `configs/base.yaml`；吸收 DEV-OPS-008 C1/C2；修改 STM-006/PR #30；merge PR #30/#31。
+- **阻塞关系**：**blocks DEV-OPS-008 authoritative-runtime validation**；**blocks STM-013**（lz4 维度）；merge 顺序：DEV-OPS-009 → DEV-OPS-008 revalidate/merge → STM-013 sync main → E1–E4 → new Code Review。
+- **关键修复**：`pyproject.toml` 追加 `cramjam>=2.8,<3` + `uv lock`；lz4 codec/producer init 单测 + Kafka lz4 发送集成测。
+- **计划文件**：`02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md`
+- **插入说明**：用户显式 NEW_TASK；`workflow_mode=NORMAL`（explicit）；分支必须从 **main** 创建（NOT feat/STM-013；NOT feat/DEV-OPS-008）。
+- **状态备注**：`approved`（human PLAN_APPROVED）；`next_action=实施`；PLAN_LANDING 进行中。
 
 #### DEV-OPS-008 Compose test-stack runtime compatibility (aiokafka 0.13 + Elasticsearch 9.4 mapping API)
 
@@ -1042,6 +1054,16 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 原因 | 用户显式 NEW_TASK：**DEV-OPS-008** Compose test-stack runtime compatibility（C1 aiokafka 0.13 `bootstrap_connected` + C2 ES 9.4 mapping readback `element_type`）；STM-013 scope remediation 已将生产修复移出 PR #30；blocks STM-013 |
 | 受影响任务 | 新增 `DEV-OPS-008`（`planned`；plan `02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md`）；`STM-013`（`blocked`；PR #30 OPEN MUST NOT MERGE）；**不** commit `tests/e2e/**`；**不** cherry-pick `975e6029` wholesale；**不** 触碰 DEV-006/PR #13；分支从 main @ `390af52` 创建（NOT feat/STM-013） |
 | 是否改变技术规格 | **否**（读回兼容与 runtime 探针对齐 pinned 依赖；CREATE mapping 不变） |
+| 审批 | Planner；`next_action=计划审查` |
+
+### CHANGE-051
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-11 |
+| 原因 | 用户显式 NEW_TASK：**DEV-OPS-009** Restore authoritative Kafka LZ4 runtime support；权威 lz4 配置下 fresh image `RuntimeError: Compression library for lz4 not found`；根因缺失 `cramjam`（aiokafka 0.13 lz4 extra） |
+| 受影响任务 | 新增 `DEV-OPS-009`（`planned`；plan `02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md`）；`DEV-OPS-008` authoritative validation **BLOCKED_BY_DEFECT_FIX** pending DEV-OPS-009；`STM-013`（`blocked`；blocking_task→DEV-OPS-009；PR #30 OPEN MUST NOT MERGE）；**不** 修改 PR #30/#31；分支从 main 创建 |
+| 是否改变技术规格 | **否**（补齐运行时依赖以兑现 §3.19 lz4 配置；不改 API/Schema/压缩 Contract） |
 | 审批 | Planner；`next_action=计划审查` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
