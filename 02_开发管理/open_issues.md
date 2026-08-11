@@ -77,14 +77,23 @@ spec_sections:
 impact: "close_incomplete 的 HTTP 状态码与统一错误码映射未在 §1 写死"
 blocks_current_task: false
 resolve_by_task: STM-010
-status: open
+status: resolved
+resolved_at: "2026-08-11T09:30:00Z"
+resolved_by_task: STM-010
 ```
 
 **问题描述：** Session Close 在 Redis 删除未确认等情况下返回 `close_incomplete`；§1 未完整映射到 §3.23 的 HTTP 状态表。
 
 **禁止行为：** 不得在未解决前自行定为新 Contract。
 
-**决议记录：** （空）
+**决议记录：**
+
+- **2026-08-11** — STM-010 Task Plan §10.3 Planner 决议
+- **HTTP 映射**：`close_incomplete` → HTTP **503** + `error.code=close_incomplete`（§3.23 503 = 基础设施不可用或外部依赖暂时失败；与 `working_memory_full` 同类可重试语义）
+- **语义**：Redis 终端删除失败或结果不可确认；Session 保持 `status=closing`；客户端可安全重试 close
+- **规格依据**：§750–751（错误码字面量）；§3.23 HTTP 映射表
+- **验收证据**：STM-010 Contract C9；Integration terminal 失败注入
+- **status**: resolved（Contract 定义；实现验收归属 STM-010）
 
 ---
 
@@ -109,6 +118,7 @@ status: open
 
 - **2026-08-10** — STM-005 POST_MERGE_CLEANUP evidence：Mongo archive messages persist 4 fields only（no `estimated_tokens`）；create/reuse contract delivered；full token-boundary resolution deferred to STM-010；**status remains open**。
 - **2026-08-11** — STM-009 POST_MERGE_CLEANUP evidence：Coordinator 侧所有 token 边界计算仅使用 Redis WM `WorkingMemoryMessage.estimated_tokens` 求和；Mongo 四字段不含 tokens；Finalize `archived_message_tokens == pending_archive_estimated_tokens`；**full token-boundary closure deferred to STM-010**；**status remains open**。
+- **2026-08-11** — STM-010 Task Plan §10.4：七项 resolution criteria 已映射至 `split_close_suffix_batches`（Redis `estimated_tokens` 精确和）、Pending `pending_archive_estimated_tokens`、后缀全归档、OI4 Integration 验收；**正式 closure 待 STM-010 实现 + OI4 测试 PASS**；**status remains open**。
 
 ---
 
@@ -346,7 +356,7 @@ resolved_by_task: OI-012
 |---|---|---|---|
 | OI-001 | STM-009 | 否 | resolved |
 | OI-002 | STM-009 | 否 | resolved |
-| OI-003 | STM-010 | 否 | open |
+| OI-003 | STM-010 | 否 | resolved |
 | OI-004 | STM-005 / STM-010 | 否 | open |
 | OI-005 | STM-006 | 否 | resolved |
 | OI-006 | EXT-008 前需规格确认 | 否 | open |

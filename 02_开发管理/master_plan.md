@@ -380,11 +380,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-010
 
-- **目标**：Close 状态机、切分、resume、早失败回滚、原子删 Redis；`close_incomplete`（HTTP 映射见 OI-003，不得臆造）。
-- **非目标**：Extraction。
+- **目标**：Session Close 状态机 + 关闭路径 Archive 协调 + `POST /api/v1/memory/session/{user_id}/{session_id}/close`；原子 `active→closing`（`session_close_enter.lua`）；早失败 `revert_active`；`ClosePlan.base_compression_version` 在 `enter_closing` 后单次快照并冻结（§331/§735）；suffix Archive 全部使用冻结值；`split_close_suffix_batches` 归档 **全部** 后缀（`max_archive_estimated_tokens`；**不** 应用 `absolute_min_recent_messages`）；复用 Pending + STM-005 create/reuse + Kafka publish（`publish_failed` 不阻断 terminal）；`session_close_terminal.lua` 原子删 meta/messages/message_ids；复用 STM-006 压缩锁；**不** 调用 Coordinator/LLM/Finalize；OI-003/OI-004 Planner 决议见 Task Plan §10.3/§10.4。
+- **非目标**：STM-011 republish；STM-012/013 E2E；Extraction/Retrieval；重写 STM-003–009 核心 Contract；第二套 close 锁；STM-008 token 公式修改；Mongo 写入 `estimated_tokens`；Redis `status=closed`。
+- **计划文件**：`02_开发管理/tasks/STM-010-session-close.md`
+- **规格章节**：§1.2.1、§1.2.2（§331 `base_compression_version`）、§1.2.3（Close API §651–755）、§1.2.4、§1.2.6、§1.2.7（§1183–1185）、§3.23。
 - **正式前置依赖**：STM-006、STM-009 — **SATISFIED**。
-- **状态备注**：`planned` — **READY_FOR_PLANNING only**（STM-006+STM-009 **SATISFIED**；**不得自动开始**）。
-- **测试**：Integration/E2E 片段；部分失败与恢复。
+- **测试**：Unit 22 + Contract 10 + Integration A–R + OI-004 专用 OI4；含 `base_compression_version` 快照/冻结/REUSED；失败注入/并发 write-vs-close；**无** STM-013 全 E2E。
+- **规划备注**：`plan_review_round: 2`（MF-1 `base_compression_version` 闭合；吸收 SF-1–SF-4）；同步 HTTP 200 `closed` / 503 `close_incomplete`（OI-003 决议）；`closing` 重试恢复非 409；终端重复 404 `session_not_found`；STM-011 **非** blocker；`pr_sizing: single PR, medium-sized scoped change`。
+- **状态备注**：`planned` — Task Plan 已创建；`next_action=计划审查`；**不得自动实施**。
 
 #### STM-011
 

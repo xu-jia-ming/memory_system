@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 1 — STM-009 completed
+current_phase: Phase 1 — STM-010 approved
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: STM-009
-current_task_status: completed
+current_task: STM-010
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,8 +21,14 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md
+current_plan_file: 02_开发管理/tasks/STM-010-session-close.md
 workflow_mode_for_this_task: NORMAL
+formal_STM-010_status: approved
+formal_STM-010_plan_file: 02_开发管理/tasks/STM-010-session-close.md
+formal_STM-010_workflow_mode: NORMAL
+formal_STM-010_prerequisite: SATISFIED
+formal_STM-010_note: "Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；Session Close 状态机 + enter/revert/terminal Lua + split_close_suffix_batches + ClosePlan.base_compression_version 快照/冻结 + POST close API；不调用 Coordinator/LLM/Finalize；OI-003 resolved at plan time HTTP 503 close_incomplete；OI-004 criteria 映射完成 formal closure 待实现+OI4；STM-011 非 blocker；Unit 22 + Contract 10 + Integration A–R；未实施"
+formal_STM-010_plan_review_round: 2
 formal_STM-009_status: completed
 formal_STM-009_plan_file: 02_开发管理/tasks/STM-009-compression-coordinator-message-write-api.md
 formal_STM-009_plan_commit: 8609f15b47a318e885fab9cd073b616863b8d5b5
@@ -434,7 +440,7 @@ step7_marker: tests/e2e/devops003_normal_workflow_smoke.txt
 deferred_business_task: null
 deferred_business_task_status: null
 deferred_business_task_note: null
-next_action: STM-010 READY_FOR_PLANNING only
+next_action: 实施
 last_role_result: RELEASE_COMPLETED
 blocking_reason: null
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
@@ -870,6 +876,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 | 2026-08-10 08:02 UTC | STM-004 | committed → completed | PR #22 MERGED（`6a3d09f5bf29ec25c768c6295e2c13adb3ff9a6c`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped 15 / contract 3 / integration 14 / full unit 300 / contract 65；ruff PASS；mypy PASS；OI-009 resolved | STM-005 READY_FOR_PLANNING only；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 14:05 UTC | STM-007 | planned | 创建 Task Plan `02_开发管理/tasks/STM-007-compression-llm-client-structured-output.md`；master_plan CHANGE-043；progress 规划态回写 | baseline `dc74311`；§5.0 十六项 Contract 闭合；OI-004/OI-005 OUT OF SCOPE | `next_action=计划审查`；未实施、未 Git 写；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 22:40 UTC | STM-007 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `87dc9c4a442aff113ac220b9604010aa135f721e`；PR #26 OPEN；docs(status): record on feat | scoped 29 / full unit 369 / contract 76；ruff PASS；mypy PASS | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；**不得触碰 DEV-006/PR#13** |
+| 2026-08-11 01:47 UTC | STM-010 | planned → approved | Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；人工确认 PLAN_APPROVED；Amendment 001；治理回写 Task Plan / progress / master_plan / open_issues（OI-003 resolved at plan time） | 未实施 | `next_action=实施`；PLAN_LANDING 进行中；**不得触碰 DEV-006/PR#13** |
 | 2026-08-11 01:17 UTC | STM-009 | committed → completed | PR #28 MERGED（`924ca8c8af94793e76be9376c4514ef417ce5e33` mergedAt `2026-08-11T01:17:29Z`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped unit 21 / contract 10 / redis int 10 / kafka int 2；full unit 410 / contract 90；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=3；OI-001/OI-002/OI-005 resolved；OI-004 remains open；STM-010 READY_FOR_PLANNING only（STM-006+STM-009 SATISFIED）；STM-011 READY_FOR_PLANNING only；STM-013 NOT ready（needs STM-010）；**不得触碰 DEV-006/PR#13** |
 | 2026-08-11 01:12 UTC | STM-009 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `1b6270b663b6326efb32f096a0e67e2742bb6794`；PR #28 OPEN；docs(status): record on feat | scoped unit 21 / contract 10 / integration 12；full unit 410 / contract 90；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 | 仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；OI-004 remains open；**不得触碰 DEV-006/PR#13** |
 | 2026-08-10 15:48 UTC | STM-008 | committed → completed | PR #27 MERGED（`ac61680098d2ae2644bc8b990f057816c3218fca` mergedAt `2026-08-10T15:48:17Z`）；POST_MERGE_CLEANUP docs(status): complete on main；删 exact feat | scoped unit 20 / contract 4 / integration 27；full unit 393 / contract 80；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2；单 Lua Finalize + token 公式 I18/I27 + safety/idempotency；无 Kafka/Mongo/LLM；OI-004/OI-005 remain open | STM-009 READY_FOR_PLANNING only（prerequisites SATISFIED）；STM-011 READY_FOR_PLANNING only；STM-010 NOT ready（needs STM-009）；**不得触碰 DEV-006/PR#13** |
@@ -924,7 +931,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ## 下一任务
 
-1. **STM-010**：`READY_FOR_PLANNING only` — Session Close；prerequisites STM-006+STM-009 **SATISFIED**；`next_action=STM-010 READY_FOR_PLANNING only`；**不得自动开始**。
+1. **STM-010**：`approved` — Task Plan `02_开发管理/tasks/STM-010-session-close.md`；Round 2 PLAN_APPROVED；prerequisites STM-006+STM-009 **SATISFIED**；`next_action=实施`；PLAN_LANDING 后 Developer 实施。
 2. **STM-011**：`READY_FOR_PLANNING only` — prerequisite STM-006 **SATISFIED**；`republish_archive_event.py`；**不得自动开始**。
 3. **STM-013**：NOT ready — needs STM-010 completed。
 4. **STM-009**：`completed`（PR #28 MERGED `924ca8c8af94793e76be9376c4514ef417ce5e33` mergedAt `2026-08-11T01:17:29Z`；implementation `1b6270b663b6326efb32f096a0e67e2742bb6794`；record `63232d837add2b4a6c6918d145f115f4762b88f7`；scoped unit **21** / contract **10** / redis int **10** / kafka int **2**；full unit **410** / contract **90**；ruff **PASS**；mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=3；OI-001/OI-002/OI-005 resolved；OI-004 remains open；feat 分支待删）。
