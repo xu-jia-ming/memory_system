@@ -11,8 +11,8 @@ phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: STM-013
-current_task_status: completed
+current_task: STM-011
+current_task_status: planned
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,8 +21,13 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/STM-013-short-term-memory-e2e.md
+current_plan_file: 02_开发管理/tasks/STM-011-republish-archive-event.md
 workflow_mode_for_this_task: NORMAL
+formal_STM-011_status: planned
+formal_STM-011_plan_file: 02_开发管理/tasks/STM-011-republish-archive-event.md
+formal_STM-011_baseline: 26f31bdf44e879881c8a160ec3855fab88d4e86e
+formal_STM-011_workflow_mode: NORMAL
+formal_STM-011_note: "规划轮 ONLY；scripts/republish_archive_event.py 发布侧单 archive_id CLI；复用 ArchiveCreatedEvent + publish_archive_created_event；无 EXT-001；§836 扫描 OUT OF SCOPE（OI-STM-011-001）；next_action=计划审查"
 formal_DEV-OPS-009_status: completed
 formal_DEV-OPS-009_plan_file: 02_开发管理/tasks/DEV-OPS-009-kafka-lz4-runtime-support.md
 formal_DEV-OPS-009_plan_commit: 8367e7b6953fe6776d35865375a9aa48b02877f0
@@ -554,7 +559,7 @@ formal_DEV-OPS-008_ruff: PASS
 formal_DEV-OPS-008_mypy: PASS
 formal_DEV-OPS-008_kafka_lz4_integration: "2 passed"
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
-next_action: "STM-011 READY_FOR_PLANNING only; STM-012 NOT ready (needs STM-011 + EXT-001); do NOT auto-start"
+next_action: "计划审查"
 last_role_result: POST_MERGE_CLEANUP
 blocking_reason: null
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
@@ -685,7 +690,7 @@ stm_013_scope_remediation:
 
 **DEV-OPS-007**：**completed** — Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；Ruff E501 L174–175 换行（零语义变更）；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；record `c48a70d`；PR [#24](https://github.com/xu-jia-ming/memory_system/pull/24) **MERGED**（merge `de95f3a2f0107f791f89441177841754b1d4f82c` mergedAt `2026-08-10T11:54:41Z`）；ZERO_STALE_AUTHORITATIVE_REFERENCES **PASS**；FULL_RUFF **PASS**；integration context-read **14 passed**；mypy **PASS**；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；production `src/**` changes **none**；Phase 1 DEV-OPS-007 **completed**。
 
-**下游**：**STM-013** **completed** — PR #30 MERGED `f473c19`；`v0.2.0-short-term-memory` milestone **closed**；**STM-011** `READY_FOR_PLANNING only`；**STM-012** NOT ready（needs STM-011 + EXT-001）；**不得触碰 DEV-006/PR#13**。
+**下游**：**STM-013** **completed** — PR #30 MERGED `f473c19`；`v0.2.0-short-term-memory` milestone **closed**；**STM-011** `planned`（`next_action=计划审查`）；**STM-012** NOT ready（needs STM-011 + EXT-001）；**不得触碰 DEV-006/PR#13**。
 
 ## 实施前置条件
 
@@ -1072,8 +1077,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 下一任务
 
 1. **STM-010**：`completed`（PR #29 MERGED `722e42d9e24d085b0ed671478730952ef7c92ad6` mergedAt `2026-08-11T02:14:24Z`；implementation `ebb90e49c4eed8b7fd64a35611d7af87521d3d5a`；scoped unit **36** / contract **11** / integration **19**；full unit **446** / contract **101**；ruff **PASS**；mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=3；OI-003/OI-004 resolved；feat 分支待删）。
-2. **STM-011**：`READY_FOR_PLANNING only` — prerequisite STM-006 **SATISFIED**；`republish_archive_event.py`；**不得自动开始**。
-3. **STM-013**：`planned` — Task Plan 已创建；prerequisite STM-010 **SATISFIED**；`next_action=计划审查`；**不得自动开始实施**。
+2. **STM-011**：`planned` — Task Plan `02_开发管理/tasks/STM-011-republish-archive-event.md`；prerequisite STM-006 **SATISFIED**；`next_action=计划审查`；**不得自动开始实施**。
+3. **STM-013**：`completed`（PR #30 MERGED；milestone `v0.2.0-short-term-memory` closed）。
 4. **STM-012**：NOT ready — needs STM-011 + EXT-001。
 5. **STM-009**：`completed`（PR #28 MERGED `924ca8c8af94793e76be9376c4514ef417ce5e33` mergedAt `2026-08-11T01:17:29Z`；implementation `1b6270b663b6326efb32f096a0e67e2742bb6794`；record `63232d837add2b4a6c6918d145f115f4762b88f7`；scoped unit **21** / contract **10** / redis int **10** / kafka int **2**；full unit **410** / contract **90**；ruff **PASS**；mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=3；OI-001/OI-002/OI-005 resolved；feat 分支待删）。
 6. **STM-008**：`completed`（PR #27 MERGED `ac61680098d2ae2644bc8b990f057816c3218fca` mergedAt `2026-08-10T15:48:17Z`；implementation `d619ca2f7e2e20d2d944794c2ca21e8e6d5752ef`；record `a938220f8937b0e8af7e52dd34019ad1b558e789`；scoped unit **20** / contract **4** / integration **27**；full unit **393** / contract **80**；ruff **PASS**；mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2；feat 分支待删）。

@@ -415,11 +415,14 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### STM-011
 
-- **目标**：实现 `scripts/republish_archive_event.py`（发布侧）。
-- **非目标**：消费侧任务创建断言（属 STM-012）。
-- **前置**：**仅 STM-006** — **SATISFIED**。
-- **状态备注**：`planned` — **READY_FOR_PLANNING only**（STM-006 satisfied；**不得自动开始**）。
-- **测试**：Unit/脚本级；不依赖 EXT-001。
+- **目标**：`scripts/republish_archive_event.py` 发布侧人工补发：按 `--archive-id` 从 Mongo 只读加载 Archive，生成 **新** `event_id`，经 `ArchiveCreatedEvent` + `publish_archive_created_event` 发布 `context.archive.created`（key=`user_id`；六字段）；at-least-once；exit 0/1/2；可选 `--user-id` ownership 校验；**不**使用 Redis/`compression_version`；**不**含 `base_compression_version` 于 Kafka。
+- **非目标**：STM-012 消费验证；EXT-001 / `memory_extraction_task` 扫描（§836 批量扫描见 OI-STM-011-001）；HTTP Endpoint（OI-007 CLI-only）；Redis pending/lock；Mongo 写入；修改六字段 Contract。
+- **规格章节**：§1.2.2、§1.2.4（§836）、§2.1.14 规则 6、§3.4。
+- **正式前置依赖**：STM-006 — **SATISFIED**；STM-005（Mongo archive 模型）— **SATISFIED**。
+- **计划文件**：`02_开发管理/tasks/STM-011-republish-archive-event.md`
+- **规划备注**：Round 1；单 `archive_id` CLI MVP；`created_time` 取 Mongo `archive.created_time`（OI-STM-011-002）；复用 STM-006 publisher；新增 `find_context_archive_by_id` + `archive_event_republish_service`；测试 Unit/Contract/Kafka Integration；**无** EXT consumer 断言。
+- **状态备注**：`planned` — Task Plan 已编写；`next_action=计划审查`；**不得自动进入 Developer**。
+- **测试**：Unit（malformed input / not found / ownership / invalid / success / publish fail / payload exactness / exit codes）+ Contract（枚举/六字段）+ Kafka Integration；不依赖 EXT-001。
 
 #### STM-012
 
