@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-006 completed
+current_phase: Phase 2 — EXT-007 planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: EXT-006
-current_task_status: completed
+current_task: EXT-007
+current_task_status: planned
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,11 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
+current_plan_file: 02_开发管理/tasks/EXT-007-retrieval-document-sync.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
+planning_baseline_main: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
+planning_baseline_EXT-007: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
 formal_EXT-006_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
 formal_EXT-006_status: completed
@@ -65,6 +66,21 @@ formal_EXT-006_status_record_completed: 6b00287e663f96d0729a2474a678fa5e960cd051
 formal_EXT-006_release_gate: COMPLETED
 formal_EXT-006_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-006_next_action: "EXT-007 planned / NOT AUTO-STARTED"
+formal_EXT-007_plan_file: 02_开发管理/tasks/EXT-007-retrieval-document-sync.md
+formal_EXT-007_status: planned
+formal_EXT-007_workflow_mode: NORMAL
+formal_EXT-007_workflow_mode_source: explicit
+formal_EXT-007_baseline: 2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e
+formal_EXT-007_branch: "feat/EXT-007-retrieval-document-sync"
+formal_EXT-007_prerequisite: "SATISFIED — EXT-006 completed (PR #40 MERGED); DEV-007 completed; DEV-004 completed"
+formal_EXT-007_scope: "§2.2.3 expand index_sync_memory_set via Neo4j; load Memory+Entity; search_text with alias budget (TEI /tokenize); embedding via create_embedding_client; ES bulk upsert memory_retrieval_current refresh=wait_for; mark_completed on success; mark_failed retrieval_index_write_failed; zero offset; zero upstream pipeline/consumer/EXT-001-006 diff; pipeline continuation DEFERRED_FOR_MVP"
+formal_EXT-007_blocking_open_issues: []
+formal_EXT-007_nonblocking_open_issues: [OI-006]
+formal_EXT-007_dependency_changes_expected: NONE
+formal_EXT-007_migration_changes_expected: NONE
+formal_EXT-007_authorized_error_codes: "retrieval_index_write_failed; failed_stage=retrieval_index (LD-1); graph_write_failed/memory_search_text_too_long/llm_*/archive_*/entity_alignment_failed forbidden"
+formal_EXT-007_pipeline_handoff: "isolated library service; EXT-006→EXT-007 continuation DEFERRED_FOR_MVP; first stage to mark task completed; consumer offset after terminal Mongo unchanged"
+formal_EXT-007_note: "Planning only; baseline 2db6f5a verified main clean tree; LD-7 closes EXT-006 LD-8 vs §2.2.3 full set; 不得触碰 DEV-006/PR#13"
 planning_baseline_EXT-005: "5deb8949ee5ac367a08f173ef67c0c0689c26f5d"
 formal_EXT-005_plan_file: 02_开发管理/tasks/EXT-005-reconciliation-aggregation-gate.md
 formal_EXT-005_status: completed
@@ -131,8 +147,8 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: "POST_MERGE_CLEANUP — completed"
-next_action: "EXT-007 planned / NOT AUTO-STARTED"
+current_task_approval_posture: "pending Plan Review"
+next_action: "计划审查"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -1183,6 +1199,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 20:55 UTC | EXT-007 | planned | Planner created `02_开发管理/tasks/EXT-007-retrieval-document-sync.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e` verified (main, clean tree); scope = §2.2.3 full index sync + §2.2.4 ES document upsert; expand LD-8 handoff via Neo4j; TEI /tokenize for alias budget; create_embedding_client; mark_completed/failed; zero offset; zero upstream diff; `dependency_changes_expected=NONE`; non-blocking `OI-006`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 12:15 UTC | EXT-006 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #40 MERGED (`372e0232c1e5cfa1d71e2bb0152a22f59e60cd03` mergedAt `2026-08-12T12:12:38Z`)；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；record `eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f`；completion `6b00287e663f96d0729a2474a678fa5e960cd051`；feat 分支已删 | scoped 44 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2 non-blocking；atomic Neo4j graph write + index_sync_memory_set handoff；zero task completed/offset；OI-006 non-blocking；EXT-003→EXT-006 continuation DEFERRED_FOR_MVP；`next_action=EXT-007 planned / NOT AUTO-STARTED`；governance completion commit created |
 | 2026-08-12 18:10 UTC | EXT-006 | planned | Planner created `02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2` verified (main, clean tree); scope = §2.1.13 steps 8–10 + atomic Neo4j write; §2.1.12 apply planned values; `index_sync_memory_set` handoff; `failed_stage=graph_write`; zero task completed/offset; EXT-003→EXT-006 continuation DEFERRED_FOR_MVP; `dependency_changes_expected=NONE`; non-blocking `OI-006`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 10:48 UTC | EXT-006 | planned → tested | Developer implemented graph write library on `feat/EXT-006-neo4j-graph-transaction-write`; 9 production + 7 test whitelist files; no commit | scoped **41** passed; ruff/mypy PASS; single Neo4j write transaction; Evidence MERGE idempotency + SKIP path; `index_sync_memory_set` handoff; task/offset untouched; upstream zero diff; `next_action=CODE_REVIEW` |
@@ -1440,4 +1457,5 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 11. **EXT-003**：`completed`（PR #37 MERGED `0eb45e20c64777a03dc770be70cba2316b47fdf6` mergedAt `2026-08-12T06:06:31Z`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；scoped **63** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=1；feat 分支已删）。
 12. **EXT-004**：`completed`（PR #38 MERGED `229f5e960f51e55a7389599eeccdf650a9a7beff` mergedAt `2026-08-12T07:49:18Z`；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；scoped **53** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2；read-only Neo4j alignment only；feat 分支已删）。
 13. **EXT-005**：`completed`（PR #39 MERGED `638598080b2d24e9291933c5ef92d3e4d65a0612` mergedAt `2026-08-12T09:47:46Z`；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；record `775992943ae0eb349301defb990c59c7089cf32e`；scoped **63** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=0；zero Mongo/Neo4j writes；feat 分支已删）。
-14. **EXT-006**：`completed`（PR #40 MERGED `372e0232c1e5cfa1d71e2bb0152a22f59e60cd03` mergedAt `2026-08-12T12:12:38Z`；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；record `eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f`；scoped **44** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2 non-blocking；atomic Neo4j graph write + `index_sync_memory_set` handoff；zero task completed/offset；OI-006 non-blocking；feat 分支已删）；**EXT-007** prerequisites **PARTIAL**（EXT-006 **completed**；DEV-007 **completed**；DEV-004 **completed**）— **planned / NOT AUTO-STARTED**。
+14. **EXT-006**：`completed`（PR #40 MERGED `372e0232c1e5cfa1d71e2bb0152a22f59e60cd03` mergedAt `2026-08-12T12:12:38Z`；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；record `eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f`；scoped **44** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2 non-blocking；atomic Neo4j graph write + `index_sync_memory_set` handoff；zero task completed/offset；OI-006 non-blocking；feat 分支已删）。
+15. **EXT-007**：`planned`（Task Plan `02_开发管理/tasks/EXT-007-retrieval-document-sync.md`；baseline `2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e`；prerequisites **SATISFIED** — EXT-006 **completed**；DEV-007 **completed**；DEV-004 **completed**；scope = §2.2.3 retrieval index sync + ES bulk upsert + first `completed` gate；`next_action=计划审查`；Developer **NOT** authorized；不得触碰 DEV-006/PR#13）。

@@ -459,7 +459,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | EXT-004 | Entity Alignment + Neo4j 模型基础 | §2.1.9, §2.1.10 | EXT-003, DEV-004 | completed |
 | EXT-005 | Reconciliation + 聚合门禁 | §2.1.11 | EXT-004 | completed |
 | EXT-006 | Neo4j 图谱事务写入 | §2.1.12, §2.1.13 | EXT-005 | completed |
-| EXT-007 | Retrieval Document 同步 | §2.2.3 | EXT-006, DEV-007, DEV-004 | planned |
+| EXT-007 | Retrieval Document 同步 | §2.2.3, §2.2.4 | EXT-006, DEV-007, DEV-004 | planned |
 | EXT-008 | Extraction 管理 GET/Retry | §2.1.14 | EXT-007, DEV-005 | planned |
 | EXT-009 | Extraction E2E + 失败注入 | §2.1.15, §3.28 | EXT-008 | planned |
 
@@ -546,10 +546,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 #### EXT-007 Retrieval Document 同步
 
-- **目标**：search_text、经 `create_embedding_client` 调用 Embedding（**默认 SiliconFlow / DEV-007**）、Bulk upsert（`refresh=wait_for`）；作为 Extraction 完成门禁之一。
-- **非目标**：**不创建/修改** Mapping 或 Alias（缺失则失败）。
-- **前置**：EXT-006, **DEV-007**, DEV-004。
-- **测试**：Integration（部分 bulk 失败、Neo4j 成功后 ES 失败恢复路径按规格）。
+- **目标**：在 EXT-006 Neo4j 提交后，按 §2.2.3 **扩展** `index_sync_memory_set`（闭合 EXT-006 LD-8 种子 handoff）、从 Neo4j 加载 Memory/Entity、构建含 alias 预算的 `search_text`（TEI `/tokenize`）、经 `create_embedding_client`（默认 SiliconFlow / DEV-007）生成 Embedding、Bulk Upsert 至 Alias `memory_retrieval_current`（`refresh=wait_for`、Document ID=`memory_id`）；全部成功后 **首次** `mark_completed`；失败 `mark_failed(retrieval_index_write_failed, failed_stage=retrieval_index)`。
+- **非目标**：**不创建/修改** Mapping 或 Alias（DEV-004 已完成；缺失则失败）；**不**提交 Kafka Offset（EXT-001 consumer）；**不**修改 `PipelineTerminalDecision`/consumer/worker/EXT-001–006 服务；pipeline continuation `DEFERRED_FOR_MVP`；RET-* API；EXT-008/009；DEV-006/PR#13。
+- **前置**：EXT-006（`GraphWriteSuccess.index_sync_memory_set` handoff）、DEV-007（`create_embedding_client`）、DEV-004（alias `memory_retrieval_current`）。
+- **规格章节**：§2.1.3–§2.1.4、§2.1.13（完成顺序）、§2.1.15–§2.1.16、**§2.2.3**、**§2.2.4**、§3.6、§3.10、§3.24、§3.27–§3.28、Appendix B §B.10–§B.11。
+- **分支**：`feat/EXT-007-retrieval-document-sync`。
+- **依赖/Migration**：`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`。
+- **幂等/恢复**：ES Upsert by `memory_id`；`status=completed` skip；Neo4j durable + 索引重试；Bulk 部分失败 → `failed` 直至重试全成功。
+- **状态备注**：`planned`（Task Plan `02_开发管理/tasks/EXT-007-retrieval-document-sync.md`；baseline `2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e`；prerequisites **SATISFIED**；`next_action=计划审查`；Developer **NOT** authorized；不得触碰 DEV-006/PR#13）。
+- **测试**：Unit（search_text alias 预算、集合扩展、失败映射、completed skip）；Contract（错误码/`failed_stage` 白名单、ES Document 形状、零上游 diff）；Integration（Neo4j+ES 真实写入、bulk 部分失败、replay upsert）；无 E2E（RET-006）。
 
 #### EXT-008 / EXT-009
 
@@ -1323,5 +1328,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
 | 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
 | 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=EXT-007 planned / NOT AUTO-STARTED` |
+
+### CHANGE-067
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | EXT-007 Planner 创建 Task Plan；prerequisites 全部 SATISFIED；同步 progress/master_plan |
+| 受影响任务 | `EXT-007`（`planned`）；`next_action=计划审查`；Developer **NOT** authorized；不改变 Appendix B、pipeline continuation 语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
+| 规划决议 | §2.2.3 完整 index sync（扩展 LD-8 handoff、Neo4j 加载、search_text+alias、Embedding、ES bulk upsert、completed/failed 门禁）；zero offset；zero upstream EXT-001–006 diff；LD-1–LD-9 recorded |
+| Open Issues | 非阻塞 `OI-006` 不变 |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
+| 是否改变技术规格 | 否；仅治理规划文件 |
+| 审批 | Planner only；`next_action=计划审查` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
