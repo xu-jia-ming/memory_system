@@ -596,6 +596,122 @@ status: deferred_for_mvp
 
 ---
 
+## OI-EXT-004-001
+```yaml
+id: OI-EXT-004-001
+title: "§2.1.10 step 4 secondary exact-match operands, comparison basis, and multi-match determinism are undefined"
+spec_sections:
+  - "§2.1.10"
+  - "§2.1.9"
+  - "§2.1.6"
+impact: "Entity identity assignment cannot be determined. Different readings bind candidates to different entity_id values, which changes the durable Memory subject_entity_id/object_entity_id and the pre-transaction aligned_memory_key. This is irreversible durable graph identity, not a reversible internal choice."
+blocks_current_task: false
+resolve_by_task: EXT-004
+status: resolved_by_plan
+resolution: "Amendment 002 MVP_LOCAL_DECISION — Task Plan §5.2.2 + LD-7/LD-8; non-blocking"
+round_1_blocks_current_task: true
+```
+
+**问题描述：** §2.1.10 第 4 步规定「若未匹配，查询当前用户、相同 `entity_type` 下 `canonical_name` 或 `aliases` 完全相同的实体」，但未定义：
+
+1. 比较操作数集合：仅候选 `name`，还是同时包含候选 `aliases`？
+2. 比较基准：候选 `name` 原文与既有 `canonical_name` 原文精确比较，还是使用第 2 步产出的 `normalized_name`？
+3. alias 侧语义：既有 `aliases` 数组元素精确相等，还是其他匹配方式？
+4. 多命中：同一 `user_id + entity_type` 下 ≥2 个不同实体命中时，是确定性择一（依据哪个排序键）还是 fail-closed？若 fail-closed，使用哪个已授权错误码——`entity_alignment_failed` 的规格语义为「实体对齐执行失败 / 可人工重试」，与不可重试的数据歧义不符。
+5. 候选经第 3 步 `entity_key` 精确匹配解析到用户实体节点时是否特殊处理，其别名是否必须保持不变（§2.1.10.1「用户实体不参与普通名称和别名对齐」）。
+
+`entity_key_unique` 仅保证同一 `(user_id, entity_type, normalized_name)` 唯一，不阻止不同实体的 `aliases` 出现相同值，因此多命中在 MVP 数据中真实可发生。
+
+**禁止行为：** 不得先实现「猜测版」第 4 步；不得以任意排序静默取首条；不得引入模糊/相似度/全文/向量匹配；不得新造歧义错误码（如 `entity_alignment_ambiguous`）；不得把数据歧义映射为可重试的执行失败而未获授权。
+
+**安全中间行为（Round 1）：** 第 1–3 步语义明确，但第 4 步未决即无法确定第 5 步边界，故 Round 1 将 EXT-004 标为 blocking。
+
+**Round 2 闭合（Amendment 002；非 Spec Amendment）：** Task Plan §5.2.2 固定：S4 候选操作数仅 `normalized_name`；既有侧 `normalized_name` + `normalize_entity_alias(aliases[])`；`user_id` + `entity_type` 过滤；零命中→S5；单命中→`canonical_or_alias_exact`；多命中→**`entity_id ASC` 择一**（LD-8，不 fail-closed）。`blocks_current_task: false`。
+
+**所需决议：** ~~权威 owner 决议~~ → **已由 Task Plan Amendment 002 闭合**（MVP_LOCAL_DECISION）。
+
+---
+
+## OI-EXT-004-002
+```yaml
+id: OI-EXT-004-002
+title: "No authorized failed_stage literal exists for entity_alignment_failed"
+spec_sections:
+  - "§2.1.3"
+  - "§2.1.15"
+  - "Appendix A Amendment EXT-002-004 §A.1, §A.2"
+  - "Appendix B Amendment EXT-003 §B.6"
+impact: "last_error.failed_stage is a durable contract field. Existing authorized literals are only archive_read, archive_validate, redaction, and llm_extraction; the entity-alignment stage has none, so EXT-004 cannot express a terminal alignment failure without inventing vocabulary."
+blocks_current_task: false
+resolve_by_task: EXT-004
+status: resolved_by_plan
+resolution: "Amendment 002 MVP_LOCAL_DECISION — failed_stage=entity_alignment (LD-9); non-blocking"
+round_1_blocks_current_task: true
+```
+
+**问题描述：** §2.1.15 授权了错误码 `entity_alignment_failed`（「实体对齐执行失败」；可人工重试=是），但 `failed_stage` 字面量词表只在 Appendix A/B 中被逐项授权，且不含实体对齐阶段。同时需要确认 `graph_query_failed`（「查询已有记忆失败」）的归属边界：其规格含义指向 §2.1.11 已有 Memory 候选召回（EXT-005），而非 EXT-004 的 Entity 只读查询。
+
+**需决议：**
+
+1. `entity_alignment_failed` 对应的 `failed_stage` 精确字面量（建议 `entity_alignment`）。
+2. 确认 `graph_query_failed` 保留给 §2.1.11 已有 Memory 召回（EXT-005）；EXT-004 的 Neo4j 只读实体查询失败必须映射为 `entity_alignment_failed`。
+3. 确认图谱 Entity 数据结构异常（property 缺失或类型非法，无法映射为授权只读快照）归入 `entity_alignment_failed`，而非新码。
+
+**禁止行为：** 不得发明 `failed_stage` 字面量；不得复用 `llm_extraction` 或 `graph_write`；不得在 EXT-004 使用 `graph_query_failed`；不得新增错误码。
+
+**安全中间行为（Round 1）：** 未决前不实现 EXT-004 失败映射。
+
+**Round 2 闭合（Amendment 002；非 Spec Amendment）：** `entity_alignment_failed` → `failed_stage="entity_alignment"`（LD-9）；`graph_query_failed` 仍保留 EXT-005；Entity 结构异常同映射。`blocks_current_task: false`。
+
+**所需决议：** ~~权威 owner 授权字面量~~ → **已由 Task Plan Amendment 002 闭合**（MVP_LOCAL_DECISION）。
+
+---
+
+## OI-EXT-004-003
+```yaml
+id: OI-EXT-004-003
+title: "normalized_name and candidate alias normalization micro-semantics are not fully pinned"
+spec_sections:
+  - "§2.1.10"
+  - "§2.1.6"
+impact: "entity_key is durable identity material; residual normalization choices (lower vs casefold, whitespace class, alias 去空白 scope) can change entity_key for edge-case inputs."
+blocks_current_task: false
+resolve_by_task: EXT-004
+status: open
+```
+
+**问题描述：** §2.1.10 第 2 步列明四项操作（Unicode NFKC、转小写、去除首尾空格、连续空白标准化），§2.1.6 列明候选 aliases「先执行 NFKC、去空白、去重并排序」，但未定义 `str.lower()` 与 `str.casefold()` 的取舍、空白字符集合，以及 alias「去空白」是仅去首尾还是同时压缩内部空白。
+
+**禁止行为：** 不得追加规格未写明的 canonicalization（标点剥离、同义词映射、locale 排序、数字归一、case folding 之外的大小写规则）。
+
+**安全中间行为（本计划固定读法）：** `normalized_name` = NFKC → `str.lower()` → 连续 Unicode 空白压缩为单个 `U+0020` → 去首尾空白（顺序不可换）；候选 alias = NFKC → 连续空白压缩 → 去首尾空白 → 精确去重 → 按 code point 字典序排序。以固定测试向量锁定；`entity_key` 采用仓库既有 SHA-256 约定（UTF-8 编码 + 小写 hexdigest）。
+
+**所需决议：** owner 可确认或修订上述字面读法；非阻塞。
+
+---
+
+## OI-EXT-004-004
+```yaml
+id: OI-EXT-004-004
+title: "canonical_name replacement criterion has no deterministic MVP basis; user entity alias non-participation needs confirmation"
+spec_sections:
+  - "§2.1.10"
+impact: "Alias merge planning must decide whether canonical_name may be replaced and whether the user entity participates in alias merge."
+blocks_current_task: false
+resolve_by_task: EXT-004
+status: open
+```
+
+**问题描述：** §2.1.10 允许在「新名称是用户明确给出的正式名称」时替换 `canonical_name`，但 MVP 没有确定性判据（该判定需语义能力，属 §2.1.11 之后）。同时 §2.1.10.1 规定「用户实体不参与普通名称和别名对齐」，其对别名合并的含义需确认。
+
+**禁止行为：** 不得用启发式或 LLM 判定「正式名称」；不得自动把候选 `name` 加入既有实体 aliases；不得因 50 上限删除既有 alias。
+
+**安全中间行为（本计划固定读法）：** MVP 恒不替换 `canonical_name`；解析到 `entity_id = "user:" + user_id` 的对齐条目不执行别名合并（`planned_aliases` 等于既有 aliases，或计划创建时为 `[]`）。
+
+**所需决议：** owner 可确认或修订；非阻塞。
+
+---
+
 ## 索引
 
 | 问题 ID | 最迟解决任务 | 是否阻塞当前任务 | 状态 |
@@ -622,3 +738,7 @@ status: deferred_for_mvp
 | OI-EXT-003-003 | EXT-003 | 否 | resolved |
 | OI-EXT-003-004 | EXT-003 | 否 | resolved |
 | OI-EXT-003-005 | later Evidence/reconciliation | 否 | deferred_for_mvp |
+| OI-EXT-004-001 | EXT-004 | 否（Round 2 `resolved_by_plan`） | resolved_by_plan |
+| OI-EXT-004-002 | EXT-004 | 否（Round 2 `resolved_by_plan`） | resolved_by_plan |
+| OI-EXT-004-003 | EXT-004 | 否 | open |
+| OI-EXT-004-004 | EXT-004 | 否 | open |

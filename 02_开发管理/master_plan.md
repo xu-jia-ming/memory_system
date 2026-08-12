@@ -502,6 +502,20 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **Open Issues**：OI-EXT-003-001/002/003/004 **resolved** by Appendix B；OI-EXT-003-005 **deferred_for_mvp**（SHA-256 collision，non-blocking）；无 blocking Open Issue；Round 2 Plan Review **PLAN_APPROVED**（BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1）；human PLAN_APPROVED granted；SF-1 MVP_LOCAL_DECISION：`extraction_llm_service.py` orchestration owner；`approval_posture=PLAN_APPROVED`；`developer_authorized=true` post-PLAN_LANDING。
 - **测试**：Unit（schema/reference/limits/prompt/retry/errors/fingerprint/privacy/empty/both-empty/duplicate）；Contract（input/output/provider/error/fingerprint/durable result/terminal boundary/legal-empty）；Integration(fake)（happy/both-empty/non-empty-processing/timeout/provider/malformed/retry/replay/no leakage）；Mongo/replay integration（result persistence/reuse）；real provider false/default skipped；无 EXT-004+ behavior。
 
+#### EXT-004
+
+- **目标**：在 EXT-003 已持久化 `extraction_result` 之后，实现 §2.1.10 的**纯确定性**实体对齐（S0–S6）与 §2.1.9 中对齐实际需要的 Neo4j Entity 模型基础；产出 `local_entity_id -> entity_id` 对齐映射、计划态新实体创建记录与计划态别名合并记录，供 EXT-005/EXT-006 消费。
+- **非目标**：任何 Neo4j 写入（Entity/Memory/Evidence 节点、`SUBJECT`/`OBJECT`/`SUPPORTS`/`SUPERSEDES`/`CONFLICTS_WITH` 关系、别名落盘、写事务）；§2.1.11 已有 Memory 召回与 LLM Reconciliation、`aligned_memory_key`、候选聚合、`reconciliation_plan_conflict`；§2.1.12 置信度/重要性；§2.1.13 事务内写入与 `referenced_entity_write_set`；`memory_id` / `evidence_id` 生产写入；Retrieval/`core_search_text`/Elasticsearch/Embedding；EXT-005+；EXT-003→EXT-004 生产 continuation 编排（Appendix B §B.10.4 `DEFERRED_FOR_MVP`）；EXT-001/EXT-002/EXT-003 语义；Migration/依赖/配置/Settings；新错误码或新 `failed_stage` 字面量；DEV-006 / PR #13。
+- **计划文件**：`02_开发管理/tasks/EXT-004-entity-alignment-neo4j-model-basis.md`（Round 2；Amendment 002）
+- **规格章节**：§1.2.1、§2.1.3、§2.1.4、§2.1.6–§2.1.7（仅消费）、**§2.1.9**、**§2.1.10**、§2.1.13（事务前准备第 2 步与写入禁令）、§2.1.15–§2.1.16、§3.6、§3.24、§3.26–§3.28、Appendix A、Appendix B（§B.1/§B.2/§B.10/§B.11）。
+- **正式前置依赖**：EXT-003 — **SATISFIED/completed**（PR #37 MERGED）；DEV-004 — **SATISFIED/completed**（§2.1.9 约束/索引已存在）；EXT-001/EXT-002 — **SATISFIED/completed**。
+- **关键门禁**：持久化 `extraction_result` 为唯一抽取输入且零 LLM 调用；对齐阶段只读 Neo4j 且零写入（集成测试断言 Entity 节点/property/aliases 前后逐字不变）；所有 Cypher 显式 `user_id` 过滤并批量 `UNWIND`；对齐输出瞬态不持久化（`AUTHORIZED_ENTITY_FIELDS`/`AUTHORIZED_MEMORY_FIELDS` 零变更）；别名合并仅计划态（既有 alias 零删除、50 上限、`canonical_name` 永不替换、不发 `memory_entity_alias_omitted_total`）；失败仅映射 `entity_alignment_failed` 且**禁用** `graph_query_failed` 与全部 EXT-005+/EXT-003/EXT-002 码；`PipelineTerminalDecision` / consumer / `extraction_llm_service` / `extraction_worker` / Settings / metrics / 全部 Migration 零 diff。
+- **幂等/恢复**：EXT-004 无任何副作用与自有状态，天然幂等；replay 以相同持久化输入与相同图谱状态得到相同匹配判定；图谱事务已提交的 replay 通过 `entity_key` 精确匹配复用既有节点，不重复计划创建；任务保持 `processing`，EXT-004 不执行状态迁移、不提交 Offset。
+- **配置/依赖结论**：`dependency_changes_expected=NONE`（`neo4j>=5.28,<6`、§3.24 `Neo4jSettings`、`AppState.neo4j` 已存在）；**无** Migration/Schema 产物需求（DEV-004 已建 §2.1.9 约束/索引并有断言）；沿用既有 `max_entity_candidates_per_archive=100` / `max_stored_entity_alias_count=50`。
+- **Open Issues**：~~blocking `OI-EXT-004-001`、`OI-EXT-004-002`~~ → Round 2 `resolved_by_plan`（MVP_LOCAL_DECISION）；非阻塞 `OI-EXT-004-003`、`OI-EXT-004-004`。
+- **状态备注**：`planned`（Round 2 Amendment 002；baseline `8330d42a9f2fe9365e180bdd68c6c9dc7add6e48`；`next_action=计划审查 Round 2`；`approval_posture=AWAIT_PLAN_REVIEW_ROUND_2`；`developer_authorized=false`；**无 blocking Open Issue**；不得触碰 DEV-006/PR#13）。
+- **测试**：Unit（归一化向量/`entity_key`/用户实体固定字段；全部对齐分支、别名合并计划、失败映射、零 LLM 依赖、零写入、用户隔离、privacy 日志）；Contract（输入/输出契约、§2.1.9 property 集合、错误码白名单与 `failed_stage`、不持久化、只读 Cypher 文本、无 EXT-005+ 字段、上游/Migration/依赖零变更）；Integration（真实 Neo4j：命中/未命中/用户实体/跨用户隔离/零写入/查询失败注入/100 候选批量；真实 Mongo：持久化结果加载、Fake LLM 调用计数 0、replay 幂等、任务文档零变更）；无 E2E、无真实外部 provider 调用。
+
 #### EXT-007 Retrieval Document 同步
 
 - **目标**：search_text、经 `create_embedding_client` 调用 Embedding（**默认 SiliconFlow / DEV-007**）、Bulk upsert（`refresh=wait_for`）；作为 Extraction 完成门禁之一。
@@ -1216,5 +1230,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 事实记录 | merge `0eb45e20c64777a03dc770be70cba2316b47fdf6`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；record `b14d53d840e7ba69139ce050a5225eae92def220`；completion `5d9349f7ed6984aee5000422bc55ab5e7031285b`；scoped 63 passed；Ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=1 non-blocking；OI-EXT-003-005 deferred_for_mvp |
 | 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
 | 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=EXT-004 planned / NOT AUTO-STARTED` |
+
+### CHANGE-062
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | 用户显式 `TASK_ID=EXT-004`、`WORKFLOW_MODE=NORMAL`、baseline `8330d42a9f2fe9365e180bdd68c6c9dc7add6e48`；Planner 仅创建 Entity Alignment + Neo4j 模型基础 fail-closed Task Plan |
+| 受影响任务 | `EXT-004`（`planned`；plan `02_开发管理/tasks/EXT-004-entity-alignment-neo4j-model-basis.md`）；仅更新规划白名单（Task Plan / open_issues / progress / master_plan）；不实施业务代码/测试、不改配置/依赖/Migration/规格正文、不启动 Developer/Reviewer/Release Operator、不执行 Git 写 |
+| 规划决议 | 权威输入 = 已持久化 `extraction_result`（`processing` + 非空则**不得**再调用 LLM、不重读 Archive、不重算 fingerprint/source time）；范围严格为 §2.1.9 Entity 模型基础 + §2.1.10 确定性对齐（S0–S6），MVP 纯确定性、无 LLM、无模糊/全文/向量匹配；`entity_key = SHA256(user_id + ":" + entity_type + ":" + normalized_name)`（UTF-8 + 小写 hex）；用户实体确定性 `entity_id = "user:" + user_id` 与 §2.1.10.1 固定字段；对齐阶段**只读** Neo4j、**禁止**任何 Entity/Memory/Evidence/关系写入（§2.1.13 事务前准备第 2 步）；对齐输出为**瞬态非持久化**返回值（§2.1.3「任务表不保存 Memory、Entity 结果 ID 数组」+ Appendix B §B.1 授权字段不变）；别名合并仅为计划态（既有 alias 零删除、50 上限、`canonical_name` 永不替换、`omitted_alias_count` 仅输出、不发指标）；`entity_alignment_failed` 为 EXT-004 唯一授权终态码，`graph_query_failed` 保留给 §2.1.11 已有 Memory 召回（EXT-005）；不可预期内部/基础设施故障沿用 `abort_without_terminal` 且不提交 Offset；EXT-003→EXT-004 continuation 编排仍 `DEFERRED_FOR_MVP`（Appendix B §B.10.4），`PipelineTerminalDecision` / consumer / `extraction_llm_service` / `extraction_worker` 逐字不变；精确生产/测试白名单四新建生产文件 + 五测试文件 |
+| Open Issues | 新增 blocking `OI-EXT-004-001`（§2.1.10 第 4 步次级精确匹配的操作数/比较基准/alias 语义/多命中确定性）、blocking `OI-EXT-004-002`（`entity_alignment_failed` 的 `failed_stage` 字面量 + `graph_query_failed` 归属确认）；新增非阻塞 `OI-EXT-004-003`（`normalized_name` / alias 归一化 micro-semantics，已固定字面读法）、`OI-EXT-004-004`（`canonical_name` 替换判据与用户实体别名非参与，已固定 fail-closed 读法） |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`（`neo4j>=5.28,<6`、`Neo4jSettings` §3.24 固定值、`AppState.neo4j` AsyncDriver 均已存在）；**无** Schema/Constraint/Migration 产物需求——§2.1.9 的 4 约束 + 2 索引已由 DEV-004 `scripts/migrations/002_initial_neo4j.py` 逐字创建并由 `tests/integration/test_migrate_infra.py` 断言；禁止新增或修改 Migration、禁止运行时 DDL |
+| 是否改变技术规格 | 否；权威规格正文未改动；未决歧义 fail-closed，实施前需 owner 决议（如需修订则由授权轮次单独追加 Appendix） |
+| 审批 | Planner；`next_action=计划审查`；`approval_posture=FAIL_CLOSED_BLOCKED`；`developer_authorized=false`；不得自动进入 Developer；不得触碰 DEV-006 / PR #13 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
