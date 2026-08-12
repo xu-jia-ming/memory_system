@@ -5,7 +5,7 @@
 ```yaml
 task_id: EXT-006
 task_name: Neo4j 图谱事务写入
-status: planned
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
@@ -56,8 +56,8 @@ approval_gates:
   planning: "PLAN_APPROVED"
   approval_posture: "Round 2 pending Plan Review (Amendment 001)"
   amendment_recorded: true
-  human_plan_approved: false
-  developer_authorized: false
+  human_plan_approved: true
+  developer_authorized: true
   reviewer_authorized: false
   release_operator_authorized: false
 release_phases:
@@ -630,11 +630,34 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-12 18:10 UTC | planning | 创建 Task Plan；同步 progress/master_plan | — | baseline 59281d1 verified |
+| 2026-08-12 10:48 UTC | implementation | 9 production + 7 test files per whitelist | scoped **41** passed（unit 23 + contract 9 + integration 9）；ruff/mypy PASS | single `execute_write` transaction；Evidence SKIP path；LD-9 archive timestamp；session_id from context_archive on load_from_persisted_task |
+| 2026-08-12 11:05 UTC | code_review_remediation | P1: `graph_write_repository.py` entity_key MERGE → resolve authoritative `entity_id` for Memory props + SUBJECT/OBJECT; I7 extended; I3 SUPERSEDE/CONFLICT integration; S14b LD-9 unresolvable message ID | scoped **44** passed（unit 24 + contract 9 + integration 11）；ruff/mypy PASS | P1 convergence via MERGE RETURN + fallback resolve query; no plan_builder change |
+| 2026-08-12 11:06 UTC | Release IMPLEMENTATION_RELEASE | implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；PR #40 OPEN；feat push only | scoped 44 passed；ruff PASS；mypy PASS | `status=committed`；`next_action=WAITING_FOR_PR_MERGE` |
 
 ## 16. 实际执行结果
 
-（实施前留空）
-
 ### 最终状态
 
-`planned`
+`committed` — IMPLEMENTATION_RELEASE complete；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；PR #40 OPEN (`https://github.com/xu-jia-ming/memory_system/pull/40`)；scoped 44 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2；zero upstream pipeline/consumer/alignment/reconciliation diff；no task completed/offset writes；`next_action=WAITING_FOR_PR_MERGE`；**不得触碰 DEV-006/PR#13**。
+
+### Git 记录
+
+```yaml
+branch: "feat/EXT-006-neo4j-graph-transaction-write"
+plan_commit: "66c547fcd1a4c529e95f776ec7165e08038e81cc"
+implementation_commit: "b19e913af3848e932b8adb404dc5d5304167fb73"
+implementation_commit_message: "feat(ext): add neo4j graph transaction write"
+pr: "#40"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/40"
+pr_state: OPEN
+next_action: "WAITING_FOR_PR_MERGE"
+```
+
+**验证命令**：
+```bash
+uv run pytest tests/unit/test_referenced_entity_write_set.py tests/unit/test_core_search_text.py tests/unit/test_graph_write_plan_builder.py tests/unit/test_graph_write_service.py tests/contract/test_ext006_contract.py tests/integration/test_ext006_graph_write_neo4j.py tests/integration/test_ext006_graph_write_replay_mongo.py -q
+uv run ruff check src/memory_system/domain/models/graph_write.py src/memory_system/domain/ports/tokenize_client.py src/memory_system/domain/services/referenced_entity_write_set.py src/memory_system/domain/services/core_search_text.py src/memory_system/domain/services/graph_write_plan_builder.py src/memory_system/domain/services/graph_write_service.py src/memory_system/infrastructure/neo4j/graph_write_repository.py src/memory_system/infrastructure/tei/tei_tokenize_client.py src/memory_system/infrastructure/tei/fake_tokenize_client.py src/memory_system/infrastructure/mongodb/context_archive_message_timestamp_repository.py tests/unit/test_referenced_entity_write_set.py tests/unit/test_core_search_text.py tests/unit/test_graph_write_plan_builder.py tests/unit/test_graph_write_service.py tests/contract/test_ext006_contract.py
+uv run mypy src/memory_system/domain/models/graph_write.py src/memory_system/domain/ports/tokenize_client.py src/memory_system/domain/services/referenced_entity_write_set.py src/memory_system/domain/services/core_search_text.py src/memory_system/domain/services/graph_write_plan_builder.py src/memory_system/domain/services/graph_write_service.py src/memory_system/infrastructure/neo4j/graph_write_repository.py src/memory_system/infrastructure/tei/tei_tokenize_client.py src/memory_system/infrastructure/tei/fake_tokenize_client.py src/memory_system/infrastructure/mongodb/context_archive_message_timestamp_repository.py
+```
+
+**结果**：44 passed；ruff PASS；mypy PASS（10 production files）。
