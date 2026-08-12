@@ -91,6 +91,20 @@ async def find_extraction_task_by_archive_id(
     return extraction_task_from_document(document)
 
 
+async def find_extraction_task_by_user_and_archive_id(
+    mongodb: AsyncMongoClient[Any],
+    user_id: str,
+    archive_id: str,
+) -> MemoryExtractionTask | None:
+    """Find extraction task by user_id + archive_id (cross-user isolation)."""
+    document = await _collection(mongodb).find_one(
+        {"user_id": user_id, "archive_id": archive_id}
+    )
+    if document is None:
+        return None
+    return extraction_task_from_document(document)
+
+
 async def upsert_pending_extraction_task(
     mongodb: AsyncMongoClient[Any],
     *,
@@ -259,4 +273,72 @@ async def mark_failed(
     )
     if document is None:
         raise RuntimeError(f"failed to mark extraction task failed archive_id={archive_id}")
+    return extraction_task_from_document(document)
+
+
+async def admin_reset_failed_to_pending(
+    mongodb: AsyncMongoClient[Any],
+    *,
+    user_id: str,
+    archive_id: str,
+    now: int,
+    clear_extraction_result: bool,
+) -> MemoryExtractionTask | None:
+    """Admin: failed → pending; clear last_error; optionally clear extraction_result."""
+    set_fields: dict[str, Any] = {
+        "status": ExtractionTaskStatus.PENDING.value,
+        "last_error": None,
+        "updated_time": now,
+    }
+    if clear_extraction_result:
+        set_fields["extraction_result"] = None
+
+    document = await _collection(mongodb).find_one_and_update(
+        {
+            "user_id": user_id,
+            "archive_id": archive_id,
+            "status": ExtractionTaskStatus.FAILED.value,
+        },
+        {"$set": set_fields},
+        return_document=ReturnDocument.AFTER,
+    )
+    if document is None:
+        return None
+    return extraction_task_from_document(document)
+
+
+async def admin_mark_failed_from_admin_action(
+    mongodb: AsyncMongoClient[Any],
+    *,
+    user_id: str,
+    archive_id: str,
+    last_error: ExtractionLastError,
+    now: int,
+) -> MemoryExtractionTask:
+    """Admin: mark failed from pending or failed after Kafka publish failure."""
+    document = await _collection(mongodb).find_one_and_update(
+        {
+            "user_id": user_id,
+            "archive_id": archive_id,
+            "status": {
+                "$in": [
+                    ExtractionTaskStatus.PENDING.value,
+                    ExtractionTaskStatus.FAILED.value,
+                ]
+            },
+        },
+        {
+            "$set": {
+                "status": ExtractionTaskStatus.FAILED.value,
+                "last_error": last_error.model_dump(mode="json"),
+                "updated_time": now,
+            },
+        },
+        return_document=ReturnDocument.AFTER,
+    )
+    if document is None:
+        raise RuntimeError(
+            f"failed to mark extraction task failed from admin action "
+            f"user_id={user_id} archive_id={archive_id}"
+        )
     return extraction_task_from_document(document)

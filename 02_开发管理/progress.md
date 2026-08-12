@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-008 planned
+current_phase: Phase 2 — EXT-008 tested
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-008
-current_task_status: planned
-current_branch: main
+current_task_status: tested
+current_branch: feat/EXT-008-extraction-admin-api
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -27,7 +27,7 @@ workflow_mode_source: explicit
 planning_baseline_main: "d55bf53e715378463243fcf80e49277e603c1bb5"
 planning_baseline_EXT-008: "d55bf53e715378463243fcf80e49277e603c1bb5"
 formal_EXT-008_plan_file: 02_开发管理/tasks/EXT-008-extraction-admin-api.md
-formal_EXT-008_status: planned
+formal_EXT-008_status: tested
 formal_EXT-008_workflow_mode: NORMAL
 formal_EXT-008_workflow_mode_source: explicit
 formal_EXT-008_baseline: d55bf53e715378463243fcf80e49277e603c1bb5
@@ -41,9 +41,12 @@ formal_EXT-008_dependency_changes_expected: NONE
 formal_EXT-008_migration_changes_expected: NONE
 formal_EXT-008_authorized_http_error_codes: "extraction_task_not_found, retry_not_allowed (+ DEV-005 cross-cutting invalid_api_key/forbidden/validation_error/internal_error)"
 formal_EXT-008_pipeline_handoff: "HTTP + ExtractionAdminService + Mongo admin repo; worker/consumer unchanged; pipeline continuation DEFERRED_FOR_MVP"
-formal_EXT-008_note: "Planner only; baseline d55bf53 verified (main, clean tree); OI-006 resolved_by_plan via LD-1 rebuild endpoint; Developer NOT authorized; 不得触碰 DEV-006/PR#13"
-formal_EXT-008_next_action: "计划审查"
-next_action: "计划审查"
+formal_EXT-008_note: "Developer tested；9 whitelist files；GET/retry/rebuild Admin HTTP；OI-006 rebuild 闭合；LD-3 Mongo before Kafka；scoped 25 passed；ruff/mypy PASS；zero consumer/worker/pipeline diff；未 commit"
+formal_EXT-008_next_action: "代码审查"
+formal_EXT-008_scoped_tests: "25 passed"
+formal_EXT-008_ruff: PASS
+formal_EXT-008_mypy: PASS
+next_action: "代码审查"
 planning_baseline_EXT-007: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
 formal_EXT-006_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md

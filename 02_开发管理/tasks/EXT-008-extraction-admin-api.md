@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-008
 task_name: Extraction 管理 GET/Retry/Rebuild API
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "d55bf53e715378463243fcf80e49277e603c1bb5"
 branch: "feat/EXT-008-extraction-admin-api"
 created_at: "2026-08-12 21:40 UTC"
-updated_at: "2026-08-12 21:40 UTC"
+updated_at: "2026-08-12 22:00 UTC"
 spec_sections:
   - "§2.1.3 Memory Extraction Task 数据库设计"
   - "§2.1.4 Kafka 消费与任务幂等（completed 早退；terminal 持久化后才 Offset）"
@@ -38,10 +38,10 @@ prerequisites:
     verification: "git branch --show-current=main; git status --short empty; git rev-parse HEAD=d55bf53e715378463243fcf80e49277e603c1bb5"
 approval_gates:
   planning: "PLAN_APPROVED"
-  approval_posture: "pending Plan Review"
+  approval_posture: "human PLAN_APPROVED"
   amendment_recorded: false
-  human_plan_approved: false
-  developer_authorized: false
+  human_plan_approved: true
+  developer_authorized: true
   reviewer_authorized: false
   release_operator_authorized: false
 release_phases:
@@ -531,18 +531,20 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-12 21:40 UTC | planning | 创建 Task Plan；同步 progress/master_plan/open_issues | — | baseline d55bf53 verified；prerequisites SATISFIED；OI-006 resolved_by_plan |
+| 2026-08-12 22:00 UTC | implementation | 9 whitelist files：retry policy、ExtractionAdminService、Mongo admin repo、HTTP schemas/routes、app router | — | LD-3 Mongo before Kafka；LD-4 infra→503 |
+| 2026-08-12 22:00 UTC | tests | unit 11 + contract 7 + integration 7 | 25 passed；ruff PASS；mypy PASS | SF-1–SF-4 absorbed；zero consumer/worker/pipeline diff |
 
 ## 14. 实际执行结果
 
 ### 最终状态
 
-`planned` — 待 Plan Review；Developer **NOT** authorized；`next_action=计划审查`；**不得触碰 DEV-006/PR#13**。
+`tested` — Developer 实施完成；`next_action=代码审查`；scoped 25 passed；ruff/mypy PASS；**不得触碰 DEV-006/PR#13**。
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/EXT-008-extraction-admin-api
+plan_commit: 003ab40c44611acbc039f4a05548a9e0640d5d8c
 implementation_commit: null
 implementation_commit_message: null
 ```
