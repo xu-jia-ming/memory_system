@@ -455,7 +455,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | EXT-001 | Task Schema + Kafka Consumer 幂等/Offset | §2.1.3, §2.1.4 | STM-006, DEV-004 | completed |
 | EXT-002 | Archive 读取/预处理/脱敏 | §2.1.5 | EXT-001 | completed |
-| EXT-003 | LLM Extraction + Fingerprint | §2.1.6–2.1.8 | EXT-002, STM-007 | approved |
+| EXT-003 | LLM Extraction + Fingerprint | §2.1.6–2.1.8 | EXT-002, STM-007 | completed |
 | EXT-004 | Entity Alignment + Neo4j 模型基础 | §2.1.9, §2.1.10 | EXT-003, DEV-004 | planned |
 | EXT-005 | Reconciliation + 聚合门禁 | §2.1.11 | EXT-004 | planned |
 | EXT-006 | Neo4j 图谱事务写入 | §2.1.12, §2.1.13 | EXT-005 | planned |
@@ -495,6 +495,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **计划文件**：`02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md`（Amendment 002）
 - **规格章节**：§1.2.1、§2.1.3–§2.1.8、§2.1.15–§2.1.16、§3.9、Appendix A Amendment EXT-002-004、**Appendix B Amendment EXT-003**。
 - **正式前置依赖**：EXT-002 — **SATISFIED/completed**（PR #36 MERGED）；STM-007 — **SATISFIED/completed**（PR #26 MERGED）；EXT-001 — **SATISFIED/completed**（PR #34 MERGED）。
+- **状态备注**：`completed`（implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；record `b14d53d840e7ba69139ce050a5225eae92def220`；PR #37 MERGED `0eb45e20c64777a03dc770be70cba2316b47fdf6` mergedAt `2026-08-12T06:06:31Z`；scoped 63 passed；Ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=1 non-blocking；Appendix B behavior、terminal/offset gate、privacy and production scope verified；OI-EXT-003-005 **deferred_for_mvp**；EXT-004 prerequisites **PARTIAL**（EXT-003 completed；DEV-004 completed）— **planned / NOT AUTO-STARTED**；feat 分支 cleanup complete；不得触碰 DEV-006/PR#13）。
 - **配置/依赖结论**：当前 `memory_extraction` limits、120-second timeout、`memory_extraction_v1`、DeepSeek extraction model、json_object、temperature=0、thinking disabled、stream=false、max_output_tokens=8192 和 `openai>=2.46,<3` 已存在；`dependency_changes_expected=NONE`；不得修改 Settings/manifest/lockfile。
 - **关键门禁**：空 Archive 零 LLM call 并沿用 EXT-001 normal completion；非空 both-empty output 持久化后 `completed`+Offset；非空 `extraction_result` 持久化后 `processing` 不提交 Offset；invalid source refs → `llm_invalid_output`/`llm_extraction`（非 `invalid_archive`）；blank output → `llm_invalid_output`（非 `llm_empty_output`）；exact correction prompt §6.2；8000 token 不分块/不截断；LLM timeout/request/invalid output 仅使用 §2.1.15 codes at `llm_extraction`；schema failure 一次 correction retry、transport retry=0；failure logs 含 MF-002 metadata；无 prompt/response/raw/secret logging。
 - **幂等/恢复**：completed task 跳过 LLM；processing 且已有 `extraction_result` 复用并跳过 LLM；source time/fingerprint 不用 server current time 重算；both-empty result write → complete+Offset；non-empty result write → processing no Offset；real LLM fresh calls may vary。
@@ -1204,5 +1205,16 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `EXT-003`（`approved`；Amendment 002；baseline `f112d12d28d34de18c637a661a857fcb9f0a401f`）；仅更新规划白名单与 approval gates；PLAN_LANDING pending Release Operator |
 | 规划决议 | SF-1：single orchestration owner `extraction_llm_service.py`（LLM/validate/fingerprint + Step 5 pipeline handoff）；`extraction_archive_preprocessing_service.py` compose-only；no new files/whitelist expansion/competing orchestration layer；Round 2 SHOULD_FIX=1 resolved without new Plan Review |
 | 审批 | Human PLAN_APPROVED；`human_plan_approved=true`；`developer_authorized=true` post-PLAN_LANDING；`next_action=PLAN_LANDING then Developer on feat/EXT-003-llm-extraction-fingerprint` |
+
+### CHANGE-061
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | EXT-003 POST_MERGE_CLEANUP：PR #37 MERGED；同步完成治理状态、验收证据、提交链与下游依赖 |
+| 受影响任务 | `EXT-003`（`completed`）；`EXT-004` prerequisites **PARTIAL**（`EXT-003` + `DEV-004` completed）；`EXT-004` remains `planned` / **NOT AUTO-STARTED**；不改变 Appendix B、EXT-001 terminal/offset 语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
+| 事实记录 | merge `0eb45e20c64777a03dc770be70cba2316b47fdf6`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；record `b14d53d840e7ba69139ce050a5225eae92def220`；completion `1d587ba6471f20e43275e775f1489f00c48759eb`；scoped 63 passed；Ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=1 non-blocking；OI-EXT-003-005 deferred_for_mvp |
+| 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
+| 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=EXT-004 planned / NOT AUTO-STARTED` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

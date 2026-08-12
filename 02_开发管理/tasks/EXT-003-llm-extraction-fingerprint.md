@@ -5,7 +5,7 @@
 ```yaml
 task_id: EXT-003
 task_name: LLM Extraction + Fingerprint
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "f112d12d28d34de18c637a661a857fcb9f0a401f"
@@ -861,13 +861,16 @@ branch: "feat/EXT-003-llm-extraction-fingerprint"
 plan_commit: "81cf1adf21bf39d2980af41ee171a8bf646f018e"
 implementation_commit: "7c6309ee68b01a6604b79253cea65be6fa26a0c6"
 implementation_commit_message: "feat(ext): add llm extraction and candidate fingerprint"
-status_record_committed: "7073811e4160e0f0fa2398b2b2b7414bdbe82c87"
+status_record_committed: "b14d53d840e7ba69139ce050a5225eae92def220"
 pr: "#37"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/37"
-pr_state: OPEN
-merge_commit: null
+pr_state: MERGED
+merged_at: "2026-08-12T06:06:31Z"
+merge_commit: "0eb45e20c64777a03dc770be70cba2316b47fdf6"
+release_gate: COMPLETED
+status_record_completed: "1d587ba6471f20e43275e775f1489f00c48759eb"
 ```
 
 ### 最终状态
 
-`committed` — IMPLEMENTATION_RELEASE complete; PR #37 OPEN; awaiting human merge
+`completed` — POST_MERGE_CLEANUP complete; PR #37 MERGED (`0eb45e20c64777a03dc770be70cba2316b47fdf6`); implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`; record `b14d53d840e7ba69139ce050a5225eae92def220`; scoped 63 passed; ruff/mypy PASS; CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=1 non-blocking; OI-EXT-003-005 DEFERRED_FOR_MVP; EXT-004 continuation deferred; feat branch deleted; `next_action=EXT-004 planned / NOT AUTO-STARTED`

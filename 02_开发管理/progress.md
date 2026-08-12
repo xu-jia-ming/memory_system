@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-002 completed (EXT-003 prerequisites satisfied)
+current_phase: Phase 2 — EXT-003 completed (EXT-004 prerequisites partial)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-003
-current_task_status: committed
-current_branch: feat/EXT-003-llm-extraction-fingerprint
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -24,7 +24,7 @@ target_default_branch: main
 current_plan_file: 02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-next_action: "WAITING_FOR_PR_MERGE — EXT-003 PR #37"
+next_action: "EXT-004 planned / NOT AUTO-STARTED"
 current_task_approval_posture: "PLAN_APPROVED — Amendment 002; Round 2 BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1; human PLAN_APPROVED granted; SF-1 orchestration owner=extraction_llm_service.py; Developer authorized post-PLAN_LANDING"
 planning_baseline_EXT-003: "f112d12d28d34de18c637a661a857fcb9f0a401f"
 formal_EXT-003_plan_file: 02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md
@@ -76,20 +76,27 @@ formal_EXT-002_production_scope: "VERIFIED — exact approved whitelist; no EXT-
 formal_EXT-002_raw_evidence: "RAW-01..RAW-12 PASS; strict no-coercion/_id exception/unknown-field rejection/full-document gate verified"
 formal_EXT-002_redaction_evidence: "RED-01..RED-27 PASS; deterministic content-only redaction/no leakage/provenance/order verified"
 formal_EXT-002_terminal_evidence: "exact mappings and abort_without_terminal verified; persistence-before-offset and no commit on persistence failure preserved"
-formal_EXT-003_status: committed
-formal_EXT-003_next_action: "WAITING_FOR_PR_MERGE — PR #37"
+formal_EXT-003_status: completed
+formal_EXT-003_next_action: "EXT-004 planned / NOT AUTO-STARTED"
 formal_EXT-003_scoped_tests: "63 passed"
 formal_EXT-003_ruff: PASS
 formal_EXT-003_mypy: PASS
 formal_EXT-003_code_review: CODE_REVIEW_APPROVED
 formal_EXT-003_p0: 0
 formal_EXT-003_p1: 0
+formal_EXT-003_p2: 1
+formal_EXT-003_p3: 1
 formal_EXT-003_implementation_commit: 7c6309ee68b01a6604b79253cea65be6fa26a0c6
 formal_EXT-003_implementation_commit_message: "feat(ext): add llm extraction and candidate fingerprint"
 formal_EXT-003_pr: "#37"
 formal_EXT-003_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/37"
-formal_EXT-003_pr_state: OPEN
-formal_EXT-003_status_record_committed: 7073811e4160e0f0fa2398b2b2b7414bdbe82c87
+formal_EXT-003_pr_state: MERGED
+formal_EXT-003_merge_commit: 0eb45e20c64777a03dc770be70cba2316b47fdf6
+formal_EXT-003_merged_at: "2026-08-12T06:06:31Z"
+formal_EXT-003_status_record_committed: b14d53d840e7ba69139ce050a5225eae92def220
+formal_EXT-003_status_record_completed: 1d587ba6471f20e43275e775f1489f00c48759eb
+formal_EXT-003_release_gate: COMPLETED
+formal_EXT-003_note: "POST_MERGE_CLEANUP；implementation 7c6309e；record b14d53d；PR #37 MERGED merge 0eb45e2 mergedAt 2026-08-12T06:06:31Z；scoped 63 passed；ruff+mypy PASS；CODE_REVIEW_APPROVED Round 2 P0=0 P1=0 P2=1 P3=1 non-blocking；OI-EXT-003-005 DEFERRED_FOR_MVP；EXT-004 continuation deferred；feat 分支已删；不得触碰 DEV-006/PR#13"
 formal_EXT-003_implementation_note: "ExtractionLlmService owns LLM/validate/fingerprint/persist/pipeline handoff; preprocessing compose-only; PipelineTerminalDecision and worker unchanged"
 formal_EXT-003_human_plan_approved: true
 formal_EXT-003_human_plan_approved_at: "2026-08-12T05:45:00Z"
@@ -855,7 +862,7 @@ stm_013_scope_remediation:
 
 **DEV-OPS-007**：**completed** — Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；Ruff E501 L174–175 换行（零语义变更）；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；record `c48a70d`；PR [#24](https://github.com/xu-jia-ming/memory_system/pull/24) **MERGED**（merge `de95f3a2f0107f791f89441177841754b1d4f82c` mergedAt `2026-08-10T11:54:41Z`）；ZERO_STALE_AUTHORITATIVE_REFERENCES **PASS**；FULL_RUFF **PASS**；integration context-read **14 passed**；mypy **PASS**；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；production `src/**` changes **none**；Phase 1 DEV-OPS-007 **completed**。
 
-**下游**：**STM-013** **completed**；**STM-011** **completed**；**EXT-001** **completed**（PR #34 MERGED `ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；scoped **61** passed；ruff/mypy **PASS**）；**STM-012** **completed**（PR #35 MERGED `d73207752bbf004a4b20bf8fff00720cc0ca456b` mergedAt `2026-08-11T15:20:30Z`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；integration **1** passed；ruff/mypy **PASS**；production_delta **NONE**）；**EXT-002** **completed**（PR #36 MERGED `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`）；**EXT-003** prerequisites **SATISFIED** — **planned / NOT AUTO-STARTED**；**不得触碰 DEV-006/PR#13**。
+**下游**：**STM-013** **completed**；**STM-011** **completed**；**EXT-001** **completed**（PR #34 MERGED `ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；scoped **61** passed；ruff/mypy **PASS**）；**STM-012** **completed**（PR #35 MERGED `d73207752bbf004a4b20bf8fff00720cc0ca456b` mergedAt `2026-08-11T15:20:30Z`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；integration **1** passed；ruff/mypy **PASS**；production_delta **NONE**）；**EXT-002** **completed**（PR #36 MERGED `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`）；**EXT-003** **completed**（PR #37 MERGED `0eb45e20c64777a03dc770be70cba2316b47fdf6` mergedAt `2026-08-12T06:06:31Z`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；scoped **63** passed；ruff/mypy **PASS**）；**EXT-004** prerequisites **PARTIAL**（EXT-003 completed；DEV-004 completed）— **planned / NOT AUTO-STARTED**；**不得触碰 DEV-006/PR#13**。
 
 ## 实施前置条件
 
@@ -1032,6 +1039,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 14:10 UTC | EXT-003 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #37 MERGED (`0eb45e20c64777a03dc770be70cba2316b47fdf6`)；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；record `b14d53d840e7ba69139ce050a5225eae92def220`；completion `1aa6a69cd86169c1b41ab6693bc6d40d0e6516ee`；feat 分支已删 | scoped 63 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=1 non-blocking；OI-EXT-003-005 DEFERRED_FOR_MVP；EXT-004 continuation deferred；`next_action=EXT-004 planned / NOT AUTO-STARTED`；governance completion commit created |
 | 2026-08-12 06:02 UTC | EXT-003 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；PR #37 OPEN；docs(status): record on feat | scoped 63 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED Round 2 P0=0 P1=0；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge** |
 | 2026-08-12 05:45 UTC | EXT-003 | planned → approved | Human PLAN_APPROVED Amendment 002; SF-1 MVP_LOCAL_DECISION orchestration owner=`extraction_llm_service.py`; approval gates updated; PLAN_LANDING pending Release Operator | Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1; preprocessing compose-only; no whitelist expansion; `next_action=Developer on feat/EXT-003-llm-extraction-fingerprint` post-PLAN_LANDING |
 | 2026-08-12 10:56 UTC | EXT-002 | committed → completed | Release Operator `POST_MERGE_CLEANUP`; PR #36 MERGED (`59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`); implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`; amendment `985613be08814b1e9eea521888b61dd5cb8d94ff`; record `036d770268c3a3bbb95fe4687fd0007805e284a4`; completion `cd0b1a33848b294b5b068891f2a02422767becf1` | scoped 165 passed; RAW-01..12 PASS; RED-01..27 PASS; mandatory skips=0; scoped rerun=165 passed; Ruff/mypy PASS; CODE_REVIEW_APPROVED P0/P1/P2/P3=0; Amendment 004 behavior, terminal/offset gate, privacy and production scope verified; STM-007 completed; EXT-003 prerequisites SATISFIED, planned/NOT AUTO-STARTED; governance completion commit created |
