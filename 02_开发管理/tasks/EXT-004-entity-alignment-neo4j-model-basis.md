@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-004
 task_name: Entity Alignment + Neo4j 模型基础
-status: planned
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "8330d42a9f2fe9365e180bdd68c6c9dc7add6e48"
 branch: "feat/EXT-004-entity-alignment-neo4j-model-basis"
 created_at: "2026-08-12 06:20 UTC"
-updated_at: "2026-08-12 14:50 UTC"
+updated_at: "2026-08-12 15:35 UTC"
 spec_sections:
   - "§1.2.1 记忆萃取整体流程（Align Entities with Existing Graph 位置）"
   - "§2.1.3 Memory Extraction Task（任务表不保存 Memory/Entity 结果 ID 数组）"
@@ -53,9 +53,9 @@ approval_gates:
   approval_posture: "PLAN_REVIEW_APPROVED Round 2 — BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1; await human PLAN_APPROVED; Developer NOT authorized"
   amendment_recorded: true
   human_plan_approved: true
-  developer_authorized: false
+  developer_authorized: true
   reviewer_authorized: false
-  release_operator_authorized: false
+  release_operator_authorized: true
 release_phases:
   PLAN_LANDING: "NORMAL only; after PLAN_APPROVED, Release Operator may land approved planning files on main and create the exact feature branch"
   IMPLEMENTATION_RELEASE: "only after all blocking Open Issues are resolved and implementation is approved; feature branch whitelist only; no push to main"
@@ -838,10 +838,34 @@ out_of_scope_changes:
 | 2026-08-12 06:20 UTC | Planner 创建 fail-closed 计划 | 仅规划白名单（Task Plan / open_issues / progress / master_plan）；未改 `src/**`、`tests/**`、规格正文、配置、依赖；未执行 Git 写 | N/A（规划-only） | OI-EXT-004-001 / OI-EXT-004-002 blocking；`approval_posture=FAIL_CLOSED_BLOCKED`；`next_action=计划审查` |
 | 2026-08-12 14:50 UTC | Planner Round 2 remediation (Amendment 002) | §5.2.1/§5.2.2/§5.4.1/S4 Q3/同批次 entity_key/LD-1/LD-7/LD-8/LD-9/测试计划；同步 open_issues/progress/master_plan；SAFE_AUTO_REMEDIATION 记录 progress 重复 `next_action` 键重命名 | N/A（规划-only） | OI-EXT-004-001/002 → MVP_LOCAL_DECISION non-blocking；`approval_posture=AWAIT_PLAN_REVIEW_ROUND_2`；Developer NOT authorized |
 | 2026-08-12 15:00 UTC | Plan Review Round 2 | `PLAN_APPROVED`；BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1（SF-R2-001：Q3 示例 Cypher 对 aliases 为原文比较，实现须以 §5.2.2 表为准做 `normalize_entity_alias`） | N/A | `status=READY_FOR_PLAN_APPROVAL`；Developer still NOT authorized until human PLAN_APPROVED |
-| null | Developer | null | null | null |
-| null | Code Review | null | null | null |
-| null | Release | null | null | null |
+| 2026-08-12 07:25 UTC | Developer implementation | 新建 entity_alignment 模型/entity_key/entity_alignment_service/entity_alignment_repository + unit/contract/integration 测试白名单；Q3 按 user_id+entity_type 批量 fetch + Python `normalize_entity_alias` 过滤（SF-R2-001）；零 Neo4j 写入；未改 pipeline/consumer/llm/worker/repository | `pytest` unit+contract 53 passed；`ruff` PASS；`mypy` PASS；integration 需 Docker（skip if unavailable） | `status=tested`；`READY_FOR_CODE_REVIEW` |
+| 2026-08-12 15:30 UTC | Code Review | `CODE_REVIEW_APPROVED`；P0=0 P1=0 P2=2 P3=2 non-blocking | N/A | `status=reviewed`；`READY_FOR_HUMAN_COMMIT` |
+| 2026-08-12 15:35 UTC | Release IMPLEMENTATION_RELEASE | implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；PR #38 OPEN；feat push only | scoped 53 passed；ruff PASS；mypy PASS | `status=committed`；`next_action=WAITING_FOR_PR_MERGE` |
 
 ## 17. 最终状态
 
-`planned` — Round 2 Amendment 002 **Plan Review APPROVED**（BLOCKER=0 MUST_FIX=0）；等待人工 **PLAN_APPROVED**。OI-EXT-004-001/002 已 `resolved_by_plan`（非 blocking）。Developer **未**授权。
+`committed` — IMPLEMENTATION_RELEASE complete；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；PR #38 OPEN；scoped 53 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2 non-blocking；零 Neo4j 写入；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**。
+
+### Git 记录
+
+```yaml
+branch: "feat/EXT-004-entity-alignment-neo4j-model-basis"
+plan_commit: "8330d42a9f2fe9365e180bdd68c6c9dc7add6e48"
+implementation_commit: "0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c"
+implementation_commit_message: "feat(ext): add deterministic entity alignment and neo4j read model"
+status_record_committed: "c975394369d2f0f64c973cc8aa701cded6b2c54d"
+pr: "#38"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/38"
+pr_state: OPEN
+release_gate: IMPLEMENTATION_RELEASE_COMPLETE
+```
+
+### Code Review
+
+```yaml
+review_report: CODE_REVIEW_APPROVED
+p0: 0
+p1: 0
+p2: 2
+p3: 2
+```

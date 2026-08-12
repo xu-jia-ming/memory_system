@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-004 planning (Round 2 remediation; await Plan Review)
+current_phase: Phase 2 — EXT-004 implementation (committed; await human merge)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-004
-current_task_status: planned
-current_branch: main
+current_task_status: committed
+current_branch: feat/EXT-004-entity-alignment-neo4j-model-basis
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -26,7 +26,7 @@ workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 planning_baseline_EXT-004: "8330d42a9f2fe9365e180bdd68c6c9dc7add6e48"
 formal_EXT-004_plan_file: 02_开发管理/tasks/EXT-004-entity-alignment-neo4j-model-basis.md
-formal_EXT-004_status: planned
+formal_EXT-004_status: committed
 formal_EXT-004_workflow_mode: NORMAL
 formal_EXT-004_workflow_mode_source: explicit
 formal_EXT-004_baseline: 8330d42a9f2fe9365e180bdd68c6c9dc7add6e48
@@ -41,10 +41,24 @@ formal_EXT-004_plan_review_should_fix: 1
 formal_EXT-004_plan_review_note: "SF-R2-001: Q3 example Cypher uses raw alias IN; implementation must follow §5.2.2 normalize_entity_alias semantics"
 formal_EXT-004_human_plan_approved: true
 formal_EXT-004_human_plan_approved_at: "2026-08-12T15:06:00Z"
-formal_EXT-004_status: approved
-current_task_status: approved
-current_task_approval_posture: "PLAN_APPROVED — Round 2 human approval granted; PLAN_LANDING pending Release Operator"
-next_action: "PLAN_LANDING via Release Operator"
+current_task_status: committed
+current_task_approval_posture: "IMPLEMENTATION_RELEASE — PR #38 OPEN; CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2"
+next_action: "WAITING_FOR_PR_MERGE — human merge PR #38; then POST_MERGE_CLEANUP"
+formal_EXT-004_scoped_tests: "53 passed"
+formal_EXT-004_ruff: PASS
+formal_EXT-004_mypy: PASS
+formal_EXT-004_code_review: CODE_REVIEW_APPROVED
+formal_EXT-004_p0: 0
+formal_EXT-004_p1: 0
+formal_EXT-004_p2: 2
+formal_EXT-004_p3: 2
+formal_EXT-004_implementation_commit: 0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c
+formal_EXT-004_implementation_commit_message: "feat(ext): add deterministic entity alignment and neo4j read model"
+formal_EXT-004_pr: "#38"
+formal_EXT-004_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/38"
+formal_EXT-004_pr_state: OPEN
+formal_EXT-004_status_record_committed: c975394369d2f0f64c973cc8aa701cded6b2c54d
+formal_EXT-004_implementation_evidence: "src/memory_system/domain/models/entity_alignment.py; domain/services/entity_key.py; domain/services/entity_alignment_service.py; infrastructure/neo4j/entity_alignment_repository.py; tests/unit+contract+integration per whitelist; pytest 53 passed; ruff+mypy PASS"
 formal_EXT-004_prerequisite: "SATISFIED — EXT-003 completed (PR #37 MERGED); DEV-004 completed (§2.1.9 constraints/indexes exist via migration 002); EXT-001/EXT-002 completed"
 formal_EXT-004_prerequisite_evidence: "persisted extraction_result / candidate_fingerprint / candidate_source_time verified in domain/models/extraction_llm.py; non-empty result stays processing via abort_without_terminal; PipelineTerminalDecision and extraction_worker verified unchanged"
 formal_EXT-004_scope: "§2.1.9 Entity model basis + §2.1.10 deterministic entity alignment; read-only Neo4j queries; transient (non-persisted) local_entity_id -> entity_id map and planned entity create / planned alias merge records"
@@ -55,7 +69,7 @@ formal_EXT-004_dependency_changes_expected: NONE
 formal_EXT-004_migration_changes_expected: NONE
 formal_EXT-004_authorized_error_codes: "entity_alignment_failed only; graph_query_failed reserved for §2.1.11 memory recall (EXT-005) and forbidden in EXT-004; failed_stage=entity_alignment (LD-9)"
 formal_EXT-004_pipeline_handoff: "isolated library service; EXT-003→EXT-004 continuation orchestration remains DEFERRED_FOR_MVP (Appendix B §B.10.4); PipelineTerminalDecision / consumer / extraction_llm_service / extraction_worker unchanged"
-formal_EXT-004_note: "Round 2 planning remediation only: Task Plan Amendment 002 + open_issues + progress + master_plan; SAFE_AUTO_REMEDIATION recorded (progress duplicate next_action key rename); no src/tests/config/dependency/spec-body change; no Git write; Developer NOT authorized; 不得触碰 DEV-006/PR#13"
+formal_EXT-004_note: "IMPLEMENTATION_RELEASE complete; implementation 0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c; PR #38 OPEN; scoped 53 passed; ruff+mypy PASS; CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2 non-blocking; zero Neo4j writes; EXT-003→EXT-004 continuation DEFERRED_FOR_MVP; 不得触碰 DEV-006/PR#13"
 formal_EXT-003_approval_posture: "PLAN_APPROVED — Amendment 002; Round 2 BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1; human PLAN_APPROVED granted; SF-1 orchestration owner=extraction_llm_service.py; Developer authorized post-PLAN_LANDING"
 planning_baseline_EXT-003: "f112d12d28d34de18c637a661a857fcb9f0a401f"
 formal_EXT-003_plan_file: 02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md
@@ -894,7 +908,7 @@ stm_013_scope_remediation:
 
 **DEV-OPS-007**：**completed** — Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；Ruff E501 L174–175 换行（零语义变更）；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；record `c48a70d`；PR [#24](https://github.com/xu-jia-ming/memory_system/pull/24) **MERGED**（merge `de95f3a2f0107f791f89441177841754b1d4f82c` mergedAt `2026-08-10T11:54:41Z`）；ZERO_STALE_AUTHORITATIVE_REFERENCES **PASS**；FULL_RUFF **PASS**；integration context-read **14 passed**；mypy **PASS**；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；production `src/**` changes **none**；Phase 1 DEV-OPS-007 **completed**。
 
-**下游**：**STM-013** **completed**；**STM-011** **completed**；**EXT-001** **completed**（PR #34 MERGED `ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；scoped **61** passed；ruff/mypy **PASS**）；**STM-012** **completed**（PR #35 MERGED `d73207752bbf004a4b20bf8fff00720cc0ca456b` mergedAt `2026-08-11T15:20:30Z`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；integration **1** passed；ruff/mypy **PASS**；production_delta **NONE**）；**EXT-002** **completed**（PR #36 MERGED `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`）；**EXT-003** **completed**（PR #37 MERGED `0eb45e20c64777a03dc770be70cba2316b47fdf6` mergedAt `2026-08-12T06:06:31Z`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；scoped **63** passed；ruff/mypy **PASS**）；**EXT-004** `planned`（Round 1 fail-closed plan；prerequisites **SATISFIED**：EXT-001/EXT-002/EXT-003/DEV-004 completed；plan `02_开发管理/tasks/EXT-004-entity-alignment-neo4j-model-basis.md`；baseline `8330d42a9f2fe9365e180bdd68c6c9dc7add6e48`；`next_action=计划审查`；实施被 **OI-EXT-004-001**（§2.1.10 第 4 步匹配与多命中确定性）与 **OI-EXT-004-002**（`entity_alignment_failed` 的 `failed_stage` 字面量）阻塞；`dependency_changes_expected=NONE`；无 Migration 变更）；**不得触碰 DEV-006/PR#13**。
+**下游**：**STM-013** **completed**；**STM-011** **completed**；**EXT-001** **completed**（PR #34 MERGED `ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；scoped **61** passed；ruff/mypy **PASS**）；**STM-012** **completed**（PR #35 MERGED `d73207752bbf004a4b20bf8fff00720cc0ca456b` mergedAt `2026-08-11T15:20:30Z`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；integration **1** passed；ruff/mypy **PASS**；production_delta **NONE**）；**EXT-002** **completed**（PR #36 MERGED `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`）；**EXT-003** **completed**（PR #37 MERGED `0eb45e20c64777a03dc770be70cba2316b47fdf6` mergedAt `2026-08-12T06:06:31Z`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；scoped **63** passed；ruff/mypy **PASS**）；**EXT-004** `committed`（PR #38 OPEN；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；scoped **53** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2；prerequisites **SATISFIED**；plan `02_开发管理/tasks/EXT-004-entity-alignment-neo4j-model-basis.md`；`next_action=WAITING_FOR_PR_MERGE`；`dependency_changes_expected=NONE`；无 Migration 变更）；**不得触碰 DEV-006/PR#13**。
 
 ## 实施前置条件
 
@@ -1073,6 +1087,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 15:35 UTC | EXT-004 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；PR #38 OPEN；docs(status): record on feat | scoped 53 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge** |
 | 2026-08-12 14:50 UTC | EXT-004 | planned (Round 2) | Planner Amendment 002 remediation; §5.2.1/§5.2.2/§5.4.1/S4 Q3/same-batch entity_key/LD-9; OI-EXT-004-001/002 downgraded to `resolved_by_plan`; SAFE_AUTO_REMEDIATION recorded (progress duplicate `next_action` key → `historical_next_action_EXT-002`); no src/tests/spec-body change; no Git write | `next_action=计划审查 Round 2`; `approval_posture=AWAIT_PLAN_REVIEW_ROUND_2`; blocking Open Issues **none**; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 06:20 UTC | EXT-004 | planned | Planner created `02_开发管理/tasks/EXT-004-entity-alignment-neo4j-model-basis.md`; synchronized open_issues/progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `8330d42a9f2fe9365e180bdd68c6c9dc7add6e48` verified (main, clean tree); scope = §2.1.9 Entity model basis + §2.1.10 deterministic alignment, read-only Neo4j queries, transient non-persisted alignment output; `entity_alignment_failed` is the only authorized EXT-004 code and `graph_query_failed` is reserved for §2.1.11 recall (EXT-005); EXT-003→EXT-004 continuation stays `DEFERRED_FOR_MVP`; `dependency_changes_expected=NONE`; `migration_changes_expected=NONE`; blocking `OI-EXT-004-001` / `OI-EXT-004-002`; non-blocking `OI-EXT-004-003` / `OI-EXT-004-004`; `next_action=计划审查`; `approval_posture=FAIL_CLOSED_BLOCKED`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 14:10 UTC | EXT-003 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #37 MERGED (`0eb45e20c64777a03dc770be70cba2316b47fdf6`)；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；record `b14d53d840e7ba69139ce050a5225eae92def220`；completion `5d9349f7ed6984aee5000422bc55ab5e7031285b`；feat 分支已删 | scoped 63 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=1 non-blocking；OI-EXT-003-005 DEFERRED_FOR_MVP；EXT-004 continuation deferred；`next_action=EXT-004 planned / NOT AUTO-STARTED`；governance completion commit created |
