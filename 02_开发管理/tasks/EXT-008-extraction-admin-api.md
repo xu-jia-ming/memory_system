@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-008
 task_name: Extraction 管理 GET/Retry/Rebuild API
-status: planned
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "d55bf53e715378463243fcf80e49277e603c1bb5"
 branch: "feat/EXT-008-extraction-admin-api"
 created_at: "2026-08-12 21:40 UTC"
-updated_at: "2026-08-12 21:40 UTC"
+updated_at: "2026-08-12 22:00 UTC"
 spec_sections:
   - "§2.1.3 Memory Extraction Task 数据库设计"
   - "§2.1.4 Kafka 消费与任务幂等（completed 早退；terminal 持久化后才 Offset）"
@@ -38,10 +38,10 @@ prerequisites:
     verification: "git branch --show-current=main; git status --short empty; git rev-parse HEAD=d55bf53e715378463243fcf80e49277e603c1bb5"
 approval_gates:
   planning: "PLAN_APPROVED"
-  approval_posture: "pending Plan Review"
+  approval_posture: "human PLAN_APPROVED"
   amendment_recorded: false
-  human_plan_approved: false
-  developer_authorized: false
+  human_plan_approved: true
+  developer_authorized: true
   reviewer_authorized: false
   release_operator_authorized: false
 release_phases:
@@ -531,18 +531,25 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-12 21:40 UTC | planning | 创建 Task Plan；同步 progress/master_plan/open_issues | — | baseline d55bf53 verified；prerequisites SATISFIED；OI-006 resolved_by_plan |
+| 2026-08-12 22:00 UTC | implementation | 9 whitelist files：retry policy、ExtractionAdminService、Mongo admin repo、HTTP schemas/routes、app router | — | LD-3 Mongo before Kafka；LD-4 infra→503 |
+| 2026-08-12 22:00 UTC | tests | unit 11 + contract 7 + integration 7 | 25 passed；ruff PASS；mypy PASS | SF-1–SF-4 absorbed；zero consumer/worker/pipeline diff |
+| 2026-08-12 22:00 UTC | Release IMPLEMENTATION_RELEASE | implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；PR #42 OPEN；feat push only | scoped 25 passed；ruff PASS；mypy PASS | `status=committed`；`next_action=WAITING_FOR_PR_MERGE` |
 
 ## 14. 实际执行结果
 
 ### 最终状态
 
-`planned` — 待 Plan Review；Developer **NOT** authorized；`next_action=计划审查`；**不得触碰 DEV-006/PR#13**。
+`committed` — IMPLEMENTATION_RELEASE complete；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；PR #42 OPEN (`https://github.com/xu-jia-ming/memory_system/pull/42`)；scoped 25 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；GET/retry/rebuild Admin HTTP；OI-006 rebuild 闭合；LD-3 Mongo before Kafka；zero consumer/worker/pipeline diff；`next_action=WAITING_FOR_PR_MERGE`；**不得触碰 DEV-006/PR#13**。
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/EXT-008-extraction-admin-api
+plan_commit: 003ab40c44611acbc039f4a05548a9e0640d5d8c
+implementation_commit: "e8f15b458a6f1fa6e204393d5300a018bfc5c27b"
+implementation_commit_message: "feat(ext): add extraction admin get retry rebuild api"
+pr: "#42"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/42"
+pr_state: OPEN
+next_action: "WAITING_FOR_PR_MERGE"
 ```

@@ -9,7 +9,13 @@ from fastapi import FastAPI
 
 from memory_system.api.error_handlers import register_error_handlers
 from memory_system.api.middleware import AccessLogMetricsMiddleware, RequestIdMiddleware
-from memory_system.api.routes import health, internal_metrics, memory_message, memory_session
+from memory_system.api.routes import (
+    health,
+    internal_metrics,
+    memory_extraction_admin,
+    memory_message,
+    memory_session,
+)
 from memory_system.infrastructure.llm import FakeLlmClient
 from memory_system.infrastructure.llm.protocol import LLMClient
 from memory_system.infrastructure.runtime import AppState, create_app_state, shutdown_app_state
@@ -62,5 +68,6 @@ def create_app(
     app.include_router(internal_metrics.router)
     app.include_router(memory_session.router)
     app.include_router(memory_message.router)
+    app.include_router(memory_extraction_admin.router)
 
     return app
