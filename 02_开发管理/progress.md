@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-006 tested (awaiting code review)
+current_phase: Phase 2 — EXT-006 committed (awaiting PR merge)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-006
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/EXT-006-neo4j-graph-transaction-write
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -27,8 +27,8 @@ workflow_mode_source: explicit
 planning_baseline_main: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
 planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
 formal_EXT-006_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
-formal_EXT-006_status: tested
-formal_EXT-006_developer_evidence: "scoped 41 passed; ruff/mypy PASS; 9 production + 7 test files; zero upstream/pipeline diff"
+formal_EXT-006_status: committed
+formal_EXT-006_developer_evidence: "scoped 44 passed; ruff/mypy PASS; 10 production + 7 test files; zero upstream/pipeline diff"
 formal_EXT-006_workflow_mode: NORMAL
 formal_EXT-006_workflow_mode_source: explicit
 formal_EXT-006_baseline: 59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2
@@ -44,7 +44,22 @@ formal_EXT-006_dependency_changes_expected: NONE
 formal_EXT-006_migration_changes_expected: NONE
 formal_EXT-006_authorized_error_codes: "graph_write_failed, memory_search_text_too_long; failed_stage=graph_write (LD-1); entity_alignment_failed/graph_query_failed/reconciliation_plan_conflict/llm_*/archive_*/retrieval_index_write_failed forbidden"
 formal_EXT-006_pipeline_handoff: "isolated library service; EXT-003→EXT-006 continuation DEFERRED_FOR_MVP; index_sync_memory_set transient output for EXT-007; PipelineTerminalDecision / consumer / extraction_llm_service / extraction_worker / entity_alignment_service / reconciliation_service unchanged"
-formal_EXT-006_note: "implementation complete on feat/EXT-006-neo4j-graph-transaction-write; scoped 41 passed; ruff/mypy PASS; awaiting CODE_REVIEW; 不得触碰 DEV-006/PR#13"
+formal_EXT-006_note: "IMPLEMENTATION_RELEASE；implementation b19e913af3848e932b8adb404dc5d5304167fb73；PR #40 OPEN；scoped 44 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2；zero upstream pipeline/consumer/alignment/reconciliation diff；no task completed/offset writes；不得触碰 DEV-006/PR#13"
+formal_EXT-006_scoped_tests: "44 passed"
+formal_EXT-006_ruff: PASS
+formal_EXT-006_mypy: PASS
+formal_EXT-006_code_review: CODE_REVIEW_APPROVED
+formal_EXT-006_p0: 0
+formal_EXT-006_p1: 0
+formal_EXT-006_p2: 0
+formal_EXT-006_p3: 2
+formal_EXT-006_implementation_commit: b19e913af3848e932b8adb404dc5d5304167fb73
+formal_EXT-006_implementation_commit_message: "feat(ext): add neo4j graph transaction write"
+formal_EXT-006_pr: "#40"
+formal_EXT-006_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/40"
+formal_EXT-006_pr_state: OPEN
+formal_EXT-006_release_gate: IMPLEMENTATION_RELEASE
+formal_EXT-006_next_action: "WAITING_FOR_PR_MERGE"
 planning_baseline_EXT-005: "5deb8949ee5ac367a08f173ef67c0c0689c26f5d"
 formal_EXT-005_plan_file: 02_开发管理/tasks/EXT-005-reconciliation-aggregation-gate.md
 formal_EXT-005_status: completed
@@ -111,9 +126,9 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_status: approved
-current_task_approval_posture: "PLAN_APPROVED Round 2 Amendment 001 — PLAN_LANDING authorized"
-next_action: "PLAN_LANDING"
+current_task_status: committed
+current_task_approval_posture: "CODE_REVIEW_APPROVED — IMPLEMENTATION_RELEASE complete; PR #40 OPEN"
+next_action: "WAITING_FOR_PR_MERGE"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
