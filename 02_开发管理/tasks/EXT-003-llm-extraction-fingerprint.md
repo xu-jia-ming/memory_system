@@ -844,11 +844,14 @@ human_plan_approved: true
 sf1_mvp_local_decision: "orchestration owner extraction_llm_service.py; preprocessing compose-only"
 amendment_recorded: true
 amendment_id: EXT-003-002
-code_review: NOT_AUTHORIZED
+code_review: CODE_REVIEW_APPROVED
+code_review_round: 2
 blocker: 0
 must_fix: 0
 should_fix: 1
-review_report: PLAN_APPROVED
+p2: 1
+p3: 1
+review_report: CODE_REVIEW_APPROVED
 ```
 
 ### Git 记录
@@ -856,14 +859,15 @@ review_report: PLAN_APPROVED
 ```yaml
 branch: "feat/EXT-003-llm-extraction-fingerprint"
 plan_commit: "81cf1adf21bf39d2980af41ee171a8bf646f018e"
-implementation_commit: null
-implementation_commit_message: null
-status_record_committed: null
-pr: null
-pr_state: null
+implementation_commit: "7c6309ee68b01a6604b79253cea65be6fa26a0c6"
+implementation_commit_message: "feat(ext): add llm extraction and candidate fingerprint"
+status_record_committed: "7073811e4160e0f0fa2398b2b2b7414bdbe82c87"
+pr: "#37"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/37"
+pr_state: OPEN
 merge_commit: null
 ```
 
 ### 最终状态
 
-`approved` — Amendment 002 + human PLAN_APPROVED; SF-1 orchestration owner recorded; PLAN_LANDING pending Release Operator
+`committed` — IMPLEMENTATION_RELEASE complete; PR #37 OPEN; awaiting human merge
