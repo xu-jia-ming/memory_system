@@ -1213,7 +1213,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 日期 | 2026-08-12 |
 | 原因 | EXT-003 POST_MERGE_CLEANUP：PR #37 MERGED；同步完成治理状态、验收证据、提交链与下游依赖 |
 | 受影响任务 | `EXT-003`（`completed`）；`EXT-004` prerequisites **PARTIAL**（`EXT-003` + `DEV-004` completed）；`EXT-004` remains `planned` / **NOT AUTO-STARTED**；不改变 Appendix B、EXT-001 terminal/offset 语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
-| 事实记录 | merge `0eb45e20c64777a03dc770be70cba2316b47fdf6`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；record `b14d53d840e7ba69139ce050a5225eae92def220`；completion `1d587ba6471f20e43275e775f1489f00c48759eb`；scoped 63 passed；Ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=1 non-blocking；OI-EXT-003-005 deferred_for_mvp |
+| 事实记录 | merge `0eb45e20c64777a03dc770be70cba2316b47fdf6`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；record `b14d53d840e7ba69139ce050a5225eae92def220`；completion `5d9349f7ed6984aee5000422bc55ab5e7031285b`；scoped 63 passed；Ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=1 non-blocking；OI-EXT-003-005 deferred_for_mvp |
 | 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
 | 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=EXT-004 planned / NOT AUTO-STARTED` |
 

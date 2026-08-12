@@ -868,7 +868,7 @@ pr_state: MERGED
 merged_at: "2026-08-12T06:06:31Z"
 merge_commit: "0eb45e20c64777a03dc770be70cba2316b47fdf6"
 release_gate: COMPLETED
-status_record_completed: "1d587ba6471f20e43275e775f1489f00c48759eb"
+status_record_completed: "5d9349f7ed6984aee5000422bc55ab5e7031285b"
 ```
 
 ### 最终状态
