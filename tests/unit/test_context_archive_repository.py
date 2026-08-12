@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from pymongo.errors import DuplicateKeyError
 
@@ -79,3 +81,21 @@ def test_is_archive_batch_key_duplicate_error_by_index_name() -> None:
 def test_is_archive_batch_key_duplicate_error_false_for_archive_id() -> None:
     exc = DuplicateKeyError("dup", 11000, {"keyPattern": {"archive_id": 1}})
     assert is_archive_batch_key_duplicate_error(exc) is False
+
+
+@pytest.mark.asyncio
+async def test_raw_lookup_filters_only_archive_id_and_preserves_document() -> None:
+    from memory_system.infrastructure.mongodb.context_archive_repository import (
+        find_context_archive_document_by_id,
+    )
+
+    raw = {"archive_id": "archive-1", "base_compression_version": "0", "_id": "mongo-id"}
+    collection = AsyncMock()
+    collection.find_one.return_value = raw
+    with patch(
+        "memory_system.infrastructure.mongodb.context_archive_repository._collection",
+        return_value=collection,
+    ):
+        result = await find_context_archive_document_by_id(object(), "archive-1")  # type: ignore[arg-type]
+    collection.find_one.assert_awaited_once_with({"archive_id": "archive-1"})
+    assert result is raw

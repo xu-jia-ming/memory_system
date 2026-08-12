@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 from pymongo import AsyncMongoClient
 from pymongo.asynchronous.collection import AsyncCollection
@@ -95,6 +95,17 @@ async def find_context_archive_by_id(
     if document is None:
         return None
     return context_archive_from_document(document)
+
+
+async def find_context_archive_document_by_id(
+    mongodb: AsyncMongoClient[Any],
+    archive_id: str,
+) -> dict[str, Any] | None:
+    """Read the untouched BSON mapping for strict EXT-002 validation."""
+    document = await _collection(mongodb).find_one({"archive_id": archive_id})
+    if document is None:
+        return None
+    return cast(dict[str, Any], document)
 
 
 async def count_by_batch_key(mongodb: AsyncMongoClient[Any], archive_batch_key: str) -> int:

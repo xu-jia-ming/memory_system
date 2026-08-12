@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-002
 task_name: Archive 读取 / 预处理 / 脱敏
-status: planned
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "13e1dae36a0b0d94415d9581b2a5fe53c990545f"
 branch: "feat/EXT-002-archive-read-preprocess-redact"
 created_at: "2026-08-11 15:36 UTC"
-updated_at: "2026-08-12 09:16 UTC"
+updated_at: "2026-08-12 10:40 UTC"
 plan_review_round: 4
 amendment: "004 — EXT-002 specification/governance amendment: terminal mappings, strict raw validation, deterministic redaction, and handoff order"
 prerequisites:
@@ -494,7 +494,25 @@ Future changes require an appended amendment and approval. In particular, resolv
 | 2026-08-12 08:41 UTC | Planner Round 2 remediation | Planning documents only; MF-001/MF-002/MF-003 and SHOULD_FIX precision addressed | N/A | OI-EXT-002-001–005 remain open; status planned/PENDING review |
 | 2026-08-12 08:48 UTC | Planner Round 3 remediation | Planning documents only; raw boundary delta, strict field matrix, terminal gate, redaction decision packet, blocked output contract, and exact tests documented | N/A | OI-EXT-002-001–005 remain open/blocking; status planned/PENDING review |
 | 2026-08-12 09:00 UTC | Planner Round 4 governance amendment | Planning documents only; authoritative Amendment EXT-002-004 synchronized; terminal mappings, strict raw validation, deterministic content-only redaction, handoff order, and OI dispositions recorded | N/A | status remains planned/PENDING review; no business implementation, Developer, EXT-003, or Git write |
+| 2026-08-12 09:42 UTC | Developer resumed implementation | Added strict raw BSON validation, deterministic normalization/redaction, internal handoff model, and raw read-only repository boundary; added scoped unit/contract/integration coverage | Initial scoped run exposed stale test fixtures and normalization expectation; fixed without changing EXT-001 semantics | No out-of-whitelist production or test paths; no EXT-003/worker wiring; no Git write |
+| 2026-08-12 10:02 UTC | Developer tested implementation | Verified raw validation, no-partial-output gate, terminal decisions/persistence failure behavior, content-only redaction, provenance/order, and raw lookup | `pytest` 40 passed, 1 optional Mongo integration skipped; Ruff PASS; mypy PASS; IDE diagnostics clean | Real Mongo evidence requires explicit `EXT002_MONGO_TEST_URI`; no E2E authorized |
+| 2026-08-12 10:30 UTC | Developer remediated P1 findings | Narrowed expected redaction failure to `RedactionFailure`; token-estimator, normalization, helper, model, repository, and unexpected redactor exceptions now abort without terminal/last_error; added explicit RAW-01..RAW-12 and RED-01..RED-27 executable coverage | EXT-002 scoped `133 passed, 1 optional Mongo skipped`; relevant EXT-001/Mongo gates `35 passed`; Ruff PASS; mypy PASS; lints PASS | No contract/spec/EXT-001 semantic change; no Git write |
+| 2026-08-12 10:10 UTC | Developer remediation Round 2 started | Reopened only the approved EXT-002 implementation/test state to close P1-001/P1-002; existing unit evidence retained for valid behavior | Pending real-pipeline EXT-001 gate, RAW/RED matrix, and mandatory evidence rerun | No plan/spec/EXT-001 production change; no Git write |
+| 2026-08-12 10:16 UTC | Developer remediation Round 2 implemented | Added actual pipeline-bound RAW matrix assertions, real post-redaction/provenance/repeatability coverage, and real Kafka/Mongo RED-18/RED-19 consumer-gate evidence | Unit/contract `172 passed`; RED-18/19 `2 passed`; full EXT-002 Mongo `2 passed, 1 optional skip`; EXT-001 Kafka `8 passed`; Ruff/mypy PASS | Optional URI-only raw lookup remains the sole non-evidence skip; no plan/spec/EXT-001 production change; no Git write |
+| 2026-08-12 10:18 UTC | Developer remediation Round 2 tested | Final scoped EXT-002 unit/contract/Mongo suite passed; mandatory RAW/RED behavior and real terminal/offset evidence are green | Final `161 passed, 1 optional URI-only skip`; EXT-001 Kafka `8 passed`; Ruff PASS; mypy PASS; IDE lints clean | No mandatory evidence skipped; no plan/spec/EXT-001 production change; no Git write |
 
 ## 16. 实际执行结果
 
-Not started. Final status: `planned`; implementation status is not claimed.
+Developer P1 remediation Round 2 is complete and tested after PLAN_APPROVED and PLAN_LANDING. `RAW=12`, `RED=27`; no mandatory evidence skipped; implementation remains within the exact whitelist.
+
+## 17. Release record
+
+```yaml
+status: committed
+implementation_commit: "7fdf84827b2c253a6e6734b8051467f3ec1151f1"
+implementation_commit_message: "feat(ext): add archive preprocessing pipeline"
+pr: "#36"
+pr_state: OPEN
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/36"
+release_gate: WAITING_FOR_PR_MERGE
+```

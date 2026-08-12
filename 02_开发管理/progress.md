@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-002 planned (STM-012 + EXT-001 completed)
+current_phase: Phase 2 — EXT-002 in progress (STM-012 + EXT-001 completed)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-002
-current_task_status: planned
-current_branch: main
+current_task_status: committed
+current_branch: feat/EXT-002-archive-read-preprocess-redact
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -24,18 +24,32 @@ target_default_branch: main
 current_plan_file: 02_开发管理/tasks/EXT-002-archive-read-preprocess-redact.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-next_action: 计划审查
-formal_EXT-002_status: planned
+next_action: WAITING_FOR_PR_MERGE
+formal_EXT-002_status: committed
 formal_EXT-002_plan_file: 02_开发管理/tasks/EXT-002-archive-read-preprocess-redact.md
 formal_EXT-002_prerequisite: "SATISFIED — EXT-001 completed; PR #34 MERGED"
 formal_EXT-002_workflow_mode: NORMAL
 formal_EXT-002_baseline: 13e1dae36a0b0d94415d9581b2a5fe53c990545f
 formal_EXT-002_branch: feat/EXT-002-archive-read-preprocess-redact
-formal_EXT-002_plan_review: PENDING
+formal_EXT-002_plan_review: PLAN_APPROVED
 formal_EXT-002_plan_review_round: 4
 formal_EXT-002_amendment: "004 — authoritative specification/governance amendment: terminal mappings, strict raw validation, deterministic redaction, and handoff order"
-formal_EXT-002_note: "Planning only; EXT-002 may add only read-only find_context_archive_document_by_id(mongodb, archive_id) returning raw Mongo/BSON mapping without Pydantic/domain coercion; existing typed lookup semantics unchanged. Amendment 004 effective raw matrix requires archive_id/user_id/session_id/archive_batch_key non-empty actual str, base_compression_version/created_time actual int, messages actual list, and message_id/content actual str with role exactly user|assistant and timestamp actual int; unknown application fields are invalid, storage-only _id is ignored, and no coercion or partial output is allowed. Complete validation precedes preprocessing/redaction/output. Terminal mappings are archive_not_found/archive_read, invalid_archive/archive_validate, and redaction_failed/redaction; terminal persistence precedes offset commit, persistence failure and abort_without_terminal leave offset uncommitted. Deterministic local content-only redaction follows Amendment 004 categories, precedence, spans, marker, and no-value logging; ExtractionReadyArchive is finalized only after validation PASS -> preprocessing PASS -> redaction PASS. First-person is deferred/out-of-scope; OI-EXT-002-001/002/004/005 resolved; OI-EXT-002-003 deferred/out-of-scope; dependency_changes_expected=NONE; scope exclusions preserved."
-formal_EXT-002_amendment_override: "Authoritative Amendment EXT-002-004 supersedes prior blocked wording: OI-EXT-002-001/002/004/005 resolved; OI-EXT-002-003 deferred/out-of-scope; exact terminal mappings, deterministic content-only redaction, and validation→preprocessing→redaction handoff order are fixed. No implementation status; dependency_changes_expected=NONE."
+formal_EXT-002_note: "Implemented strict raw BSON validation and read-only archive lookup; storage-only _id is ignored, unknown application fields and coercion are rejected, and complete validation precedes preprocessing/redaction/output. Deterministic NFKC/whitespace normalization and local content-only redaction produce only normalized+redacted ExtractionReadyArchive content while preserving order/provenance; terminal mappings and EXT-001 persistence-before-offset semantics remain unchanged. No EXT-003/LLM/worker wiring, dependency, schema, Kafka, task, or status changes."
+formal_EXT-002_amendment_override: "Amendment EXT-002-004 implemented; OI-EXT-002-001/002/004/005 resolved; OI-EXT-002-003 deferred/out-of-scope; dependency_changes_expected=NONE."
+formal_EXT-002_scoped_tests: "165 passed"
+formal_EXT-002_ruff: PASS
+formal_EXT-002_mypy: PASS
+formal_EXT-002_lints: PASS
+formal_EXT-002_code_review: CODE_REVIEW_APPROVED
+formal_EXT-002_p0: 0
+formal_EXT-002_p1: 0
+formal_EXT-002_p2: 0
+formal_EXT-002_p3: 0
+formal_EXT-002_implementation_commit: 7fdf84827b2c253a6e6734b8051467f3ec1151f1
+formal_EXT-002_pr: "#36"
+formal_EXT-002_pr_state: OPEN
+formal_EXT-002_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/36"
+formal_EXT-002_release_gate: WAITING_FOR_PR_MERGE
 formal_EXT-001_status: completed
 formal_EXT-001_plan_file: 02_开发管理/tasks/EXT-001-task-schema-kafka-consumer-idempotency-offset.md
 formal_EXT-001_prerequisite: SATISFIED  # STM-006 + DEV-004 completed; DEV-004 index/topic re-verified MATCH
@@ -664,7 +678,7 @@ formal_DEV-OPS-008_ruff: PASS
 formal_DEV-OPS-008_mypy: PASS
 formal_DEV-OPS-008_kafka_lz4_integration: "2 passed"
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
-next_action: "EXT-002 remains planned; do NOT auto-start EXT-002; do NOT touch DEV-006/PR#13"
+next_action: "EXT-002 tested; next_action=Code Review; do NOT start EXT-003; do NOT touch DEV-006/PR#13"
 last_role_result: DEVELOPER
 blocking_reason: null
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
@@ -972,7 +986,14 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 10:40 UTC | EXT-002 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`; implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`; PR #36 OPEN; approved governance record on feat | scoped 165 passed; Amendment 004/raw/redaction/offset/privacy/scope gates PASS; Ruff/mypy PASS; release_gate=WAITING_FOR_PR_MERGE; no merge; no main write |
+| 2026-08-12 10:15 UTC | EXT-002 | tested → in_progress | Remediating P1-001 exception classification and P1-002 explicit RAW/RED matrix on the approved whitelist; no Git write and no scope expansion |
+| 2026-08-12 10:30 UTC | EXT-002 | in_progress → tested | P1-001 exception classification narrowed; explicit RAW-01..RAW-12 and RED-01..RED-27 coverage added; scoped 133 passed / 1 optional Mongo skipped; relevant EXT-001/Mongo gates 35 passed; Ruff/mypy/lints PASS; no Git write |
+| 2026-08-12 10:10 UTC | EXT-002 | tested → in_progress | Remediation Round 2 reopened only to replace P1 mock/AST evidence with real EXT-002 pipeline and EXT-001 consumer-gate evidence; approved whitelist only; no Git write |
+| 2026-08-12 10:16 UTC | EXT-002 | in_progress → implemented | Real pipeline RAW matrix and RED-16/17/21/22/23/27 evidence added; real Kafka/Mongo RED-18/19 gate tests added; unit/contract 172 passed, RED-18/19 2 passed, EXT-002 Mongo 2 passed/1 optional skip, EXT-001 Kafka 8 passed; Ruff/mypy PASS |
+| 2026-08-12 10:18 UTC | EXT-002 | implemented → tested | Final scoped suite `161 passed, 1 optional URI-only skip`; RED-18/19 real gate `2 passed`; relevant EXT-001 Kafka/Mongo `8 passed`; Ruff/mypy/lints PASS; mandatory RAW/RED evidence skipped=0; no Git write |
 |---|---|---|---|
+| 2026-08-12 10:02 UTC | EXT-002 | in_progress → tested | Developer resumed and completed the approved whitelist: strict raw BSON validation, read-only archive lookup, deterministic normalization/redaction, internal handoff, terminal-gate tests; scoped 40 passed / 1 optional Mongo skipped; Ruff/mypy/lints PASS | No EXT-003, worker wiring, dependency, schema, Kafka, task-status, or Git write; next_action=Code Review |
 | 2026-08-12 09:16 UTC | EXT-002 | planned（Round 4 effective-wording synchronization） | Planning-only；active validation wording fixed to `error_code=invalid_archive`, `failed_stage=archive_validate`; historical Amendment 003 wording preserved；未实施、未启动 Developer/EXT-003、未 Git 写 | `next_action=计划审查`；baseline `13e1dae36a0b0d94415d9581b2a5fe53c990545f`；dependency changes NONE；不得触碰 DEV-006/PR#13 |
 | 2026-08-12 09:00 UTC | EXT-002 | planned（Round 4 governance amendment） | Planning-only；authoritative specification Amendment EXT-002-004 与 Task Plan/open_issues/master_plan 同步；terminal mappings、strict raw validation、deterministic content-only redaction、handoff order、OI dispositions 已记录；未实施、未启动 Developer/EXT-003、未 Git 写 | `next_action=计划审查`；baseline `13e1dae36a0b0d94415d9581b2a5fe53c990545f`；dependency changes NONE；不得触碰 DEV-006/PR#13 |
 | 2026-08-12 08:48 UTC | EXT-002 | planned（Round 3 remediation；historical, superseded by Round 4） | Planning-only；Amendment 003；raw read-only repository boundary、strict all-field/no-coercion matrix、no-partial-output gate、EXT-001 terminal/offset consequences、`REDACTION_SPEC_STATUS=BLOCKED_PENDING_SPEC_DECISION`、OI-EXT-002-001 decision packet、`output_contract_status=BLOCKED` 已同步至 Task Plan/master_plan/open_issues；未 Git 写、未实施、未启动 Developer/EXT-003 | `next_action=计划审查`；baseline `13e1dae36a0b0d94415d9581b2a5fe53c990545f`；dependency changes NONE；不得触碰 DEV-006/PR#13 |
