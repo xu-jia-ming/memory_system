@@ -5,7 +5,7 @@
 ```yaml
 task_id: EXT-006
 task_name: Neo4j 图谱事务写入
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
@@ -633,12 +633,13 @@ out_of_scope_changes:
 | 2026-08-12 10:48 UTC | implementation | 9 production + 7 test files per whitelist | scoped **41** passed（unit 23 + contract 9 + integration 9）；ruff/mypy PASS | single `execute_write` transaction；Evidence SKIP path；LD-9 archive timestamp；session_id from context_archive on load_from_persisted_task |
 | 2026-08-12 11:05 UTC | code_review_remediation | P1: `graph_write_repository.py` entity_key MERGE → resolve authoritative `entity_id` for Memory props + SUBJECT/OBJECT; I7 extended; I3 SUPERSEDE/CONFLICT integration; S14b LD-9 unresolvable message ID | scoped **44** passed（unit 24 + contract 9 + integration 11）；ruff/mypy PASS | P1 convergence via MERGE RETURN + fallback resolve query; no plan_builder change |
 | 2026-08-12 11:06 UTC | Release IMPLEMENTATION_RELEASE | implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；PR #40 OPEN；feat push only | scoped 44 passed；ruff PASS；mypy PASS | `status=committed`；`next_action=WAITING_FOR_PR_MERGE` |
+| 2026-08-12 12:15 UTC | Release POST_MERGE_CLEANUP | PR #40 MERGED `372e0232c1e5cfa1d71e2bb0152a22f59e60cd03`；governance completion on main；feat 分支已删 | — | `status=completed`；`next_action=EXT-007 planned / NOT AUTO-STARTED` |
 
 ## 16. 实际执行结果
 
 ### 最终状态
 
-`committed` — IMPLEMENTATION_RELEASE complete；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；PR #40 OPEN (`https://github.com/xu-jia-ming/memory_system/pull/40`)；scoped 44 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2；zero upstream pipeline/consumer/alignment/reconciliation diff；no task completed/offset writes；`next_action=WAITING_FOR_PR_MERGE`；**不得触碰 DEV-006/PR#13**。
+`completed` — POST_MERGE_CLEANUP complete；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；record `eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f`；PR #40 MERGED (`https://github.com/xu-jia-ming/memory_system/pull/40` merge `372e0232c1e5cfa1d71e2bb0152a22f59e60cd03` mergedAt `2026-08-12T12:12:38Z`)；scoped 44 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2 non-blocking；zero upstream pipeline/consumer/alignment/reconciliation diff；no task completed/offset writes；OI-006 non-blocking；feat 分支已删；`next_action=EXT-007 planned / NOT AUTO-STARTED`；**不得触碰 DEV-006/PR#13**。
 
 ### Git 记录
 
@@ -647,10 +648,13 @@ branch: "feat/EXT-006-neo4j-graph-transaction-write"
 plan_commit: "66c547fcd1a4c529e95f776ec7165e08038e81cc"
 implementation_commit: "b19e913af3848e932b8adb404dc5d5304167fb73"
 implementation_commit_message: "feat(ext): add neo4j graph transaction write"
+status_record_committed: "eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f"
 pr: "#40"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/40"
-pr_state: OPEN
-next_action: "WAITING_FOR_PR_MERGE"
+pr_state: MERGED
+merge_commit: "372e0232c1e5cfa1d71e2bb0152a22f59e60cd03"
+merged_at: "2026-08-12T12:12:38Z"
+next_action: "EXT-007 planned / NOT AUTO-STARTED"
 ```
 
 **验证命令**：

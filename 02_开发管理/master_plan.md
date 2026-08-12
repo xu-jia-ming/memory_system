@@ -458,7 +458,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | EXT-003 | LLM Extraction + Fingerprint | §2.1.6–2.1.8 | EXT-002, STM-007 | completed |
 | EXT-004 | Entity Alignment + Neo4j 模型基础 | §2.1.9, §2.1.10 | EXT-003, DEV-004 | completed |
 | EXT-005 | Reconciliation + 聚合门禁 | §2.1.11 | EXT-004 | completed |
-| EXT-006 | Neo4j 图谱事务写入 | §2.1.12, §2.1.13 | EXT-005 | planned |
+| EXT-006 | Neo4j 图谱事务写入 | §2.1.12, §2.1.13 | EXT-005 | completed |
 | EXT-007 | Retrieval Document 同步 | §2.2.3 | EXT-006, DEV-007, DEV-004 | planned |
 | EXT-008 | Extraction 管理 GET/Retry | §2.1.14 | EXT-007, DEV-005 | planned |
 | EXT-009 | Extraction E2E + 失败注入 | §2.1.15, §3.28 | EXT-008 | planned |
@@ -541,7 +541,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **幂等/恢复**：写事务失败无部分图谱；replay 通过 Evidence SKIP 或 MERGE；成功图谱写入后仍 `processing` 待 EXT-007。
 - **配置/依赖结论**：`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；最小 TEI `/tokenize` 端口（LD-4）。
 - **Open Issues**：非阻塞 `OI-006`；无 blocking Open Issue。
-- **状态备注**：`planned`（Round 1 Task Plan created；baseline `59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`completed`（PR #40 MERGED `372e0232c1e5cfa1d71e2bb0152a22f59e60cd03` mergedAt `2026-08-12T12:12:38Z`；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；record `eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f`；scoped 44 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2 non-blocking；atomic Neo4j graph write + `index_sync_memory_set` handoff；zero task completed/offset；OI-006 non-blocking；feat 分支已删；EXT-007 prerequisites **PARTIAL**（EXT-006 **completed**；DEV-007 **completed**；DEV-004 **completed**）— planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 - **测试**：Unit（referenced_entity_write_set、core_search_text、plan builder、service 路径、幂等、失败映射、privacy）；Contract（输入/输出、错误码白名单、无 EXT-007+ 字段、上游零变更）；Integration（真实 Neo4j 写入/回滚/隔离/replay；Mongo 任务零变更）；无 E2E。
 
 #### EXT-007 Retrieval Document 同步
@@ -1310,5 +1310,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
 | 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
 | 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=EXT-006 planned / NOT AUTO-STARTED` |
+
+### CHANGE-066
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | EXT-006 POST_MERGE_CLEANUP：PR #40 MERGED；implementation + record on main；governance completion |
+| 受影响任务 | `EXT-006`（`completed`）；`EXT-007` prerequisites **PARTIAL**（EXT-006 **completed**；DEV-007 **completed**；DEV-004 **completed**）— remains `planned` / **NOT AUTO-STARTED**；不改变 Appendix B、pipeline continuation 语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
+| 规划决议 | atomic Neo4j graph write + `referenced_entity_write_set` + `core_search_text` + TEI token gate + `index_sync_memory_set` handoff delivered；zero task completed/offset；EXT-003→EXT-006 continuation remains `DEFERRED_FOR_MVP`；MF-001/SF-001–SF-004 verified |
+| Open Issues | 非阻塞 `OI-006` 不变 |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
+| 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
+| 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=EXT-007 planned / NOT AUTO-STARTED` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
