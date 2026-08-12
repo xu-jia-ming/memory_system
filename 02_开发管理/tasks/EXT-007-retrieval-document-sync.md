@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-007
 task_name: Retrieval Document 同步
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 branch: "feat/EXT-007-retrieval-document-sync"
 created_at: "2026-08-12 20:55 UTC"
-updated_at: "2026-08-12 20:55 UTC"
+updated_at: "2026-08-12 21:30 UTC"
 spec_sections:
   - "§2.1.3 Memory Extraction Task（任务表不保存 Memory/Entity 结果 ID 数组）"
   - "§2.1.4 Kafka 消费与任务幂等（completed 早退；terminal 持久化后才 Offset）"
@@ -51,8 +51,8 @@ approval_gates:
   planning: "PLAN_APPROVED"
   approval_posture: "pending Plan Review"
   amendment_recorded: false
-  human_plan_approved: false
-  developer_authorized: false
+  human_plan_approved: true
+  developer_authorized: true
   reviewer_authorized: false
   release_operator_authorized: false
 release_phases:
@@ -457,16 +457,16 @@ mark_failed(retrieval_index_write_failed, failed_stage=retrieval_index)
 
 ## 10. 验收标准
 
-- [ ] `index_sync_memory_set` 按 §2.2.3 扩展（闭合 EXT-006 LD-8）；`user:{user_id}` 不触发批量重建
-- [ ] `search_text` 含 alias 预算；TEI `/tokenize` 计数；`memory_search_text_omitted_alias_total` 发射
-- [ ] Embedding 经 `create_embedding_client`（默认 siliconflow）；`1024` 维
-- [ ] ES Bulk Upsert 至 `memory_retrieval_current`；`_id=memory_id`；`refresh=wait_for`；逐 Item 检查
-- [ ] 全成功 → `mark_completed`；失败 → `mark_failed(retrieval_index_write_failed, failed_stage=retrieval_index)`
-- [ ] **零** Kafka Offset 写入；**零** upstream pipeline/consumer/worker/EXT-001–006 服务 diff
-- [ ] 不创建/修改 Mapping/Alias
-- [ ] 对应测试全部通过（scoped unit + contract + integration）
-- [ ] Ruff 通过
-- [ ] Mypy 通过
+- [x] `index_sync_memory_set` 按 §2.2.3 扩展（闭合 EXT-006 LD-8）；`user:{user_id}` 不触发批量重建
+- [x] `search_text` 含 alias 预算；TEI `/tokenize` 计数；`memory_search_text_omitted_alias_total` 发射
+- [x] Embedding 经 `create_embedding_client`（默认 siliconflow）；`1024` 维
+- [x] ES Bulk Upsert 至 `memory_retrieval_current`；`_id=memory_id`；`refresh=wait_for`；逐 Item 检查
+- [x] 全成功 → `mark_completed`；失败 → `mark_failed(retrieval_index_write_failed, failed_stage=retrieval_index)`
+- [x] **零** Kafka Offset 写入；**零** upstream pipeline/consumer/worker/EXT-001–006 服务 diff
+- [x] 不创建/修改 Mapping/Alias
+- [x] 对应测试全部通过（scoped unit + contract + integration）
+- [x] Ruff 通过
+- [x] Mypy 通过
 - [ ] Review 无 P0/P1
 
 ## 11. 风险与阻塞项
@@ -534,19 +534,20 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-12 20:55 UTC | planning | 创建 Task Plan；同步 progress/master_plan | — | baseline 2db6f5a verified；prerequisites SATISFIED |
+| 2026-08-12 21:30 UTC | implementation | 新增 EXT-007 领域模型、Neo4j 只读/ES bulk repository、search_text 构建器、RetrievalIndexSyncService 及测试/support fakes | unit 25 + contract 11 + integration 5 PASS；ruff/mypy PASS | SF-1 MemoryIndexRow；SF-2 空集合 mark_completed synced_count=0；SF-3 EMBEDDING_BATCH_SIZE=32；零 upstream diff |
 
 ## 14. 实际执行结果
 
 ### 最终状态
 
-`planned` — 等待 Plan Review；不得自动进入 Developer。
+`tested` — 实现与 scoped 测试完成；等待 Code Review。
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: "feat/EXT-007-retrieval-document-sync"
+plan_commit: "d2dcfe709f3f7a4e8ae933b7ded2874c33d4af5d"
 implementation_commit: null
 implementation_commit_message: null
-next_action: "计划审查"
+next_action: "Code Review"
 ```
