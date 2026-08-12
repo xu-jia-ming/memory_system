@@ -12,8 +12,8 @@ phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-003
-current_task_status: approved
-current_branch: main
+current_task_status: tested
+current_branch: feat/EXT-003-llm-extraction-fingerprint
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -24,7 +24,7 @@ target_default_branch: main
 current_plan_file: 02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-next_action: "Developer implementation on feat/EXT-003-llm-extraction-fingerprint"
+next_action: "Code Review EXT-003 on feat/EXT-003-llm-extraction-fingerprint"
 current_task_approval_posture: "PLAN_APPROVED — Amendment 002; Round 2 BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1; human PLAN_APPROVED granted; SF-1 orchestration owner=extraction_llm_service.py; Developer authorized post-PLAN_LANDING"
 planning_baseline_EXT-003: "f112d12d28d34de18c637a661a857fcb9f0a401f"
 formal_EXT-003_plan_file: 02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md
@@ -76,9 +76,12 @@ formal_EXT-002_production_scope: "VERIFIED — exact approved whitelist; no EXT-
 formal_EXT-002_raw_evidence: "RAW-01..RAW-12 PASS; strict no-coercion/_id exception/unknown-field rejection/full-document gate verified"
 formal_EXT-002_redaction_evidence: "RED-01..RED-27 PASS; deterministic content-only redaction/no leakage/provenance/order verified"
 formal_EXT-002_terminal_evidence: "exact mappings and abort_without_terminal verified; persistence-before-offset and no commit on persistence failure preserved"
-formal_EXT-003_status: approved
-formal_EXT-003_prerequisite_status: "SATISFIED — EXT-002 and STM-007 completed"
-formal_EXT-003_next_action: "PLAN_LANDING then Developer implementation on feat/EXT-003-llm-extraction-fingerprint"
+formal_EXT-003_status: tested
+formal_EXT-003_next_action: "Code Review on feat/EXT-003-llm-extraction-fingerprint"
+formal_EXT-003_scoped_tests: "58 passed"
+formal_EXT-003_ruff: PASS
+formal_EXT-003_mypy: PASS
+formal_EXT-003_implementation_note: "ExtractionLlmService owns LLM/validate/fingerprint/persist/pipeline handoff; preprocessing compose-only; PipelineTerminalDecision and worker unchanged"
 formal_EXT-003_human_plan_approved: true
 formal_EXT-003_human_plan_approved_at: "2026-08-12T05:45:00Z"
 formal_EXT-003_human_plan_approved_note: "Human PLAN_APPROVED EXT-003 Amendment 002; Round 2 Plan Review PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1; SF-1 MVP_LOCAL_DECISION orchestration owner=extraction_llm_service.py"

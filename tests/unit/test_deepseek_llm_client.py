@@ -113,6 +113,32 @@ async def test_generate_structured_passes_openai_parameters(valid_env: None) -> 
 
 
 @pytest.mark.asyncio
+async def test_extraction_profile_uses_extraction_settings(valid_env: None) -> None:
+    settings = get_settings()
+    mock_openai = MagicMock(spec=AsyncOpenAI)
+    mock_openai.chat = MagicMock()
+    mock_openai.chat.completions = MagicMock()
+    mock_openai.chat.completions.create = AsyncMock(
+        return_value=_make_completion('{"entities":[],"memories":[]}'),
+    )
+    client = DeepSeekLlmClient(settings, openai_client=mock_openai)
+
+    await client.generate_structured(
+        model=settings.llm.extraction.model,
+        system_prompt="system-json",
+        user_prompt="user-json",
+        timeout_seconds=120.0,
+        max_output_tokens=settings.llm.extraction.max_output_tokens,
+        settings_profile="extraction",
+    )
+
+    kwargs = mock_openai.chat.completions.create.await_args.kwargs
+    assert kwargs["max_tokens"] == 8192
+    assert kwargs["temperature"] == 0
+    assert kwargs["extra_body"] == {"thinking": {"type": "disabled"}}
+
+
+@pytest.mark.asyncio
 async def test_timeout_maps_to_llm_timeout_no_retry(valid_env: None) -> None:
     settings = get_settings()
     mock_openai = MagicMock(spec=AsyncOpenAI)

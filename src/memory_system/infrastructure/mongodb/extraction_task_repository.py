@@ -209,6 +209,32 @@ async def mark_completed(
     return extraction_task_from_document(document)
 
 
+async def set_extraction_result(
+    mongodb: AsyncMongoClient[Any],
+    *,
+    archive_id: str,
+    extraction_result: dict[str, Any],
+    now: int,
+) -> MemoryExtractionTask | None:
+    """Persist validated extraction_result for a processing task only."""
+    document = await _collection(mongodb).find_one_and_update(
+        {
+            "archive_id": archive_id,
+            "status": ExtractionTaskStatus.PROCESSING.value,
+        },
+        {
+            "$set": {
+                "extraction_result": extraction_result,
+                "updated_time": now,
+            },
+        },
+        return_document=ReturnDocument.AFTER,
+    )
+    if document is None:
+        return None
+    return extraction_task_from_document(document)
+
+
 async def mark_failed(
     mongodb: AsyncMongoClient[Any],
     *,

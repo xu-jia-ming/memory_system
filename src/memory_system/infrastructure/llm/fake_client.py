@@ -21,6 +21,9 @@ class FakeLlmClient:
         self._success_content = success_content
         self._responses: list[str | BaseException] = list(responses) if responses else []
         self.call_count = 0
+        self.last_system_prompt: str | None = None
+        self.last_user_prompt: str | None = None
+        self.prompt_history: list[tuple[str, str]] = []
 
     async def generate_structured(
         self,
@@ -30,8 +33,13 @@ class FakeLlmClient:
         user_prompt: str,
         timeout_seconds: float,
         max_output_tokens: int,
+        **kwargs: object,
     ) -> str:
-        del model, system_prompt, user_prompt, timeout_seconds, max_output_tokens
+        del kwargs
+        del model, timeout_seconds, max_output_tokens
+        self.last_system_prompt = system_prompt
+        self.last_user_prompt = user_prompt
+        self.prompt_history.append((system_prompt, user_prompt))
         self.call_count += 1
 
         if self._responses:

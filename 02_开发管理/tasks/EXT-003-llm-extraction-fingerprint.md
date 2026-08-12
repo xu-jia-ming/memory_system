@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-003
 task_name: LLM Extraction + Fingerprint
-status: approved
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "f112d12d28d34de18c637a661a857fcb9f0a401f"
 branch: "feat/EXT-003-llm-extraction-fingerprint"
 created_at: "2026-08-12 03:05 UTC"
-updated_at: "2026-08-12 13:45 UTC"
+updated_at: "2026-08-12 14:30 UTC"
 spec_sections:
   - "§1.2.1 记忆萃取整体流程与 Context Archive 唯一原始来源"
   - "§1.2.3 memory_extraction_task.extraction_result"
@@ -793,7 +793,8 @@ Future changes require an appended amendment and a new Plan Review. No approved 
 | 2026-08-12 03:06 UTC | Independent Plan Review | No file changes by reviewer | N/A | PLAN_REJECTED; BLOCKER=7, MUST_FIX=2, SHOULD_FIX=3; collision policy, legal-empty terminal handling, source-reference mapping, and blank-output mapping also require authoritative closure |
 | 2026-08-12 05:35 UTC | Planner Amendment 002 remediation | Appendix B recorded; Task Plan/open_issues/progress/master_plan synchronized; no business code or tests | N/A | All 13 authorized decisions incorporated; OI-EXT-003-001/002/003/004 resolved; OI-EXT-003-005 deferred; `approval_posture=AWAIT_PLAN_REVIEW`; `amendment_recorded=true` |
 | 2026-08-12 13:45 UTC | Human PLAN_APPROVED + SF-1 MVP_LOCAL_DECISION | Task Plan Step 5 orchestration owner=`extraction_llm_service.py`; approval_gates updated; progress/master_plan synchronized; no business code or tests | N/A | Round 2 SHOULD_FIX=1 resolved without new Plan Review; `extraction_archive_preprocessing_service.py` compose-only; no whitelist expansion |
-| null | Developer implementation | null | null | Authorized post-PLAN_LANDING on feat branch |
+| 2026-08-12 14:10 UTC | Developer implementation Steps 1-6 | Created extraction_llm models/service/fingerprint; DeepSeek extraction profile; repository set_extraction_result; preprocessing compose_extraction_pipeline; full scoped tests | 58 passed; ruff PASS; mypy PASS | SF-1 orchestration in extraction_llm_service.py; PipelineTerminalDecision/worker unchanged; EXT-004 deferred |
+| 2026-08-12 14:30 UTC | Developer P1 remediation (CODE_REVIEW_REJECTED) | P1-1: non-event memories require null start_time/end_time/original_time_text; U10 parametrized test added; P1-2: reverted `.cursor/commands/orchestrate-task.md` to main | 63 passed; ruff PASS; mypy PASS | Minimal scope; P2/P3 untouched |
 | null | Code Review | null | null | null |
 | null | Release | null | null | null |
 
@@ -803,22 +804,32 @@ Future changes require an appended amendment and a new Plan Review. No approved 
 
 | 文件 | 结果 |
 |---|---|
-| `02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md` | Amendment 002 remediation |
-| `01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md` | Appendix B Amendment EXT-003 appended |
-| `02_开发管理/open_issues.md` | OI-EXT-003-001..004 resolved; OI-EXT-003-005 deferred added |
-| `02_开发管理/progress.md` | Planning-state fields updated |
-| `02_开发管理/master_plan.md` | EXT-003 section + CHANGE-058 |
+| `src/memory_system/domain/models/extraction_llm.py` | created — strict extraction input/output/result models |
+| `src/memory_system/domain/services/extraction_llm_service.py` | created — LLM/validate/fingerprint/pipeline handoff orchestration |
+| `src/memory_system/domain/services/extraction_fingerprint.py` | created — SHA-256 fingerprint helper |
+| `src/memory_system/infrastructure/llm/deepseek_client.py` | modified — internal `settings_profile` extraction/compression selection |
+| `src/memory_system/infrastructure/llm/fake_client.py` | modified — prompt capture and kwargs passthrough for tests |
+| `src/memory_system/infrastructure/mongodb/extraction_task_repository.py` | modified — `set_extraction_result` conditional helper |
+| `src/memory_system/domain/services/extraction_archive_preprocessing_service.py` | modified — `compose_extraction_pipeline` compose-only wiring |
+| `tests/unit/test_extraction_llm_service.py` | created |
+| `tests/unit/test_extraction_fingerprint.py` | created |
+| `tests/unit/test_deepseek_llm_client.py` | modified — extraction profile test |
+| `tests/contract/test_ext003_contract.py` | created |
+| `tests/contract/helpers/extraction_llm_fake.py` | created |
+| `tests/integration/test_extraction_llm_fake.py` | created |
+| `tests/unit/test_extraction_task_repository.py` | modified — set_extraction_result tests |
+| `tests/unit/test_extraction_pipeline_ext002.py` | modified — empty archive zero-LLM via composed pipeline |
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | N/A in planning-only round | Not run |
-| Contract | N/A in planning-only round | Not run |
-| Integration | N/A in planning-only round | Not run |
+| Unit | `uv run pytest tests/unit/test_extraction_fingerprint.py tests/unit/test_extraction_llm_service.py tests/unit/test_deepseek_llm_client.py tests/unit/test_extraction_task_repository.py tests/unit/test_extraction_pipeline_ext002.py::test_ext003_empty_archive_pipeline_zero_llm -q` | 63 passed |
+| Contract | `uv run pytest tests/contract/test_ext003_contract.py -q` | PASS (included above) |
+| Integration | `uv run pytest tests/integration/test_extraction_llm_fake.py -q` | PASS (included above) |
 | E2E | N/A; out of scope | Not run |
-| Ruff | N/A in planning-only round | Not run |
-| Mypy | N/A in planning-only round | Not run |
+| Ruff | scoped touched files | PASS |
+| Mypy | scoped production files | PASS |
 
 ### Review 结果
 
@@ -843,8 +854,8 @@ review_report: PLAN_APPROVED
 ### Git 记录
 
 ```yaml
-branch: "main"
-plan_commit: null
+branch: "feat/EXT-003-llm-extraction-fingerprint"
+plan_commit: "81cf1adf21bf39d2980af41ee171a8bf646f018e"
 implementation_commit: null
 implementation_commit_message: null
 status_record_committed: null

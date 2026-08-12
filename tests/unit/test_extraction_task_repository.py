@@ -159,3 +159,41 @@ async def test_mark_completed_raises_when_no_document() -> None:
     client = _mock_mongodb(collection)
     with pytest.raises(RuntimeError, match="completed"):
         await repo.mark_completed(client, archive_id="arch-1", now=NOW)
+
+
+@pytest.mark.asyncio
+async def test_set_extraction_result_processing_only() -> None:
+    after = _pending_doc(
+        status="processing",
+        attempt_count=1,
+        extraction_result={"entities": [], "memories": []},
+    )
+    collection = MagicMock()
+    collection.find_one_and_update = AsyncMock(return_value=after)
+    client = _mock_mongodb(collection)
+
+    task = await repo.set_extraction_result(
+        client,
+        archive_id="arch-1",
+        extraction_result={"entities": [], "memories": []},
+        now=NOW + 1,
+    )
+    assert task is not None
+    assert task.extraction_result == {"entities": [], "memories": []}
+    filt, update = collection.find_one_and_update.await_args.args
+    assert filt == {"archive_id": "arch-1", "status": "processing"}
+    assert update["$set"]["extraction_result"] == {"entities": [], "memories": []}
+
+
+@pytest.mark.asyncio
+async def test_set_extraction_result_returns_none_when_not_processing() -> None:
+    collection = MagicMock()
+    collection.find_one_and_update = AsyncMock(return_value=None)
+    client = _mock_mongodb(collection)
+    task = await repo.set_extraction_result(
+        client,
+        archive_id="arch-1",
+        extraction_result={"entities": [], "memories": []},
+        now=NOW,
+    )
+    assert task is None
