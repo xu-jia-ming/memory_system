@@ -455,7 +455,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | EXT-001 | Task Schema + Kafka Consumer 幂等/Offset | §2.1.3, §2.1.4 | STM-006, DEV-004 | completed |
 | EXT-002 | Archive 读取/预处理/脱敏 | §2.1.5 | EXT-001 | completed |
-| EXT-003 | LLM Extraction + Fingerprint | §2.1.6–2.1.8 | EXT-002, STM-007 | planned |
+| EXT-003 | LLM Extraction + Fingerprint | §2.1.6–2.1.8 | EXT-002, STM-007 | approved |
 | EXT-004 | Entity Alignment + Neo4j 模型基础 | §2.1.9, §2.1.10 | EXT-003, DEV-004 | planned |
 | EXT-005 | Reconciliation + 聚合门禁 | §2.1.11 | EXT-004 | planned |
 | EXT-006 | Neo4j 图谱事务写入 | §2.1.12, §2.1.13 | EXT-005 | planned |
@@ -487,6 +487,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规划备注**：Round 4 / Amendment 004；`workflow_mode=NORMAL`（explicit）；baseline `13e1dae36a0b0d94415d9581b2a5fe53c990545f` MATCH；本轮仅更新 Task Plan、open_issues、progress、master_plan，未修改规格正文。EXT-002 只允许新增 `find_context_archive_document_by_id(mongodb, archive_id)` 这一 read-only raw BSON mapping lookup；不得写入、修复、迁移、复制持久化模型或改变既有 typed `find_context_archive_by_id` 语义。RAW-01..RAW-12 与 RED-01..RED-27 覆盖严格七字段/四字段消息验证、未知字段、`_id` 例外、无 coercion、无部分输出及全部脱敏正负/跨度/失败/泄漏/来源/顺序场景。缺失映射为 `archive_not_found/archive_read`；结构或嵌套/消息无效映射为 `invalid_archive/archive_validate`；redaction failure 为 `redaction_failed/redaction`；非确定性基础设施/内部失败为 `abort_without_terminal`；终态持久化成功后才提交 Offset。确定性本地 redaction 仅作用 `messages[].content`，精确类别/优先级/span 合并/Luhn/marker 规则已由 authoritative Amendment EXT-002-004 固定。first-person deferred/out-of-scope；`ExtractionReadyArchive` 仅在 raw validation → deterministic preprocessing → deterministic redaction 后最终化；dependency_changes_expected=NONE。
 - **阻塞项**：无 EXT-002 blocking Open Issue；OI-EXT-002-001/002/004/005 resolved，OI-EXT-002-003 deferred/out-of-scope。可实施范围仍不含 EXT-003/LLM/Neo4j/Elasticsearch；不得扩展到 Kafka/task status/STM-011/012、DEV-006 或 PR #13。
 - **非目标**：Kafka/EXT-001 Contract、offset/state 语义、`context_archive` schema/repository 与 STM 写入、EXT-003 LLM/Prompt/Structured Output、EXT-004+、Neo4j/Elasticsearch、Migration/Settings/dependency、DEV-006、PR #13、E2E。
+
+#### EXT-003
+
+- **目标**：在 EXT-002 finalized `ExtractionReadyArchive` 之后执行 `memory_extraction_v1` Structured Extraction；严格消费 `archive_id/user_id/session_id` 和 ordered `message_id/role/normalized-redacted content/timestamp`；不依赖 first-person binding；复用 STM-007 `LLMClient`/DeepSeek/OpenAI/Fake conventions（MF-001：`llm.extraction` 路径，compression 不变）；应用层校验 §2.1.6–§2.1.7 + Appendix B schema、references、source user requirement、limits、event/time nullability；unknown fields parse 忽略、持久化前 strip；duplicate merge 与 fingerprint 按 Appendix B §B.7–B.8；由应用计算 `candidate_source_time` 并生成 exact `candidate_fingerprint`；将完整 validated result 持久化至既有 `memory_extraction_task.extraction_result`。
+- **非目标**：EXT-004 entity alignment/数据库 IDs/relations/Neo4j；EXT-005 reconciliation；EXT-006 graph write；EXT-007 retrieval/Elasticsearch/Embedding；Evidence/evidence_id 生产写入；EXT-001 Kafka/task/offset semantics；EXT-002 redaction/first-person；`PipelineTerminalDecision` 修改；EXT-004 continuation 编排（`DEFERRED_FOR_MVP`）；DEV-006/PR #13；新依赖/新 config stack；默认真实 DeepSeek call；SHA-256 collision recovery（OI-EXT-003-005 deferred）。
+- **计划文件**：`02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md`（Amendment 002）
+- **规格章节**：§1.2.1、§2.1.3–§2.1.8、§2.1.15–§2.1.16、§3.9、Appendix A Amendment EXT-002-004、**Appendix B Amendment EXT-003**。
+- **正式前置依赖**：EXT-002 — **SATISFIED/completed**（PR #36 MERGED）；STM-007 — **SATISFIED/completed**（PR #26 MERGED）；EXT-001 — **SATISFIED/completed**（PR #34 MERGED）。
+- **配置/依赖结论**：当前 `memory_extraction` limits、120-second timeout、`memory_extraction_v1`、DeepSeek extraction model、json_object、temperature=0、thinking disabled、stream=false、max_output_tokens=8192 和 `openai>=2.46,<3` 已存在；`dependency_changes_expected=NONE`；不得修改 Settings/manifest/lockfile。
+- **关键门禁**：空 Archive 零 LLM call 并沿用 EXT-001 normal completion；非空 both-empty output 持久化后 `completed`+Offset；非空 `extraction_result` 持久化后 `processing` 不提交 Offset；invalid source refs → `llm_invalid_output`/`llm_extraction`（非 `invalid_archive`）；blank output → `llm_invalid_output`（非 `llm_empty_output`）；exact correction prompt §6.2；8000 token 不分块/不截断；LLM timeout/request/invalid output 仅使用 §2.1.15 codes at `llm_extraction`；schema failure 一次 correction retry、transport retry=0；failure logs 含 MF-002 metadata；无 prompt/response/raw/secret logging。
+- **幂等/恢复**：completed task 跳过 LLM；processing 且已有 `extraction_result` 复用并跳过 LLM；source time/fingerprint 不用 server current time 重算；both-empty result write → complete+Offset；non-empty result write → processing no Offset；real LLM fresh calls may vary。
+- **Open Issues**：OI-EXT-003-001/002/003/004 **resolved** by Appendix B；OI-EXT-003-005 **deferred_for_mvp**（SHA-256 collision，non-blocking）；无 blocking Open Issue；Round 2 Plan Review **PLAN_APPROVED**（BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1）；human PLAN_APPROVED granted；SF-1 MVP_LOCAL_DECISION：`extraction_llm_service.py` orchestration owner；`approval_posture=PLAN_APPROVED`；`developer_authorized=true` post-PLAN_LANDING。
+- **测试**：Unit（schema/reference/limits/prompt/retry/errors/fingerprint/privacy/empty/both-empty/duplicate）；Contract（input/output/provider/error/fingerprint/durable result/terminal boundary/legal-empty）；Integration(fake)（happy/both-empty/non-empty-processing/timeout/provider/malformed/retry/replay/no leakage）；Mongo/replay integration（result persistence/reuse）；real provider false/default skipped；无 EXT-004+ behavior。
 
 #### EXT-007 Retrieval Document 同步
 
@@ -1147,5 +1160,49 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 事实记录 | merge `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`；implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`；amendment `985613be08814b1e9eea521888b61dd5cb8d94ff`；record `036d770268c3a3bbb95fe4687fd0007805e284a4`；RAW-01..12 PASS；RED-01..27 PASS；mandatory skips=0；scoped rerun=165 passed；Ruff/mypy PASS；CODE_REVIEW_APPROVED P0/P1/P2/P3=0 |
 | 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
 | 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=EXT-003 planned / NOT AUTO-STARTED` |
+
+### CHANGE-057
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | 用户显式 `TASK_ID=EXT-003`、`WORKFLOW_MODE=NORMAL`、baseline `f112d12d28d34de18c637a661a857fcb9f0a401f`；Planner 仅创建 LLM Extraction + Fingerprint fail-closed Task Plan |
+| 受影响任务 | `EXT-003`（`planned`；plan `02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md`）；仅更新 planning whitelist；不实施业务代码/测试、不启动 Developer/Reviewer/Release Operator |
+| 规划决议 | Exact `ExtractionReadyArchive` provenance/order/privacy boundary；8000/no-chunking/50/100/character limits；§2.1.6 schema and §2.1.7 validation；application-owned `candidate_source_time`；fixed-order UTF-8 compact fingerprint with sorted source IDs and no invented normalization; existing STM-007 provider conventions; §2.1.15-only LLM error mappings; terminal persistence/replay constraints; exact production/test whitelist; no EXT-004+ |
+| Open Issues | Added blocking `OI-EXT-003-001` unknown-field durable policy; `OI-EXT-003-002` canonical fingerprint/equivalence/order; `OI-EXT-003-003` correction prompt text; `OI-EXT-003-004` terminal-only pipeline handoff |
+| 是否改变技术规格 | 否；authoritative specification untouched; unresolved contract ambiguity is fail-closed and requires owner decision/amendment before implementation |
+| 审批 | Planner；`next_action=计划审查`；`approval_posture=FAIL_CLOSED_BLOCKED`；不得自动进入 Developer；不得触碰 DEV-006/PR #13 |
+
+### CHANGE-058
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | Human `AUTHORIZED_EXT_003_MVP_AMENDMENT`（items 1–13）；Planner 记录 Appendix B、修订 EXT-003 Task Plan Amendment 002、同步 open_issues/progress/master_plan |
+| 受影响任务 | `EXT-003`（`planned`；Amendment 002；baseline `f112d12d28d34de18c637a661a857fcb9f0a401f`）；仅更新规划白名单与 authoritative specification append-only amendment；不实施业务代码/测试、不启动 Developer/Reviewer/Release Operator |
+| 规划决议 | Appendix B §B.1–B.13：unknown-field strip；legal-empty terminal mapping（both-empty complete+Offset，non-empty processing no Offset）；source-ref/blank-output/correction-prompt/failure mappings；fingerprint JSON array `ensure_ascii=false`；duplicate merge/order；SHA-256 collision deferred；EXT-003 boundary without `PipelineTerminalDecision` change；MF-001/MF-002 |
+| Open Issues | `OI-EXT-003-001/002/003/004` resolved；`OI-EXT-003-005` deferred_for_mvp |
+| 是否改变技术规格 | **是**，仅追加 authoritative Appendix B amendment；dependency changes **NONE**；不改 EXT-001 Kafka/task status、STM-011/012、EXT-004+ implementation scope、Neo4j、Elasticsearch、DEV-006、PR #13 |
+| 审批 | Planner；`next_action=计划审查`；`approval_posture=AWAIT_PLAN_REVIEW`；`amendment_recorded=true`；`formal_EXT-003_plan_review=pending`；不得自动进入 Developer；不得触碰 DEV-006/PR #13 |
+
+### CHANGE-059
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | EXT-003 Amendment 002 独立 Plan Review Round 2 |
+| 受影响任务 | `EXT-003`（`planned`；Amendment 002；baseline `f112d12d28d34de18c637a661a857fcb9f0a401f`）；仅同步 progress/master_plan/plan approval gates；不实施、不启动 Developer |
+| 审查结论 | **PLAN_APPROVED**；BLOCKER=0；MUST_FIX=0；SHOULD_FIX=1（Step 5 orchestration file path underspecified；non-blocking） |
+| 审批 | Plan Reviewer Round 2；`next_action=人工 PLAN_APPROVED 后进入 PLAN_LANDING / Developer`；`formal_EXT-003_plan_review=PLAN_APPROVED`；不得自动进入 Developer；不得触碰 DEV-006/PR #13 |
+
+### CHANGE-060
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | Human PLAN_APPROVED EXT-003 Amendment 002；SAFE_AUTO_REMEDIATION SF-1 MVP_LOCAL_DECISION 记录 Step 5 orchestration owner |
+| 受影响任务 | `EXT-003`（`approved`；Amendment 002；baseline `f112d12d28d34de18c637a661a857fcb9f0a401f`）；仅更新规划白名单与 approval gates；PLAN_LANDING pending Release Operator |
+| 规划决议 | SF-1：single orchestration owner `extraction_llm_service.py`（LLM/validate/fingerprint + Step 5 pipeline handoff）；`extraction_archive_preprocessing_service.py` compose-only；no new files/whitelist expansion/competing orchestration layer；Round 2 SHOULD_FIX=1 resolved without new Plan Review |
+| 审批 | Human PLAN_APPROVED；`human_plan_approved=true`；`developer_authorized=true` post-PLAN_LANDING；`next_action=PLAN_LANDING then Developer on feat/EXT-003-llm-extraction-fingerprint` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

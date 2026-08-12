@@ -6077,3 +6077,99 @@ MVP 只有同时满足以下条件，才可判定为“开发完成”，不能�
 ### A.5 Handoff 顺序
 
 `ExtractionReadyArchive` 只可在 raw validation 完成后，经 deterministic preprocessing，再经 deterministic redaction 后产生；不得包含 pre-redaction raw content。保持 Archive 消息顺序及 provenance。EXT-003 不在本修订中实现。
+
+---
+
+## 附录 B：EXT-003 规格修订记录（Amendment EXT-003）
+
+> 本记录为追加式权威修订，不改写前文历史文本。适用范围仅为 EXT-003 LLM Structured Extraction、应用层校验、duplicate normalization、`candidate_fingerprint`、`candidate_source_time` 与 `extraction_result` 持久化边界；不改变 EXT-001 Kafka 语义、任务状态枚举字面量、STM-011/012、EXT-004+ 图谱/对齐实现、Neo4j、Elasticsearch、DEV-006 或 PR #13。
+
+- **日期**：2026-08-12
+- **审批来源**：人类规格负责人显式决议 `AUTHORIZED_EXT_003_MVP_AMENDMENT`（items 1–13）；`WORKFLOW_MODE=NORMAL`
+- **基线**：`f112d12d28d34de18c637a661a857fcb9f0a401f`
+- **依赖变化**：`NONE`
+
+### B.1 Unknown-field 策略
+
+1. LLM 输出在 parse 阶段可忽略未知字段；在持久化前必须 strip，仅允许授权字段进入 `extraction_result`。
+2. 未知字段不得影响 persist、fingerprint 或 duplicate/equivalence 判定。
+
+### B.2 Legal empty 与终态/Offset 门禁
+
+1. 结构上允许全部四种 `entities`/`memories` 空与非空组合。
+2. `entities=[]` 且 `memories=[]`（both-empty）：持久化空结果；任务 `completed`；终态持久化成功后才允许提交 Offset。
+3. 任一非空 `extraction_result`（存在 entity 或 memory 候选）：持久化完整校验结果；任务保持 `processing`；不得提交 Offset。
+
+### B.3 Source reference 校验
+
+1. `source_message_ids` 必须非空；每个 ID 必须存在于当前 Archive；每条 memory 至少包含一个 `role=user` 来源。
+2. 违反时映射为 `llm_invalid_output` / `llm_extraction`；适用 schema correction retry；不得因模型返回无效 ID 而映射为 `invalid_archive`。
+
+### B.4 Blank output
+
+1. null、blank 或仅 whitespace 的 provider 输出视为无效 Structured Output。
+2. 映射为 `llm_invalid_output`（EXT-003 不得使用 `llm_empty_output`）；一次 correction retry 后仍为 terminal `failed`。
+
+### B.5 Correction retry
+
+1. blank、invalid JSON、schema、source refs 及其他应用层校验失败：允许且仅允许一次 correction retry。
+2. timeout、provider、429、5xx：不得 retry。
+3. 两次调用使用相同 redacted input；不得把先前无效 response 放入 prompt。
+4. correction instruction 精确为：
+
+```text
+The previous response was invalid.
+Return exactly one valid JSON object matching the required extraction schema, using only source_message_ids from the provided archive.
+Return JSON only.
+```
+
+5. 不得进行第三次调用。
+
+### B.6 LLM 失败映射
+
+| 条件 | `error_code` | `failed_stage` |
+|---|---|---|
+| HTTP/provider timeout | `llm_timeout` | `llm_extraction` |
+| connection、429、5xx 及其他 provider request failure | `llm_request_failed` | `llm_extraction` |
+| correction retry 后仍无效 | `llm_invalid_output` | `llm_extraction` |
+| 不可预期非确定性基础设施/内部失败 | `abort_without_terminal` | — |
+
+### B.7 Fingerprint
+
+1. `candidate_fingerprint = SHA256(UTF-8 compact JSON array)`，字段顺序固定为：`memory_type`, `content`, `subject_entity_id`, `predicate`, `object_entity_id`, `object_value`, `event_status`, `start_time`, `end_time`, `original_time_text`, `source_message_ids`。
+2. 序列化前对 `source_message_ids` 去重并按字典序排序。
+3. JSON 序列化使用 `ensure_ascii=false`；`null` 使用 JSON null；不得额外 trim 或 normalization。
+4. `candidate_source_time` 明确排除在 fingerprint 之外。
+
+### B.8 Duplicate normalization 与数组顺序
+
+1. `entities` 保持 provider 顺序，不去重。
+2. `memories` 保持首次出现顺序。
+3. “完全相同”定义为：除 `source_message_ids` 外，全部 durable LLM memory 字段相等。
+4. 合并时 `source_message_ids` 去重并按字典序排序，保留一条 memory；不做 confidence 聚合。
+
+### B.9 SHA-256 collision
+
+1. MVP 阶段 `DEFERRED_FOR_MVP`；登记 Open Issue；非阻塞。
+
+### B.10 EXT-003 边界与 Pipeline handoff
+
+1. EXT-003 拥有：`ExtractionReadyArchive` handoff → LLM → validation → duplicate normalization → fingerprint → `candidate_source_time` → `extraction_result` persist。
+2. replay 时 `status=processing` 且 `extraction_result != null`：跳过 LLM，复用已持久化结果。
+3. 非空 `extraction_result` 持久化后任务保持 `processing`，不得提交 Offset。
+4. EXT-003→EXT-004 continuation 编排 `DEFERRED_FOR_MVP`；不得修改 `PipelineTerminalDecision` 以供未来编排；EXT-004 消费已持久化的 `extraction_result`。
+
+### B.11 Privacy
+
+1. 仅 redacted input 进入 LLM；不得记录 prompt、response、content 或 secret。
+2. 失败日志必须包含：`task_id`、`archive_id`、`user_id`、`failed_stage`、`attempt_count`。
+
+### B.12 MF-001 — extraction settings 路径
+
+1. extraction 必须使用 `llm.extraction`；compression 路径保持不变。
+2. 必须保留 public `LLMClient` contract；测试须覆盖 extraction 与 compression 两路径。
+3. 若不可避免需改变 public contract，必须停止并请求 authoritative amendment。
+
+### B.13 MF-002 — failure log metadata
+
+1. 所有 extraction-stage failure logs 必须包含 §B.11 规定的 required metadata。

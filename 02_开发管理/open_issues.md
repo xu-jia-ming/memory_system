@@ -447,6 +447,155 @@ status: resolved
 - Effective EXT-002 state: no blocking Open Issue remains; `REDACTION_SPEC_STATUS=SPECIFIED`; raw validation, redaction, and `ExtractionReadyArchive` handoff are authorized only by the Amendment 004 contract.
 - Unrelated Open Issues remain unchanged. Specification amendment: `01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md`, Appendix A, Amendment `EXT-002-004`.
 
+---
+
+## OI-EXT-003-001
+```yaml
+id: OI-EXT-003-001
+title: "Structured Extraction unknown-field policy conflicts with strict durable validation"
+spec_sections:
+  - "§2.1.6"
+  - "§2.1.7"
+  - "Appendix B Amendment EXT-003 §B.1"
+impact: "The LLM output durable schema cannot be implemented safely: §2.1.7 says unknown fields can be ignored, while strict application validation and extraction_result persistence require an explicit reject/strip/admit policy."
+blocks_current_task: false
+resolve_by_task: EXT-003
+status: resolved
+```
+
+**问题描述：** §2.1.6 presents a fixed Structured Output shape, while §2.1.7 says unknown fields “可以忽略” and separately requires application validation. It is not defined whether unknown top-level/entity/memory fields are rejected, stripped before durable persistence, retained in a bounded non-durable parse, or allowed to affect duplicate/equivalence/fingerprint processing.
+
+**禁止行为：** 不得自行选择 Pydantic `extra="forbid"`、`extra="ignore"` 或 `extra="allow"` 作为 durable Contract；不得把未知字段静默写入 `memory_extraction_task.extraction_result`；不得让未知字段影响 fingerprint。
+
+**安全中间行为（历史）：** EXT-003 implementation remained blocked until authoritative decision was recorded.
+
+**Amendment EXT-003 resolution record (2026-08-12; human/spec owner decision):**
+
+- **RESOLVED** — unknown fields: ignore during parse; strip before persistence; only authorized fields in `extraction_result`; no persist/fingerprint/duplicate influence.
+- Effective contract: Appendix B §B.1; Task Plan Amendment 002.
+
+---
+
+## OI-EXT-003-002
+```yaml
+id: OI-EXT-003-002
+title: "Fingerprint canonical bytes and candidate equivalence/order are underspecified"
+spec_sections:
+  - "§2.1.7"
+  - "§2.1.8"
+  - "Appendix B Amendment EXT-003 §B.7–B.8"
+impact: "Durable candidate_fingerprint and extraction_result replay identity are not fully reproducible without Unicode JSON escaping, number/string serialization, duplicate source-ID, candidate equivalence, and candidate-array ordering rules."
+blocks_current_task: false
+resolve_by_task: EXT-003
+status: resolved
+```
+
+**问题描述：** §2.1.7 fixes field order, UTF-8, no extra whitespace, and sorted `source_message_ids`, but does not define JSON Unicode escaping (`ensure_ascii` versus literal UTF-8), number serialization, string canonicalization, duplicate source-ID handling, whether “完全相同” candidate equivalence includes source IDs, or how merged candidates/entities are ordered in the durable result. These choices can change SHA-256 bytes or durable replay content.
+
+**禁止行为：** 不得私自加入 Unicode NFKC、trim、whitespace folding、case folding、locale ordering、JSON key sorting、number normalization、source-ID deduplication、candidate reordering、collision error code或fallback；不得在未决议前声明 fingerprint deterministic。
+
+**安全中间行为（历史）：** 仅记录规范明确的 fixed field order、UTF-8、compact/no-whitespace、sorted source IDs；暂停 fingerprint implementation and duplicate/equivalence persistence behavior.
+
+**Amendment EXT-003 resolution record (2026-08-12; human/spec owner decision):**
+
+- **RESOLVED** — fingerprint: SHA-256 UTF-8 compact JSON array of fields in exact order; before serialization dedupe+lex sort `source_message_ids`; `ensure_ascii=false`; JSON null; no extra trimming/normalization; `candidate_source_time` excluded.
+- **RESOLVED** — duplicates/ordering: entities preserve provider order, no dedup; memories preserve first occurrence; fully identical = all durable LLM memory fields except `source_message_ids` equal; merge source IDs dedupe+lex sort; one memory; no confidence aggregation.
+- Effective contract: Appendix B §B.7–B.8; Task Plan Amendment 002.
+
+---
+
+## OI-EXT-003-003
+```yaml
+id: OI-EXT-003-003
+title: "Stricter Structured Output correction prompt is not textually specified"
+spec_sections:
+  - "§2.1.6"
+  - "§2.1.7"
+  - "§3.9"
+  - "Appendix B Amendment EXT-003 §B.5"
+impact: "The required one-time schema retry cannot be reproduced or contract-tested without the exact correction prompt; copying Compression behavior would change the extraction contract."
+blocks_current_task: false
+resolve_by_task: EXT-003
+status: resolved
+```
+
+**问题描述：** 规格要求第一次 Structured Output 校验失败后，用相同 Archive 和“更严格的纠错 Prompt”重试一次，但没有给出该 retry system/user prompt 的精确文字、变量、是否保留原 prompt 或允许哪些 correction instruction。
+
+**禁止行为：** 不得静默复用首次 prompt、复制 STM-007 Compression 的相同-prompt retry、追加未授权的自然语言、把完整失败 response 放入 prompt，或改变一次 retry/无 transport retry 语义。
+
+**安全中间行为（历史）：** 只可固定首次 §2.1.6 system/user prompt；retry prompt implementation、prompt contract tests 和生产 LLM extraction remained blocked.
+
+**Amendment EXT-003 resolution record (2026-08-12; human/spec owner decision):**
+
+- **RESOLVED** — one retry for blank/invalid JSON/schema/source refs/other validation failures; no retry for timeout/provider/429/5xx; same redacted input; no prior invalid response in prompt.
+- Exact correction instruction:
+
+```text
+The previous response was invalid.
+Return exactly one valid JSON object matching the required extraction schema, using only source_message_ids from the provided archive.
+Return JSON only.
+```
+
+- No third call. Effective contract: Appendix B §B.5; Task Plan Amendment 002 §6.2.
+
+---
+
+## OI-EXT-003-004
+```yaml
+id: OI-EXT-003-004
+title: "EXT-003 extraction-result success has no authorized handoff in terminal-only PipelineTerminalDecision"
+spec_sections:
+  - "§2.1.1"
+  - "§2.1.3"
+  - "§2.1.4"
+  - "§2.1.6"
+  - "§2.1.15"
+  - "Appendix B Amendment EXT-003 §B.2, §B.10"
+impact: "Existing EXT-001 ExtractionPipelinePort exposes only complete/fail/abort_without_terminal, but EXT-003 stops before EXT-004 alignment/graph/index completion. Mapping non-empty LLM success to complete would falsely commit the task; mapping it to abort would create a replay loop."
+blocks_current_task: false
+resolve_by_task: EXT-003
+status: resolved
+```
+
+**问题描述：** EXT-001's `PipelineTerminalDecision` is terminal-only. The authoritative flow requires validated `extraction_result` persistence before entity alignment and later Neo4j/Elasticsearch gates, while EXT-003 explicitly must not implement those later stages. The current Contract has no “stage success/continue” outcome or ownership rule for wiring the next stage.
+
+**禁止行为：** 不得在 EXT-003 将非空 Archive 的 extraction-only success 映射为 whole-task `complete`；不得把 `abort_without_terminal` 当作正常 continuation；不得修改 existing decision/state/offset semantics without authoritative approval；不得启动 production worker before all completion gates exist.
+
+**安全中间行为（历史）：** 保留 EXT-001 terminal and offset semantics；保留 EXT-002 empty-Archive normal completion；worker `main()` remains refusal-only；EXT-003 may be planned as an isolated LLM/result service but no production non-empty pipeline wiring is authorized.
+
+**Amendment EXT-003 resolution record (2026-08-12; human/spec owner decision):**
+
+- **RESOLVED** — EXT-003 owns handoff→LLM→validation→dup norm→fingerprint→source_time→persist; replay `processing`+non-null result skips LLM.
+- **RESOLVED** — both-empty (`entities=[]`, `memories=[]`): persist empty result, `completed`, Offset after persistence.
+- **RESOLVED** — ANY non-empty `extraction_result`: persist complete validated result, task remains `processing`, do NOT commit Offset.
+- **RESOLVED** — EXT-004 continuation `DEFERRED_FOR_MVP`; do NOT modify `PipelineTerminalDecision`; EXT-004 consumes persisted result.
+- Effective contract: Appendix B §B.2, §B.10; Task Plan Amendment 002.
+
+---
+
+## OI-EXT-003-005
+```yaml
+id: OI-EXT-003-005
+title: "SHA-256 fingerprint collision handling deferred for MVP"
+spec_sections:
+  - "§2.1.7"
+  - "Appendix B Amendment EXT-003 §B.9"
+impact: "No authoritative collision recovery, deduplication fallback, or collision error code for candidate_fingerprint SHA-256 collisions in MVP."
+blocks_current_task: false
+resolve_by_task: "later Evidence/reconciliation"
+status: deferred_for_mvp
+```
+
+**问题描述：** Appendix B §B.9 defers SHA-256 collision handling for MVP. EXT-003 uses ordinary SHA-256 identity comparison only; any collision policy belongs to later Evidence/reconciliation work.
+
+**禁止行为：** 不得在 EXT-003 发明 `fingerprint_collision` error code、fallback field 或 collision recovery behavior。
+
+**安全中间行为：** EXT-003 implements fingerprint as SHA-256 identity material; collision handling is non-blocking and owned by later tasks.
+
+**所需决议：** Deferred — owner by later Evidence/reconciliation; non-blocking for EXT-003 MVP.
+
+---
+
 ## 索引
 
 | 问题 ID | 最迟解决任务 | 是否阻塞当前任务 | 状态 |
@@ -468,3 +617,8 @@ status: resolved
 | OI-EXT-002-003 | EXT-002 | 否 | deferred_out_of_scope |
 | OI-EXT-002-004 | EXT-002 | 否 | resolved |
 | OI-EXT-002-005 | EXT-002 | 否 | resolved |
+| OI-EXT-003-001 | EXT-003 | 否 | resolved |
+| OI-EXT-003-002 | EXT-003 | 否 | resolved |
+| OI-EXT-003-003 | EXT-003 | 否 | resolved |
+| OI-EXT-003-004 | EXT-003 | 否 | resolved |
+| OI-EXT-003-005 | later Evidence/reconciliation | 否 | deferred_for_mvp |
