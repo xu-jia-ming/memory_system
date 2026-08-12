@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-005
 task_name: Reconciliation + 聚合门禁
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "5deb8949ee5ac367a08f173ef67c0c0689c26f5d"
 branch: "feat/EXT-005-reconciliation-aggregation-gate"
 created_at: "2026-08-12 16:15 UTC"
-updated_at: "2026-08-12 08:50 UTC"
+updated_at: "2026-08-12 09:10 UTC"
 plan_review_round: 2
 spec_sections:
   - "§1.2.1 记忆萃取整体流程（Reconcile Memories with Existing Graph 位置）"
@@ -943,8 +943,30 @@ out_of_scope_changes:
 | 2026-08-12 16:15 UTC | Planner 创建 Task Plan | 仅规划白名单（Task Plan / progress / master_plan）；未改 `src/**`、`tests/**`、规格正文、配置、依赖；未执行 Git 写 | N/A（规划-only） | `next_action=计划审查`；`developer_authorized=false`；不得触碰 DEV-006/PR#13 |
 | 2026-08-12 16:30 UTC | Planner Amendment 001 (Round 2) | §5.7–§5.11 输出契约 MF-001；SF-001–SF-004；§12.4；Step 1/测试/验收同步；progress/master_plan 规划态 | N/A（规划-only） | `plan_review_round=2`；`approval_posture=AWAIT_PLAN_REVIEW_ROUND_2`；Developer NOT authorized |
 | 2026-08-12 08:50 UTC | Developer implementation | 9 production + 8 test files per whitelist; reconciliation service/plan builder/LLM/Neo4j read repos; zero Mongo/Neo4j writes | scoped 63 passed; ruff/mypy PASS | `next_action=Code Review`; upstream zero diff verified |
+| 2026-08-12 09:10 UTC | Release IMPLEMENTATION_RELEASE | implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；PR #39 OPEN；feat push only | scoped 63 passed；ruff PASS；mypy PASS | `status=committed`；`next_action=WAITING_FOR_PR_MERGE` |
 | 2026-08-12 08:35 UTC | Release Operator PLAN_LANDING | docs(plan) on main；feat branch created | N/A | human PLAN_APPROVED；`developer_authorized=true`；`next_action=Developer on feat/EXT-005-reconciliation-aggregation-gate` |
 
 ## 17. 最终状态
 
-`tested` — Round 2 Amendment 001 implementation complete; scoped 63 passed; ruff/mypy PASS; `next_action=Code Review`; **不得触碰 DEV-006/PR#13**。
+`committed` — IMPLEMENTATION_RELEASE complete；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；PR #39 OPEN；scoped 63 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；zero Mongo/Neo4j writes；upstream zero diff；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**。
+
+### Git 记录
+
+```yaml
+branch: "feat/EXT-005-reconciliation-aggregation-gate"
+plan_commit: "1556a3f50c0edca453ff992e15187d1dba93a425"
+implementation_commit: "c6e619d312bfd83fef30c9f394e16b42a65cba81"
+implementation_commit_message: "feat(ext): add reconciliation plan and read-only recall"
+pr: "#39"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/39"
+pr_state: OPEN
+release_gate: IMPLEMENTATION_RELEASE_COMPLETE
+```
+
+### Code Review
+
+```yaml
+review_report: CODE_REVIEW_APPROVED
+p0: 0
+p1: 0
+```
