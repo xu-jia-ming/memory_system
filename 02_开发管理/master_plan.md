@@ -456,8 +456,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | EXT-001 | Task Schema + Kafka Consumer 幂等/Offset | §2.1.3, §2.1.4 | STM-006, DEV-004 | completed |
 | EXT-002 | Archive 读取/预处理/脱敏 | §2.1.5 | EXT-001 | completed |
 | EXT-003 | LLM Extraction + Fingerprint | §2.1.6–2.1.8 | EXT-002, STM-007 | completed |
-| EXT-004 | Entity Alignment + Neo4j 模型基础 | §2.1.9, §2.1.10 | EXT-003, DEV-004 | planned |
-| EXT-005 | Reconciliation + 聚合门禁 | §2.1.11 | EXT-004 | planned |
+| EXT-004 | Entity Alignment + Neo4j 模型基础 | §2.1.9, §2.1.10 | EXT-003, DEV-004 | completed |
+| EXT-005 | Reconciliation + 聚合门禁 | §2.1.11 | EXT-004 | approved |
 | EXT-006 | Neo4j 图谱事务写入 | §2.1.12, §2.1.13 | EXT-005 | planned |
 | EXT-007 | Retrieval Document 同步 | §2.2.3 | EXT-006, DEV-007, DEV-004 | planned |
 | EXT-008 | Extraction 管理 GET/Retry | §2.1.14 | EXT-007, DEV-005 | planned |
@@ -513,8 +513,22 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **幂等/恢复**：EXT-004 无任何副作用与自有状态，天然幂等；replay 以相同持久化输入与相同图谱状态得到相同匹配判定；图谱事务已提交的 replay 通过 `entity_key` 精确匹配复用既有节点，不重复计划创建；任务保持 `processing`，EXT-004 不执行状态迁移、不提交 Offset。
 - **配置/依赖结论**：`dependency_changes_expected=NONE`（`neo4j>=5.28,<6`、§3.24 `Neo4jSettings`、`AppState.neo4j` 已存在）；**无** Migration/Schema 产物需求（DEV-004 已建 §2.1.9 约束/索引并有断言）；沿用既有 `max_entity_candidates_per_archive=100` / `max_stored_entity_alias_count=50`。
 - **Open Issues**：~~blocking `OI-EXT-004-001`、`OI-EXT-004-002`~~ → Round 2 `resolved_by_plan`（MVP_LOCAL_DECISION）；非阻塞 `OI-EXT-004-003`、`OI-EXT-004-004`。
-- **状态备注**：`planned`（Round 2 Amendment 002；baseline `8330d42a9f2fe9365e180bdd68c6c9dc7add6e48`；`next_action=计划审查 Round 2`；`approval_posture=AWAIT_PLAN_REVIEW_ROUND_2`；`developer_authorized=false`；**无 blocking Open Issue**；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`completed`（PR #38 MERGED `229f5e960f51e55a7389599eeccdf650a9a7beff` mergedAt `2026-08-12T07:49:18Z`；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；scoped 53 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2 non-blocking；read-only Neo4j alignment only；feat 分支已删；EXT-005 prerequisites **SATISFIED** — planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 - **测试**：Unit（归一化向量/`entity_key`/用户实体固定字段；全部对齐分支、别名合并计划、失败映射、零 LLM 依赖、零写入、用户隔离、privacy 日志）；Contract（输入/输出契约、§2.1.9 property 集合、错误码白名单与 `failed_stage`、不持久化、只读 Cypher 文本、无 EXT-005+ 字段、上游/Migration/依赖零变更）；Integration（真实 Neo4j：命中/未命中/用户实体/跨用户隔离/零写入/查询失败注入/100 候选批量；真实 Mongo：持久化结果加载、Fake LLM 调用计数 0、replay 幂等、任务文档零变更）；无 E2E、无真实外部 provider 调用。
+
+#### EXT-005
+
+- **目标**：在 EXT-003 已持久化 `extraction_result` 且 EXT-004 已产出瞬态 `EntityAlignmentOutcome` 之后，实现 §2.1.11 只读 Memory 候选召回（确定性 `ORDER BY` + `LIMIT 20`）、逐候选 LLM Reconciliation（`CREATE`/`MERGE`/`SUPERSEDE`/`CONFLICT`/`SKIP` + `reason_code` + `merged_content` 校验）、`aligned_memory_key` 计算、Archive 内候选聚合与 `reconciliation_plan_conflict` 门禁；产出 §2.1.12 置信度/重要性计划值、§2.1.13 事务前准备第 1 步（`evidence_id` + 只读 Evidence 存在性 SKIP）、第 6 步（`increment_memory_version` 布尔）、第 7 步（预生成 `memory_id`）；形成瞬态非持久化 Reconciliation Plan 供 EXT-006 消费（Amendment 001：全部新 Memory 以自包含 `PlannedMemoryCreate` 行输出，`create_kind` + 链接字段）。
+- **非目标**：任何 Neo4j/Mongo 写入；`referenced_entity_write_set`、`core_search_text`、TEI `/tokenize`、`memory_search_text_too_long`（EXT-006）；Retrieval/Elasticsearch/Embedding（EXT-007）；任务 `status` 变更与 Kafka Offset 提交；`PipelineTerminalDecision` / consumer / `extraction_llm_service` / `extraction_worker` / `entity_alignment_service` 语义变更；EXT-004→EXT-005 生产 continuation 编排（`DEFERRED_FOR_MVP`）；EXT-006+；EXT-003/EXT-004 语义变更；新错误码（优先 §2.1.15 既有码）；Migration/依赖/Settings 变更；DEV-006 / PR #13。
+- **计划文件**：`02_开发管理/tasks/EXT-005-reconciliation-aggregation-gate.md`（Round 2；Amendment 001）
+- **规格章节**：§1.2.1、§2.1.3–§2.1.4、§2.1.6–§2.1.7（仅消费）、§2.1.9（Memory/Evidence 只读快照）、**§2.1.11**、**§2.1.12**（计划输出）、**§2.1.13**（事务前准备第 1/3–7 步）、§2.1.15–§2.1.16、§3.6、§3.24、§3.26–§3.28、Appendix B（§B.7/§B.8/§B.10/§B.11/§B.12）。
+- **正式前置依赖**：EXT-004 — **SATISFIED/completed**（PR #38 MERGED）；EXT-003 — **SATISFIED/completed**；DEV-004 — **SATISFIED/completed**（§2.1.9 约束/索引）；EXT-001/EXT-002 — **SATISFIED/completed**。
+- **关键门禁**：持久化 `extraction_result` + `EntityAlignmentSuccess` 为唯一输入；只读 Neo4j（Memory 召回 + Evidence 存在性）且零写入；reconciliation LLM 复用 `LLMClient` + `settings.llm.extraction`（MF-001）；`failed_stage=reconciliation`（LD-10）；零召回确定性 `CREATE` 不调 LLM（LD-1）；输出瞬态不持久化；`new_memory_create_plans[]` 为全部新 Memory 自包含行（MF-001：`create_kind` + `supersedes_target_memory_id`/`conflicts_with_target_memory_id`）；`session_id` 不在 reconciliation 输出（SF-003）；失败码仅 `graph_query_failed`/`reconciliation_plan_conflict`/`llm_*`；`entity_alignment_failed` 禁用；任务保持 `processing`、不提交 Offset；上游 pipeline/alignment 零 diff。
+- **幂等/恢复**：无副作用 → 天然幂等；Evidence 已存在 → SKIP；replay 相同输入+图谱状态 → 相同计划；崩溃后任务仍 `processing`。
+- **配置/依赖结论**：`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；沿用 `memory_extraction.llm_timeout_seconds=120`、`max_memory_candidates_per_archive=50`；不新增 `llm.reconciliation` Settings。
+- **Open Issues**：非阻塞 `OI-006`（`reconciliation_plan_conflict` 运维清理属 EXT-008）；无 blocking Open Issue。
+- **状态备注**：`approved`（Round 2 Amendment 001；human PLAN_APPROVED granted；baseline `5deb8949ee5ac367a08f173ef67c0c0689c26f5d`；branch `feat/EXT-005-reconciliation-aggregation-gate`；`developer_authorized=true`；`next_action=Developer on feat/EXT-005-reconciliation-aggregation-gate`；不得触碰 DEV-006/PR#13）。
+- **测试**：Unit（evidence_id、aligned_memory_key、聚合/conflict、LLM 校验、MF-001 create_kind 链接、SF-002 SKIP 排除、SF-004 mixed merged_content、失败映射、零写入、privacy）；Contract（输入/输出、无 session_id 于输出、MF-001 自包含新侧、错误码白名单、只读 Cypher、无 EXT-006+ 字段、上游零变更）；Integration（真实 Neo4j 召回/隔离/零写入/Evidence SKIP；真实 Mongo replay/任务零变更）；无 E2E、无默认真实 provider。
 
 #### EXT-007 Retrieval Document 同步
 
@@ -1243,5 +1257,31 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 依赖 / Migration 结论 | `dependency_changes_expected=NONE`（`neo4j>=5.28,<6`、`Neo4jSettings` §3.24 固定值、`AppState.neo4j` AsyncDriver 均已存在）；**无** Schema/Constraint/Migration 产物需求——§2.1.9 的 4 约束 + 2 索引已由 DEV-004 `scripts/migrations/002_initial_neo4j.py` 逐字创建并由 `tests/integration/test_migrate_infra.py` 断言；禁止新增或修改 Migration、禁止运行时 DDL |
 | 是否改变技术规格 | 否；权威规格正文未改动；未决歧义 fail-closed，实施前需 owner 决议（如需修订则由授权轮次单独追加 Appendix） |
 | 审批 | Planner；`next_action=计划审查`；`approval_posture=FAIL_CLOSED_BLOCKED`；`developer_authorized=false`；不得自动进入 Developer；不得触碰 DEV-006 / PR #13 |
+
+### CHANGE-063
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | 用户显式 `TASK_ID=EXT-005`、`WORKFLOW_MODE=NORMAL`、baseline `5deb8949ee5ac367a08f173ef67c0c0689c26f5d`；Planner 仅创建 Reconciliation + 聚合门禁 Task Plan |
+| 受影响任务 | `EXT-005`（`planned`；plan `02_开发管理/tasks/EXT-005-reconciliation-aggregation-gate.md`）；仅更新规划白名单（Task Plan / progress / master_plan）；不实施业务代码/测试、不改配置/依赖/Migration/规格正文、不启动 Developer/Reviewer/Release Operator、不执行 Git 写 |
+| 规划决议 | 权威输入 = 已持久化 `extraction_result` + 瞬态 `EntityAlignmentSuccess`；范围 = §2.1.11 只读 Memory 召回 + LLM Reconciliation + `aligned_memory_key` + Archive 聚合 + `reconciliation_plan_conflict`；§2.1.12 置信度/重要性计划输出；§2.1.13 事务前第 1/6/7 步（evidence_id SKIP、increment_memory_version、预生成 memory_id）；零 Neo4j/Mongo 写入；瞬态 Reconciliation Plan 供 EXT-006；失败码 `graph_query_failed`/`reconciliation_plan_conflict`/`llm_*` + `failed_stage=reconciliation`；`entity_alignment_failed` 禁用；零召回确定性 CREATE 不调 LLM（LD-1）；reconciliation LLM 复用 `llm.extraction`（LD-3）；EXT-004→EXT-005 continuation `DEFERRED_FOR_MVP`；九新建生产文件 + 八新建测试文件 |
+| Open Issues | 非阻塞 `OI-006`（运维清理属 EXT-008） |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
+| 是否改变技术规格 | 否 |
+| 审批 | Planner；`next_action=计划审查 Round 2`；`approval_posture=AWAIT_PLAN_REVIEW_ROUND_2`；`developer_authorized=false`；不得触碰 DEV-006 / PR #13 |
+
+### CHANGE-064
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | Plan Review Round 1 `MUST_FIX=1`（MF-001 SUPERSEDE/CONFLICT 新侧输出契约不完整）+ `SHOULD_FIX=4`（SF-001–SF-004）；Planner Amendment 001 |
+| 受影响任务 | `EXT-005`（`planned` Round 2）；仅更新 Task Plan §5.7–§5.11/§12.4/测试/验收 + progress/master_plan 规划态；不实施业务代码/测试、不改配置/依赖/Migration/规格正文、不执行 Git 写 |
+| 规划决议 | `new_memory_create_plans[]` 为全部新 Memory 自包含 `PlannedMemoryCreate` 行（`create_kind` + 链接字段）；`PlannedExistingMemoryUpdate.planned_new_memory_id` 双向链接；归一化仅 `aligned_memory_key.py`；LLM SKIP 排除聚合；`session_id` 由 EXT-006 从任务文档读取；MERGE 混合 null/非 null merged_content 规则闭合 |
+| Open Issues | 非阻塞 `OI-006` 不变 |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
+| 是否改变技术规格 | 否 |
+| 审批 | Planner；`next_action=计划审查 Round 2`；`approval_posture=AWAIT_PLAN_REVIEW_ROUND_2`；`developer_authorized=false`；不得触碰 DEV-006 / PR #13 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
