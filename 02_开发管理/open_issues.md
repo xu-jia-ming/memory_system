@@ -168,8 +168,9 @@ spec_sections:
 impact: "reconciliation_plan_conflict 的特殊运维清理路径无 API Contract"
 blocks_current_task: false
 resolve_by_task: EXT-008
-status: resolved_by_plan
-resolved_at: "2026-08-12T13:40:00Z"
+status: resolved_by_task
+resolved_at: "2026-08-12T14:07:04Z"
+resolved_by_task: EXT-008
 resolved_by_plan: "02_开发管理/tasks/EXT-008-extraction-admin-api.md"
 ```
 
@@ -177,7 +178,9 @@ resolved_by_plan: "02_开发管理/tasks/EXT-008-extraction-admin-api.md"
 
 **禁止行为：** 不得在未解决前自行新增管理 API 或 Schema。
 
-**决议记录：** EXT-008 Plan（LD-1）拥有 `reconciliation_plan_conflict` 最小清理 Contract：`POST /api/v1/memory/extraction/{user_id}/{archive_id}/rebuild`（Admin Key only）；前置条件 `status=failed` 且 `last_error.error_code=reconciliation_plan_conflict`；Mongo 清 `extraction_result`、转 `pending`、清 `last_error`（`attempt_count` 不清零）、经 STM-011 `republish_archive_created_event` 重发 Kafka；同错误码调用 `POST .../retry` → HTTP 409 `retry_not_allowed`；不做 generalized admin platform；Neo4j/ES 清理不在 MVP 范围。待 EXT-008 implementation 验收后升级为 `resolved_by_task`。
+**决议记录：** EXT-008 Plan（LD-1）拥有 `reconciliation_plan_conflict` 最小清理 Contract：`POST /api/v1/memory/extraction/{user_id}/{archive_id}/rebuild`（Admin Key only）；前置条件 `status=failed` 且 `last_error.error_code=reconciliation_plan_conflict`；Mongo 清 `extraction_result`、转 `pending`、清 `last_error`（`attempt_count` 不清零）、经 STM-011 `republish_archive_created_event` 重发 Kafka；同错误码调用 `POST .../retry` → HTTP 409 `retry_not_allowed`；不做 generalized admin platform；Neo4j/ES 清理不在 MVP 范围。
+
+- **2026-08-12** — EXT-008 PR #42 MERGED（merge `8bee66be25e140cd59a8dd74faa733211ab44382` mergedAt `2026-08-12T14:07:04Z`）；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；`POST .../rebuild` Admin HTTP 闭合 OI-006 最小契约；scoped 25 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=3 non-blocking；**status**: `resolved_by_task`
 
 ---
 
@@ -723,7 +726,7 @@ status: open
 | OI-003 | STM-010 | 否 | resolved |
 | OI-004 | STM-005 / STM-010 | 否 | resolved |
 | OI-005 | STM-006 | 否 | resolved |
-| OI-006 | EXT-008 | 否 | resolved_by_plan |
+| OI-006 | EXT-008 | 否 | resolved_by_task |
 | OI-007 | STM-011 | 否 | open |
 | OI-008 | RET-005 | 否 | open |
 | OI-009 | STM-004 | 否 | resolved |

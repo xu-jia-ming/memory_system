@@ -460,7 +460,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | EXT-005 | Reconciliation + 聚合门禁 | §2.1.11 | EXT-004 | completed |
 | EXT-006 | Neo4j 图谱事务写入 | §2.1.12, §2.1.13 | EXT-005 | completed |
 | EXT-007 | Retrieval Document 同步 | §2.2.3, §2.2.4 | EXT-006, DEV-007, DEV-004 | completed |
-| EXT-008 | Extraction 管理 GET/Retry | §2.1.14 | EXT-007, DEV-005 | planned |
+| EXT-008 | Extraction 管理 GET/Retry | §2.1.14 | EXT-007, DEV-005 | completed |
 | EXT-009 | Extraction E2E + 失败注入 | §2.1.15, §3.28 | EXT-008 | planned |
 
 #### EXT-001
@@ -564,10 +564,10 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规格章节**：§2.1.3–§2.1.4、**§2.1.14**、**§2.1.15**、§2.1.16、**§3.21**、**§3.23**。
 - **正式前置依赖**：EXT-007 — **SATISFIED/completed**；EXT-001 — **SATISFIED/completed**；DEV-005 — **SATISFIED/completed**；STM-011 — **SATISFIED/completed**（`republish_archive_created_event`）。
 - **关键门禁**：`user_id+archive_id` 404 `extraction_task_not_found`；永久错误/reconciliation_plan_conflict 误 retry → 409 `retry_not_allowed`；Kafka 失败 → `kafka_publish_failed` + `failed_stage=extraction_admin`（LD-2）；GET 不返回 `extraction_result`（LD-5）。
-- **Open Issues**：**OI-006 resolved_by_plan**（rebuild 窄契约）；无 blocking Open Issue。
+- **Open Issues**：**OI-006 resolved_by_task**（rebuild 窄契约）；无 blocking Open Issue。
 - **依赖/Migration**：`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`。
 - **分支**：`feat/EXT-008-extraction-admin-api`。
-- **状态备注**：`planned`（Planner baseline `d55bf53e715378463243fcf80e49277e603c1bb5`；prerequisites **SATISFIED**；`next_action=计划审查`；Developer **NOT** authorized；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`completed`（PR #42 MERGED `8bee66be25e140cd59a8dd74faa733211ab44382` mergedAt `2026-08-12T14:07:04Z`；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；record `eefb52edea62c1d1a917f2393ff157c64421a2b0`；scoped 25 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=3 non-blocking；GET/retry/rebuild Admin HTTP；OI-006 resolved_by_task；LD-3 Mongo before Kafka；zero consumer/worker/pipeline diff；feat 分支已删；EXT-009 prerequisites **SATISFIED**（EXT-008 **completed**）— planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 - **测试**：Unit（retry 表/rebuild 门禁/Kafka 失败回写）；Contract（路由/错误码/零 upstream diff）；Integration（TestClient + Mongo/Kafka fake）；无 E2E（EXT-009）。
 
 #### EXT-009
@@ -1381,5 +1381,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
 | 是否改变技术规格 | 否（MVP_LOCAL_DECISION 仅 Plan 层；未改规格正文） |
 | 审批 | Planner only；`next_action=计划审查`；`developer_authorized=false`；不得触碰 DEV-006 / PR #13 |
+
+### CHANGE-070
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | EXT-008 POST_MERGE_CLEANUP：PR #42 MERGED；implementation + record on main；governance completion |
+| 受影响任务 | `EXT-008`（`completed`）；`EXT-009` prerequisites **SATISFIED** — remains `planned` / **NOT AUTO-STARTED**；不改变 Appendix B、pipeline continuation 语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
+| 规划决议 | §2.1.14 GET + POST retry + OI-006 POST rebuild（LD-1）delivered；Mongo-only durable；STM-011 republish reuse；authorized HTTP codes extraction_task_not_found/retry_not_allowed；zero offset/Neo4j/ES；zero consumer/worker/pipeline diff；LD-1–LD-7 verified |
+| Open Issues | **OI-006 resolved_by_task** |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
+| 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
+| 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=EXT-009 planned / NOT AUTO-STARTED` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-008 committed (awaiting PR merge)
+current_phase: Phase 2 — EXT-008 completed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-008
-current_task_status: committed
-current_branch: feat/EXT-008-extraction-admin-api
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -27,7 +27,7 @@ workflow_mode_source: explicit
 planning_baseline_main: "d55bf53e715378463243fcf80e49277e603c1bb5"
 planning_baseline_EXT-008: "d55bf53e715378463243fcf80e49277e603c1bb5"
 formal_EXT-008_plan_file: 02_开发管理/tasks/EXT-008-extraction-admin-api.md
-formal_EXT-008_status: committed
+formal_EXT-008_status: completed
 formal_EXT-008_workflow_mode: NORMAL
 formal_EXT-008_workflow_mode_source: explicit
 formal_EXT-008_baseline: d55bf53e715378463243fcf80e49277e603c1bb5
@@ -41,21 +41,27 @@ formal_EXT-008_dependency_changes_expected: NONE
 formal_EXT-008_migration_changes_expected: NONE
 formal_EXT-008_authorized_http_error_codes: "extraction_task_not_found, retry_not_allowed (+ DEV-005 cross-cutting invalid_api_key/forbidden/validation_error/internal_error)"
 formal_EXT-008_pipeline_handoff: "HTTP + ExtractionAdminService + Mongo admin repo; worker/consumer unchanged; pipeline continuation DEFERRED_FOR_MVP"
-formal_EXT-008_note: "IMPLEMENTATION_RELEASE；implementation e8f15b458a6f1fa6e204393d5300a018bfc5c27b；PR #42 OPEN；scoped 25 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；GET/retry/rebuild Admin HTTP；OI-006 rebuild 闭合；LD-3 Mongo before Kafka；zero consumer/worker/pipeline diff；不得触碰 DEV-006/PR#13"
+formal_EXT-008_note: "POST_MERGE_CLEANUP；implementation e8f15b458a6f1fa6e204393d5300a018bfc5c27b；record eefb52edea62c1d1a917f2393ff157c64421a2b0；PR #42 MERGED merge 8bee66be25e140cd59a8dd74faa733211ab44382 mergedAt 2026-08-12T14:07:04Z；scoped 25 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=3 non-blocking；GET/retry/rebuild Admin HTTP；OI-006 resolved_by_task；LD-3 Mongo before Kafka；zero consumer/worker/pipeline diff；feat 分支已删；不得触碰 DEV-006/PR#13"
 formal_EXT-008_scoped_tests: "25 passed"
 formal_EXT-008_ruff: PASS
 formal_EXT-008_mypy: PASS
 formal_EXT-008_code_review: CODE_REVIEW_APPROVED
 formal_EXT-008_p0: 0
 formal_EXT-008_p1: 0
+formal_EXT-008_p2: 1
+formal_EXT-008_p3: 3
 formal_EXT-008_implementation_commit: e8f15b458a6f1fa6e204393d5300a018bfc5c27b
 formal_EXT-008_implementation_commit_message: "feat(ext): add extraction admin get retry rebuild api"
 formal_EXT-008_pr: "#42"
 formal_EXT-008_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/42"
-formal_EXT-008_pr_state: OPEN
-formal_EXT-008_release_gate: IMPLEMENTATION_RELEASE
-formal_EXT-008_next_action: "WAITING_FOR_PR_MERGE"
-next_action: "WAITING_FOR_PR_MERGE"
+formal_EXT-008_pr_state: MERGED
+formal_EXT-008_merge_commit: 8bee66be25e140cd59a8dd74faa733211ab44382
+formal_EXT-008_merged_at: "2026-08-12T14:07:04Z"
+formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
+formal_EXT-008_release_gate: COMPLETED
+formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
+formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
+next_action: "EXT-009 planned / NOT AUTO-STARTED"
 planning_baseline_EXT-007: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
 formal_EXT-006_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
@@ -1069,7 +1075,7 @@ stm_013_scope_remediation:
 
 **DEV-OPS-007**：**completed** — Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；Ruff E501 L174–175 换行（零语义变更）；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；record `c48a70d`；PR [#24](https://github.com/xu-jia-ming/memory_system/pull/24) **MERGED**（merge `de95f3a2f0107f791f89441177841754b1d4f82c` mergedAt `2026-08-10T11:54:41Z`）；ZERO_STALE_AUTHORITATIVE_REFERENCES **PASS**；FULL_RUFF **PASS**；integration context-read **14 passed**；mypy **PASS**；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；production `src/**` changes **none**；Phase 1 DEV-OPS-007 **completed**。
 
-**下游**：**STM-013** **completed**；**STM-011** **completed**；**EXT-001** **completed**（PR #34 MERGED `ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；scoped **61** passed；ruff/mypy **PASS**）；**STM-012** **completed**（PR #35 MERGED `d73207752bbf004a4b20bf8fff00720cc0ca456b` mergedAt `2026-08-11T15:20:30Z`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；integration **1** passed；ruff/mypy **PASS**；production_delta **NONE**）；**EXT-002** **completed**（PR #36 MERGED `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`）；**EXT-003** **completed**（PR #37 MERGED `0eb45e20c64777a03dc770be70cba2316b47fdf6` mergedAt `2026-08-12T06:06:31Z`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；scoped **63** passed；ruff/mypy **PASS**）；**EXT-004** **completed**（PR #38 MERGED `229f5e960f51e55a7389599eeccdf650a9a7beff` mergedAt `2026-08-12T07:49:18Z`；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；scoped **53** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2；read-only Neo4j alignment only；feat 分支已删）；**EXT-005** **completed**（PR #39 MERGED `638598080b2d24e9291933c5ef92d3e4d65a0612` mergedAt `2026-08-12T09:47:46Z`；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；record `775992943ae0eb349301defb990c59c7089cf32e`；scoped **63** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=0；zero Mongo/Neo4j writes；MF-001/SF-001–SF-004；feat 分支已删）；**EXT-006** **completed**（PR #40 MERGED `372e0232c1e5cfa1d71e2bb0152a22f59e60cd03` mergedAt `2026-08-12T12:12:38Z`；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；record `eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f`；scoped **44** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2 non-blocking；atomic Neo4j graph write + `index_sync_memory_set` handoff；zero task completed/offset；OI-006 non-blocking；feat 分支已删）；**EXT-007** **completed**（PR #41 MERGED `afb2fee9ca6f7a5e049f0d9b1b22825de4c665dd` mergedAt `2026-08-12T13:27:51Z`；implementation `2cf93ec5bcb03daae6e266984df2804a09f19a0c`；record `d385f4b3553d310f89b17e832ea07c29b50d9761`；scoped **30** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=2 non-blocking；§2.2.3 index sync + ES bulk upsert + first `mark_completed` gate；completed-before-offset gate preserved；zero upstream/offset diff；OI-006 non-blocking；feat 分支已删）；**EXT-008** prerequisites **SATISFIED**（EXT-007 **completed**；DEV-005 **completed**）— **planned / NOT AUTO-STARTED**；**不得触碰 DEV-006/PR#13**。
+**下游**：**STM-013** **completed**；**STM-011** **completed**；**EXT-001** **completed**（PR #34 MERGED `ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；scoped **61** passed；ruff/mypy **PASS**）；**STM-012** **completed**（PR #35 MERGED `d73207752bbf004a4b20bf8fff00720cc0ca456b` mergedAt `2026-08-11T15:20:30Z`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；integration **1** passed；ruff/mypy **PASS**；production_delta **NONE**）；**EXT-002** **completed**（PR #36 MERGED `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`）；**EXT-003** **completed**（PR #37 MERGED `0eb45e20c64777a03dc770be70cba2316b47fdf6` mergedAt `2026-08-12T06:06:31Z`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；scoped **63** passed；ruff/mypy **PASS**）；**EXT-004** **completed**（PR #38 MERGED `229f5e960f51e55a7389599eeccdf650a9a7beff` mergedAt `2026-08-12T07:49:18Z`；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；scoped **53** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2；read-only Neo4j alignment only；feat 分支已删）；**EXT-005** **completed**（PR #39 MERGED `638598080b2d24e9291933c5ef92d3e4d65a0612` mergedAt `2026-08-12T09:47:46Z`；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；record `775992943ae0eb349301defb990c59c7089cf32e`；scoped **63** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=0；zero Mongo/Neo4j writes；MF-001/SF-001–SF-004；feat 分支已删）；**EXT-006** **completed**（PR #40 MERGED `372e0232c1e5cfa1d71e2bb0152a22f59e60cd03` mergedAt `2026-08-12T12:12:38Z`；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；record `eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f`；scoped **44** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2 non-blocking；atomic Neo4j graph write + `index_sync_memory_set` handoff；zero task completed/offset；OI-006 non-blocking；feat 分支已删）；**EXT-007** **completed**（PR #41 MERGED `afb2fee9ca6f7a5e049f0d9b1b22825de4c665dd` mergedAt `2026-08-12T13:27:51Z`；implementation `2cf93ec5bcb03daae6e266984df2804a09f19a0c`；record `d385f4b3553d310f89b17e832ea07c29b50d9761`；scoped **30** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=2 non-blocking；§2.2.3 index sync + ES bulk upsert + first `mark_completed` gate；completed-before-offset gate preserved；zero upstream/offset diff；OI-006 non-blocking；feat 分支已删）；**EXT-008** **completed**（PR #42 MERGED `8bee66be25e140cd59a8dd74faa733211ab44382` mergedAt `2026-08-12T14:07:04Z`；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；record `eefb52edea62c1d1a917f2393ff157c64421a2b0`；scoped **25** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=3 non-blocking；GET/retry/rebuild Admin HTTP；OI-006 **resolved_by_task**；LD-3 Mongo before Kafka；zero consumer/worker/pipeline diff；feat 分支已删）；**EXT-009** prerequisites **SATISFIED**（EXT-008 **completed**）— **planned / NOT AUTO-STARTED**；**不得触碰 DEV-006/PR#13**。
 
 ## 实施前置条件
 
@@ -1248,6 +1254,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 14:10 UTC | EXT-008 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #42 MERGED (`8bee66be25e140cd59a8dd74faa733211ab44382` mergedAt `2026-08-12T14:07:04Z`)；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；record `eefb52edea62c1d1a917f2393ff157c64421a2b0`；feat 分支已删 | scoped 25 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=3 non-blocking；GET/retry/rebuild Admin HTTP；OI-006 resolved_by_task；LD-3 Mongo before Kafka；zero consumer/worker/pipeline diff；`next_action=EXT-009 planned / NOT AUTO-STARTED`；governance completion commit created |
 | 2026-08-12 22:00 UTC | EXT-008 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；PR #42 OPEN；docs(status): record on feat | scoped 25 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge** |
 | 2026-08-12 21:40 UTC | EXT-008 | planned | Planner created `02_开发管理/tasks/EXT-008-extraction-admin-api.md`; synchronized progress/master_plan/open_issues only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `d55bf53e715378463243fcf80e49277e603c1bb5` verified (main, clean tree); scope = §2.1.14 GET/retry + OI-006 rebuild (LD-1); Mongo-only durable; STM-011 republish reuse; zero offset/consumer/worker/pipeline diff; OI-006 resolved_by_plan; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 13:30 UTC | EXT-007 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #41 MERGED (`afb2fee9ca6f7a5e049f0d9b1b22825de4c665dd` mergedAt `2026-08-12T13:27:51Z`)；implementation `2cf93ec5bcb03daae6e266984df2804a09f19a0c`；record `d385f4b3553d310f89b17e832ea07c29b50d9761`；feat 分支已删 | scoped 30 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=2 non-blocking；§2.2.3 index sync invariants + completed-before-offset gate preserved；zero upstream/offset diff；OI-006 non-blocking；EXT-006→EXT-007 continuation DEFERRED_FOR_MVP；`next_action=EXT-008 planned / NOT AUTO-STARTED`；governance completion commit created |
