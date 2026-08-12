@@ -57,6 +57,7 @@ formal_EXT-004_implementation_commit_message: "feat(ext): add deterministic enti
 formal_EXT-004_pr: "#38"
 formal_EXT-004_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/38"
 formal_EXT-004_pr_state: OPEN
+formal_EXT-004_status_record_committed: c975394369d2f0f64c973cc8aa701cded6b2c54d
 formal_EXT-004_implementation_evidence: "src/memory_system/domain/models/entity_alignment.py; domain/services/entity_key.py; domain/services/entity_alignment_service.py; infrastructure/neo4j/entity_alignment_repository.py; tests/unit+contract+integration per whitelist; pytest 53 passed; ruff+mypy PASS"
 formal_EXT-004_prerequisite: "SATISFIED — EXT-003 completed (PR #37 MERGED); DEV-004 completed (§2.1.9 constraints/indexes exist via migration 002); EXT-001/EXT-002 completed"
 formal_EXT-004_prerequisite_evidence: "persisted extraction_result / candidate_fingerprint / candidate_source_time verified in domain/models/extraction_llm.py; non-empty result stays processing via abort_without_terminal; PipelineTerminalDecision and extraction_worker verified unchanged"

@@ -853,6 +853,7 @@ branch: "feat/EXT-004-entity-alignment-neo4j-model-basis"
 plan_commit: "8330d42a9f2fe9365e180bdd68c6c9dc7add6e48"
 implementation_commit: "0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c"
 implementation_commit_message: "feat(ext): add deterministic entity alignment and neo4j read model"
+status_record_committed: "c975394369d2f0f64c973cc8aa701cded6b2c54d"
 pr: "#38"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/38"
 pr_state: OPEN
