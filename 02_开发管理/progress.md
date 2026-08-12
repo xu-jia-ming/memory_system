@@ -52,6 +52,7 @@ formal_EXT-002_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/36"
 formal_EXT-002_merge_commit: 59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d
 formal_EXT-002_merged_at: "2026-08-12T02:45:26Z"
 formal_EXT-002_status_record_committed: 036d770268c3a3bbb95fe4687fd0007805e284a4
+formal_EXT-002_status_record_completed: cd0b1a33848b294b5b068891f2a02422767becf1
 formal_EXT-002_amendment_commit: 985613be08814b1e9eea521888b61dd5cb8d94ff
 formal_EXT-002_amendment_commit_verified: true
 formal_EXT-002_release_gate: COMPLETED
@@ -998,7 +999,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
-| 2026-08-12 10:56 UTC | EXT-002 | committed → completed | Release Operator `POST_MERGE_CLEANUP`; PR #36 MERGED (`59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`); implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`; amendment `985613be08814b1e9eea521888b61dd5cb8d94ff`; record `036d770268c3a3bbb95fe4687fd0007805e284a4` | scoped 165 passed; RAW-01..12 PASS; RED-01..27 PASS; mandatory skips=0; scoped rerun=165 passed; Ruff/mypy PASS; CODE_REVIEW_APPROVED P0/P1/P2/P3=0; Amendment 004 behavior, terminal/offset gate, privacy and production scope verified; STM-007 completed; EXT-003 prerequisites SATISFIED, planned/NOT AUTO-STARTED; governance completion pending |
+| 2026-08-12 10:56 UTC | EXT-002 | committed → completed | Release Operator `POST_MERGE_CLEANUP`; PR #36 MERGED (`59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`); implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`; amendment `985613be08814b1e9eea521888b61dd5cb8d94ff`; record `036d770268c3a3bbb95fe4687fd0007805e284a4`; completion `cd0b1a33848b294b5b068891f2a02422767becf1` | scoped 165 passed; RAW-01..12 PASS; RED-01..27 PASS; mandatory skips=0; scoped rerun=165 passed; Ruff/mypy PASS; CODE_REVIEW_APPROVED P0/P1/P2/P3=0; Amendment 004 behavior, terminal/offset gate, privacy and production scope verified; STM-007 completed; EXT-003 prerequisites SATISFIED, planned/NOT AUTO-STARTED; governance completion commit created |
 | 2026-08-12 10:40 UTC | EXT-002 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`; implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`; PR #36 OPEN; approved governance record on feat | scoped 165 passed; Amendment 004/raw/redaction/offset/privacy/scope gates PASS; Ruff/mypy PASS; release_gate=WAITING_FOR_PR_MERGE; no merge; no main write |
 | 2026-08-12 10:15 UTC | EXT-002 | tested → in_progress | Remediating P1-001 exception classification and P1-002 explicit RAW/RED matrix on the approved whitelist; no Git write and no scope expansion |
 | 2026-08-12 10:30 UTC | EXT-002 | in_progress → tested | P1-001 exception classification narrowed; explicit RAW-01..RAW-12 and RED-01..RED-27 coverage added; scoped 133 passed / 1 optional Mongo skipped; relevant EXT-001/Mongo gates 35 passed; Ruff/mypy/lints PASS; no Git write |

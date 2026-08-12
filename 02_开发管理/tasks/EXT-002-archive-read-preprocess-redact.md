@@ -517,7 +517,7 @@ pr_url: "https://github.com/xu-jia-ming/memory_system/pull/36"
 merge_commit: "59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d"
 amendment_commit: "985613be08814b1e9eea521888b61dd5cb8d94ff"
 status_record_committed: "036d770268c3a3bbb95fe4687fd0007805e284a4"
-status_record_completed: null
+status_record_completed: "cd0b1a33848b294b5b068891f2a02422767becf1"
 release_gate: COMPLETED
 evidence: "RAW-01..RAW-12 PASS; RED-01..RED-27 PASS; mandatory skips=0; scoped rerun=165 passed; Ruff/mypy PASS; CODE_REVIEW_APPROVED P0/P1/P2/P3=0"
 scope_verification: "Amendment 004 effective behavior PASS; EXT-001 persistence-before-offset/no-commit-on-persistence-failure unchanged; first-person deferred; no EXT-003+ or dependency/schema/migration/DEV-006/PR #13 drift"
