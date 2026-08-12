@@ -61,6 +61,7 @@ formal_EXT-006_pr_state: MERGED
 formal_EXT-006_merge_commit: 372e0232c1e5cfa1d71e2bb0152a22f59e60cd03
 formal_EXT-006_merged_at: "2026-08-12T12:12:38Z"
 formal_EXT-006_status_record_committed: eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f
+formal_EXT-006_status_record_completed: 6b00287e663f96d0729a2474a678fa5e960cd051
 formal_EXT-006_release_gate: COMPLETED
 formal_EXT-006_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-006_next_action: "EXT-007 planned / NOT AUTO-STARTED"
@@ -1182,7 +1183,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
-| 2026-08-12 12:15 UTC | EXT-006 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #40 MERGED (`372e0232c1e5cfa1d71e2bb0152a22f59e60cd03` mergedAt `2026-08-12T12:12:38Z`)；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；record `eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f`；feat 分支已删 | scoped 44 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2 non-blocking；atomic Neo4j graph write + index_sync_memory_set handoff；zero task completed/offset；OI-006 non-blocking；EXT-003→EXT-006 continuation DEFERRED_FOR_MVP；`next_action=EXT-007 planned / NOT AUTO-STARTED`；governance completion commit created |
+| 2026-08-12 12:15 UTC | EXT-006 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #40 MERGED (`372e0232c1e5cfa1d71e2bb0152a22f59e60cd03` mergedAt `2026-08-12T12:12:38Z`)；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；record `eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f`；completion `6b00287e663f96d0729a2474a678fa5e960cd051`；feat 分支已删 | scoped 44 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2 non-blocking；atomic Neo4j graph write + index_sync_memory_set handoff；zero task completed/offset；OI-006 non-blocking；EXT-003→EXT-006 continuation DEFERRED_FOR_MVP；`next_action=EXT-007 planned / NOT AUTO-STARTED`；governance completion commit created |
 | 2026-08-12 18:10 UTC | EXT-006 | planned | Planner created `02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2` verified (main, clean tree); scope = §2.1.13 steps 8–10 + atomic Neo4j write; §2.1.12 apply planned values; `index_sync_memory_set` handoff; `failed_stage=graph_write`; zero task completed/offset; EXT-003→EXT-006 continuation DEFERRED_FOR_MVP; `dependency_changes_expected=NONE`; non-blocking `OI-006`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 10:48 UTC | EXT-006 | planned → tested | Developer implemented graph write library on `feat/EXT-006-neo4j-graph-transaction-write`; 9 production + 7 test whitelist files; no commit | scoped **41** passed; ruff/mypy PASS; single Neo4j write transaction; Evidence MERGE idempotency + SKIP path; `index_sync_memory_set` handoff; task/offset untouched; upstream zero diff; `next_action=CODE_REVIEW` |
 | 2026-08-12 09:10 UTC | EXT-005 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；PR #39 OPEN；docs(status): record on feat | scoped 63 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge** |
