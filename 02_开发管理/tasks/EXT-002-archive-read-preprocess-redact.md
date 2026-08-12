@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-002
 task_name: Archive 读取 / 预处理 / 脱敏
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "13e1dae36a0b0d94415d9581b2a5fe53c990545f"
 branch: "feat/EXT-002-archive-read-preprocess-redact"
 created_at: "2026-08-11 15:36 UTC"
-updated_at: "2026-08-12 10:18 UTC"
+updated_at: "2026-08-12 10:40 UTC"
 plan_review_round: 4
 amendment: "004 — EXT-002 specification/governance amendment: terminal mappings, strict raw validation, deterministic redaction, and handoff order"
 prerequisites:
@@ -503,4 +503,16 @@ Future changes require an appended amendment and approval. In particular, resolv
 
 ## 16. 实际执行结果
 
-Developer P1 remediation Round 2 is complete and tested after PLAN_APPROVED and PLAN_LANDING. `RAW=12`, `RED=27`; no mandatory evidence skipped; implementation remains within the exact whitelist; no commit performed.
+Developer P1 remediation Round 2 is complete and tested after PLAN_APPROVED and PLAN_LANDING. `RAW=12`, `RED=27`; no mandatory evidence skipped; implementation remains within the exact whitelist.
+
+## 17. Release record
+
+```yaml
+status: committed
+implementation_commit: "7fdf84827b2c253a6e6734b8051467f3ec1151f1"
+implementation_commit_message: "feat(ext): add archive preprocessing pipeline"
+pr: "#36"
+pr_state: OPEN
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/36"
+release_gate: WAITING_FOR_PR_MERGE
+```

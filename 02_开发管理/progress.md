@@ -12,7 +12,7 @@ phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-002
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/EXT-002-archive-read-preprocess-redact
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -24,8 +24,8 @@ target_default_branch: main
 current_plan_file: 02_开发管理/tasks/EXT-002-archive-read-preprocess-redact.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-next_action: Code Review
-formal_EXT-002_status: tested
+next_action: WAITING_FOR_PR_MERGE
+formal_EXT-002_status: committed
 formal_EXT-002_plan_file: 02_开发管理/tasks/EXT-002-archive-read-preprocess-redact.md
 formal_EXT-002_prerequisite: "SATISFIED — EXT-001 completed; PR #34 MERGED"
 formal_EXT-002_workflow_mode: NORMAL
@@ -36,10 +36,20 @@ formal_EXT-002_plan_review_round: 4
 formal_EXT-002_amendment: "004 — authoritative specification/governance amendment: terminal mappings, strict raw validation, deterministic redaction, and handoff order"
 formal_EXT-002_note: "Implemented strict raw BSON validation and read-only archive lookup; storage-only _id is ignored, unknown application fields and coercion are rejected, and complete validation precedes preprocessing/redaction/output. Deterministic NFKC/whitespace normalization and local content-only redaction produce only normalized+redacted ExtractionReadyArchive content while preserving order/provenance; terminal mappings and EXT-001 persistence-before-offset semantics remain unchanged. No EXT-003/LLM/worker wiring, dependency, schema, Kafka, task, or status changes."
 formal_EXT-002_amendment_override: "Amendment EXT-002-004 implemented; OI-EXT-002-001/002/004/005 resolved; OI-EXT-002-003 deferred/out-of-scope; dependency_changes_expected=NONE."
-formal_EXT-002_scoped_tests: "133 passed, 1 optional Mongo integration skipped; relevant EXT-001/Mongo gates 35 passed"
+formal_EXT-002_scoped_tests: "165 passed"
 formal_EXT-002_ruff: PASS
 formal_EXT-002_mypy: PASS
 formal_EXT-002_lints: PASS
+formal_EXT-002_code_review: CODE_REVIEW_APPROVED
+formal_EXT-002_p0: 0
+formal_EXT-002_p1: 0
+formal_EXT-002_p2: 0
+formal_EXT-002_p3: 0
+formal_EXT-002_implementation_commit: 7fdf84827b2c253a6e6734b8051467f3ec1151f1
+formal_EXT-002_pr: "#36"
+formal_EXT-002_pr_state: OPEN
+formal_EXT-002_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/36"
+formal_EXT-002_release_gate: WAITING_FOR_PR_MERGE
 formal_EXT-001_status: completed
 formal_EXT-001_plan_file: 02_开发管理/tasks/EXT-001-task-schema-kafka-consumer-idempotency-offset.md
 formal_EXT-001_prerequisite: SATISFIED  # STM-006 + DEV-004 completed; DEV-004 index/topic re-verified MATCH
@@ -976,6 +986,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 10:40 UTC | EXT-002 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`; implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`; PR #36 OPEN; approved governance record on feat | scoped 165 passed; Amendment 004/raw/redaction/offset/privacy/scope gates PASS; Ruff/mypy PASS; release_gate=WAITING_FOR_PR_MERGE; no merge; no main write |
 | 2026-08-12 10:15 UTC | EXT-002 | tested → in_progress | Remediating P1-001 exception classification and P1-002 explicit RAW/RED matrix on the approved whitelist; no Git write and no scope expansion |
 | 2026-08-12 10:30 UTC | EXT-002 | in_progress → tested | P1-001 exception classification narrowed; explicit RAW-01..RAW-12 and RED-01..RED-27 coverage added; scoped 133 passed / 1 optional Mongo skipped; relevant EXT-001/Mongo gates 35 passed; Ruff/mypy/lints PASS; no Git write |
 | 2026-08-12 10:10 UTC | EXT-002 | tested → in_progress | Remediation Round 2 reopened only to replace P1 mock/AST evidence with real EXT-002 pipeline and EXT-001 consumer-gate evidence; approved whitelist only; no Git write |
