@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-005 planned (NOT AUTO-STARTED)
+current_phase: Phase 2 — EXT-005 committed (awaiting PR merge)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-005
-current_task_status: approved
+current_task_status: committed
 current_branch: feat/EXT-005-reconciliation-aggregation-gate
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -27,7 +27,7 @@ workflow_mode_source: explicit
 planning_baseline_main: "5deb8949ee5ac367a08f173ef67c0c0689c26f5d"
 planning_baseline_EXT-005: "5deb8949ee5ac367a08f173ef67c0c0689c26f5d"
 formal_EXT-005_plan_file: 02_开发管理/tasks/EXT-005-reconciliation-aggregation-gate.md
-formal_EXT-005_status: approved
+formal_EXT-005_status: committed
 formal_EXT-005_workflow_mode: NORMAL
 formal_EXT-005_workflow_mode_source: explicit
 formal_EXT-005_baseline: 5deb8949ee5ac367a08f173ef67c0c0689c26f5d
@@ -43,10 +43,22 @@ formal_EXT-005_dependency_changes_expected: NONE
 formal_EXT-005_migration_changes_expected: NONE
 formal_EXT-005_authorized_error_codes: "graph_query_failed, reconciliation_plan_conflict, llm_timeout, llm_request_failed, llm_invalid_output; failed_stage=reconciliation (LD-10); graph_query_failed forbidden in EXT-004"
 formal_EXT-005_pipeline_handoff: "isolated library service; EXT-004→EXT-005 continuation DEFERRED_FOR_MVP; PipelineTerminalDecision / consumer / extraction_llm_service / extraction_worker / entity_alignment_service unchanged"
-formal_EXT-005_note: "Round 2 Amendment 001 PLAN_APPROVED; human PLAN_APPROVED granted; MF-001 PlannedMemoryCreate self-contained output; SF-001–SF-004; Developer authorized post-PLAN_LANDING; 不得触碰 DEV-006/PR#13"
+formal_EXT-005_note: "IMPLEMENTATION_RELEASE complete; implementation c6e619d312bfd83fef30c9f394e16b42a65cba81; PR #39 OPEN; scoped 63 passed; ruff/mypy PASS; CODE_REVIEW_APPROVED P0=0 P1=0; zero Mongo/Neo4j writes; upstream zero diff; 不得触碰 DEV-006/PR#13"
 formal_EXT-005_human_plan_approved: true
 formal_EXT-005_human_plan_approved_at: "2026-08-12T08:35:00Z"
-formal_EXT-005_approval_posture: "PLAN_APPROVED — Amendment 001; Round 2 BLOCKER=0 MUST_FIX=0 SHOULD_FIX=0; human PLAN_APPROVED granted; Developer authorized post-PLAN_LANDING"
+formal_EXT-005_approval_posture: "IMPLEMENTATION_RELEASE — PR #39 OPEN; CODE_REVIEW_APPROVED P0=0 P1=0"
+formal_EXT-005_scoped_tests: "63 passed"
+formal_EXT-005_ruff: PASS
+formal_EXT-005_mypy: PASS
+formal_EXT-005_code_review: CODE_REVIEW_APPROVED
+formal_EXT-005_p0: 0
+formal_EXT-005_p1: 0
+formal_EXT-005_implementation_commit: c6e619d312bfd83fef30c9f394e16b42a65cba81
+formal_EXT-005_implementation_commit_message: "feat(ext): add reconciliation plan and read-only recall"
+formal_EXT-005_pr: "#39"
+formal_EXT-005_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/39"
+formal_EXT-005_pr_state: OPEN
+formal_EXT-005_implementation_evidence: "src/memory_system/domain/models/reconciliation.py; domain/services/reconciliation_service.py; domain/services/reconciliation_plan_builder.py; domain/services/reconciliation_llm_service.py; infrastructure/neo4j/memory_recall_repository.py; infrastructure/neo4j/evidence_lookup_repository.py; tests/unit+contract+integration per whitelist; pytest 63 passed; ruff+mypy PASS"
 planning_baseline_EXT-004: "8330d42a9f2fe9365e180bdd68c6c9dc7add6e48"
 formal_EXT-004_plan_file: 02_开发管理/tasks/EXT-004-entity-alignment-neo4j-model-basis.md
 formal_EXT-004_status: completed
@@ -64,8 +76,8 @@ formal_EXT-004_plan_review_should_fix: 1
 formal_EXT-004_plan_review_note: "SF-R2-001: Q3 example Cypher uses raw alias IN; implementation must follow §5.2.2 normalize_entity_alias semantics"
 formal_EXT-004_human_plan_approved: true
 formal_EXT-004_human_plan_approved_at: "2026-08-12T15:06:00Z"
-current_task_approval_posture: "PLAN_APPROVED — Round 2 Amendment 001 MF-001/SF-001–SF-004; human PLAN_APPROVED granted; Developer authorized post-PLAN_LANDING"
-next_action: "Developer on feat/EXT-005-reconciliation-aggregation-gate"
+current_task_approval_posture: "IMPLEMENTATION_RELEASE — PR #39 OPEN; CODE_REVIEW_APPROVED P0=0 P1=0"
+next_action: "WAITING_FOR_PR_MERGE — human merge PR #39; then POST_MERGE_CLEANUP"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -937,7 +949,7 @@ stm_013_scope_remediation:
 
 **DEV-OPS-007**：**completed** — Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；Ruff E501 L174–175 换行（零语义变更）；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；record `c48a70d`；PR [#24](https://github.com/xu-jia-ming/memory_system/pull/24) **MERGED**（merge `de95f3a2f0107f791f89441177841754b1d4f82c` mergedAt `2026-08-10T11:54:41Z`）；ZERO_STALE_AUTHORITATIVE_REFERENCES **PASS**；FULL_RUFF **PASS**；integration context-read **14 passed**；mypy **PASS**；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；production `src/**` changes **none**；Phase 1 DEV-OPS-007 **completed**。
 
-**下游**：**STM-013** **completed**；**STM-011** **completed**；**EXT-001** **completed**（PR #34 MERGED `ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；scoped **61** passed；ruff/mypy **PASS**）；**STM-012** **completed**（PR #35 MERGED `d73207752bbf004a4b20bf8fff00720cc0ca456b` mergedAt `2026-08-11T15:20:30Z`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；integration **1** passed；ruff/mypy **PASS**；production_delta **NONE**）；**EXT-002** **completed**（PR #36 MERGED `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`）；**EXT-003** **completed**（PR #37 MERGED `0eb45e20c64777a03dc770be70cba2316b47fdf6` mergedAt `2026-08-12T06:06:31Z`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；scoped **63** passed；ruff/mypy **PASS**）；**EXT-004** **completed**（PR #38 MERGED `229f5e960f51e55a7389599eeccdf650a9a7beff` mergedAt `2026-08-12T07:49:18Z`；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；scoped **53** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2；read-only Neo4j alignment only；`next_action=EXT-005 planned / NOT AUTO-STARTED`；`dependency_changes_expected=NONE`；无 Migration 变更）；**不得触碰 DEV-006/PR#13**。
+**下游**：**STM-013** **completed**；**STM-011** **completed**；**EXT-001** **completed**（PR #34 MERGED `ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；scoped **61** passed；ruff/mypy **PASS**）；**STM-012** **completed**（PR #35 MERGED `d73207752bbf004a4b20bf8fff00720cc0ca456b` mergedAt `2026-08-11T15:20:30Z`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；integration **1** passed；ruff/mypy **PASS**；production_delta **NONE**）；**EXT-002** **completed**（PR #36 MERGED `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`）；**EXT-003** **completed**（PR #37 MERGED `0eb45e20c64777a03dc770be70cba2316b47fdf6` mergedAt `2026-08-12T06:06:31Z`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；scoped **63** passed；ruff/mypy **PASS**）；**EXT-004** **completed**（PR #38 MERGED `229f5e960f51e55a7389599eeccdf650a9a7beff` mergedAt `2026-08-12T07:49:18Z`；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；scoped **53** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2；read-only Neo4j alignment only；feat 分支已删）；**EXT-005** `committed`（PR #39 OPEN；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；scoped **63** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0；zero Mongo/Neo4j writes；`next_action=WAITING_FOR_PR_MERGE`）；**不得触碰 DEV-006/PR#13**。
 
 ## 实施前置条件
 
@@ -1116,6 +1128,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 09:10 UTC | EXT-005 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；PR #39 OPEN；docs(status): record on feat | scoped 63 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge** |
+| 2026-08-12 08:50 UTC | EXT-005 | approved → tested | Developer implemented whitelist (9 prod + 8 test); reconciliation read-only recall + LLM + plan builder; zero Mongo/Neo4j writes; upstream zero diff | scoped 63 passed; ruff/mypy PASS; integration Neo4j+Mongo PASS; `next_action=Code Review`; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 08:35 UTC | EXT-005 | planned → approved | Release Operator `PLAN_LANDING`；human PLAN_APPROVED Round 2 Amendment 001；docs(plan) on main；feat branch created | Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=0; MF-001/SF-001–SF-004; `next_action=Developer on feat/EXT-005-reconciliation-aggregation-gate`; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 16:30 UTC | EXT-005 | planned (Round 2) | Planner Amendment 001 remediation; §5.7–§5.11 MF-001 PlannedMemoryCreate self-contained output (`create_kind` + link fields); SF-001 normalization in `aligned_memory_key.py` only; SF-002 LLM SKIP excluded from aggregation; SF-003 session_id from task doc (not reconciliation output); SF-004 MERGE mixed null/non-null merged_content; no src/tests/spec-body change; no Git write | `next_action=计划审查 Round 2`; `approval_posture=AWAIT_PLAN_REVIEW_ROUND_2`; `plan_review_round=2`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 16:15 UTC | EXT-005 | planned | Planner created `02_开发管理/tasks/EXT-005-reconciliation-aggregation-gate.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `5deb8949ee5ac367a08f173ef67c0c0689c26f5d` verified (main, clean tree); scope = §2.1.11 read-only recall + LLM Reconciliation + aligned_memory_key + aggregation + reconciliation_plan_conflict; §2.1.12 planning output; §2.1.13 steps 1/6/7; transient plan for EXT-006; zero writes; `failed_stage=reconciliation`; EXT-004→EXT-005 continuation DEFERRED_FOR_MVP; `dependency_changes_expected=NONE`; non-blocking `OI-006`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
@@ -1367,4 +1381,4 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 10. **DEV-006**：`PAUSED / SUPERSEDED_FOR_MVP`；PR #13 **DO_NOT_MERGE**；不得触碰。
 11. **EXT-003**：`completed`（PR #37 MERGED `0eb45e20c64777a03dc770be70cba2316b47fdf6` mergedAt `2026-08-12T06:06:31Z`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；scoped **63** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=1；feat 分支已删）。
 12. **EXT-004**：`completed`（PR #38 MERGED `229f5e960f51e55a7389599eeccdf650a9a7beff` mergedAt `2026-08-12T07:49:18Z`；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；scoped **53** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2；read-only Neo4j alignment only；feat 分支已删）。
-13. **EXT-005**：`approved`（Round 2 Amendment 001）— MF-001 闭合：`PlannedMemoryCreate` 自包含行（`create`/`supersede_new`/`conflict_new`）；SF-001–SF-004 纳入计划；human PLAN_APPROVED granted；`next_action=Developer on feat/EXT-005-reconciliation-aggregation-gate`；**不得触碰 DEV-006/PR#13**。
+13. **EXT-005**：`committed`（PR #39 OPEN；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；scoped **63** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0；zero Mongo/Neo4j writes；MF-001/SF-001–SF-004；`next_action=WAITING_FOR_PR_MERGE`；**不得触碰 DEV-006/PR#13**）。
