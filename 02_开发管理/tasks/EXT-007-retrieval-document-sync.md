@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-007
 task_name: Retrieval Document 同步
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 branch: "feat/EXT-007-retrieval-document-sync"
 created_at: "2026-08-12 20:55 UTC"
-updated_at: "2026-08-12 21:25 UTC"
+updated_at: "2026-08-12 13:30 UTC"
 spec_sections:
   - "§2.1.3 Memory Extraction Task（任务表不保存 Memory/Entity 结果 ID 数组）"
   - "§2.1.4 Kafka 消费与任务幂等（completed 早退；terminal 持久化后才 Offset）"
@@ -536,12 +536,13 @@ out_of_scope_changes:
 | 2026-08-12 20:55 UTC | planning | 创建 Task Plan；同步 progress/master_plan | — | baseline 2db6f5a verified；prerequisites SATISFIED |
 | 2026-08-12 21:30 UTC | implementation | 新增 EXT-007 领域模型、Neo4j 只读/ES bulk repository、search_text 构建器、RetrievalIndexSyncService 及测试/support fakes | unit 25 + contract 11 + integration 5 PASS；ruff/mypy PASS | SF-1 MemoryIndexRow；SF-2 空集合 mark_completed synced_count=0；SF-3 EMBEDDING_BATCH_SIZE=32；零 upstream diff |
 | 2026-08-12 21:25 UTC | Release IMPLEMENTATION_RELEASE | implementation `2cf93ec5bcb03daae6e266984df2804a09f19a0c`；PR #41 OPEN；feat push only | scoped 30 passed；ruff PASS；mypy PASS | `status=committed`；`next_action=WAITING_FOR_PR_MERGE` |
+| 2026-08-12 13:30 UTC | POST_MERGE_CLEANUP | PR #41 MERGED；governance completion on main；feat 分支已删 | — | `status=completed`；`next_action=EXT-008 planned / NOT AUTO-STARTED` |
 
 ## 14. 实际执行结果
 
 ### 最终状态
 
-`committed` — IMPLEMENTATION_RELEASE complete；implementation `2cf93ec5bcb03daae6e266984df2804a09f19a0c`；PR #41 OPEN (`https://github.com/xu-jia-ming/memory_system/pull/41`)；scoped 30 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；zero upstream pipeline/consumer/EXT-001-006 diff；no offset writes；first `mark_completed` gate；`next_action=WAITING_FOR_PR_MERGE`；**不得触碰 DEV-006/PR#13**。
+`completed` — POST_MERGE_CLEANUP complete；implementation `2cf93ec5bcb03daae6e266984df2804a09f19a0c`；record `d385f4b3553d310f89b17e832ea07c29b50d9761`；PR #41 MERGED (`https://github.com/xu-jia-ming/memory_system/pull/41` merge `afb2fee9ca6f7a5e049f0d9b1b22825de4c665dd` mergedAt `2026-08-12T13:27:51Z`)；scoped 30 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=2 non-blocking；§2.2.3 index sync invariants + completed-before-offset gate preserved；zero upstream pipeline/consumer/EXT-001-006 diff；no offset writes；first `mark_completed` gate；OI-006 non-blocking；feat 分支已删；`next_action=EXT-008 planned / NOT AUTO-STARTED`；**不得触碰 DEV-006/PR#13**。
 
 ### Git 记录
 
@@ -550,8 +551,11 @@ branch: "feat/EXT-007-retrieval-document-sync"
 plan_commit: "d2dcfe709f3f7a4e8ae933b7ded2874c33d4af5d"
 implementation_commit: "2cf93ec5bcb03daae6e266984df2804a09f19a0c"
 implementation_commit_message: "feat(ext): add retrieval index document sync"
+record_commit: "d385f4b3553d310f89b17e832ea07c29b50d9761"
+merge_commit: "afb2fee9ca6f7a5e049f0d9b1b22825de4c665dd"
+merged_at: "2026-08-12T13:27:51Z"
 pr: "#41"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/41"
-pr_state: OPEN
-next_action: "WAITING_FOR_PR_MERGE"
+pr_state: MERGED
+next_action: "EXT-008 planned / NOT AUTO-STARTED"
 ```
