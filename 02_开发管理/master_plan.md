@@ -570,9 +570,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **状态备注**：`completed`（PR #42 MERGED `8bee66be25e140cd59a8dd74faa733211ab44382` mergedAt `2026-08-12T14:07:04Z`；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；record `eefb52edea62c1d1a917f2393ff157c64421a2b0`；scoped 25 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=3 non-blocking；GET/retry/rebuild Admin HTTP；OI-006 resolved_by_task；LD-3 Mongo before Kafka；zero consumer/worker/pipeline diff；feat 分支已删；EXT-009 prerequisites **SATISFIED**（EXT-008 **completed**）— planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 - **测试**：Unit（retry 表/rebuild 门禁/Kafka 失败回写）；Contract（路由/错误码/零 upstream diff）；Integration（TestClient + Mongo/Kafka fake）；无 E2E（EXT-009）。
 
-#### EXT-009
+#### EXT-009 Extraction E2E + Pipeline Wiring
 
-- Extraction 阶段 E2E + 失败注入（含 Worker 在 Neo4j commit 后退出等）；前置 EXT-008。
+- **目标**：闭合 EXT-003→EXT-007 **生产 pipeline continuation**（权威 owner）；`ProductionExtractionPipeline` 实现 `ExtractionPipelinePort` 串联 LLM（可跳过）→ Alignment → Reconciliation → Graph Write → Retrieval Index Sync；`extraction_worker.main()` 替换 exit 1 stub 接入 Kafka consumer loop；consumer **窄补丁** LD-1：COMPLETE/FAIL 前 reload，若 EXT-007 已 `mark_completed`/`mark_failed` 则 commit offset 无重复 `mark_*`（§2.1.13）；`extraction_result` 非空跳过 LLM 继续 alignment→index；E2E-1..4（happy / index fail after graph / replay idempotency / admin retry/rebuild）；compose.test Mongo/Kafka/Neo4j/ES + Fake LLM/Embedding/Tokenize（§3.28）；**零** EXT-002..007 阶段服务语义 diff。
+- **非目标**：修改 `PipelineTerminalDecision` / 阶段库内部；RET-*；E2E-001 全链路；DEV-006/PR#13；新依赖/Migration。
+- **计划文件**：`02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md`
+- **规格章节**：§2.1.3–§2.1.4、**§2.1.13**、§2.1.14–§2.1.16、§2.2.3、**§3.28**、Appendix B §B.10。
+- **正式前置依赖**：EXT-008 — **SATISFIED/completed**；EXT-007 — **SATISFIED/completed**；EXT-001..006 — **SATISFIED/completed**；DEV-005 — **SATISFIED/completed**。
+- **关键门禁**：completed-before-offset；Evidence MERGE 幂等；index 失败 `retrieval_index_write_failed` + admin retry；`reconciliation_plan_conflict` → rebuild 非 retry。
+- **Open Issues**：无 blocking。
+- **依赖/Migration**：`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`。
+- **分支**：`feat/EXT-009-extraction-e2e-pipeline-wiring`。
+- **状态备注**：`planned`（baseline `779963257e33a93ad02ef4e3f997b3c9f6706802`；prerequisites **SATISFIED**；continuation closure planned；`next_action=计划审查`；Developer **NOT** authorized；不得触碰 DEV-006/PR#13）。
+- **测试**：Unit（pipeline 编排 + consumer LD-1）；Contract（零 upstream diff）；Integration（compose.test）；E2E（E2E-1..4 + F1 失败注入）。
 
 ---
 
@@ -1394,5 +1404,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
 | 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
 | 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=EXT-009 planned / NOT AUTO-STARTED` |
+
+### CHANGE-071
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | EXT-009 Planner：production extraction pipeline wiring + E2E plan landed |
+| 受影响任务 | `EXT-009`（`planned`）；`next_action=计划审查`；Developer **NOT** authorized；不改变 Appendix B 阶段库语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
+| 规划决议 | `ProductionExtractionPipeline` closes EXT-003→EXT-007 `DEFERRED_FOR_MVP`；worker `main()` wiring；consumer LD-1 terminal reload idempotency；E2E-1..4 + §3.28 failure injection；compose.test + Fake LLM/embedding/tokenize；zero EXT-002..007 service semantics diff |
+| Open Issues | 无 blocking |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
+| 是否改变技术规格 | 否（MVP_LOCAL_DECISION LD-1..LD-7 仅 Plan 层；未改规格正文） |
+| 审批 | Planner only；`next_action=计划审查`；`developer_authorized=false`；不得触碰 DEV-006 / PR #13 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
