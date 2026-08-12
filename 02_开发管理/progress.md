@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-007 completed
+current_phase: Phase 2 — EXT-008 planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: EXT-007
-current_task_status: completed
+current_task: EXT-008
+current_task_status: planned
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,29 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/EXT-007-retrieval-document-sync.md
+current_plan_file: 02_开发管理/tasks/EXT-008-extraction-admin-api.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
+planning_baseline_main: "d55bf53e715378463243fcf80e49277e603c1bb5"
+planning_baseline_EXT-008: "d55bf53e715378463243fcf80e49277e603c1bb5"
+formal_EXT-008_plan_file: 02_开发管理/tasks/EXT-008-extraction-admin-api.md
+formal_EXT-008_status: planned
+formal_EXT-008_workflow_mode: NORMAL
+formal_EXT-008_workflow_mode_source: explicit
+formal_EXT-008_baseline: d55bf53e715378463243fcf80e49277e603c1bb5
+formal_EXT-008_branch: "feat/EXT-008-extraction-admin-api"
+formal_EXT-008_prerequisite: "SATISFIED — EXT-007 completed (PR #41 MERGED); EXT-001 completed; DEV-005 completed; STM-011 republish service"
+formal_EXT-008_scope: "§2.1.14 GET status + POST retry (Admin Key); OI-006 POST rebuild for reconciliation_plan_conflict; Mongo-only durable writes; STM-011 republish; zero offset; zero consumer/worker/pipeline diff"
+formal_EXT-008_blocking_open_issues: []
+formal_EXT-008_nonblocking_open_issues: []
+formal_EXT-008_resolved_open_issues: [OI-006]
+formal_EXT-008_dependency_changes_expected: NONE
+formal_EXT-008_migration_changes_expected: NONE
+formal_EXT-008_authorized_http_error_codes: "extraction_task_not_found, retry_not_allowed (+ DEV-005 cross-cutting invalid_api_key/forbidden/validation_error/internal_error)"
+formal_EXT-008_pipeline_handoff: "HTTP + ExtractionAdminService + Mongo admin repo; worker/consumer unchanged; pipeline continuation DEFERRED_FOR_MVP"
+formal_EXT-008_note: "Planner only; baseline d55bf53 verified (main, clean tree); OI-006 resolved_by_plan via LD-1 rebuild endpoint; Developer NOT authorized; 不得触碰 DEV-006/PR#13"
+formal_EXT-008_next_action: "计划审查"
+next_action: "计划审查"
 planning_baseline_EXT-007: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
 formal_EXT-006_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
@@ -1218,6 +1237,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 21:40 UTC | EXT-008 | planned | Planner created `02_开发管理/tasks/EXT-008-extraction-admin-api.md`; synchronized progress/master_plan/open_issues only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `d55bf53e715378463243fcf80e49277e603c1bb5` verified (main, clean tree); scope = §2.1.14 GET/retry + OI-006 rebuild (LD-1); Mongo-only durable; STM-011 republish reuse; zero offset/consumer/worker/pipeline diff; OI-006 resolved_by_plan; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 13:30 UTC | EXT-007 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #41 MERGED (`afb2fee9ca6f7a5e049f0d9b1b22825de4c665dd` mergedAt `2026-08-12T13:27:51Z`)；implementation `2cf93ec5bcb03daae6e266984df2804a09f19a0c`；record `d385f4b3553d310f89b17e832ea07c29b50d9761`；feat 分支已删 | scoped 30 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=2 non-blocking；§2.2.3 index sync invariants + completed-before-offset gate preserved；zero upstream/offset diff；OI-006 non-blocking；EXT-006→EXT-007 continuation DEFERRED_FOR_MVP；`next_action=EXT-008 planned / NOT AUTO-STARTED`；governance completion commit created |
 | 2026-08-12 21:25 UTC | EXT-007 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `2cf93ec5bcb03daae6e266984df2804a09f19a0c`；PR #41 OPEN；docs(status): record on feat | scoped 30 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge** |
 | 2026-08-12 20:55 UTC | EXT-007 | planned | Planner created `02_开发管理/tasks/EXT-007-retrieval-document-sync.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e` verified (main, clean tree); scope = §2.2.3 full index sync + §2.2.4 ES document upsert; expand LD-8 handoff via Neo4j; TEI /tokenize for alias budget; create_embedding_client; mark_completed/failed; zero offset; zero upstream diff; `dependency_changes_expected=NONE`; non-blocking `OI-006`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
@@ -1479,4 +1499,5 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 12. **EXT-004**：`completed`（PR #38 MERGED `229f5e960f51e55a7389599eeccdf650a9a7beff` mergedAt `2026-08-12T07:49:18Z`；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；scoped **53** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2；read-only Neo4j alignment only；feat 分支已删）。
 13. **EXT-005**：`completed`（PR #39 MERGED `638598080b2d24e9291933c5ef92d3e4d65a0612` mergedAt `2026-08-12T09:47:46Z`；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；record `775992943ae0eb349301defb990c59c7089cf32e`；scoped **63** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=0；zero Mongo/Neo4j writes；feat 分支已删）。
 14. **EXT-006**：`completed`（PR #40 MERGED `372e0232c1e5cfa1d71e2bb0152a22f59e60cd03` mergedAt `2026-08-12T12:12:38Z`；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；record `eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f`；scoped **44** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2 non-blocking；atomic Neo4j graph write + `index_sync_memory_set` handoff；zero task completed/offset；OI-006 non-blocking；feat 分支已删）。
-15. **EXT-007**：`completed`（PR #41 MERGED `afb2fee9ca6f7a5e049f0d9b1b22825de4c665dd` mergedAt `2026-08-12T13:27:51Z`；implementation `2cf93ec5bcb03daae6e266984df2804a09f19a0c`；record `d385f4b3553d310f89b17e832ea07c29b50d9761`；scoped **30** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=2 non-blocking；§2.2.3 index sync + ES bulk upsert + first `mark_completed` gate；completed-before-offset gate preserved；zero upstream/offset diff；OI-006 non-blocking；feat 分支已删；`next_action=EXT-008 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13）。
+15. **EXT-007**：`completed`（PR #41 MERGED `afb2fee9ca6f7a5e049f0d9b1b22825de4c665dd` mergedAt `2026-08-12T13:27:51Z`；implementation `2cf93ec5bcb03daae6e266984df2804a09f19a0c`；record `d385f4b3553d310f89b17e832ea07c29b50d9761`；scoped **30** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=2 non-blocking；§2.2.3 index sync + ES bulk upsert + first `mark_completed` gate；completed-before-offset gate preserved；zero upstream/offset diff；feat 分支已删；不得触碰 DEV-006/PR#13）。
+16. **EXT-008**：`planned`（Planner created `02_开发管理/tasks/EXT-008-extraction-admin-api.md`；baseline `d55bf53e715378463243fcf80e49277e603c1bb5`；§2.1.14 GET/retry + OI-006 rebuild；Mongo-only；zero offset/consumer/worker diff；OI-006 resolved_by_plan；`next_action=计划审查`；Developer **NOT** authorized；不得触碰 DEV-006/PR#13）。
