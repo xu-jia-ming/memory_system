@@ -5,7 +5,7 @@
 ```yaml
 task_id: EXT-008
 task_name: Extraction 管理 GET/Retry/Rebuild API
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "d55bf53e715378463243fcf80e49277e603c1bb5"
@@ -533,18 +533,23 @@ out_of_scope_changes:
 | 2026-08-12 21:40 UTC | planning | 创建 Task Plan；同步 progress/master_plan/open_issues | — | baseline d55bf53 verified；prerequisites SATISFIED；OI-006 resolved_by_plan |
 | 2026-08-12 22:00 UTC | implementation | 9 whitelist files：retry policy、ExtractionAdminService、Mongo admin repo、HTTP schemas/routes、app router | — | LD-3 Mongo before Kafka；LD-4 infra→503 |
 | 2026-08-12 22:00 UTC | tests | unit 11 + contract 7 + integration 7 | 25 passed；ruff PASS；mypy PASS | SF-1–SF-4 absorbed；zero consumer/worker/pipeline diff |
+| 2026-08-12 22:00 UTC | Release IMPLEMENTATION_RELEASE | implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；PR #42 OPEN；feat push only | scoped 25 passed；ruff PASS；mypy PASS | `status=committed`；`next_action=WAITING_FOR_PR_MERGE` |
 
 ## 14. 实际执行结果
 
 ### 最终状态
 
-`tested` — Developer 实施完成；`next_action=代码审查`；scoped 25 passed；ruff/mypy PASS；**不得触碰 DEV-006/PR#13**。
+`committed` — IMPLEMENTATION_RELEASE complete；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；PR #42 OPEN (`https://github.com/xu-jia-ming/memory_system/pull/42`)；scoped 25 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；GET/retry/rebuild Admin HTTP；OI-006 rebuild 闭合；LD-3 Mongo before Kafka；zero consumer/worker/pipeline diff；`next_action=WAITING_FOR_PR_MERGE`；**不得触碰 DEV-006/PR#13**。
 
 ### Git 记录
 
 ```yaml
 branch: feat/EXT-008-extraction-admin-api
 plan_commit: 003ab40c44611acbc039f4a05548a9e0640d5d8c
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: "e8f15b458a6f1fa6e204393d5300a018bfc5c27b"
+implementation_commit_message: "feat(ext): add extraction admin get retry rebuild api"
+pr: "#42"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/42"
+pr_state: OPEN
+next_action: "WAITING_FOR_PR_MERGE"
 ```
