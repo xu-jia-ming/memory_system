@@ -6036,3 +6036,44 @@ MVP 只有同时满足以下条件，才可判定为“开发完成”，不能�
 7. CPU Embedding 模式是必测和发布阻塞项；GPU 模式在具备 RTX A5000 环境时执行 Contract 与 E2E 回归，但没有 GPU 不阻塞 CPU MVP 验收。
 8. 所有 HTTP 错误均使用第 `3.23` 节统一结构；所有业务资源查询均执行 `user_id` 隔离；日志和指标中不得出现本文禁止记录的敏感内容。
 9. `.env.example`、`versions.env`、`versions.lock.env`、基础 YAML、Compose 文件、Migration、运维脚本和 README 启动命令必须与实际代码一致，不得保留影响主流程的 TODO、占位实现或未决技术选型。
+
+---
+
+## 附录 A：EXT-002 规格修订记录（Amendment EXT-002-004）
+
+> 本记录为追加式权威修订，不改写前文历史文本。适用范围仅为 EXT-002 Archive 读取、预处理、脱敏与 handoff 门禁；不改变 EXT-001 Kafka 语义、任务状态枚举、STM-011/012、EXT-003+、Neo4j、Elasticsearch、DEV-006 或 PR #13。
+
+- **日期**：2026-08-12
+- **审批来源**：人类规格负责人显式决议；`WORKFLOW_MODE=NORMAL`
+- **基线**：`13e1dae36a0b0d94415d9581b2a5fe53c990545f`
+- **依赖变化**：`NONE`
+
+### A.1 终端映射与 Offset 门禁
+
+1. Archive 缺失：返回 `PipelineTerminalDecision.fail`，任务为 `failed`，`error_code=archive_not_found`，`failed_stage=archive_read`。
+2. 结构损坏，或嵌套/消息结构无效：返回 `PipelineTerminalDecision.fail`，任务为 `failed`，`error_code=invalid_archive`，`failed_stage=archive_validate`。
+3. 终态任务持久化必须先成功，之后才允许提交 Kafka Offset；持久化失败时不得提交 Offset。
+4. 不可预期的非确定性基础设施/内部失败：`abort_without_terminal`，不得提交 Offset。
+5. 不改变任务状态字面量及既有状态机。
+
+### A.2 脱敏边界与类别
+
+1. 仅对 `messages[].content` 脱敏；不得对 provenance 或 identity 字段脱敏；不定义一般 PII 脱敏。
+2. 类别严格限定为：明确标注的密码；明确标注的验证码/OTP；API keys；access/bearer tokens；private keys；完整银行卡号；明确标注的 CVV/CVC。不得扩展类别。
+3. 脱敏失败时不得 handoff，不得输出未脱敏或部分脱敏内容；返回 `PipelineTerminalDecision.fail`，任务为 `failed`，`error_code=redaction_failed`，`failed_stage=redaction`。终态持久化先于 Offset 提交；无匹配是成功。
+
+### A.3 确定性本地检测与替换
+
+1. 使用确定性的本地 detector；不得使用 LLM、网络、外部服务或新增第三方依赖。
+2. 优先级依次为：private-key blocks；bearer/access-token forms；明确标注的 credential key/value forms；经 Luhn 校验的完整 payment-card numbers。验证码与 CVV/CVC 必须有明确标签/上下文。
+3. 在批准的 normalization 完成后收集 spans，按 source position 排序并合并重叠；等价起点取最长 span。每个合并 span 精确替换为 `[REDACTED_SECRET]`；多个不相邻匹配独立替换；任何日志不得记录匹配值。
+
+### A.4 First-person 与 Raw Archive 边界
+
+1. First-person binding 延后且不在本范围；保留 role/provenance，不表示 identity，不增加 durable field；EXT-003 不得依赖该能力；仅处置对应的 Open Issue。
+2. Archive 读取必须是按 `archive_id` 的 raw read-only `context_archive` lookup，返回 raw mapping；校验前不得 coercion；不得写入、迁移或建立重复模型；既有 typed repository 行为不变。
+3. 严格规则固定如下：忽略 storage-only `_id`；拒绝未知 application fields、未知 top-level fields 与未知 nested fields；identifier 必须为 non-null/non-empty；role 仅为 `user` 或 `assistant`；integer 字段必须为实际 integer 且拒绝 bool；`messages` 必须为实际 list；`content` 必须为 string；空 normalized content 必须保留。必须完成全部校验后，才允许 preprocessing、redaction 或 output。
+
+### A.5 Handoff 顺序
+
+`ExtractionReadyArchive` 只可在 raw validation 完成后，经 deterministic preprocessing，再经 deterministic redaction 后产生；不得包含 pre-redaction raw content。保持 Archive 消息顺序及 provenance。EXT-003 不在本修订中实现。
