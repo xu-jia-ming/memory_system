@@ -530,6 +530,20 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **状态备注**：`completed`（PR #39 MERGED `638598080b2d24e9291933c5ef92d3e4d65a0612` mergedAt `2026-08-12T09:47:46Z`；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；record `775992943ae0eb349301defb990c59c7089cf32e`；scoped 63 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=0 non-blocking；read-only reconciliation only；zero Mongo/Neo4j writes；OI-006 non-blocking；feat 分支已删；EXT-006 prerequisites **SATISFIED** — planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 - **测试**：Unit（evidence_id、aligned_memory_key、聚合/conflict、LLM 校验、MF-001 create_kind 链接、SF-002 SKIP 排除、SF-004 mixed merged_content、失败映射、零写入、privacy）；Contract（输入/输出、无 session_id 于输出、MF-001 自包含新侧、错误码白名单、只读 Cypher、无 EXT-006+ 字段、上游零变更）；Integration（真实 Neo4j 召回/隔离/零写入/Evidence SKIP；真实 Mongo replay/任务零变更）；无 E2E、无默认真实 provider。
 
+#### EXT-006
+
+- **目标**：在 EXT-003 已持久化 `extraction_result`、EXT-004 已产出瞬态 `EntityAlignmentSuccess`、EXT-005 已产出瞬态 `ReconciliationSuccess` 之后，实现 §2.1.13 **第 8–10 步事务前准备**（`referenced_entity_write_set`、`planned_index_sync_memory_set`、`core_search_text`、TEI `/tokenize` 门禁、`memory_search_text_too_long`）与**单 Archive 原子 Neo4j 写事务**（Entity `MERGE`、Memory 创建/字段级更新、`SUPERSEDES`/`CONFLICTS_WITH`/`SUBJECT`/`OBJECT`/`SUPPORTS`、Evidence `MERGE`）；应用 §2.1.12 计划态置信度/重要性；产出瞬态 `index_sync_memory_set` 供 EXT-007。
+- **非目标**：Elasticsearch/Embedding/`search_text` alias 扩展（EXT-007）；任务 `completed`/Kafka Offset（EXT-007）；重调 extraction/reconciliation/alignment LLM；`PipelineTerminalDecision`/consumer/worker/alignment/reconciliation 语义变更；EXT-003→EXT-006 continuation 编排（`DEFERRED_FOR_MVP`）；EXT-007+；DEV-006/PR#13；新错误码；Migration/依赖/Settings 变更。
+- **计划文件**：`02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md`（Round 1）
+- **规格章节**：§1.2.1、§2.1.3–§2.1.4、§2.1.6–§2.1.7（Evidence 字段来源）、§2.1.9–§2.1.10、**§2.1.12**、**§2.1.13**（第 8–10 步 + 事务内写入）、§2.1.15–§2.1.16、§2.2.3（`core_search_text` 校验语义）、§3.6、§3.10、§3.24、§3.26–§3.28、Appendix B。
+- **正式前置依赖**：EXT-005 — **SATISFIED/completed**（PR #39 MERGED）；EXT-004/EXT-003/EXT-001/EXT-002 — **SATISFIED/completed**；DEV-004 — **SATISFIED/completed**。
+- **关键门禁**：三阶段成功输出 + 任务元数据为唯一输入；单 Neo4j 写事务；`evidence_id`/`entity_key`/`memory_id` MERGE 幂等；全 Evidence 已处理 SKIP；`failed_stage=graph_write`；`graph_write_failed`/`memory_search_text_too_long` 仅授权码；任务保持 `processing`、不提交 Offset；上游零 diff。
+- **幂等/恢复**：写事务失败无部分图谱；replay 通过 Evidence SKIP 或 MERGE；成功图谱写入后仍 `processing` 待 EXT-007。
+- **配置/依赖结论**：`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；最小 TEI `/tokenize` 端口（LD-4）。
+- **Open Issues**：非阻塞 `OI-006`；无 blocking Open Issue。
+- **状态备注**：`planned`（Round 1 Task Plan created；baseline `59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13）。
+- **测试**：Unit（referenced_entity_write_set、core_search_text、plan builder、service 路径、幂等、失败映射、privacy）；Contract（输入/输出、错误码白名单、无 EXT-007+ 字段、上游零变更）；Integration（真实 Neo4j 写入/回滚/隔离/replay；Mongo 任务零变更）；无 E2E。
+
 #### EXT-007 Retrieval Document 同步
 
 - **目标**：search_text、经 `create_embedding_client` 调用 Embedding（**默认 SiliconFlow / DEV-007**）、Bulk upsert（`refresh=wait_for`）；作为 Extraction 完成门禁之一。

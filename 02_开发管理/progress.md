@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-005 completed (EXT-006 planned / NOT AUTO-STARTED)
+current_phase: Phase 2 — EXT-006 planned (plan review pending)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: EXT-005
-current_task_status: completed
+current_task: EXT-006
+current_task_status: planned
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,29 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/EXT-005-reconciliation-aggregation-gate.md
+current_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "5deb8949ee5ac367a08f173ef67c0c0689c26f5d"
+planning_baseline_main: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
+planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
+formal_EXT-006_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
+formal_EXT-006_status: planned
+formal_EXT-006_workflow_mode: NORMAL
+formal_EXT-006_workflow_mode_source: explicit
+formal_EXT-006_baseline: 59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2
+formal_EXT-006_branch: "feat/EXT-006-neo4j-graph-transaction-write"
+formal_EXT-006_prerequisite: "SATISFIED — EXT-005 completed (PR #39 MERGED); EXT-004 completed (PR #38 MERGED); EXT-003 completed (PR #37 MERGED); DEV-004 completed"
+formal_EXT-006_scope: "§2.1.12 apply planned confidence/importance; §2.1.13 steps 8–10 pre-transaction (referenced_entity_write_set, core_search_text, TEI /tokenize, memory_search_text_too_long gate) + single atomic Neo4j write transaction (Entity/Memory/Evidence + SUBJECT/OBJECT/SUPPORTS/SUPERSEDES/CONFLICTS_WITH); evidence_id/entity_key/memory_id MERGE idempotency; index_sync_memory_set handoff for EXT-007; zero task completed/offset; zero upstream LLM re-call"
+formal_EXT-006_plan_review_round: 2
+formal_EXT-006_amendment: "Amendment 001 — Round 1 remediation MF-001 + SF-001–SF-004"
+formal_EXT-006_amendment_recorded: true
+formal_EXT-006_blocking_open_issues: []
+formal_EXT-006_nonblocking_open_issues: [OI-006]
+formal_EXT-006_dependency_changes_expected: NONE
+formal_EXT-006_migration_changes_expected: NONE
+formal_EXT-006_authorized_error_codes: "graph_write_failed, memory_search_text_too_long; failed_stage=graph_write (LD-1); entity_alignment_failed/graph_query_failed/reconciliation_plan_conflict/llm_*/archive_*/retrieval_index_write_failed forbidden"
+formal_EXT-006_pipeline_handoff: "isolated library service; EXT-003→EXT-006 continuation DEFERRED_FOR_MVP; index_sync_memory_set transient output for EXT-007; PipelineTerminalDecision / consumer / extraction_llm_service / extraction_worker / entity_alignment_service / reconciliation_service unchanged"
+formal_EXT-006_note: "planning only Round 1; baseline 59281d1 verified (main, clean tree); nine production files + seven test files; Developer NOT authorized; 不得触碰 DEV-006/PR#13"
 planning_baseline_EXT-005: "5deb8949ee5ac367a08f173ef67c0c0689c26f5d"
 formal_EXT-005_plan_file: 02_开发管理/tasks/EXT-005-reconciliation-aggregation-gate.md
 formal_EXT-005_status: completed
@@ -85,8 +104,15 @@ formal_EXT-004_plan_review_should_fix: 1
 formal_EXT-004_plan_review_note: "SF-R2-001: Q3 example Cypher uses raw alias IN; implementation must follow §5.2.2 normalize_entity_alias semantics"
 formal_EXT-004_human_plan_approved: true
 formal_EXT-004_human_plan_approved_at: "2026-08-12T15:06:00Z"
-current_task_approval_posture: "EXT-005 completed — EXT-006 prerequisites SATISFIED / NOT AUTO-STARTED"
-next_action: "EXT-006 planned / NOT AUTO-STARTED"
+formal_EXT-006_plan_review: PLAN_APPROVED
+formal_EXT-006_plan_review_blocker: 0
+formal_EXT-006_plan_review_must_fix: 0
+formal_EXT-006_plan_review_should_fix: 5
+formal_EXT-006_human_plan_approved: true
+formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
+current_task_status: approved
+current_task_approval_posture: "PLAN_APPROVED Round 2 Amendment 001 — PLAN_LANDING authorized"
+next_action: "PLAN_LANDING"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -1138,6 +1164,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 | 日期时间 | Task | 状态变化 | 说明 |
 | 2026-08-12 09:55 UTC | EXT-005 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #39 MERGED (`638598080b2d24e9291933c5ef92d3e4d65a0612`)；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；record `775992943ae0eb349301defb990c59c7089cf32e`；completion `fe48dfcafe3f301005a631b3dec8b06272d6d109`；feat 分支已删 | scoped 63 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=0；zero Mongo/Neo4j writes；OI-006 non-blocking；EXT-004→EXT-005 continuation DEFERRED_FOR_MVP；`next_action=EXT-006 planned / NOT AUTO-STARTED`；governance completion commit created |
+| 2026-08-12 18:10 UTC | EXT-006 | planned | Planner created `02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2` verified (main, clean tree); scope = §2.1.13 steps 8–10 + atomic Neo4j write; §2.1.12 apply planned values; `index_sync_memory_set` handoff; `failed_stage=graph_write`; zero task completed/offset; EXT-003→EXT-006 continuation DEFERRED_FOR_MVP; `dependency_changes_expected=NONE`; non-blocking `OI-006`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 09:10 UTC | EXT-005 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；PR #39 OPEN；docs(status): record on feat | scoped 63 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge** |
 | 2026-08-12 08:50 UTC | EXT-005 | approved → tested | Developer implemented whitelist (9 prod + 8 test); reconciliation read-only recall + LLM + plan builder; zero Mongo/Neo4j writes; upstream zero diff | scoped 63 passed; ruff/mypy PASS; integration Neo4j+Mongo PASS; `next_action=Code Review`; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 08:35 UTC | EXT-005 | planned → approved | Release Operator `PLAN_LANDING`；human PLAN_APPROVED Round 2 Amendment 001；docs(plan) on main；feat branch created | Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=0; MF-001/SF-001–SF-004; `next_action=Developer on feat/EXT-005-reconciliation-aggregation-gate`; 不得触碰 DEV-006/PR#13 |
