@@ -457,7 +457,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | EXT-002 | Archive 读取/预处理/脱敏 | §2.1.5 | EXT-001 | completed |
 | EXT-003 | LLM Extraction + Fingerprint | §2.1.6–2.1.8 | EXT-002, STM-007 | completed |
 | EXT-004 | Entity Alignment + Neo4j 模型基础 | §2.1.9, §2.1.10 | EXT-003, DEV-004 | completed |
-| EXT-005 | Reconciliation + 聚合门禁 | §2.1.11 | EXT-004 | approved |
+| EXT-005 | Reconciliation + 聚合门禁 | §2.1.11 | EXT-004 | completed |
 | EXT-006 | Neo4j 图谱事务写入 | §2.1.12, §2.1.13 | EXT-005 | planned |
 | EXT-007 | Retrieval Document 同步 | §2.2.3 | EXT-006, DEV-007, DEV-004 | planned |
 | EXT-008 | Extraction 管理 GET/Retry | §2.1.14 | EXT-007, DEV-005 | planned |
@@ -527,7 +527,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **幂等/恢复**：无副作用 → 天然幂等；Evidence 已存在 → SKIP；replay 相同输入+图谱状态 → 相同计划；崩溃后任务仍 `processing`。
 - **配置/依赖结论**：`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；沿用 `memory_extraction.llm_timeout_seconds=120`、`max_memory_candidates_per_archive=50`；不新增 `llm.reconciliation` Settings。
 - **Open Issues**：非阻塞 `OI-006`（`reconciliation_plan_conflict` 运维清理属 EXT-008）；无 blocking Open Issue。
-- **状态备注**：`approved`（Round 2 Amendment 001；human PLAN_APPROVED granted；baseline `5deb8949ee5ac367a08f173ef67c0c0689c26f5d`；branch `feat/EXT-005-reconciliation-aggregation-gate`；`developer_authorized=true`；`next_action=Developer on feat/EXT-005-reconciliation-aggregation-gate`；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`completed`（PR #39 MERGED `638598080b2d24e9291933c5ef92d3e4d65a0612` mergedAt `2026-08-12T09:47:46Z`；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；record `775992943ae0eb349301defb990c59c7089cf32e`；scoped 63 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=0 non-blocking；read-only reconciliation only；zero Mongo/Neo4j writes；OI-006 non-blocking；feat 分支已删；EXT-006 prerequisites **SATISFIED** — planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 - **测试**：Unit（evidence_id、aligned_memory_key、聚合/conflict、LLM 校验、MF-001 create_kind 链接、SF-002 SKIP 排除、SF-004 mixed merged_content、失败映射、零写入、privacy）；Contract（输入/输出、无 session_id 于输出、MF-001 自包含新侧、错误码白名单、只读 Cypher、无 EXT-006+ 字段、上游零变更）；Integration（真实 Neo4j 召回/隔离/零写入/Evidence SKIP；真实 Mongo replay/任务零变更）；无 E2E、无默认真实 provider。
 
 #### EXT-007 Retrieval Document 同步
@@ -1283,5 +1283,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
 | 是否改变技术规格 | 否 |
 | 审批 | Planner；`next_action=计划审查 Round 2`；`approval_posture=AWAIT_PLAN_REVIEW_ROUND_2`；`developer_authorized=false`；不得触碰 DEV-006 / PR #13 |
+
+### CHANGE-065
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | EXT-005 POST_MERGE_CLEANUP：PR #39 MERGED；implementation + record on main；governance completion |
+| 受影响任务 | `EXT-005`（`completed`）；`EXT-006` prerequisites **SATISFIED** — remains `planned` / **NOT AUTO-STARTED**；不改变 Appendix B、pipeline continuation 语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
+| 规划决议 | read-only Memory recall + LLM Reconciliation + aggregation + transient reconciliation plan delivered；zero Mongo/Neo4j writes；EXT-004→EXT-005 continuation remains `DEFERRED_FOR_MVP`；MF-001/SF-001–SF-004 verified |
+| Open Issues | 非阻塞 `OI-006` 不变 |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
+| 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
+| 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=EXT-006 planned / NOT AUTO-STARTED` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
