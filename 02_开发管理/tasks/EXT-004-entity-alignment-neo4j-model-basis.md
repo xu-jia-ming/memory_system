@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-004
 task_name: Entity Alignment + Neo4j 模型基础
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "8330d42a9f2fe9365e180bdd68c6c9dc7add6e48"
 branch: "feat/EXT-004-entity-alignment-neo4j-model-basis"
 created_at: "2026-08-12 06:20 UTC"
-updated_at: "2026-08-12 15:35 UTC"
+updated_at: "2026-08-12 15:53 UTC"
 spec_sections:
   - "§1.2.1 记忆萃取整体流程（Align Entities with Existing Graph 位置）"
   - "§2.1.3 Memory Extraction Task（任务表不保存 Memory/Entity 结果 ID 数组）"
@@ -842,9 +842,11 @@ out_of_scope_changes:
 | 2026-08-12 15:30 UTC | Code Review | `CODE_REVIEW_APPROVED`；P0=0 P1=0 P2=2 P3=2 non-blocking | N/A | `status=reviewed`；`READY_FOR_HUMAN_COMMIT` |
 | 2026-08-12 15:35 UTC | Release IMPLEMENTATION_RELEASE | implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；PR #38 OPEN；feat push only | scoped 53 passed；ruff PASS；mypy PASS | `status=committed`；`next_action=WAITING_FOR_PR_MERGE` |
 
+| 2026-08-12 15:53 UTC | Release POST_MERGE_CLEANUP | PR #38 MERGED；merge `229f5e960f51e55a7389599eeccdf650a9a7beff`；governance completion on main；feat 分支已删 | N/A | `status=completed`；`release_gate=COMPLETED`；`next_action=EXT-005 planned / NOT AUTO-STARTED` |
+
 ## 17. 最终状态
 
-`committed` — IMPLEMENTATION_RELEASE complete；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；PR #38 OPEN；scoped 53 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2 non-blocking；零 Neo4j 写入；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**。
+`completed` — POST_MERGE_CLEANUP complete；PR #38 MERGED (`229f5e960f51e55a7389599eeccdf650a9a7beff` mergedAt `2026-08-12T07:49:18Z`)；implementation `0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c`；record `c975394369d2f0f64c973cc8aa701cded6b2c54d`；sha_backfill `22ff20af43dbb1ddd851ac5c1477aad30bb0c950`；scoped 53 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2 non-blocking；read-only Neo4j alignment only；OI-EXT-004-003/004 non-blocking；feat branch deleted；`next_action=EXT-005 planned / NOT AUTO-STARTED`；**不得触碰 DEV-006/PR#13**。
 
 ### Git 记录
 
@@ -854,10 +856,14 @@ plan_commit: "8330d42a9f2fe9365e180bdd68c6c9dc7add6e48"
 implementation_commit: "0641ac3c7648c0c12cb881f3a0f501c7b3f8dc9c"
 implementation_commit_message: "feat(ext): add deterministic entity alignment and neo4j read model"
 status_record_committed: "c975394369d2f0f64c973cc8aa701cded6b2c54d"
+status_record_sha_backfill: "22ff20af43dbb1ddd851ac5c1477aad30bb0c950"
 pr: "#38"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/38"
-pr_state: OPEN
-release_gate: IMPLEMENTATION_RELEASE_COMPLETE
+pr_state: MERGED
+merged_at: "2026-08-12T07:49:18Z"
+merge_commit: "229f5e960f51e55a7389599eeccdf650a9a7beff"
+release_gate: COMPLETED
+status_record_completed: "0bf6f5be96f348f3d5668e1261713889167d2a73"
 ```
 
 ### Code Review
