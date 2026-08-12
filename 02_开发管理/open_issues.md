@@ -361,6 +361,92 @@ resolved_by_task: OI-012
 
 ---
 
+---
+
+## Historical pre-Amendment 004 EXT-002 issue records
+
+The following issue descriptions and interim behaviors are append-only historical evidence from before authoritative Amendment 004. They are not effective current blockers or implementation instructions. The effective dispositions are recorded in the Amendment EXT-002-004 resolution record below.
+
+## OI-EXT-002-001
+```yaml
+id: OI-EXT-002-001
+title: "Credential detection and redaction rules are undefined"
+spec_sections: ["§2.1.5", "§2.1.15"]
+ambiguity: "§2.1.5 specifies only that detected sensitive credentials are replaced before LLM use by [REDACTED_SECRET] and raw Archive is unchanged; credential classes/rules, boundaries, ordering, overlap or multiple-match precedence, malformed/partial-match, detector failure, and normalization/redaction order are unspecified."
+affected_contract_behavior: "Cannot safely construct an LLM-facing content field, claim privacy completion, or declare ExtractionReadyArchive EXT-003-ready."
+currently_specified_token_behavior: "Detected sensitive credential -> exact [REDACTED_SECRET] before LLM; raw Archive unchanged."
+privacy_risk: "Guessed rules can leak credentials through false negatives or destroy legitimate content through false positives; no-detection is not evidence of safety."
+downstream_ext003_impact: "No ExtractionReadyArchive handoff, LLM call, prompt input, or EXT-003-ready claim."
+safe_interim_behavior: "Historical pre-Amendment 004 only: REDACTION_SPEC_STATUS=BLOCKED_PENDING_SPEC_DECISION; fail closed before LLM handoff; no fake/minimal regex, heuristic, dependency, scanner, alternative marker, or invented terminal mapping."
+blocking: false
+decision_needed: "Authoritative specification amendment defining one deterministic secret-detection/redaction policy: credential classes, patterns/boundaries, rule order, overlap/multiple-match behavior, malformed/partial-match behavior, normalization order, detector failure handling, and conformance fixtures. Do not choose arbitrary regex defaults."
+status: resolved
+```
+
+**决策包：** 标题、受影响规格章节、当前已规定的 token 行为、缺失语义、隐私风险及 EXT-003 下游影响如上。实现所需的精确决策是该权威确定性 secret-detection/redaction policy；在决议前不得把“未检测到”解释为安全。
+
+## OI-EXT-002-002
+```yaml
+id: OI-EXT-002-002
+title: "Normalized versus redacted content handoff semantics are undefined"
+spec_sections: ["§2.1.5"]
+ambiguity: "normalized_content is temporary while the example exposes content; replacement ownership and normalization/redaction order are unstated."
+affected_contract_behavior: "ExtractionReadyArchive content shape and privacy boundary."
+safe_interim_behavior: "No LLM-facing handoff and no durable raw/normalized/redacted field."
+blocking: false
+decision_needed: "Specify exact normalization/redaction order, field replacement ownership, consumer reliance, overlap/multiple-match behavior, and partial-failure semantics."
+status: resolved
+```
+
+## OI-EXT-002-003
+```yaml
+id: OI-EXT-002-003
+title: "First-person binding representation and lifecycle are undefined"
+spec_sections: ["§2.1.5", "§2.1.6"]
+ambiguity: "Representation, ownership/provenance, EXT-003 consumption, and persistence/non-persistence for first-person binding are not defined."
+affected_contract_behavior: "Output/data shape and provenance; no identity representation can be safely synthesized."
+safe_interim_behavior: "Preserve original role/provenance; synthesize no identity, add no durable field, and leave unresolved references unknown."
+blocking: false
+decision_needed: "Authoritative citation defining representation, ownership/provenance, EXT-003 use, and persistence."
+status: deferred_out_of_scope
+```
+
+## OI-EXT-002-004
+```yaml
+id: OI-EXT-002-004
+title: "Unexpected redaction/configuration failure has no authorized mapping"
+spec_sections: ["§2.1.15", "§2.1.16"]
+ambiguity: "No redaction-specific error code or failed_stage mapping is authorized for unexpected gate/configuration failures."
+affected_contract_behavior: "Terminal failed behavior and Kafka offset consequence."
+safe_interim_behavior: "Historical pre-Amendment 004 only: REDACTION_SPEC_STATUS=BLOCKED_PENDING_SPEC_DECISION; remain gated/abort_without_terminal and do not commit an offset."
+blocking: false
+decision_needed: "Specify whether and how unexpected redaction/configuration failures map to already authorized error_code and failed_stage fields; no new mapping may be invented."
+status: resolved
+```
+
+## OI-EXT-002-005
+```yaml
+id: OI-EXT-002-005
+title: "Raw-document versus message-validation boundary and failed_stage vocabulary are undefined"
+spec_sections: ["§2.1.5", "§2.1.15"]
+ambiguity: "The specification does not explicitly distinguish structurally corrupt documents from valid documents with invalid message elements, does not define failed_stage values, and the existing typed repository lookup coercively maps BSON values."
+affected_contract_behavior: "Exact invalid_archive mapping, no-partial-preprocessing boundary, terminal persistence, and offset commit."
+safe_interim_behavior: "Use only a read-only raw mapping lookup by archive_id; strict no-coercion validation; no partial preprocessing; only existing error codes; no undocumented failed_stage literal."
+blocking: false
+decision_needed: "Authorize the four-way boundary and exact failed_stage values for missing, structurally corrupt, message-level invalid, and valid Archive outcomes, or leave unauthorized paths non-terminal until amended."
+status: resolved
+```
+
+**Amendment EXT-002-004 resolution record (2026-08-12; human/spec owner decision):**
+
+- `OI-EXT-002-001` resolved: deterministic local, content-only secret detection/redaction categories, precedence, span handling, exact marker, no-match success, and failure behavior are authoritative.
+- `OI-EXT-002-002` resolved: complete validation → deterministic normalization → deterministic redaction; only normalized+redacted `messages[].content` is eligible for handoff.
+- `OI-EXT-002-003` **DEFERRED / OUT_OF_SCOPE**: preserve role/provenance; no identity representation or durable field; EXT-003 cannot rely on first-person binding; this is not an unresolved EXT-002 blocker.
+- `OI-EXT-002-004` resolved: redaction failure is `redaction_failed` at `redaction`; nondeterministic infrastructure/internal failure is `abort_without_terminal`, with no commit.
+- `OI-EXT-002-005` resolved: missing Archive is `archive_not_found` at `archive_read`; structural/nested/message invalidity is `invalid_archive` at `archive_validate`; terminal persistence precedes Offset commit.
+- Effective EXT-002 state: no blocking Open Issue remains; `REDACTION_SPEC_STATUS=SPECIFIED`; raw validation, redaction, and `ExtractionReadyArchive` handoff are authorized only by the Amendment 004 contract.
+- Unrelated Open Issues remain unchanged. Specification amendment: `01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md`, Appendix A, Amendment `EXT-002-004`.
+
 ## 索引
 
 | 问题 ID | 最迟解决任务 | 是否阻塞当前任务 | 状态 |
@@ -377,3 +463,8 @@ resolved_by_task: OI-012
 | OI-010 | 已人工决议（uv_build） | 否 | resolved |
 | OI-011 | OI-011 | 否 | resolved |
 | OI-012 | OI-012 | 否（PR#13 deferred） | resolved |
+| OI-EXT-002-001 | EXT-002 | 否 | resolved |
+| OI-EXT-002-002 | EXT-002 | 否 | resolved |
+| OI-EXT-002-003 | EXT-002 | 否 | deferred_out_of_scope |
+| OI-EXT-002-004 | EXT-002 | 否 | resolved |
+| OI-EXT-002-005 | EXT-002 | 否 | resolved |

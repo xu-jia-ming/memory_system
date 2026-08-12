@@ -477,6 +477,16 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - 各自单 Commit：预处理；LLM；实体对齐；和解；图谱事务（在 EXT-001 任务状态机与 Offset 之后）。
 - **风险**：OI-006（`reconciliation_plan_conflict` 运维清理无 Contract）——EXT-008 前需规格确认，不得自行发明 API。
 
+#### EXT-002
+
+- **目标**：读取不可变 `context_archive`（按事件 `archive_id`），在预处理前区分缺失 Archive、结构损坏、有效文档中的消息级无效数据和有效可预处理 Archive；严格无 coercion、结构损坏不做部分预处理；保留 Archive 顺序/来源并构建临时标准化输入；空 Archive 通过既有 EXT-001 终态/Offset 门禁完成；在 LLM 前执行 Amendment 004 固定的凭证脱敏门禁。`ExtractionReadyArchive` 仅在 raw validation PASS → preprocessing PASS → redaction PASS 后最终化为内部、非持久化 handoff，不是本任务新增的公开/持久化 Schema。
+- **计划文件**：`02_开发管理/tasks/EXT-002-archive-read-preprocess-redact.md`
+- **规格章节**：§1.2.2、§1.2.4、§2.1.1、§2.1.3–§2.1.6、§2.1.15、§2.1.16、§3.6、§3.19、§3.20、§3.27、§3.28。
+- **正式前置依赖**：EXT-001 — **SATISFIED/completed**（PR #34 MERGED；`archive_id` 幂等、`ExtractionPipelinePort`、终态持久化/Offset 门禁已合并）。
+- **规划备注**：Round 4 / Amendment 004；`workflow_mode=NORMAL`（explicit）；baseline `13e1dae36a0b0d94415d9581b2a5fe53c990545f` MATCH；本轮仅更新 Task Plan、open_issues、progress、master_plan，未修改规格正文。EXT-002 只允许新增 `find_context_archive_document_by_id(mongodb, archive_id)` 这一 read-only raw BSON mapping lookup；不得写入、修复、迁移、复制持久化模型或改变既有 typed `find_context_archive_by_id` 语义。RAW-01..RAW-12 与 RED-01..RED-27 覆盖严格七字段/四字段消息验证、未知字段、`_id` 例外、无 coercion、无部分输出及全部脱敏正负/跨度/失败/泄漏/来源/顺序场景。缺失映射为 `archive_not_found/archive_read`；结构或嵌套/消息无效映射为 `invalid_archive/archive_validate`；redaction failure 为 `redaction_failed/redaction`；非确定性基础设施/内部失败为 `abort_without_terminal`；终态持久化成功后才提交 Offset。确定性本地 redaction 仅作用 `messages[].content`，精确类别/优先级/span 合并/Luhn/marker 规则已由 authoritative Amendment EXT-002-004 固定。first-person deferred/out-of-scope；`ExtractionReadyArchive` 仅在 raw validation → deterministic preprocessing → deterministic redaction 后最终化；dependency_changes_expected=NONE。
+- **阻塞项**：无 EXT-002 blocking Open Issue；OI-EXT-002-001/002/004/005 resolved，OI-EXT-002-003 deferred/out-of-scope。可实施范围仍不含 EXT-003/LLM/Neo4j/Elasticsearch；不得扩展到 Kafka/task status/STM-011/012、DEV-006 或 PR #13。
+- **非目标**：Kafka/EXT-001 Contract、offset/state 语义、`context_archive` schema/repository 与 STM 写入、EXT-003 LLM/Prompt/Structured Output、EXT-004+、Neo4j/Elasticsearch、Migration/Settings/dependency、DEV-006、PR #13、E2E。
+
 #### EXT-007 Retrieval Document 同步
 
 - **目标**：search_text、经 `create_embedding_client` 调用 Embedding（**默认 SiliconFlow / DEV-007**）、Bulk upsert（`refresh=wait_for`）；作为 Extraction 完成门禁之一。
@@ -1091,5 +1101,39 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | 新增 `DEV-OPS-008`（`planned`；plan `02_开发管理/tasks/DEV-OPS-008-compose-test-stack-runtime-compatibility.md`）；`STM-013`（`blocked`；PR #30 OPEN MUST NOT MERGE）；**不** commit `tests/e2e/**`；**不** cherry-pick `975e6029` wholesale；**不** 触碰 DEV-006/PR #13；分支从 main @ `390af52` 创建（NOT feat/STM-013） |
 | 是否改变技术规格 | **否**（读回兼容与 runtime 探针对齐 pinned 依赖；CREATE mapping 不变） |
 | 审批 | Planner；`next_action=计划审查` |
+
+### CHANGE-053 (historical; superseded by Amendment 004 / CHANGE-055)
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | 用户显式 EXT-002 Planner Round 3 remediation/clarification；raw Archive access、strict validation、terminal mapping、redaction blocker、first-person binding 和 blocked output contract 需要精确化 |
+| 受影响任务 | `EXT-002`（`planned`；plan review round 3；Amendment 003；baseline `13e1dae36a0b0d94415d9581b2a5fe53c990545f`）；仅更新规划白名单文件；不实施、不启动 Developer/EXT-003 |
+| 规划决议 | 新增唯一 read-only `find_context_archive_document_by_id` raw mapping boundary；严格验证七个 Archive 顶层字段与四字段消息，验证完成前无任何 preprocessing/redaction/handoff；仅使用现有 error_code，未授权 failed_stage 保持 gated；`REDACTION_SPEC_STATUS=BLOCKED_PENDING_SPEC_DECISION`；`output_contract_status=BLOCKED`；OI-EXT-002-001 decision packet 与 OI-002..005 同步 |
+| 是否改变技术规格 | **否**；dependency changes **NONE**；不改 Kafka/task schema、STM-011/012、EXT-003+、Neo4j、ES、DEV-006、PR #13 |
+| 审批 | Planner；`next_action=计划审查`；等待独立 Plan Reviewer，不得自动进入 Developer |
+
+### CHANGE-054
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | 用户显式 EXT-002 Planner governance amendment；authoritative specification Appendix A / Amendment EXT-002-004 已固定 terminal mappings、strict raw boundary、deterministic content-only redaction、handoff order 与 OI dispositions |
+| 受影响任务 | `EXT-002`（`planned`；plan review round 4；Amendment 004；baseline `13e1dae36a0b0d94415d9581b2a5fe53c990545f`）；仅规划白名单与 authoritative specification append-only amendment；不实施、不启动 Developer/EXT-003 |
+| 规划决议 | `archive_not_found/archive_read`、`invalid_archive/archive_validate`、`redaction_failed/redaction`；unexpected nondeterministic infrastructure/internal failure = `abort_without_terminal`；terminal persistence before offset; local deterministic redaction only on `messages[].content`, exact category/preference/span/Luhn/marker rules; first-person deferred/out-of-scope; raw validation → preprocessing → redaction → conditional handoff |
+| 是否改变技术规格 | **是**，仅追加 authoritative amendment；dependency changes **NONE**；不改 EXT-001 Kafka/task status、STM-011/012、EXT-003+、Neo4j、Elasticsearch、DEV-006、PR #13 |
+| Open Issues | OI-EXT-002-001/002/004/005 resolved；OI-EXT-002-003 deferred/out-of-scope；unrelated issues preserved |
+| 审批 | Planner；`next_action=计划审查`；等待独立 Plan Reviewer，不得自动进入 Developer |
+
+### CHANGE-055
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | EXT-002 Planner Round 4 remediation：将 Amendment 004 作为唯一有效当前状态，清除当前规划段的 Amendment 003 blocker wording，并补齐 RAW-01..RAW-12 与 RED-01..RED-27 conformance matrix |
+| 受影响任务 | `EXT-002`（`planned`；plan review round 4；Amendment 004；baseline `13e1dae36a0b0d94415d9581b2a5fe53c990545f`）；仅更新 Task Plan、open_issues、progress、master_plan；不修改已持久化规格、不实施、不启动 Developer/EXT-003 |
+| 规划决议 | 当前有效 terminal mapping 为 `archive_not_found/archive_read`、`invalid_archive/archive_validate`、`redaction_failed/redaction`；`abort_without_terminal` 用于非确定性基础设施/内部失败；raw validation PASS → preprocessing PASS → redaction PASS 后才最终化 `ExtractionReadyArchive`；`OI-EXT-002-003=DEFERRED/OUT_OF_SCOPE`，其余 EXT-002 OI 已 resolved；implementation whitelist 精确包含 raw read-only repository method、models/services/conditional worker wiring 与 RAW/RED unit/contract/integration tests；`dependency_changes_expected=NONE` |
+| 是否改变技术规格 | 否；Amendment 004 已由规格负责人此前追加持久化，本轮只同步规划治理文件 |
+| 审批 | Planner；`next_action=计划审查`；等待独立 Plan Reviewer，不得自动进入 Developer |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
