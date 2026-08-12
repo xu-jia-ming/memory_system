@@ -64,6 +64,7 @@ formal_EXT-005_merge_commit: 638598080b2d24e9291933c5ef92d3e4d65a0612
 formal_EXT-005_merged_at: "2026-08-12T09:47:46Z"
 formal_EXT-005_status_record_committed: 775992943ae0eb349301defb990c59c7089cf32e
 formal_EXT-005_release_gate: COMPLETED
+formal_EXT-005_status_record_completed: fe48dfcafe3f301005a631b3dec8b06272d6d109
 formal_EXT-005_next_action: "EXT-006 planned / NOT AUTO-STARTED"
 formal_EXT-005_production_scope: "VERIFIED — read-only reconciliation only; zero Mongo/Neo4j writes; upstream zero diff; EXT-004→EXT-005 continuation DEFERRED_FOR_MVP; no EXT-006+, dependency/schema/migration, DEV-006, or PR #13 drift"
 formal_EXT-005_implementation_evidence: "src/memory_system/domain/models/reconciliation.py; domain/services/reconciliation_service.py; domain/services/reconciliation_plan_builder.py; domain/services/reconciliation_llm_service.py; infrastructure/neo4j/memory_recall_repository.py; infrastructure/neo4j/evidence_lookup_repository.py; tests/unit+contract+integration per whitelist; pytest 63 passed; ruff+mypy PASS"
@@ -1136,7 +1137,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
-| 2026-08-12 09:55 UTC | EXT-005 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #39 MERGED (`638598080b2d24e9291933c5ef92d3e4d65a0612`)；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；record `775992943ae0eb349301defb990c59c7089cf32e`；feat 分支已删 | scoped 63 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=0；zero Mongo/Neo4j writes；OI-006 non-blocking；EXT-004→EXT-005 continuation DEFERRED_FOR_MVP；`next_action=EXT-006 planned / NOT AUTO-STARTED`；governance completion commit created |
+| 2026-08-12 09:55 UTC | EXT-005 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #39 MERGED (`638598080b2d24e9291933c5ef92d3e4d65a0612`)；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；record `775992943ae0eb349301defb990c59c7089cf32e`；completion `fe48dfcafe3f301005a631b3dec8b06272d6d109`；feat 分支已删 | scoped 63 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=0；zero Mongo/Neo4j writes；OI-006 non-blocking；EXT-004→EXT-005 continuation DEFERRED_FOR_MVP；`next_action=EXT-006 planned / NOT AUTO-STARTED`；governance completion commit created |
 | 2026-08-12 09:10 UTC | EXT-005 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；PR #39 OPEN；docs(status): record on feat | scoped 63 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge** |
 | 2026-08-12 08:50 UTC | EXT-005 | approved → tested | Developer implemented whitelist (9 prod + 8 test); reconciliation read-only recall + LLM + plan builder; zero Mongo/Neo4j writes; upstream zero diff | scoped 63 passed; ruff/mypy PASS; integration Neo4j+Mongo PASS; `next_action=Code Review`; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 08:35 UTC | EXT-005 | planned → approved | Release Operator `PLAN_LANDING`；human PLAN_APPROVED Round 2 Amendment 001；docs(plan) on main；feat branch created | Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=0; MF-001/SF-001–SF-004; `next_action=Developer on feat/EXT-005-reconciliation-aggregation-gate`; 不得触碰 DEV-006/PR#13 |

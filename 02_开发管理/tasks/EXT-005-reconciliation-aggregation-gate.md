@@ -943,7 +943,7 @@ out_of_scope_changes:
 | 2026-08-12 16:15 UTC | Planner 创建 Task Plan | 仅规划白名单（Task Plan / progress / master_plan）；未改 `src/**`、`tests/**`、规格正文、配置、依赖；未执行 Git 写 | N/A（规划-only） | `next_action=计划审查`；`developer_authorized=false`；不得触碰 DEV-006/PR#13 |
 | 2026-08-12 16:30 UTC | Planner Amendment 001 (Round 2) | §5.7–§5.11 输出契约 MF-001；SF-001–SF-004；§12.4；Step 1/测试/验收同步；progress/master_plan 规划态 | N/A（规划-only） | `plan_review_round=2`；`approval_posture=AWAIT_PLAN_REVIEW_ROUND_2`；Developer NOT authorized |
 | 2026-08-12 08:50 UTC | Developer implementation | 9 production + 8 test files per whitelist; reconciliation service/plan builder/LLM/Neo4j read repos; zero Mongo/Neo4j writes | scoped 63 passed; ruff/mypy PASS | `next_action=Code Review`; upstream zero diff verified |
-| 2026-08-12 09:55 UTC | Release POST_MERGE_CLEANUP | governance completion on main; feat branch deleted | N/A | `status=completed`；PR #39 MERGED；`next_action=EXT-006 planned / NOT AUTO-STARTED` |
+| 2026-08-12 09:55 UTC | Release POST_MERGE_CLEANUP | governance completion `fe48dfcafe3f301005a631b3dec8b06272d6d109` on main; feat branch deleted | N/A | `status=completed`；PR #39 MERGED；`next_action=EXT-006 planned / NOT AUTO-STARTED` |
 | 2026-08-12 09:10 UTC | Release IMPLEMENTATION_RELEASE | implementation `c6e619d312bfd83fef30c9f394e16b42a65cba81`；PR #39 OPEN；feat push only | scoped 63 passed；ruff PASS；mypy PASS | `status=committed`；`next_action=WAITING_FOR_PR_MERGE` |
 | 2026-08-12 08:35 UTC | Release Operator PLAN_LANDING | docs(plan) on main；feat branch created | N/A | human PLAN_APPROVED；`developer_authorized=true`；`next_action=Developer on feat/EXT-005-reconciliation-aggregation-gate` |
 
@@ -959,6 +959,7 @@ plan_commit: "1556a3f50c0edca453ff992e15187d1dba93a425"
 implementation_commit: "c6e619d312bfd83fef30c9f394e16b42a65cba81"
 implementation_commit_message: "feat(ext): add reconciliation plan and read-only recall"
 status_record_committed: "775992943ae0eb349301defb990c59c7089cf32e"
+status_record_completed: "fe48dfcafe3f301005a631b3dec8b06272d6d109"
 merge_commit: "638598080b2d24e9291933c5ef92d3e4d65a0612"
 merged_at: "2026-08-12T09:47:46Z"
 pr: "#39"
