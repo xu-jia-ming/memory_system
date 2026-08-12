@@ -12,8 +12,8 @@ phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-003
-current_task_status: approved
-current_branch: main
+current_task_status: committed
+current_branch: feat/EXT-003-llm-extraction-fingerprint
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -24,7 +24,7 @@ target_default_branch: main
 current_plan_file: 02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-next_action: "Developer implementation on feat/EXT-003-llm-extraction-fingerprint"
+next_action: "WAITING_FOR_PR_MERGE — EXT-003 PR #37"
 current_task_approval_posture: "PLAN_APPROVED — Amendment 002; Round 2 BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1; human PLAN_APPROVED granted; SF-1 orchestration owner=extraction_llm_service.py; Developer authorized post-PLAN_LANDING"
 planning_baseline_EXT-003: "f112d12d28d34de18c637a661a857fcb9f0a401f"
 formal_EXT-003_plan_file: 02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md
@@ -76,9 +76,21 @@ formal_EXT-002_production_scope: "VERIFIED — exact approved whitelist; no EXT-
 formal_EXT-002_raw_evidence: "RAW-01..RAW-12 PASS; strict no-coercion/_id exception/unknown-field rejection/full-document gate verified"
 formal_EXT-002_redaction_evidence: "RED-01..RED-27 PASS; deterministic content-only redaction/no leakage/provenance/order verified"
 formal_EXT-002_terminal_evidence: "exact mappings and abort_without_terminal verified; persistence-before-offset and no commit on persistence failure preserved"
-formal_EXT-003_status: approved
-formal_EXT-003_prerequisite_status: "SATISFIED — EXT-002 and STM-007 completed"
-formal_EXT-003_next_action: "PLAN_LANDING then Developer implementation on feat/EXT-003-llm-extraction-fingerprint"
+formal_EXT-003_status: committed
+formal_EXT-003_next_action: "WAITING_FOR_PR_MERGE — PR #37"
+formal_EXT-003_scoped_tests: "63 passed"
+formal_EXT-003_ruff: PASS
+formal_EXT-003_mypy: PASS
+formal_EXT-003_code_review: CODE_REVIEW_APPROVED
+formal_EXT-003_p0: 0
+formal_EXT-003_p1: 0
+formal_EXT-003_implementation_commit: 7c6309ee68b01a6604b79253cea65be6fa26a0c6
+formal_EXT-003_implementation_commit_message: "feat(ext): add llm extraction and candidate fingerprint"
+formal_EXT-003_pr: "#37"
+formal_EXT-003_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/37"
+formal_EXT-003_pr_state: OPEN
+formal_EXT-003_status_record_committed: 7073811e4160e0f0fa2398b2b2b7414bdbe82c87
+formal_EXT-003_implementation_note: "ExtractionLlmService owns LLM/validate/fingerprint/persist/pipeline handoff; preprocessing compose-only; PipelineTerminalDecision and worker unchanged"
 formal_EXT-003_human_plan_approved: true
 formal_EXT-003_human_plan_approved_at: "2026-08-12T05:45:00Z"
 formal_EXT-003_human_plan_approved_note: "Human PLAN_APPROVED EXT-003 Amendment 002; Round 2 Plan Review PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1; SF-1 MVP_LOCAL_DECISION orchestration owner=extraction_llm_service.py"
@@ -1020,6 +1032,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 06:02 UTC | EXT-003 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `7c6309ee68b01a6604b79253cea65be6fa26a0c6`；PR #37 OPEN；docs(status): record on feat | scoped 63 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED Round 2 P0=0 P1=0；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge** |
 | 2026-08-12 05:45 UTC | EXT-003 | planned → approved | Human PLAN_APPROVED Amendment 002; SF-1 MVP_LOCAL_DECISION orchestration owner=`extraction_llm_service.py`; approval gates updated; PLAN_LANDING pending Release Operator | Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=1; preprocessing compose-only; no whitelist expansion; `next_action=Developer on feat/EXT-003-llm-extraction-fingerprint` post-PLAN_LANDING |
 | 2026-08-12 10:56 UTC | EXT-002 | committed → completed | Release Operator `POST_MERGE_CLEANUP`; PR #36 MERGED (`59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`); implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`; amendment `985613be08814b1e9eea521888b61dd5cb8d94ff`; record `036d770268c3a3bbb95fe4687fd0007805e284a4`; completion `cd0b1a33848b294b5b068891f2a02422767becf1` | scoped 165 passed; RAW-01..12 PASS; RED-01..27 PASS; mandatory skips=0; scoped rerun=165 passed; Ruff/mypy PASS; CODE_REVIEW_APPROVED P0/P1/P2/P3=0; Amendment 004 behavior, terminal/offset gate, privacy and production scope verified; STM-007 completed; EXT-003 prerequisites SATISFIED, planned/NOT AUTO-STARTED; governance completion commit created |
 | 2026-08-12 03:05 UTC | EXT-003 | planned | Planner created `02_开发管理/tasks/EXT-003-llm-extraction-fingerprint.md`; synchronized progress/master_plan/open_issues only; no business code/tests/Git write | `next_action=计划审查`; approval posture `FAIL_CLOSED_BLOCKED`; OI-EXT-003-001/002/003/004 blocking; authoritative specification unchanged; no Developer/Reviewer/Release Operator |

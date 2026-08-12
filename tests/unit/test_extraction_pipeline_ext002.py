@@ -488,3 +488,42 @@ async def test_RED_16_17_21_22_23_27_real_pipeline_handoff_is_safe_and_repeatabl
     assert [message["timestamp"] for message in first_dump["messages"]] == [NOW, NOW + 1]
     assert "first_person" not in str(first_dump)
     assert secret not in caplog.text
+
+
+@pytest.mark.asyncio
+async def test_ext003_empty_archive_pipeline_zero_llm(monkeypatch: pytest.MonkeyPatch) -> None:
+    from memory_system.infrastructure.llm import FakeLlmClient
+    from memory_system.settings import get_settings
+
+    env = {
+        "APP_ENV": "test",
+        "REDIS__URI": "redis://redis/0",
+        "MONGODB__URI": "mongodb://mongodb/27017/memory_system",
+        "KAFKA__BOOTSTRAP_SERVERS": "kafka:9092",
+        "NEO4J__URI": "neo4j://neo4j:7687",
+        "ELASTICSEARCH__URL": "http://elasticsearch:9200",
+        "LLM__BASE_URL": "https://api.deepseek.com",
+        "LLM__API_KEY": "sk-example-replace-me",
+        "LLM__COMPRESSION__MODEL": "deepseek-v4-flash",
+        "LLM__EXTRACTION__MODEL": "deepseek-v4-flash",
+        "EMBEDDING__MODEL_ID": "BAAI/bge-m3",
+        "EMBEDDING__BASE_URL": "http://embedding-service:80",
+        "MEMORY_API_KEY": "dev-memory-api-key-change-me",
+        "MEMORY_ADMIN_API_KEY": "dev-memory-admin-key-change-me",
+        "EMBEDDING_EFFECTIVE_RUNTIME_MODE": "cpu",
+        "EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET": "4096",
+        "SILICONFLOW_API_KEY": "sk-example-replace-me",
+    }
+    for key, value in env.items():
+        monkeypatch.setenv(key, value)
+    get_settings.cache_clear()
+
+    repository = AsyncMock()
+    repository.find_context_archive_document_by_id.return_value = _archive()
+    preprocessing = ExtractionArchivePreprocessingService(AsyncMock(), repository=repository)
+    client = FakeLlmClient(success_content='{"entities":[],"memories":[]}')
+    service = preprocessing.compose_extraction_pipeline(client, get_settings())
+    decision = await service.run(_task(), _event())
+    assert decision.kind == PipelineTerminalKind.COMPLETE
+    assert client.call_count == 0
+    get_settings.cache_clear()

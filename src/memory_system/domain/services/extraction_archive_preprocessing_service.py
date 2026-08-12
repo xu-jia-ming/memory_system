@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import unicodedata
 from collections.abc import Mapping
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
 from pydantic import ValidationError
 from pymongo import AsyncMongoClient
@@ -24,6 +24,11 @@ from memory_system.domain.services.extraction_pipeline_port import (
     ExtractionPipelinePort,
     PipelineTerminalDecision,
 )
+
+if TYPE_CHECKING:
+    from memory_system.infrastructure.llm.protocol import LLMClient
+    from memory_system.settings.models import Settings
+
 from memory_system.domain.services.extraction_redaction_service import (
     ExtractionRedactionService,
     RedactionFailure,
@@ -224,3 +229,18 @@ class ExtractionArchivePreprocessingService(ExtractionPipelinePort):
         decision, ready = await self.prepare(task, event)
         self.last_ready_archive = ready
         return decision
+
+    def compose_extraction_pipeline(
+        self,
+        llm_client: LLMClient,
+        settings: Settings,
+    ) -> ExtractionPipelinePort:
+        """Wire EXT-002 prepare-only service with EXT-003 extraction orchestration."""
+        from memory_system.domain.services.extraction_llm_service import ExtractionLlmService
+
+        return ExtractionLlmService(
+            self._mongodb,
+            llm_client,
+            settings,
+            preprocessing=self,
+        )

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, Literal
 
 from openai import APIConnectionError, APIStatusError, APITimeoutError, AsyncOpenAI
 
@@ -48,8 +48,13 @@ class DeepSeekLlmClient:
         user_prompt: str,
         timeout_seconds: float,
         max_output_tokens: int,
+        settings_profile: Literal["compression", "extraction"] = "compression",
     ) -> str:
-        compression = self._settings.llm.compression
+        task_settings = (
+            self._settings.llm.extraction
+            if settings_profile == "extraction"
+            else self._settings.llm.compression
+        )
         messages: list[dict[str, str]] = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
@@ -59,10 +64,10 @@ class DeepSeekLlmClient:
                 model=model,
                 messages=messages,
                 stream=False,
-                temperature=float(compression.temperature),
+                temperature=float(task_settings.temperature),
                 max_tokens=max_output_tokens,
                 response_format={"type": "json_object"},
-                extra_body={"thinking": {"type": compression.thinking}},
+                extra_body={"thinking": {"type": task_settings.thinking}},
                 timeout=timeout_seconds,
             )
         except APITimeoutError as exc:
