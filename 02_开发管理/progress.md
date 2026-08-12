@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-002 in progress (STM-012 + EXT-001 completed)
+current_phase: Phase 2 — EXT-002 completed (EXT-003 prerequisites satisfied)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: EXT-002
-current_task_status: committed
-current_branch: feat/EXT-002-archive-read-preprocess-redact
+current_task: EXT-003
+current_task_status: planned
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -24,8 +24,8 @@ target_default_branch: main
 current_plan_file: 02_开发管理/tasks/EXT-002-archive-read-preprocess-redact.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-next_action: WAITING_FOR_PR_MERGE
-formal_EXT-002_status: committed
+next_action: "EXT-003 prerequisites SATISFIED; planned; NOT AUTO-STARTED; await explicit authorization"
+formal_EXT-002_status: completed
 formal_EXT-002_plan_file: 02_开发管理/tasks/EXT-002-archive-read-preprocess-redact.md
 formal_EXT-002_prerequisite: "SATISFIED — EXT-001 completed; PR #34 MERGED"
 formal_EXT-002_workflow_mode: NORMAL
@@ -47,9 +47,21 @@ formal_EXT-002_p2: 0
 formal_EXT-002_p3: 0
 formal_EXT-002_implementation_commit: 7fdf84827b2c253a6e6734b8051467f3ec1151f1
 formal_EXT-002_pr: "#36"
-formal_EXT-002_pr_state: OPEN
+formal_EXT-002_pr_state: MERGED
 formal_EXT-002_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/36"
-formal_EXT-002_release_gate: WAITING_FOR_PR_MERGE
+formal_EXT-002_merge_commit: 59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d
+formal_EXT-002_merged_at: "2026-08-12T02:45:26Z"
+formal_EXT-002_status_record_committed: 036d770268c3a3bbb95fe4687fd0007805e284a4
+formal_EXT-002_amendment_commit: 985613be08814b1e9eea521888b61dd5cb8d94ff
+formal_EXT-002_amendment_commit_verified: true
+formal_EXT-002_release_gate: COMPLETED
+formal_EXT-002_production_scope: "VERIFIED — exact approved whitelist; no EXT-003+, dependency/schema/migration, EXT-001 semantic, DEV-006, or PR #13 drift"
+formal_EXT-002_raw_evidence: "RAW-01..RAW-12 PASS; strict no-coercion/_id exception/unknown-field rejection/full-document gate verified"
+formal_EXT-002_redaction_evidence: "RED-01..RED-27 PASS; deterministic content-only redaction/no leakage/provenance/order verified"
+formal_EXT-002_terminal_evidence: "exact mappings and abort_without_terminal verified; persistence-before-offset and no commit on persistence failure preserved"
+formal_EXT-003_status: planned
+formal_EXT-003_prerequisite_status: "SATISFIED — EXT-002 and STM-007 completed"
+formal_EXT-003_next_action: "NOT AUTO-STARTED; await explicit authorization"
 formal_EXT-001_status: completed
 formal_EXT-001_plan_file: 02_开发管理/tasks/EXT-001-task-schema-kafka-consumer-idempotency-offset.md
 formal_EXT-001_prerequisite: SATISFIED  # STM-006 + DEV-004 completed; DEV-004 index/topic re-verified MATCH
@@ -809,7 +821,7 @@ stm_013_scope_remediation:
 
 **DEV-OPS-007**：**completed** — Phase 1 baseline hygiene before STM-006；orphan SHA metadata 更正 → `b0736431a636f0ba20a9cf5aad61a2ea8dc365df`；Ruff E501 L174–175 换行（零语义变更）；implementation `1ef8932b87604de9a01dab72e7584a4e7886b155`；record `c48a70d`；PR [#24](https://github.com/xu-jia-ming/memory_system/pull/24) **MERGED**（merge `de95f3a2f0107f791f89441177841754b1d4f82c` mergedAt `2026-08-10T11:54:41Z`）；ZERO_STALE_AUTHORITATIVE_REFERENCES **PASS**；FULL_RUFF **PASS**；integration context-read **14 passed**；mypy **PASS**；`DEV-OPS-007_CHANGED_BEHAVIOR=false`；production `src/**` changes **none**；Phase 1 DEV-OPS-007 **completed**。
 
-**下游**：**STM-013** **completed**；**STM-011** **completed**；**EXT-001** **completed**（PR #34 MERGED `ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；scoped **61** passed；ruff/mypy **PASS**）；**STM-012** **completed**（PR #35 MERGED `d73207752bbf004a4b20bf8fff00720cc0ca456b` mergedAt `2026-08-11T15:20:30Z`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；integration **1** passed；ruff/mypy **PASS**；production_delta **NONE**）；**EXT-002** remains `planned` — **NOT auto-started**；**不得触碰 DEV-006/PR#13**。
+**下游**：**STM-013** **completed**；**STM-011** **completed**；**EXT-001** **completed**（PR #34 MERGED `ae346dd27cda39f93fa38b7316ec17559df217ef` mergedAt `2026-08-11T13:57:07Z`；implementation `afd8b64dfd4856b4a2f00f82846dace76617e0d1`；scoped **61** passed；ruff/mypy **PASS**）；**STM-012** **completed**（PR #35 MERGED `d73207752bbf004a4b20bf8fff00720cc0ca456b` mergedAt `2026-08-11T15:20:30Z`；implementation `26aa710d62123d341fb79349c9ad86fc5d58c0a6`；integration **1** passed；ruff/mypy **PASS**；production_delta **NONE**）；**EXT-002** **completed**（PR #36 MERGED `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`）；**EXT-003** prerequisites **SATISFIED** — **planned / NOT AUTO-STARTED**；**不得触碰 DEV-006/PR#13**。
 
 ## 实施前置条件
 
@@ -986,6 +998,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 10:56 UTC | EXT-002 | committed → completed | Release Operator `POST_MERGE_CLEANUP`; PR #36 MERGED (`59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`); implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`; amendment `985613be08814b1e9eea521888b61dd5cb8d94ff`; record `036d770268c3a3bbb95fe4687fd0007805e284a4` | scoped 165 passed; RAW-01..12 PASS; RED-01..27 PASS; mandatory skips=0; scoped rerun=165 passed; Ruff/mypy PASS; CODE_REVIEW_APPROVED P0/P1/P2/P3=0; Amendment 004 behavior, terminal/offset gate, privacy and production scope verified; STM-007 completed; EXT-003 prerequisites SATISFIED, planned/NOT AUTO-STARTED; governance completion pending |
 | 2026-08-12 10:40 UTC | EXT-002 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`; implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`; PR #36 OPEN; approved governance record on feat | scoped 165 passed; Amendment 004/raw/redaction/offset/privacy/scope gates PASS; Ruff/mypy PASS; release_gate=WAITING_FOR_PR_MERGE; no merge; no main write |
 | 2026-08-12 10:15 UTC | EXT-002 | tested → in_progress | Remediating P1-001 exception classification and P1-002 explicit RAW/RED matrix on the approved whitelist; no Git write and no scope expansion |
 | 2026-08-12 10:30 UTC | EXT-002 | in_progress → tested | P1-001 exception classification narrowed; explicit RAW-01..RAW-12 and RED-01..RED-27 coverage added; scoped 133 passed / 1 optional Mongo skipped; relevant EXT-001/Mongo gates 35 passed; Ruff/mypy/lints PASS; no Git write |

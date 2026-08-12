@@ -454,7 +454,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | EXT-001 | Task Schema + Kafka Consumer 幂等/Offset | §2.1.3, §2.1.4 | STM-006, DEV-004 | completed |
-| EXT-002 | Archive 读取/预处理/脱敏 | §2.1.5 | EXT-001 | planned |
+| EXT-002 | Archive 读取/预处理/脱敏 | §2.1.5 | EXT-001 | completed |
 | EXT-003 | LLM Extraction + Fingerprint | §2.1.6–2.1.8 | EXT-002, STM-007 | planned |
 | EXT-004 | Entity Alignment + Neo4j 模型基础 | §2.1.9, §2.1.10 | EXT-003, DEV-004 | planned |
 | EXT-005 | Reconciliation + 聚合门禁 | §2.1.11 | EXT-004 | planned |
@@ -483,6 +483,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **计划文件**：`02_开发管理/tasks/EXT-002-archive-read-preprocess-redact.md`
 - **规格章节**：§1.2.2、§1.2.4、§2.1.1、§2.1.3–§2.1.6、§2.1.15、§2.1.16、§3.6、§3.19、§3.20、§3.27、§3.28。
 - **正式前置依赖**：EXT-001 — **SATISFIED/completed**（PR #34 MERGED；`archive_id` 幂等、`ExtractionPipelinePort`、终态持久化/Offset 门禁已合并）。
+- **状态备注**：`completed`（implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`；amendment `985613be08814b1e9eea521888b61dd5cb8d94ff`；record `036d770268c3a3bbb95fe4687fd0007805e284a4`；PR #36 MERGED `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`；RAW-01..12 PASS；RED-01..27 PASS；mandatory skips=0；scoped rerun=165 passed；Ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=0；Amendment 004 effective behavior, terminal/offset gate, privacy and production scope verified；STM-007 completed；EXT-003 prerequisites SATISFIED — planned / NOT AUTO-STARTED；feat 分支 cleanup pending；不得触碰 DEV-006/PR#13）。
 - **规划备注**：Round 4 / Amendment 004；`workflow_mode=NORMAL`（explicit）；baseline `13e1dae36a0b0d94415d9581b2a5fe53c990545f` MATCH；本轮仅更新 Task Plan、open_issues、progress、master_plan，未修改规格正文。EXT-002 只允许新增 `find_context_archive_document_by_id(mongodb, archive_id)` 这一 read-only raw BSON mapping lookup；不得写入、修复、迁移、复制持久化模型或改变既有 typed `find_context_archive_by_id` 语义。RAW-01..RAW-12 与 RED-01..RED-27 覆盖严格七字段/四字段消息验证、未知字段、`_id` 例外、无 coercion、无部分输出及全部脱敏正负/跨度/失败/泄漏/来源/顺序场景。缺失映射为 `archive_not_found/archive_read`；结构或嵌套/消息无效映射为 `invalid_archive/archive_validate`；redaction failure 为 `redaction_failed/redaction`；非确定性基础设施/内部失败为 `abort_without_terminal`；终态持久化成功后才提交 Offset。确定性本地 redaction 仅作用 `messages[].content`，精确类别/优先级/span 合并/Luhn/marker 规则已由 authoritative Amendment EXT-002-004 固定。first-person deferred/out-of-scope；`ExtractionReadyArchive` 仅在 raw validation → deterministic preprocessing → deterministic redaction 后最终化；dependency_changes_expected=NONE。
 - **阻塞项**：无 EXT-002 blocking Open Issue；OI-EXT-002-001/002/004/005 resolved，OI-EXT-002-003 deferred/out-of-scope。可实施范围仍不含 EXT-003/LLM/Neo4j/Elasticsearch；不得扩展到 Kafka/task status/STM-011/012、DEV-006 或 PR #13。
 - **非目标**：Kafka/EXT-001 Contract、offset/state 语义、`context_archive` schema/repository 与 STM 写入、EXT-003 LLM/Prompt/Structured Output、EXT-004+、Neo4j/Elasticsearch、Migration/Settings/dependency、DEV-006、PR #13、E2E。
@@ -1135,5 +1136,16 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 规划决议 | 当前有效 terminal mapping 为 `archive_not_found/archive_read`、`invalid_archive/archive_validate`、`redaction_failed/redaction`；`abort_without_terminal` 用于非确定性基础设施/内部失败；raw validation PASS → preprocessing PASS → redaction PASS 后才最终化 `ExtractionReadyArchive`；`OI-EXT-002-003=DEFERRED/OUT_OF_SCOPE`，其余 EXT-002 OI 已 resolved；implementation whitelist 精确包含 raw read-only repository method、models/services/conditional worker wiring 与 RAW/RED unit/contract/integration tests；`dependency_changes_expected=NONE` |
 | 是否改变技术规格 | 否；Amendment 004 已由规格负责人此前追加持久化，本轮只同步规划治理文件 |
 | 审批 | Planner；`next_action=计划审查`；等待独立 Plan Reviewer，不得自动进入 Developer |
+
+### CHANGE-056
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-12 |
+| 原因 | EXT-002 POST_MERGE_CLEANUP：PR #36 MERGED；同步完成治理状态、验收证据、提交链与下游依赖 |
+| 受影响任务 | `EXT-002`（`completed`）；`EXT-003` prerequisites **SATISFIED**（`EXT-002` + `STM-007` completed）；`EXT-003` remains `planned` / **NOT AUTO-STARTED**；不改变 Amendment 004、EXT-001 terminal/offset 语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
+| 事实记录 | merge `59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d`；implementation `7fdf84827b2c253a6e6734b8051467f3ec1151f1`；amendment `985613be08814b1e9eea521888b61dd5cb8d94ff`；record `036d770268c3a3bbb95fe4687fd0007805e284a4`；RAW-01..12 PASS；RED-01..27 PASS；mandatory skips=0；scoped rerun=165 passed；Ruff/mypy PASS；CODE_REVIEW_APPROVED P0/P1/P2/P3=0 |
+| 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
+| 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=EXT-003 planned / NOT AUTO-STARTED` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

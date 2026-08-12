@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-002
 task_name: Archive 读取 / 预处理 / 脱敏
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "13e1dae36a0b0d94415d9581b2a5fe53c990545f"
 branch: "feat/EXT-002-archive-read-preprocess-redact"
 created_at: "2026-08-11 15:36 UTC"
-updated_at: "2026-08-12 10:40 UTC"
+updated_at: "2026-08-12 10:56 UTC"
 plan_review_round: 4
 amendment: "004 — EXT-002 specification/governance amendment: terminal mappings, strict raw validation, deterministic redaction, and handoff order"
 prerequisites:
@@ -508,11 +508,18 @@ Developer P1 remediation Round 2 is complete and tested after PLAN_APPROVED and 
 ## 17. Release record
 
 ```yaml
-status: committed
+status: completed
 implementation_commit: "7fdf84827b2c253a6e6734b8051467f3ec1151f1"
 implementation_commit_message: "feat(ext): add archive preprocessing pipeline"
 pr: "#36"
-pr_state: OPEN
+pr_state: MERGED
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/36"
-release_gate: WAITING_FOR_PR_MERGE
+merge_commit: "59e9f7f0cf6effd34d1f13ad022f9b9eb00b8f2d"
+amendment_commit: "985613be08814b1e9eea521888b61dd5cb8d94ff"
+status_record_committed: "036d770268c3a3bbb95fe4687fd0007805e284a4"
+status_record_completed: null
+release_gate: COMPLETED
+evidence: "RAW-01..RAW-12 PASS; RED-01..RED-27 PASS; mandatory skips=0; scoped rerun=165 passed; Ruff/mypy PASS; CODE_REVIEW_APPROVED P0/P1/P2/P3=0"
+scope_verification: "Amendment 004 effective behavior PASS; EXT-001 persistence-before-offset/no-commit-on-persistence-failure unchanged; first-person deferred; no EXT-003+ or dependency/schema/migration/DEV-006/PR #13 drift"
+downstream: "STM-007 completed; EXT-003 prerequisites SATISFIED; EXT-003 planned and NOT AUTO-STARTED"
 ```
