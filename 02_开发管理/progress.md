@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-005 planned (NOT AUTO-STARTED)
+current_phase: Phase 2 — EXT-005 tested (awaiting Code Review)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-005
-current_task_status: approved
+current_task_status: tested
 current_branch: feat/EXT-005-reconciliation-aggregation-gate
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -27,7 +27,7 @@ workflow_mode_source: explicit
 planning_baseline_main: "5deb8949ee5ac367a08f173ef67c0c0689c26f5d"
 planning_baseline_EXT-005: "5deb8949ee5ac367a08f173ef67c0c0689c26f5d"
 formal_EXT-005_plan_file: 02_开发管理/tasks/EXT-005-reconciliation-aggregation-gate.md
-formal_EXT-005_status: approved
+formal_EXT-005_status: tested
 formal_EXT-005_workflow_mode: NORMAL
 formal_EXT-005_workflow_mode_source: explicit
 formal_EXT-005_baseline: 5deb8949ee5ac367a08f173ef67c0c0689c26f5d
@@ -43,7 +43,7 @@ formal_EXT-005_dependency_changes_expected: NONE
 formal_EXT-005_migration_changes_expected: NONE
 formal_EXT-005_authorized_error_codes: "graph_query_failed, reconciliation_plan_conflict, llm_timeout, llm_request_failed, llm_invalid_output; failed_stage=reconciliation (LD-10); graph_query_failed forbidden in EXT-004"
 formal_EXT-005_pipeline_handoff: "isolated library service; EXT-004→EXT-005 continuation DEFERRED_FOR_MVP; PipelineTerminalDecision / consumer / extraction_llm_service / extraction_worker / entity_alignment_service unchanged"
-formal_EXT-005_note: "Round 2 Amendment 001 PLAN_APPROVED; human PLAN_APPROVED granted; MF-001 PlannedMemoryCreate self-contained output; SF-001–SF-004; Developer authorized post-PLAN_LANDING; 不得触碰 DEV-006/PR#13"
+formal_EXT-005_note: "Implementation tested; scoped 63 passed; ruff/mypy PASS; MF-001/SF-001–SF-004; zero Mongo/Neo4j writes; upstream zero diff; next_action=Code Review; 不得触碰 DEV-006/PR#13"
 formal_EXT-005_human_plan_approved: true
 formal_EXT-005_human_plan_approved_at: "2026-08-12T08:35:00Z"
 formal_EXT-005_approval_posture: "PLAN_APPROVED — Amendment 001; Round 2 BLOCKER=0 MUST_FIX=0 SHOULD_FIX=0; human PLAN_APPROVED granted; Developer authorized post-PLAN_LANDING"
@@ -1116,6 +1116,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 08:50 UTC | EXT-005 | approved → tested | Developer implemented whitelist (9 prod + 8 test); reconciliation read-only recall + LLM + plan builder; zero Mongo/Neo4j writes; upstream zero diff | scoped 63 passed; ruff/mypy PASS; integration Neo4j+Mongo PASS; `next_action=Code Review`; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 08:35 UTC | EXT-005 | planned → approved | Release Operator `PLAN_LANDING`；human PLAN_APPROVED Round 2 Amendment 001；docs(plan) on main；feat branch created | Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=0; MF-001/SF-001–SF-004; `next_action=Developer on feat/EXT-005-reconciliation-aggregation-gate`; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 16:30 UTC | EXT-005 | planned (Round 2) | Planner Amendment 001 remediation; §5.7–§5.11 MF-001 PlannedMemoryCreate self-contained output (`create_kind` + link fields); SF-001 normalization in `aligned_memory_key.py` only; SF-002 LLM SKIP excluded from aggregation; SF-003 session_id from task doc (not reconciliation output); SF-004 MERGE mixed null/non-null merged_content; no src/tests/spec-body change; no Git write | `next_action=计划审查 Round 2`; `approval_posture=AWAIT_PLAN_REVIEW_ROUND_2`; `plan_review_round=2`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 16:15 UTC | EXT-005 | planned | Planner created `02_开发管理/tasks/EXT-005-reconciliation-aggregation-gate.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `5deb8949ee5ac367a08f173ef67c0c0689c26f5d` verified (main, clean tree); scope = §2.1.11 read-only recall + LLM Reconciliation + aligned_memory_key + aggregation + reconciliation_plan_conflict; §2.1.12 planning output; §2.1.13 steps 1/6/7; transient plan for EXT-006; zero writes; `failed_stage=reconciliation`; EXT-004→EXT-005 continuation DEFERRED_FOR_MVP; `dependency_changes_expected=NONE`; non-blocking `OI-006`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
