@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-003 committed (awaiting PR merge)
+current_phase: Phase 4 — CON-003 completed (optimistic lock batch write)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: CON-003
-current_task_status: committed
-current_branch: feat/CON-003-optimistic-lock-batch-update
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "WAITING_FOR_PR_MERGE"
+next_action: "CON-004 planned / NOT AUTO-STARTED"
 formal_CON-003_plan_file: 02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md
-formal_CON-003_status: committed
+formal_CON-003_status: completed
 formal_CON-003_workflow_mode: NORMAL
 formal_CON-003_workflow_mode_source: explicit
 formal_CON-003_baseline: "cabcc6f98e5cd676b962b49e3b0c943587a11689"
@@ -112,7 +112,7 @@ formal_CON-003_durable_read_scope: NONE
 formal_CON-003_durable_write_scope: "Neo4j Memory — importance, last_consolidated_time"
 formal_CON-003_production_file_whitelist: "src/memory_system/domain/models/consolidation_write.py; src/memory_system/domain/services/consolidation_write_service.py; src/memory_system/infrastructure/neo4j/consolidation_memory_write_repository.py"
 formal_CON-003_test_file_whitelist: "tests/unit/test_consolidation_memory_write_repository.py; tests/unit/test_consolidation_write_service.py; tests/contract/test_con003_scope_boundaries.py"
-formal_CON-003_note: "IMPLEMENTATION_RELEASE；plan 0146b5d；CODE_REVIEW_APPROVED P0=0/P1=0/P2=1/P3=2 non-blocking；scoped 35 passed；ruff/mypy PASS；§2.3.9 optimistic-lock batch write（importance + last_consolidated_time only；不递增 memory_version；不写 updated_time）；CON-002 scored handoff only；Integration DEFERRED CON-005；不得触碰 DEV-006/PR#13"
+formal_CON-003_note: "POST_MERGE_CLEANUP；implementation 8563466feeb8aea38fb6997a3e99d4d54eb3878c；PR #52 MERGED（base=main，head=feat/CON-003-optimistic-lock-batch-update，merge 7337c861150c9312a7a37b2b884839c186cb43d1，mergedAt=2026-08-13T13:03:22Z）；fetch 后 origin/main 已通过 --ff-only 同步；CODE_REVIEW_APPROVED P0=0/P1=0/P2=1/P3=2 non-blocking；scoped 35 passed；ruff/mypy PASS；§2.3.9 optimistic-lock write contract preserved — expected_memory_version predicate-only / no memory_version increment；partial-success batch semantics（version_conflict_count）；SET importance + last_consolidated_time only；不写 updated_time；CON-002 scored handoff only；Integration DEFERRED CON-005；feat 分支本地/远程已删除；next_action=CON-004 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13"
 formal_CON-003_plan_commit: "0146b5dd53d37dfbdec0ea9bc9e87d6fe373221a"
 formal_CON-003_plan_review: PLAN_APPROVED
 formal_CON-003_code_review: CODE_REVIEW_APPROVED
@@ -125,7 +125,19 @@ formal_CON-003_ruff: PASS
 formal_CON-003_mypy: "PASS（3 new src files）"
 formal_CON-003_human_plan_approved: true
 formal_CON-003_developer_authorized: true
-formal_CON-003_approval_posture: "CODE_REVIEW_APPROVED — awaiting PR merge"
+formal_CON-003_approval_posture: "POST_MERGE_CLEANUP — completed"
+formal_CON-003_implementation_commit: 8563466feeb8aea38fb6997a3e99d4d54eb3878c
+formal_CON-003_implementation_commit_message: "feat(con): add consolidation optimistic lock batch write"
+formal_CON-003_pr: "#52"
+formal_CON-003_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/52"
+formal_CON-003_pr_state: MERGED
+formal_CON-003_pr_base: main
+formal_CON-003_pr_head: "feat/CON-003-optimistic-lock-batch-update"
+formal_CON-003_merge_commit: 7337c861150c9312a7a37b2b884839c186cb43d1
+formal_CON-003_merged_at: "2026-08-13T13:03:22Z"
+formal_CON-003_status_record_committed: null
+formal_CON-003_release_gate: COMPLETED
+formal_CON-003_next_action: "CON-004 planned / NOT AUTO-STARTED"
 formal_CON-002_plan_file: 02_开发管理/tasks/CON-002-cursor-batch-evidence-count.md
 formal_CON-002_status: completed
 formal_CON-002_workflow_mode: NORMAL
@@ -591,7 +603,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: "CODE_REVIEW_APPROVED — CON-003 awaiting PR merge"
+current_task_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -1642,6 +1654,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 13:05 UTC | CON-003 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `8563466feeb8aea38fb6997a3e99d4d54eb3878c`、merge `7337c861150c9312a7a37b2b884839c186cb43d1`；仅更新 CON-003 三份治理文件并创建 `docs(status): complete CON-003 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=1/P3=2 non-blocking；scoped 35 passed；ruff/mypy PASS；§2.3.9 optimistic-lock write contract preserved — expected_memory_version predicate-only / no memory_version increment；partial-success batch semantics；CON-002 scored handoff only；`next_action=CON-004 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 11:30 UTC | CON-003 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan `02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md`；同步 progress/master_plan 规划态字段；baseline `cabcc6f98e5cd676b962b49e3b0c943587a11689` MATCH；git status clean；§2.3.9 optimistic-lock batch write（importance + last_consolidated_time only；不递增 memory_version；不写 updated_time）；CON-002 scored handoff only；Integration DEFERRED CON-005；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 19:20 UTC | CON-002 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `a13ab31bb98598740198001d8bfee3f21d6b565a`、merge `3b26549c41b91a1bbdd72237865a5d3d4fb5324d`；仅更新 CON-002 三份治理文件并创建 `docs(status): complete CON-002 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking（P2-1 C1 untracked blind spot；P2-2 null archive_id test gap）；scoped 39 passed；ruff/mypy PASS；§2.3.4 read-only + per-user isolation + `count(DISTINCT archive_id)` + zero-Evidence→missing_evidence；零 durable write；`next_action=CON-003 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 18:55 UTC | CON-002 | approved → tested | Developer implementation on `feat/CON-002-cursor-batch-evidence-count`；3 生产 + 3 测试白名单文件；§2.3.4 cursor batch Neo4j read + `independent_archive_count` + CON-001 handoff | scoped **39 passed**；ruff PASS；mypy PASS（3 new src files）；零 durable write；OPTIONAL MATCH 零 Evidence；U13-U15 pagination metadata；`next_action=CODE_REVIEW`；不得触碰 DEV-006/PR#13 |

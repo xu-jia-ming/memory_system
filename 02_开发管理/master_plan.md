@@ -669,7 +669,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | CON-001 | Importance/衰减/保护公式纯函数 | §2.3.5–2.3.8 | EXT-004 | completed |
 | CON-002 | Cursor 分页批量读取与 Evidence 计数 | §2.3.4 | CON-001 | completed |
-| CON-003 | 乐观锁批量更新 | §2.3.9 | CON-002 | committed |
+| CON-003 | 乐观锁批量更新 | §2.3.9 | CON-002 | completed |
 | CON-004 | APScheduler、互斥锁、失败恢复 | §2.3.4, §3.22 | CON-003 | planned |
 | CON-005 | Consolidation Integration + E2E | §2.3.11–2.3.13 | CON-004 | planned |
 
@@ -703,7 +703,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit（U1..U17 乐观锁/隔离/精确字段/replay/冲突/空写/失败）；Contract（C1..C6 白名单+无 memory_version/updated_time SET+无 ES/Mongo）；Integration/E2E **DEFERRED**（CON-005）。
 - **Task Plan**：`02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=cabcc6f98e5cd676b962b49e3b0c943587a11689` MATCH；新建 `consolidation_write` models + `consolidation_write_service` + `consolidation_memory_write_repository`；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=NONE`；`durable_write_scope=Neo4j Memory（importance, last_consolidated_time）`；§2.3.9 权威 Cypher；巩固不递增 `memory_version`；不得触碰 DEV-006/PR#13。
-- **状态备注**：`committed`（plan `0146b5dd53d37dfbdec0ea9bc9e87d6fe373221a`；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2 non-blocking；scoped 35 passed；Ruff PASS；Mypy PASS（3 new src files）；§2.3.9 optimistic-lock batch write — SET importance + last_consolidated_time only；不递增 memory_version；不写 updated_time；CON-002 scored handoff only；Integration DEFERRED CON-005）；`next_action=WAITING_FOR_PR_MERGE`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`completed`（plan `0146b5dd53d37dfbdec0ea9bc9e87d6fe373221a`；implementation `8563466feeb8aea38fb6997a3e99d4d54eb3878c`；PR #52 MERGED `7337c861150c9312a7a37b2b884839c186cb43d1` mergedAt `2026-08-13T13:03:22Z`；scoped 35 passed；Ruff PASS；Mypy PASS（3 new src files）；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2 non-blocking；§2.3.9 optimistic-lock write contract preserved — `expected_memory_version` predicate-only / no `memory_version` increment；partial-success batch semantics（`version_conflict_count`）；SET importance + last_consolidated_time only；不写 updated_time；CON-002 scored handoff only；Integration DEFERRED CON-005；feat 分支已删）；`next_action=CON-004 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13。
 
 ---
 
