@@ -593,7 +593,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | RET-001 | BM25 查询 | §2.2.7 | DEV-004, DEV-007 | completed |
 | RET-002 | Vector 召回 + RRF | §2.2.6, §2.2.8, §2.2.9 | RET-001, DEV-007 | completed |
 | RET-003 | Neo4j 权威回读 + 一跳扩展 + MGET | §2.2.10 | RET-002 | completed |
-| RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | planned |
+| RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | tested |
 | RET-005 | Retrieval API、降级/超时、统计更新 | §2.2.5, §2.2.13–2.2.15 | RET-004, DEV-005 | planned |
 | RET-006 | Retrieval 阶段 E2E + 失败注入 | §2.2.16, §3.28 | RET-005, EXT-007 | planned |
 
@@ -636,7 +636,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit（NC-1..NC-8 数值算例、排序 tie-break、failure mapping）；Integration — Neo4j Evidence SUPPORTS Fixture。
 - **Task Plan**：`02_开发管理/tasks/RET-004-act-r-scoring-evidence-aggregation.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=c8d9d38d92414b9e041dd3d97dcbfd17b9e61582` MATCH；新建 `act_r_scoring` + `retrieval_scoring_service` + `retrieval_evidence_read_repository`（禁止混用 EXT-005）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；不得触碰 DEV-006/PR#13。
-- **状态备注**：`approved`（PLAN_APPROVED human confirmed 2026-08-13；Task Plan 已创建 2026-08-13 06:01 UTC；`next_action=PLAN_LANDING`；Developer NOT authorized until landing；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`tested`（plan `e3e98ee` PLAN_LANDING；implementation 待 commit；branch `feat/RET-004-act-r-scoring-evidence-aggregation`；scoped unit **44 passed**；ruff/mypy PASS；integration I1-I5 待 Neo4j compose；§2.2.11 ACT-R + §2.2.12 Evidence batch aggregation；新建 `act_r_scoring` + `retrieval_scoring_service` + `retrieval_evidence_read_repository` + `evidence_aggregation`（禁止混用 EXT-005）；`next_action=代码审查`；不得触碰 DEV-006/PR#13）。
 
 #### RET-005
 
