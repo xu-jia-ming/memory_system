@@ -14,6 +14,7 @@ from memory_system.api.routes import (
     internal_metrics,
     memory_extraction_admin,
     memory_message,
+    memory_retrieval,
     memory_session,
 )
 from memory_system.infrastructure.llm import FakeLlmClient
@@ -69,5 +70,6 @@ def create_app(
     app.include_router(memory_session.router)
     app.include_router(memory_message.router)
     app.include_router(memory_extraction_admin.router)
+    app.include_router(memory_retrieval.router)
 
     return app
