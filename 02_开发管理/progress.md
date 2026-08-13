@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 3 — RET-006 approved
+current_phase: Phase 3 — RET-006 tested
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: RET-006
-current_task_status: approved
+current_task_status: tested
 current_branch: feat/RET-006-retrieval-e2e-failure-injection
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "Developer on feat/RET-006-retrieval-e2e-failure-injection"
+next_action: "Code Reviewer on feat/RET-006-retrieval-e2e-failure-injection"
 formal_RET-006_plan_file: 02_开发管理/tasks/RET-006-retrieval-e2e-failure-injection.md
-formal_RET-006_status: approved
+formal_RET-006_status: tested
 formal_RET-006_workflow_mode: NORMAL
 formal_RET-006_workflow_mode_source: explicit
 formal_RET-006_baseline: 538cf13ac3d33d1f337a9e5f5b450626ddd6529d
@@ -120,7 +120,11 @@ formal_RET-006_approval_posture: PLAN_APPROVED
 formal_RET-006_human_plan_approved: true
 formal_RET-006_human_plan_approved_at: "2026-08-13T08:08:00Z"
 formal_RET-006_developer_authorized: true
-formal_RET-006_next_action: "Developer on feat/RET-006-retrieval-e2e-failure-injection"
+formal_RET-006_next_action: "Code Reviewer on feat/RET-006-retrieval-e2e-failure-injection"
+formal_RET-006_scoped_tests: "9 passed (E2E-1,2,3,4a,4b,5a,5b,6 + auth)"
+formal_RET-006_ruff: PASS
+formal_RET-006_mypy: PASS
+formal_RET-006_production_diff: "src/** empty"
 formal_RET-005_plan_file: 02_开发管理/tasks/RET-005-retrieval-api-degradation-statistics.md
 formal_RET-005_status: completed
 formal_RET-005_workflow_mode: NORMAL
