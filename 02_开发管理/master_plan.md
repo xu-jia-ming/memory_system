@@ -705,6 +705,16 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=cabcc6f98e5cd676b962b49e3b0c943587a11689` MATCH；新建 `consolidation_write` models + `consolidation_write_service` + `consolidation_memory_write_repository`；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=NONE`；`durable_write_scope=Neo4j Memory（importance, last_consolidated_time）`；§2.3.9 权威 Cypher；巩固不递增 `memory_version`；不得触碰 DEV-006/PR#13。
 - **状态备注**：`completed`（plan `0146b5dd53d37dfbdec0ea9bc9e87d6fe373221a`；implementation `8563466feeb8aea38fb6997a3e99d4d54eb3878c`；PR #52 MERGED `7337c861150c9312a7a37b2b884839c186cb43d1` mergedAt `2026-08-13T13:03:22Z`；scoped 35 passed；Ruff PASS；Mypy PASS（3 new src files）；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2 non-blocking；§2.3.9 optimistic-lock write contract preserved — `expected_memory_version` predicate-only / no `memory_version` increment；partial-success batch semantics（`version_conflict_count`）；SET importance + last_consolidated_time only；不写 updated_time；CON-002 scored handoff only；Integration DEFERRED CON-005；feat 分支已删）；`next_action=CON-004 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13。
 
+#### CON-004 APScheduler、互斥锁、失败恢复
+
+- **目标**：§2.3.11 巩固 **运行编排** — APScheduler `AsyncIOScheduler` + `CronTrigger`（§3.22）；进程内本地互斥锁（§2.3.4）；每轮统一 `evaluation_time` + `run_id`；Neo4j `DISTINCT user_id` 枚举 + per-user `memory_id` cursor 循环；调用 CON-002 读批次 + CON-003 写 `scored`；§2.3.13 失败恢复与运行指标/日志；`consolidation_runs_total{status}`；`consolidation_worker` 生产接线与 graceful shutdown（§3.25）。
+- **非目标**：修改 CON-001/002/003 已完成服务语义；CON-005 Integration/E2E；ES/Mongo/Kafka；持久化 cursor/run 表；Redis 分布式锁；多实例调度；独立 Consolidation HTTP API；修改 Settings Contract。
+- **前置**：**CON-003** completed（PR #52 MERGED）；**CON-002** completed（PR #51 MERGED）；**CON-001** completed（PR #50 MERGED）；EXT-001..009、RET-001..006 completed。
+- **测试**：Unit（U1..U18 编排/互斥/scheduler/枚举/worker + fake CON-002/003 ports）；Contract（C1..C7 白名单+零 CON-001/002/003 diff）；Integration/E2E **DEFERRED**（CON-005）。
+- **Task Plan**：`02_开发管理/tasks/CON-004-apscheduler-mutex-failure-recovery.md`。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=8998f627b6cf0c8f5beb103006903d8c3668542a` MATCH；新建 `consolidation_run` models + `consolidation_run_service` + `consolidation_mutex` + `consolidation_scheduler` + `consolidation_user_enumeration_repository` + `consolidation_run_telemetry`；**修改** `consolidation_worker.py`；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=Neo4j DISTINCT user_id enumeration`；`durable_write_scope=NONE（编排层）/ delegated CON-003 Neo4j write`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`approved`（planning @ main `8998f627b6cf0c8f5beb103006903d8c3668542a`；human PLAN_APPROVED 2026-08-13；SF-1..SF-3 absorbed）；`next_action=PLAN_LANDING`；不得触碰 DEV-006/PR#13。
+
 ---
 
 ### Phase 5：最终工程与发布候选

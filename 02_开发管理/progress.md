@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-003 completed (optimistic lock batch write)
+current_phase: Phase 4 — CON-004 planned (APScheduler mutex failure recovery)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: CON-003
-current_task_status: completed
+current_task: CON-004
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,10 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md
+current_plan_file: 02_开发管理/tasks/CON-004-apscheduler-mutex-failure-recovery.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "cabcc6f98e5cd676b962b49e3b0c943587a11689"
+planning_baseline_main: "8998f627b6cf0c8f5beb103006903d8c3668542a"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -95,7 +95,27 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "CON-004 planned / NOT AUTO-STARTED"
+next_action: PLAN_LANDING
+formal_CON-004_plan_file: 02_开发管理/tasks/CON-004-apscheduler-mutex-failure-recovery.md
+formal_CON-004_status: approved
+formal_CON-004_workflow_mode: NORMAL
+formal_CON-004_workflow_mode_source: explicit
+formal_CON-004_baseline: "8998f627b6cf0c8f5beb103006903d8c3668542a"
+formal_CON-004_branch: "feat/CON-004-apscheduler-mutex-failure-recovery"
+formal_CON-004_prerequisite: "SATISFIED — CON-003 completed (PR #52 MERGED); CON-002 completed (PR #51 MERGED); CON-001 completed (PR #50 MERGED); EXT-001..009 completed; RET-001..006 completed"
+formal_CON-004_scope: "§2.3.11 run orchestration + §3.22 APScheduler + §2.3.4 process-local mutex + §2.3.13 failure recovery/metrics + consolidation_worker wiring; reuse CON-002 read + CON-003 write; zero CON-001/002/003 semantics diff"
+formal_CON-004_blocking_open_issues: []
+formal_CON-004_nonblocking_open_issues: []
+formal_CON-004_dependency_changes_expected: NONE
+formal_CON-004_migration_changes_expected: NONE
+formal_CON-004_durable_read_scope: "Neo4j read-only — DISTINCT user_id enumeration"
+formal_CON-004_durable_write_scope: "NONE at orchestration layer — delegated to CON-003 Neo4j write"
+formal_CON-004_production_file_whitelist: "src/memory_system/domain/models/consolidation_run.py; src/memory_system/domain/services/consolidation_run_service.py; src/memory_system/infrastructure/consolidation_mutex.py; src/memory_system/infrastructure/scheduling/consolidation_scheduler.py; src/memory_system/infrastructure/neo4j/consolidation_user_enumeration_repository.py; src/memory_system/observability/consolidation_run_telemetry.py; src/memory_system/entrypoints/consolidation_worker.py"
+formal_CON-004_test_file_whitelist: "tests/unit/test_consolidation_run_service.py; tests/unit/test_consolidation_mutex.py; tests/unit/test_consolidation_scheduler.py; tests/unit/test_consolidation_user_enumeration_repository.py; tests/unit/test_consolidation_worker_entrypoint.py; tests/contract/test_con004_scope_boundaries.py"
+formal_CON-004_note: "PLAN_APPROVED @ main 8998f627b6cf0c8f5beb103006903d8c3668542a；human approval 2026-08-13 21:30 UTC；SF-1..SF-3 absorbed；workflow_mode=NORMAL explicit；CON-004 owns scheduler/mutex/run loop/user enum/cursor orchestration/worker wiring；禁止修改 CON-001/002/003 服务语义；Integration/E2E DEFERRED CON-005；不得触碰 DEV-006/PR#13"
+formal_CON-004_next_action: PLAN_LANDING
+formal_CON-004_approval_posture: PLAN_APPROVED
+formal_CON-004_human_plan_approved: true
 formal_CON-003_plan_file: 02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md
 formal_CON-003_status: completed
 formal_CON-003_workflow_mode: NORMAL
