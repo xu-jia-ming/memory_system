@@ -214,14 +214,32 @@ spec_sections:
 impact: "失败处理条目编号笔误（重复编号/跳号），属编辑性问题"
 blocks_current_task: false
 resolve_by_task: RET-005
-status: open
+status: resolved
+resolved_at: "2026-08-13T07:42:25Z"
+resolved_by_task: RET-005
+resolved_by_plan: "02_开发管理/tasks/RET-005-retrieval-api-degradation-statistics.md"
 ```
 
 **问题描述：** §2.2.15 列表编号存在两个 “5.” 及跳号；不改变正文失败/降级语义，但影响引用准确性。
 
 **禁止行为：** 不得借编号问题改写降级语义。
 
-**决议记录：** （空）
+**决议记录：**
+
+- **2026-08-13** — RET-005 PR #48 MERGED（merge `5b577d6e04c8b1e0a7336169a18855c66e4a2a3a` mergedAt `2026-08-13T07:42:25Z`；implementation `9baf16a7c6f7b0ad3cec8155b54c9fdeeb8c4250`）
+- **Canonical DR 映射**（Task Plan §7.5 / §17；**不**修改规格正文语义）：
+  - DR-1：双通道有效非空 → `hybrid`
+  - DR-2：仅 BM25 有效非空 → `bm25_only`
+  - DR-3：仅 Vector 有效非空 → `vector_only`
+  - DR-4：均成功但空 → `none` + `[]`
+  - DR-5：双通道 failure → `retrieval_unavailable`（原第一个「5.」）
+  - DR-6：Neo4j/Evidence 权威加载失败 → `graph_load_failed`（原第二个「5.」）
+  - DR-7：图扩展失败 → Warning `graph_expansion_failed`（原「6.」）
+  - DR-8：脏/过期索引逐条跳过 → Warnings `dirty_*` / `stale_*`（原「7.」）
+  - DR-9：单阶段/总超时分支 → `retrieval_timeout` / `retrieval_timeout_degraded`（原「8.」）
+  - DR-10：错误日志须含 user_id、query_hash、失败阶段、错误码（原「10.」）
+- **spec_original → canonical**：原「1.」→DR-1 … 原「4.」→DR-4；原第一个「5.」→DR-5；原第二个「5.」→DR-6；原「6.」→DR-7；原「7.」→DR-8；原「8.」→DR-9；原「10.」→DR-10
+- **status**: resolved
 
 ---
 
@@ -728,7 +746,7 @@ status: open
 | OI-005 | STM-006 | 否 | resolved |
 | OI-006 | EXT-008 | 否 | resolved_by_task |
 | OI-007 | STM-011 | 否 | open |
-| OI-008 | RET-005 | 否 | open |
+| OI-008 | RET-005 | 否 | resolved |
 | OI-009 | STM-004 | 否 | resolved |
 | OI-010 | 已人工决议（uv_build） | 否 | resolved |
 | OI-011 | OI-011 | 否 | resolved |

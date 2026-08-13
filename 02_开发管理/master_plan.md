@@ -594,7 +594,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | RET-002 | Vector 召回 + RRF | §2.2.6, §2.2.8, §2.2.9 | RET-001, DEV-007 | completed |
 | RET-003 | Neo4j 权威回读 + 一跳扩展 + MGET | §2.2.10 | RET-002 | completed |
 | RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | completed |
-| RET-005 | Retrieval API、降级/超时、统计更新 | §2.2.5, §2.2.13–2.2.15 | RET-004, DEV-005 | planned |
+| RET-005 | Retrieval API、降级/超时、统计更新 | §2.2.5, §2.2.13–2.2.15 | RET-004, DEV-005 | completed |
 | RET-006 | Retrieval 阶段 E2E + 失败注入 | §2.2.16, §3.28 | RET-005, EXT-007 | planned |
 
 #### RET-001 BM25 查询
@@ -646,7 +646,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit（warning mapper、response mapper、编排、tokenize gate、超时分支）；Contract（路由/错误码/白名单）；Integration（TestClient + Neo4j stats Fixture）。
 - **Task Plan**：`02_开发管理/tasks/RET-005-retrieval-api-degradation-statistics.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=c086b9953829d0ca19e930cde9b1c64dadde5fb9` MATCH；新建 `RetrievalApiService` + `RetrievalStatisticsRepository` + HTTP routes/schemas；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_write_scope=Neo4j stats only`；OI-008 `resolved_by_plan`；不得触碰 DEV-006/PR#13。
-- **状态备注**：`planned`（Task Plan 已编写；`current_task_status=planned`；`next_action=计划审查`；未启动 Developer）。
+- **状态备注**：`completed`（plan `a6b0884f9cc6489f009d3d02a68a422dba88574b`；implementation `9baf16a7c6f7b0ad3cec8155b54c9fdeeb8c4250`；PR #48 MERGED `5b577d6e04c8b1e0a7336169a18855c66e4a2a3a` mergedAt `2026-08-13T07:42:25Z`；scoped 48 passed（unit 34 + contract 8 + integration HTTP 8）；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=2 non-blocking（P2 remediated pre-commit）；§2.2.5 POST /api/v1/memory/retrieval + §2.2.12 Response DTO + §2.2.13 Neo4j stats + §2.2.15 degradation/timeout；OI-008 resolved_by_task（canonical DR-1..DR-10）；零 RET-001..004 production semantic diff；feat 分支已删；RET-006 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 
 #### RET-006
 

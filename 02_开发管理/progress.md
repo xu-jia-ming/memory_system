@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 3 — RET-005 implementation
+current_phase: Phase 3 — RET-006 planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: RET-005
-current_task_status: tested
-current_branch: feat/RET-005-retrieval-api-degradation-statistics
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "计划审查"
+next_action: "RET-006 planned / NOT AUTO-STARTED"
 formal_RET-005_plan_file: 02_开发管理/tasks/RET-005-retrieval-api-degradation-statistics.md
-formal_RET-005_status: tested
+formal_RET-005_status: completed
 formal_RET-005_workflow_mode: NORMAL
 formal_RET-005_workflow_mode_source: explicit
 formal_RET-005_baseline: c086b9953829d0ca19e930cde9b1c64dadde5fb9
@@ -105,11 +105,35 @@ formal_RET-005_branch: "feat/RET-005-retrieval-api-degradation-statistics"
 formal_RET-005_prerequisite: "SATISFIED — RET-001..004 completed (PR #44..#47 MERGED); DEV-005 completed"
 formal_RET-005_scope: "§2.2.5 HTTP Retrieval API; §2.2.12 Response DTO; §2.2.13 Neo4j retrieval_count/last_retrieved_time; §2.2.15 degradation/timeout; tokenize gate orchestration; zero RET-001..004 semantic diff"
 formal_RET-005_blocking_open_issues: []
-formal_RET-005_nonblocking_open_issues: [OI-008]
+formal_RET-005_nonblocking_open_issues: []
+formal_RET-005_resolved_open_issues: [OI-008]
 formal_RET-005_dependency_changes_expected: NONE
 formal_RET-005_migration_changes_expected: NONE
 formal_RET-005_durable_write_scope: "Neo4j Memory.retrieval_count + last_retrieved_time ONLY"
-formal_RET-005_note: "P2 remediation on feat/RET-005-retrieval-api-degradation-statistics；scoped 48 passed；ruff PASS；P2-1 import/E501、P2-2 canonical user_id 传播、P2-3 vector search deadline guard；未 Git commit；next_action=CODE_REVIEW"
+formal_RET-005_note: "POST_MERGE_CLEANUP；implementation 9baf16a7c6f7b0ad3cec8155b54c9fdeeb8c4250；plan a6b0884f9cc6489f009d3d02a68a422dba88574b；PR #48 MERGED（base=main，head=feat/RET-005-retrieval-api-degradation-statistics，merge 5b577d6e04c8b1e0a7336169a18855c66e4a2a3a，mergedAt=2026-08-13T07:42:25Z）；fetch 后 origin/main 已通过 --ff-only 同步；CODE_REVIEW_APPROVED P0=0/P1=0/P2=3/P3=2 non-blocking（P2 remediated pre-commit）；§2.2.5 POST /api/v1/memory/retrieval + §2.2.12 Response DTO + §2.2.13 Neo4j stats + §2.2.15 degradation/timeout；OI-008 resolved_by_task（canonical DR-1..DR-10）；零 RET-001..004 production semantic diff；feat 分支本地/远程已删除；next_action=RET-006 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13"
+formal_RET-005_approval_posture: "POST_MERGE_CLEANUP — completed"
+formal_RET-005_plan_review: PLAN_APPROVED
+formal_RET-005_scoped_tests: "48 passed (unit 34 + contract 8 + integration HTTP 8)"
+formal_RET-005_ruff: PASS
+formal_RET-005_mypy: PASS
+formal_RET-005_code_review: CODE_REVIEW_APPROVED
+formal_RET-005_p0: 0
+formal_RET-005_p1: 0
+formal_RET-005_p2: 3
+formal_RET-005_p3: 2
+formal_RET-005_plan_commit: a6b0884f9cc6489f009d3d02a68a422dba88574b
+formal_RET-005_implementation_commit: 9baf16a7c6f7b0ad3cec8155b54c9fdeeb8c4250
+formal_RET-005_implementation_commit_message: "feat(ret): add memory retrieval api with degradation and statistics"
+formal_RET-005_pr: "#48"
+formal_RET-005_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/48"
+formal_RET-005_pr_state: MERGED
+formal_RET-005_pr_base: main
+formal_RET-005_pr_head: "feat/RET-005-retrieval-api-degradation-statistics"
+formal_RET-005_merge_commit: 5b577d6e04c8b1e0a7336169a18855c66e4a2a3a
+formal_RET-005_merged_at: "2026-08-13T07:42:25Z"
+formal_RET-005_status_record_committed: null
+formal_RET-005_release_gate: COMPLETED
+formal_RET-005_next_action: "RET-006 planned / NOT AUTO-STARTED"
 formal_RET-004_plan_file: 02_开发管理/tasks/RET-004-act-r-scoring-evidence-aggregation.md
 formal_RET-004_status: completed
 formal_RET-004_workflow_mode: NORMAL
@@ -262,6 +286,7 @@ planning_baseline_RET-001: "a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab"
 planning_baseline_RET-002: "e5f5c9de9883d04759f19080c01f1f50d2c62513"
 planning_baseline_RET-003: "21a99a5b217f45cd4e4c67b8758bf1705d9d0a74"
 planning_baseline_RET-004: "c8d9d38d92414b9e041dd3d97dcbfd17b9e61582"
+planning_baseline_RET-005: "c086b9953829d0ca19e930cde9b1c64dadde5fb9"
 planning_baseline_EXT-007: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
 formal_EXT-006_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
@@ -1454,6 +1479,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 07:48 UTC | RET-005 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `9baf16a7c6f7b0ad3cec8155b54c9fdeeb8c4250`、merge `5b577d6e04c8b1e0a7336169a18855c66e4a2a3a`；仅更新 RET-005 四份治理文件并创建 `docs(status): complete RET-005 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=3/P3=2 non-blocking；scoped 48 passed（unit 34 + contract 8 + integration HTTP 8）；§2.2.5 HTTP Retrieval API + §2.2.13 Neo4j stats + §2.2.15 degradation/timeout；OI-008 resolved_by_task（canonical DR-1..DR-10）；零 RET-001..004 production semantic diff；`next_action=RET-006 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 16:00 UTC | RET-005 | tested (P2 remediation) | Developer：P2-1 ruff import/E501；P2-2 `validate_retrieval_input` 返回 canonical stripped `user_id` 并全链路传播；P2-3 vector search 包裹 `_await_with_deadline` | scoped **48 passed**；ruff PASS；未 Git commit；`next_action=代码审查` |
 | 2026-08-13 15:30 UTC | RET-005 | planned → tested | Developer：§15 生产 7 文件 + §16 测试 8 文件；`POST /api/v1/memory/retrieval` + `RetrievalApiService` 编排（tokenize gate、bypass HybridRetrievalService.search、超时降级、Neo4j stats） | scoped **48 passed**（unit 34 + contract 8 + integration HTTP 8）；RET-001..004 unit regression **34 passed**；ruff/mypy PASS；Neo4j I3 integration 需 compose 网络（本环境 DNS 未解析 neo4j）；未 Git commit；`next_action=代码审查`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 07:00 UTC | RET-005 | planned | Planner created `02_开发管理/tasks/RET-005-retrieval-api-degradation-statistics.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `c086b9953829d0ca19e930cde9b1c64dadde5fb9` verified (main, clean tree); scope = §2.2.5 HTTP Retrieval API + §2.2.12 Response DTO + §2.2.13 Neo4j stats + §2.2.15 degradation/timeout; OI-008 canonical DR-1..DR-10 `resolved_by_plan`; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |

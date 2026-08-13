@@ -5,13 +5,13 @@
 ```yaml
 task_id: RET-005
 task_name: Retrieval API、降级/超时、统计更新
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "c086b9953829d0ca19e930cde9b1c64dadde5fb9"
 branch: "feat/RET-005-retrieval-api-degradation-statistics"
 created_at: "2026-08-13 07:00 UTC"
-updated_at: "2026-08-13 16:00 UTC"
+updated_at: "2026-08-13 07:48 UTC"
 spec_sections:
   - "§2.2.5 Memory Retrieval API（HTTP Request 校验与字段）"
   - "§2.2.12 Evidence + Response DTO（score=final_score；retrieval_source；evidence_count；source_message_ids）"
@@ -672,7 +672,7 @@ retrieve (BM25 + Vector + fuse_rrf)
 | resolution | 在 Task Plan 与 `open_issues.md` 登记 **canonical DR 映射**；**不**修改规格正文语义 |
 | canonical_mapping | 见 §7.5 表 DR-1..DR-10 |
 | spec_original → canonical | 原「1.」→DR-1 … 原「4.」→DR-4；原第一个「5.」→DR-5（`retrieval_unavailable`）；原第二个「5.」→DR-6（`graph_load_failed`）；原「6.」→DR-7；原「7.」→DR-8；原「8.」→DR-9（超时）；原「10.」→DR-10（日志） |
-| status | `resolved_by_plan`（规划登记）；merge 后更新为 `resolved_by_task` |
+| status | `resolved_by_task`（RET-005 PR #48 MERGED） |
 | blocks_implementation | **否** |
 
 ## 18. deferred_for_mvp
@@ -874,11 +874,52 @@ docs(plan): add RET-005 retrieval api degradation and statistics plan
 | 2026-08-13 07:00 UTC | planning | 创建 Task Plan；更新 progress/master_plan 规划态 | — | planning only；未 Git 写；baseline c086b99 verified |
 | 2026-08-13 15:30 UTC | implementation | §15 生产 7 文件 + §16 测试 8 文件；`RetrievalApiService` 编排 + tokenize gate + 超时降级 + Neo4j stats | scoped 48 passed（unit 34 + contract 8 + integration HTTP 8）；RET-001..004 unit regression 34 passed；ruff/mypy clean；Neo4j I3 需 docker（未在本轮执行） | HTTP 编排 bypass `HybridRetrievalService.search`（LD-1）；mapper 使用 domain dataclass 避免 api 循环导入；未 Git commit |
 | 2026-08-13 16:00 UTC | P2 remediation | `retrieval_api_service.py`：ruff import/E501；`validate_retrieval_input` 返回 canonical `user_id` 并全链路传播；vector search 包裹 `_await_with_deadline` | scoped 48 passed；ruff PASS；未 Git commit | 最小 diff；仅 P2-1/2/3 |
+| 2026-08-13 07:48 UTC | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #48 MERGED；验证 main 含 implementation `9baf16a7c6f7b0ad3cec8155b54c9fdeeb8c4250`、merge `5b577d6e04c8b1e0a7336169a18855c66e4a2a3a`；治理四文件 + `docs(status): complete`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=3/P3=2 non-blocking；OI-008 resolved_by_task；`next_action=RET-006 planned / NOT AUTO-STARTED` | 无计划外差异 |
 
 ## 30. Plan Amendment
 
 计划批准后如需修改，新增记录，禁止覆盖原计划。
 
+## 31. 实际执行结果
+
+### Git 记录
+
+```yaml
+branch: "feat/RET-005-retrieval-api-degradation-statistics"
+plan_commit: a6b0884f9cc6489f009d3d02a68a422dba88574b
+implementation_commit: 9baf16a7c6f7b0ad3cec8155b54c9fdeeb8c4250
+implementation_commit_message: "feat(ret): add memory retrieval api with degradation and statistics"
+pr: "#48"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/48"
+pr_state: MERGED
+pr_base: main
+pr_head: "feat/RET-005-retrieval-api-degradation-statistics"
+merge_commit: 5b577d6e04c8b1e0a7336169a18855c66e4a2a3a
+merged_at: "2026-08-13T07:42:25Z"
+status_record_committed: null
+```
+
+### 测试结果
+
+```yaml
+scoped_tests: "48 passed (unit 34 + contract 8 + integration HTTP 8)"
+ruff: PASS
+mypy: PASS
+```
+
+### Review 结果
+
+```yaml
+p0: 0
+p1: 0
+p2: 3
+p3: 2
+review_report: null
+```
+
+### 最终状态
+
+`completed`
+
 ---
 
-READY_FOR_PLAN_REVIEW
