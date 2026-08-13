@@ -8,6 +8,9 @@ from typing import Any
 from elasticsearch import ApiError, AsyncElasticsearch, ConnectionError, TransportError
 
 from memory_system.domain.models.bm25_retrieval import Bm25RetrievalHit, Bm25RetrievalQuery
+from memory_system.infrastructure.elasticsearch.retrieval_filter_builder import (
+    build_retrieval_filters,
+)
 
 MULTI_MATCH_FIELDS = ["search_text^2.0", "content^1.0", "predicate^0.5"]
 
@@ -27,12 +30,12 @@ class Bm25RetrievalRepository:
         self._client = client
 
     def build_search_body(self, query: Bm25RetrievalQuery, *, size: int) -> dict[str, Any]:
-        filters: list[dict[str, Any]] = [{"term": {"user_id": query.user_id}}]
-
-        if query.memory_types:
-            filters.append({"terms": {"memory_type": query.memory_types}})
-
-        filters.append(_build_status_filter(query.include_conflicted, query.include_history))
+        filters = build_retrieval_filters(
+            user_id=query.user_id,
+            memory_types=query.memory_types,
+            include_conflicted=query.include_conflicted,
+            include_history=query.include_history,
+        )
 
         return {
             "size": size,
@@ -88,16 +91,6 @@ def _coerce_search_response_body(response: Any) -> dict[str, Any]:
     if not isinstance(body, dict):
         raise Bm25RetrievalError("elasticsearch bm25 response must be an object", retryable=False)
     return body
-
-
-def _build_status_filter(include_conflicted: bool, include_history: bool) -> dict[str, Any]:
-    if not include_conflicted and not include_history:
-        return {"term": {"status": "active"}}
-    if include_conflicted and not include_history:
-        return {"terms": {"status": ["active", "conflicted"]}}
-    if not include_conflicted and include_history:
-        return {"terms": {"status": ["active", "superseded"]}}
-    return {"terms": {"status": ["active", "conflicted", "superseded"]}}
 
 
 def _parse_hits(response: Any) -> list[Bm25RetrievalHit]:
