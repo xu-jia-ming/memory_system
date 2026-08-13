@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-009
 task_name: Extraction E2E + Pipeline Wiring
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 branch: "feat/EXT-009-extraction-e2e-pipeline-wiring"
 created_at: "2026-08-12 22:30 UTC"
-updated_at: "2026-08-12 22:30 UTC"
+updated_at: "2026-08-13 00:32 UTC"
 spec_sections:
   - "§2.1.3 Memory Extraction Task"
   - "§2.1.4 Kafka 消费与任务幂等（completed 早退；terminal 持久化后才 Offset）"
@@ -52,10 +52,10 @@ prerequisites:
     verification: "git branch --show-current=main; git status --short empty; git rev-parse HEAD=779963257e33a93ad02ef4e3f997b3c9f6706802"
 approval_gates:
   planning: "PLAN_APPROVED"
-  approval_posture: "pending Plan Review"
+  approval_posture: "PLAN_APPROVED"
   amendment_recorded: false
-  human_plan_approved: false
-  developer_authorized: false
+  human_plan_approved: true
+  developer_authorized: true
   reviewer_authorized: false
   release_operator_authorized: false
 release_phases:
@@ -69,10 +69,10 @@ migration_changes_expected: NONE
 ### 1.1 本轮门禁与停止条件
 
 ```yaml
-phase: planning_only
+phase: implementation
 must_not_this_round:
-  - "编写业务实现、测试实现、Migration、配置或依赖"
-  - "进入 Developer、Code Reviewer、Commit Recorder 或 Release Operator"
+  - "编写 Migration、配置或依赖"
+  - "进入 Code Reviewer、Commit Recorder 或 Release Operator"
   - "执行任何 Git 写命令"
   - "修改权威规格正文"
   - "修改 EXT-002..007 阶段服务内部语义（entity_alignment/reconciliation/graph_write/retrieval_index_sync/extraction_llm_service）"
@@ -559,12 +559,24 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-12 22:30 UTC | planning | 创建 Task Plan；同步 progress/master_plan | — | baseline 7799632 verified；prerequisites SATISFIED；continuation closure planned |
+| 2026-08-12 14:39 UTC | implementation start | 确认 PLAN_APPROVED；切换 `in_progress`；当前分支与计划 commit 匹配 | — | 仅按白名单实施；不触碰 DEV-006/PR#13 |
+| 2026-08-12 14:47 UTC | pipeline + worker wiring | 新建 `ProductionExtractionPipeline`；接线 extraction worker；consumer 增加 LD-1 terminal reload；新增 unit/contract/integration/E2E 测试骨架 | scoped unit/contract 首轮修复后通过；compose/E2E 待环境验证 | F1 使用可注入测试 hook；EXT-002..007 与 PipelineTerminalDecision 未改；不触碰 DEV-006/PR#13 |
+| 2026-08-12 15:03 UTC | implementation + tested | 完成 pipeline/worker/consumer 接线、SF-1 同轮 fall-through、SF-2 F1 hook、SF-3 ASGI Admin auth；补齐共享 Kafka producer 与 integration 本地 fixture 包装 | scoped unit/contract/worker **35 passed**（4 个既有 AsyncMock warning）；compose integration **1 passed**；E2E-1..4 **4 passed**；Ruff PASS；Mypy（3 个 changed production modules）PASS；IDE lints clean；combined collection **5 collected** | 首轮 collection 暴露 plugin 重复与缺少 Kafka fixture，已在白名单测试 fixture 内修复；EXT-002..007 与 `PipelineTerminalDecision` 零 diff；未 Git 写；不触碰 DEV-006/PR#13 |
+| 2026-08-12 15:17 UTC | remediation start | 收到 CODE_REVIEW_REJECTED（P0/P1/P2）；切换 `in_progress`，限定在既有 EXT-009 生产/测试白名单 | — | 修复 user-only replay 索引集合、真实 retry convergence 与 F1 断点证据；不修改 EXT-002..008、契约/错误码/状态机；不触碰 DEV-006/PR#13；不执行 Git 写 |
+| 2026-08-12 15:29 UTC | remediation implemented | 在 `ProductionExtractionPipeline` 的 graph→retrieval handoff 增加 archive Evidence→Memory seed 恢复；补充 user-only P0-A/B/C、Admin retry convergence、F1 crash-replay 的真实 compose E2E；补强 graph/Evidence/relationship identity 断言 | — | 仅修改既有 EXT-009 白名单；不创建普通 Entity；EXT-007 继续拥有 ES/terminal 写入；不触碰 DEV-006/PR#13；未 Git 写 |
+| 2026-08-12 15:29 UTC | remediation tested | — | focused P0 **3 passed**；retry convergence + F1 **2 passed**；完整 EXT-009 scoped unit/contract/integration/E2E **46 passed**（4 个既有 AsyncMock warning）；Ruff PASS；Mypy（3 个 changed production modules）PASS；IDE lints clean；Docker compose 可用 | P0/P1/P2 evidence verified；graph identities/Evidence/relationships stable；ES `_id=memory_id` 收敛；terminal Mongo before offset；未 Git 写；不触碰 DEV-006/PR#13 |
+| 2026-08-12 15:31 UTC | remediation refinement | 将 replay fallback 从仅 memory-id seed 收紧为 Neo4j `MemoryIndexRow` 生成真实 `core_search_text` 与 token_count，再交给 EXT-007；同步更新 unit evidence | focused remediation rerun pending | 避免伪造 handoff 字段；不改变 EXT-007 文本/失败/终态语义；仅既有 EXT-009 白名单；未 Git 写 |
+| 2026-08-12 15:35 UTC | refinement implemented | 完成 authoritative `MemoryIndexRow`/`core_search_text`/token_count replay handoff；保留 Evidence→Memory scope 查询与 user-only reserved identity 路径 | — | EXT-007 仍执行最终文本预算、Embedding、ES upsert、Mongo terminal；无 fake Entity/业务占位返回；仅既有 EXT-009 白名单；未 Git 写 |
+| 2026-08-12 15:35 UTC | refinement tested | — | focused P0/retry/F1 **5 passed**；完整 EXT-009 scoped unit/contract/integration/E2E **46 passed**（4 个既有 AsyncMock warning）；Ruff PASS；Mypy（3 个 changed production modules）PASS；IDE lints clean；Docker compose 可用 | P0-A/B/C、Admin retry convergence、F1 graph crash replay verified after exact handoff refinement；未 Git 写；不触碰 DEV-006/PR#13 |
+| 2026-08-13 00:26 UTC | remediation start | 切换 `in_progress`；修复 terminal reload 异常 fail-closed 与本文件 YAML 缩进；补充 TypeError/代表性 repository exception focused tests | — | 仅处理当前 Code Review 两项 finding；COMPLETE/FAIL、Offset、PipelineTerminalDecision 与阶段服务语义不变；未 Git 写 |
+| 2026-08-13 00:30 UTC | remediation implemented | COMPLETE/FAIL reload 异常统一经 `TerminalPersistError` fail-closed 并保留原始 cause；补充 expected-terminal/non-terminal/TypeError/repository-error 双分支测试；YAML 缩进已修复 | focused terminal idempotency **10 passed**；YAML parse PASS；Ruff PASS；Mypy PASS；IDE lints clean；scoped suite pending | 仅修改既有 EXT-009 白名单；不改变 mark_* 正常路径、Offset、PipelineTerminalDecision 或生产 scope；未 Git 写 |
+| 2026-08-13 00:32 UTC | remediation tested | — | focused terminal idempotency **10 passed**；EXT-009 scoped unit/contract/integration/E2E **33 passed**；YAML parse PASS；full Ruff PASS；Mypy（remediation files）PASS；IDE lints clean | full-repository Mypy remains baseline-failing with **143** errors outside this remediation；legacy EXT-001 consumer unit has **3** fixture failures because it models swallowed reload `TypeError` and is outside this narrow whitelist；未 Git 写 |
 
 ## 20. 实际执行结果
 
 ### 最终状态
 
-`planned` — 等待 Plan Review；`developer_authorized=false`；`next_action=计划审查`；**不得触碰 DEV-006/PR#13**。
+`tested` — PLAN_APPROVED；`developer_authorized=true`；当前 Code Review 两项 remediation 已实现并完成 EXT-009 scoped validation；`next_action=代码审查`；**不得触碰 DEV-006/PR#13**。
 
 ### Git 记录
 
