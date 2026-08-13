@@ -591,7 +591,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | RET-001 | BM25 查询 | §2.2.7 | DEV-004, DEV-007 | completed |
-| RET-002 | Vector 召回 + RRF | §2.2.6, §2.2.8, §2.2.9 | RET-001, DEV-007 | planned |
+| RET-002 | Vector 召回 + RRF | §2.2.6, §2.2.8, §2.2.9 | RET-001, DEV-007 | completed |
 | RET-003 | Neo4j 权威回读 + 一跳扩展 + MGET | §2.2.10 | RET-002 | planned |
 | RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | planned |
 | RET-005 | Retrieval API、降级/超时、统计更新 | §2.2.5, §2.2.13–2.2.15 | RET-004, DEV-005 | planned |
@@ -616,7 +616,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit（RRF 精确算例、并行编排、filter builder）；Integration — Migration 后**直接写入固定 ES Fixture**（差异化 embedding）+ Fake Embedding；RET-001 回归全通过。
 - **Task Plan**：`02_开发管理/tasks/RET-002-vector-retrieval-rrf.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=e5f5c9de9883d04759f19080c01f1f50d2c62513` MATCH；内部 Service/Repository；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；LD-1 SiliconFlow 无本地 `skipped_query_too_long` 预检；共享 `retrieval_filter_builder` 最小重构 BM25 repo；不得触碰 DEV-006/PR#13。
-- **状态备注**：`planned`（Planner 初版 2026-08-13；`next_action=计划审查`；Developer NOT authorized）。
+- **状态备注**：`completed`（plan `da1736925b767777bd8f538d5719d5821bebc017`；implementation `3bf3a1b760080d4f581ab53dad0961a28dfb63a4`；PR #45 MERGED `2bfc2b2ddbd5ef69a2a3f473722b32a9ead3d461` mergedAt `2026-08-13T03:13:39Z`；scoped 71 passed（31 RET-002 unit + 7 integration + 33 RET-001 regression）；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 non-blocking；§2.2.6/§2.2.8/§2.2.9 Vector+RRF internal path；共享 `retrieval_filter_builder`；Integration ES Fixture + Fake embed；feat 分支已删；RET-003 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 
 #### RET-003–RET-005
 
@@ -1471,5 +1471,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
 | 是否改变技术规格 | **否**（对齐既有 §2.2.6/§2.2.8/§2.2.9；LD-1 记录 SiliconFlow token 语义） |
 | 审批 | Planner 初版；等待独立 Plan Review → `PLAN_APPROVED` |
+
+### CHANGE-075
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-13 |
+| 原因 | RET-002 POST_MERGE_CLEANUP：PR #45 MERGED；implementation 已在 main；完成治理状态并清理 exact feature branch |
+| 受影响任务 | `RET-002`（`completed`）；`RET-003` remains `planned` / **NOT AUTO-STARTED**；不改变 Appendix B、Vector/RRF/Neo4j 语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
+| 事实记录 | plan `da1736925b767777bd8f538d5719d5821bebc017`；implementation `3bf3a1b760080d4f581ab53dad0961a28dfb63a4`；PR #45 MERGED `2bfc2b2ddbd5ef69a2a3f473722b32a9ead3d461`；mergedAt `2026-08-13T03:13:39Z`；CODE_REVIEW_APPROVED P0=0/P1=0/P2=1 non-blocking；fetch 后 origin/main 领先本地 main，已通过 --ff-only 同步 |
+| 交付与不变量 | §2.2.6 query norm + single-query embed；§2.2.8 Vector kNN；§2.2.9 RRF fusion + `retrieval_mode`；`HybridRetrievalService` 并行 BM25+Vector；共享 filter builder；BM25 零语义变更；Integration ES Fixture not EXT-007 pipeline；零 durable write |
+| Open Issues | OI-008 non-blocking（RET-005 API 编辑性） |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
+| 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
+| 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=RET-003 planned / NOT AUTO-STARTED`；不得自动启动 RET-003 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

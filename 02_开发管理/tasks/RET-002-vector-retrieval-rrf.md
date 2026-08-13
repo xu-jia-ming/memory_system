@@ -5,13 +5,13 @@
 ```yaml
 task_id: RET-002
 task_name: Vector 召回 + RRF 融合
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "e5f5c9de9883d04759f19080c01f1f50d2c62513"
 branch: "feat/RET-002-vector-retrieval-rrf"
 created_at: "2026-08-13 02:40 UTC"
-updated_at: "2026-08-13 03:01 UTC"
+updated_at: "2026-08-13 03:15 UTC"
 spec_sections:
   - "§2.2.6 Query 标准化与 Embedding（RET-002 拥有检索内部路径的 query norm + single-query embed）"
   - "§2.2.8 Vector 语义召回（本任务 Vector 通道权威范围）"
@@ -703,6 +703,7 @@ out_of_scope_changes:
 |---|---|---|---|---|
 | 2026-08-13 02:40 UTC | planning | 创建 Task Plan；更新 progress/master_plan 规划态 | — | planning only；未 Git 写 |
 | 2026-08-13 03:01 UTC | implemented → tested | 9 生产文件 + 8 测试文件；共享 filter 提取；BM25 零语义变更 | 71 passed（31 RET-002 unit + 7 integration + 33 RET-001 regression）；ruff/mypy PASS | 无计划外差异 |
+| 2026-08-13 03:15 UTC | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #45 MERGED；验证 main 含 implementation `3bf3a1b760080d4f581ab53dad0961a28dfb63a4`、merge `2bfc2b2ddbd5ef69a2a3f473722b32a9ead3d461`；治理三文件 + `docs(status): complete`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=1 non-blocking；`next_action=RET-003 planned / NOT AUTO-STARTED` | 无计划外差异 |
 
 ## 26. 实际执行结果
 
@@ -746,7 +747,7 @@ mypy: PASS
 ```yaml
 p0: 0
 p1: 0
-p2: 0
+p2: 1
 p3: 0
 review_report: null
 ```
@@ -754,12 +755,20 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: "feat/RET-002-vector-retrieval-rrf"
+plan_commit: da1736925b767777bd8f538d5719d5821bebc017
+implementation_commit: 3bf3a1b760080d4f581ab53dad0961a28dfb63a4
+implementation_commit_message: "feat(ret): add vector retrieval, query embedding path, and RRF fusion"
+pr: "#45"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/45"
+pr_state: MERGED
+pr_base: main
+pr_head: "feat/RET-002-vector-retrieval-rrf"
+merge_commit: 2bfc2b2ddbd5ef69a2a3f473722b32a9ead3d461
+merged_at: "2026-08-13T03:13:39Z"
+status_record_committed: null
 ```
 
 ### 最终状态
 
-`tested`
+`completed`

@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 3 — RET-002 approved
+current_phase: Phase 3 — RET-003 planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: RET-002
-current_task_status: tested
-current_branch: feat/RET-002-vector-retrieval-rrf
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -95,7 +95,7 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "PLAN_LANDING then Developer"
+next_action: "RET-003 planned / NOT AUTO-STARTED"
 formal_RET-001_plan_file: 02_开发管理/tasks/RET-001-bm25-retrieval.md
 formal_RET-001_status: completed
 formal_RET-001_workflow_mode: NORMAL
@@ -132,7 +132,7 @@ formal_RET-001_status_record_committed: null
 formal_RET-001_release_gate: COMPLETED
 formal_RET-001_next_action: "RET-002 planned / NOT AUTO-STARTED"
 formal_RET-002_plan_file: 02_开发管理/tasks/RET-002-vector-retrieval-rrf.md
-formal_RET-002_status: tested
+formal_RET-002_status: completed
 formal_RET-002_workflow_mode: NORMAL
 formal_RET-002_workflow_mode_source: explicit
 formal_RET-002_baseline: e5f5c9de9883d04759f19080c01f1f50d2c62513
@@ -143,12 +143,29 @@ formal_RET-002_blocking_open_issues: []
 formal_RET-002_nonblocking_open_issues: [OI-008]
 formal_RET-002_dependency_changes_expected: NONE
 formal_RET-002_migration_changes_expected: NONE
-formal_RET-002_note: "Developer 实现完成；9 生产 + 8 测试；shared retrieval_filter_builder；Hybrid 并行 BM25+embed+Vector；RRF fuse_rrf；scoped 71 passed；ruff/mypy PASS；未 Git 写；不得触碰 DEV-006/PR#13"
-formal_RET-002_approval_posture: "PLAN_APPROVED — human confirmed 2026-08-13; SF-1/SF-2/SF-3 absorbed in plan Amendment"
-formal_RET-002_next_action: "代码审查"
+formal_RET-002_note: "POST_MERGE_CLEANUP；implementation 3bf3a1b760080d4f581ab53dad0961a28dfb63a4；plan da1736925b767777bd8f538d5719d5821bebc017；PR #45 MERGED（base=main，head=feat/RET-002-vector-retrieval-rrf，merge 2bfc2b2ddbd5ef69a2a3f473722b32a9ead3d461，mergedAt=2026-08-13T03:13:39Z）；fetch 后 origin/main 领先本地 main，已通过 --ff-only 同步；CODE_REVIEW_APPROVED P0=0/P1=0/P2=1 non-blocking；§2.2.6/§2.2.8/§2.2.9 Vector+RRF internal path；共享 retrieval_filter_builder；Integration ES Fixture + Fake embed；feat 分支本地/远程已删除；next_action=RET-003 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13"
+formal_RET-002_approval_posture: "POST_MERGE_CLEANUP — completed"
+formal_RET-002_next_action: "RET-003 planned / NOT AUTO-STARTED"
 formal_RET-002_scoped_tests: "71 passed (31 RET-002 unit + 7 integration + 33 RET-001 regression)"
 formal_RET-002_ruff: PASS
 formal_RET-002_mypy: PASS
+formal_RET-002_code_review: CODE_REVIEW_APPROVED
+formal_RET-002_p0: 0
+formal_RET-002_p1: 0
+formal_RET-002_p2: 1
+formal_RET-002_p3: 0
+formal_RET-002_plan_commit: da1736925b767777bd8f538d5719d5821bebc017
+formal_RET-002_implementation_commit: 3bf3a1b760080d4f581ab53dad0961a28dfb63a4
+formal_RET-002_implementation_commit_message: "feat(ret): add vector retrieval, query embedding path, and RRF fusion"
+formal_RET-002_pr: "#45"
+formal_RET-002_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/45"
+formal_RET-002_pr_state: MERGED
+formal_RET-002_pr_base: main
+formal_RET-002_pr_head: "feat/RET-002-vector-retrieval-rrf"
+formal_RET-002_merge_commit: 2bfc2b2ddbd5ef69a2a3f473722b32a9ead3d461
+formal_RET-002_merged_at: "2026-08-13T03:13:39Z"
+formal_RET-002_status_record_committed: null
+formal_RET-002_release_gate: COMPLETED
 planning_baseline_RET-001: "a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab"
 planning_baseline_RET-002: "e5f5c9de9883d04759f19080c01f1f50d2c62513"
 planning_baseline_EXT-007: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
@@ -292,7 +309,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: "READY_FOR_CODE_REVIEW — RET-002 tested"
+current_task_approval_posture: "POST_MERGE_CLEANUP — RET-002 completed"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -1343,6 +1360,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 03:15 UTC | RET-002 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 领先本地 main，已通过 `--ff-only` 同步；验证 main 包含 implementation `3bf3a1b760080d4f581ab53dad0961a28dfb63a4`、merge `2bfc2b2ddbd5ef69a2a3f473722b32a9ead3d461`；仅更新 RET-002 三份治理文件并创建 `docs(status): complete RET-002 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=1 non-blocking；scoped 71 passed（31 RET-002 unit + 7 integration + 33 RET-001 regression）；§2.2.6/§2.2.8/§2.2.9 Vector+RRF internal path；共享 `retrieval_filter_builder`；Integration ES Fixture + Fake embed；`next_action=RET-003 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 03:01 UTC | RET-002 | approved → tested | Developer：Vector kNN + RRF fusion + Hybrid 并行编排；共享 `retrieval_filter_builder`；BM25 repository 零语义变更 | scoped **71 passed**（31 RET-002 unit + 7 integration + 33 RET-001 regression）；ruff/mypy PASS；未 Git 写；`next_action=代码审查`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 02:40 UTC | RET-002 | planned | Planner created `02_开发管理/tasks/RET-002-vector-retrieval-rrf.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `e5f5c9de9883d04759f19080c01f1f50d2c62513` verified (main, clean tree); scope = §2.2.6 retrieval-path query norm + embed, §2.2.8 Vector kNN, §2.2.9 RRF fusion; reuse RET-001 BM25 + DEV-007 EmbeddingClient; shared filter builder; Integration ES Fixture + Fake embed; LD-1 no local token pre-check on SiliconFlow; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-13 02:30 UTC | RET-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 领先本地 main，已通过 `--ff-only` 同步；验证 main 包含 implementation `fc435db722ed29c05980d6a1a60d9f57fda80968`、merge `a4dda57366b9e0cb2a1fb34b6526a07daa30ed31`；仅更新 RET-001 三份治理文件并创建 `docs(status): complete RET-001 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking；scoped 33 passed（25 unit + 8 integration）；§2.2.7 BM25 internal channel read-only；Integration ES Fixture not EXT-007 pipeline；`next_action=RET-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
