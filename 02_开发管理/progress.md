@@ -106,7 +106,10 @@ formal_CON-005_milestone: "v0.5.0-consolidation"
 formal_CON-005_prerequisite: "SATISFIED — CON-004 completed (PR #53 MERGED); CON-003 completed (PR #52 MERGED); CON-002 completed (PR #51 MERGED); CON-001 completed (PR #50 MERGED); EXT-001..009 completed; RET-001..006 completed"
 formal_CON-005_scope: "§2.3.11–13 consolidation vertical slice Integration + E2E on real Neo4j; in-process ConsolidationRunService production wiring; INT-1..6 + E2E-1..6; zero CON-001..004 production semantics diff default; closes v0.5.0-consolidation"
 formal_CON-005_blocking_open_issues: []
-formal_CON-005_nonblocking_open_issues: []
+formal_CON-005_nonblocking_open_issues:
+  - "P3-1: C1 contract test untracked-file blind spot"
+  - "P3-2: E2E-4 omits conflict-row importance unchanged assertion at E2E layer"
+  - "P3-3: E2E-2 no explicit trailing empty-page assertion"
 formal_CON-005_dependency_changes_expected: NONE
 formal_CON-005_migration_changes_expected: NONE
 formal_CON-005_durable_read_scope: "Neo4j read-only — CON-002 batch + CON-004 user enumeration (test verification)"
