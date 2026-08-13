@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-009
 task_name: Extraction E2E + Pipeline Wiring
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 branch: "feat/EXT-009-extraction-e2e-pipeline-wiring"
 created_at: "2026-08-12 22:30 UTC"
-updated_at: "2026-08-13 00:56 UTC"
+updated_at: "2026-08-13 01:13 UTC"
 spec_sections:
   - "§2.1.3 Memory Extraction Task"
   - "§2.1.4 Kafka 消费与任务幂等（completed 早退；terminal 持久化后才 Offset）"
@@ -572,12 +572,13 @@ out_of_scope_changes:
 | 2026-08-13 00:30 UTC | remediation implemented | COMPLETE/FAIL reload 异常统一经 `TerminalPersistError` fail-closed 并保留原始 cause；补充 expected-terminal/non-terminal/TypeError/repository-error 双分支测试；YAML 缩进已修复 | focused terminal idempotency **10 passed**；YAML parse PASS；Ruff PASS；Mypy PASS；IDE lints clean；scoped suite pending | 仅修改既有 EXT-009 白名单；不改变 mark_* 正常路径、Offset、PipelineTerminalDecision 或生产 scope；未 Git 写 |
 | 2026-08-13 00:32 UTC | remediation tested | — | focused terminal idempotency **10 passed**；EXT-009 scoped unit/contract/integration/E2E **33 passed**；YAML parse PASS；full Ruff PASS；Mypy（remediation files）PASS；IDE lints clean | full-repository Mypy remains baseline-failing with **143** errors outside this remediation；legacy EXT-001 consumer unit has **3** fixture failures because it models swallowed reload `TypeError` and is outside this narrow whitelist；未 Git 写 |
 | 2026-08-13 00:56 UTC | Release IMPLEMENTATION_RELEASE | implementation `d6a4bf596b78275ce3e8644a79e2dc8d218675d4`；PR #43 OPEN | scoped 33 passed；E2E 4 passed；YAML/Ruff/Mypy/lints PASS | `status=committed`；仅 exact feature branch push；等待人工 Merge；不触碰 DEV-006/PR#13 |
+| 2026-08-13 01:11 UTC | POST_MERGE_CLEANUP | fetch 后发现 origin/main 领先本地 main，按 `SAFE_AUTO_REMEDIATION` 通过 `--ff-only` 同步；验证 PR #43 MERGED 与 implementation/record/merge facts；更新三份治理文件；创建 `docs(status): complete EXT-009 after PR merge`；删除 exact feature branch local/remote | CODE_REVIEW_APPROVED P0=0/P1=0/P2=0；pipeline continuation 闭合；terminal Mongo 持久化先于 Kafka Offset；extraction_result replay 跳过 LLM，Retrieval ES upsert 收敛且无重复 Memory/Evidence/ES 文档 | `status=completed`；仅治理白名单；`next_action=RET-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 
 ## 20. 实际执行结果
 
 ### 最终状态
 
-`committed` — PLAN_APPROVED；`developer_authorized=true`；CODE_REVIEW_APPROVED；implementation `d6a4bf596b78275ce3e8644a79e2dc8d218675d4`；PR #43 OPEN；`next_action=等待 PR Merge`；**不得触碰 DEV-006/PR#13**。
+`completed` — POST_MERGE_CLEANUP；implementation `d6a4bf596b78275ce3e8644a79e2dc8d218675d4`；record `ddfb89ca8e466e0802d9e98177295a9effb41725`；PR #43 MERGED（`https://github.com/xu-jia-ming/memory_system/pull/43`；merge `c05691144b650b22be714736de3c200076c340c3`；mergedAt `2026-08-13T01:11:57Z`）；scoped 33 passed；E2E 4 passed；Ruff PASS；Mypy remediation files PASS（full-repository baseline 143 errors）；CODE_REVIEW_APPROVED P0=0/P1=0/P2=0；ProductionExtractionPipeline 闭合 EXT-003→007 continuation；terminal Mongo 持久化先于 Kafka Offset；extraction_result replay 跳过 LLM，Retrieval ES upsert 收敛且无重复 Memory/Evidence/ES 文档；EXT-002..007 阶段语义零 diff；SAFE_AUTO_REMEDIATION 已按 ff-only 完成；feat 分支本地/远程已删除；`next_action=RET-001 planned / NOT AUTO-STARTED`；**不得触碰 DEV-006/PR#13**。
 
 ### Git 记录
 
@@ -586,9 +587,13 @@ branch: feat/EXT-009-extraction-e2e-pipeline-wiring
 plan_commit: null
 implementation_commit: "d6a4bf596b78275ce3e8644a79e2dc8d218675d4"
 implementation_commit_message: "feat(ext): wire production extraction pipeline and worker"
+record_commit: "ddfb89ca8e466e0802d9e98177295a9effb41725"
+merge_commit: "c05691144b650b22be714736de3c200076c340c3"
+merged_at: "2026-08-13T01:11:57Z"
 pr: "#43"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/43"
-pr_state: OPEN
+pr_state: MERGED
 pr_base: main
 pr_head: feat/EXT-009-extraction-e2e-pipeline-wiring
+next_action: "RET-001 planned / NOT AUTO-STARTED"
 ```
