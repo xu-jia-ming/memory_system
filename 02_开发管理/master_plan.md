@@ -595,7 +595,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | RET-003 | Neo4j 权威回读 + 一跳扩展 + MGET | §2.2.10 | RET-002 | completed |
 | RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | completed |
 | RET-005 | Retrieval API、降级/超时、统计更新 | §2.2.5, §2.2.13–2.2.15 | RET-004, DEV-005 | completed |
-| RET-006 | Retrieval 阶段 E2E + 失败注入 | §2.2.16, §3.28 | RET-005, EXT-007 | approved |
+| RET-006 | Retrieval 阶段 E2E + 失败注入 | §2.2.16, §3.28 | RET-005, EXT-007 | completed |
 
 #### RET-001 BM25 查询
 
@@ -659,7 +659,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **生产白名单**：**NONE**（默认零 `src/**` diff；缺陷暴露 → HALT）。
 - **Task Plan**：`02_开发管理/tasks/RET-006-retrieval-e2e-failure-injection.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=538cf13ac3d33d1f337a9e5f5b450626ddd6529d` MATCH；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_write_scope=existing RET-005 stats + EXT-007 ES upsert only`；里程碑 `v0.4.0-memory-retrieval`；不得触碰 DEV-006/PR#13。
-- **状态备注**：`approved`（Round 2 `PLAN_APPROVED`；human PLAN_APPROVED granted 2026-08-13；`approval_posture=PLAN_APPROVED`；`developer_authorized=true` post-PLAN_LANDING；`next_action=Developer on feat/RET-006-retrieval-e2e-failure-injection`；里程碑 `v0.4.0-memory-retrieval`；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`completed`（plan `e1abc1ca77566da645a8087844d0da28cd8c87fe`；implementation `6e5517c11f0c7b6417264064d718937dd0aca62b`；record `4637279313e2fac61b986bbe45be8dfb847318b2`；PR #49 MERGED `295c5faa3b0160db349b926dc8eb0a001d67c7ce` mergedAt `2026-08-13T08:48:22Z`；scoped 9 passed（E2E-1,2,3,4a,4b,5a,5b,6 + auth）；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2 non-blocking；§2.2.16 Retrieval stage E2E + §3.28 failure injection；EXT-007 write→retrieve（E2E-2）；零 `src/**` diff；feat 分支已删）；**closes `v0.4.0-memory-retrieval` milestone**；`next_action=CON-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13）。
 
 ---
 
@@ -697,7 +697,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | `v0.1.0-bootstrap` | Phase 0 完成（含 **DEV-007** SiliconFlow MVP；DEV-006 TEI **非** bootstrap 阻塞） |
 | `v0.2.0-short-term-memory` | STM-013 完成 |
 | `v0.3.0-memory-extraction` | EXT-009 完成（已满足） |
-| `v0.4.0-memory-retrieval` | RET-006 完成 |
+| `v0.4.0-memory-retrieval` | RET-006 完成（已满足） |
 | `v0.5.0-consolidation` | CON-005 完成 |
 | `v0.9.0-mvp-rc1` | E2E-001 与审查完成 |
 | `v1.0.0-mvp` | MVP 验收清单全部通过 |
