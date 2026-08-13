@@ -671,7 +671,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | CON-002 | Cursor 分页批量读取与 Evidence 计数 | §2.3.4 | CON-001 | completed |
 | CON-003 | 乐观锁批量更新 | §2.3.9 | CON-002 | completed |
 | CON-004 | APScheduler、互斥锁、失败恢复 | §2.3.4, §3.22 | CON-003 | completed |
-| CON-005 | Consolidation Integration + E2E | §2.3.11–2.3.13 | CON-004 | planned |
+| CON-005 | Consolidation Integration + E2E | §2.3.11–2.3.13 | CON-004 | approved |
 
 - **非目标（阶段）**：独立 Consolidation HTTP API；ES importance 同步；多实例调度。
 
@@ -714,6 +714,16 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **Task Plan**：`02_开发管理/tasks/CON-004-apscheduler-mutex-failure-recovery.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=8998f627b6cf0c8f5beb103006903d8c3668542a` MATCH；新建 `consolidation_run` models + `consolidation_run_service` + `consolidation_mutex` + `consolidation_scheduler` + `consolidation_user_enumeration_repository` + `consolidation_run_telemetry`；**修改** `consolidation_worker.py`；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=Neo4j DISTINCT user_id enumeration`；`durable_write_scope=NONE（编排层）/ delegated CON-003 Neo4j write`；不得触碰 DEV-006/PR#13。
 - **状态备注**：`completed`（plan `e124b23`；implementation `abb2ceaf6579f9dfff9e46f4782d3d9d181d31c1`；PR #53 MERGED `ae70a94fd08382ffd43fbdc0e64ec613423fc403` mergedAt `2026-08-13T13:59:12Z`；scoped 37 passed；Ruff PASS；Mypy PASS（7 new src files）；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=1 non-blocking（P2-1 C1 untracked blind spot；P2-2 Prometheus failure-path assertions；P3-1 telemetry naming）；§2.3.11 run orchestration — one evaluation_time per run；process-local mutex/finally release；per-user cursor orchestration；non-fatal version conflicts；no persistent cursor/run-state；zero CON-001/002/003 semantics diff；Integration DEFERRED CON-005；feat 分支已删）；`next_action=CON-005 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13。
+
+#### CON-005 Consolidation Integration + E2E
+
+- **目标**：§2.3.11–§2.3.13 巩固 **垂直切片 Integration + E2E** — 真实 Neo4j 上证明 CON-001..004 生产栈协同；`ConsolidationRunService` in-process 生产接线（非 fake CON-002/003 ports）；固定 `evaluation_time`；INT-1..6 + E2E-1..6（happy/readback、多页隔离、missing_evidence、version_conflict、失败恢复、部分进度下轮恢复）；闭合 **`v0.5.0-consolidation` 里程碑**。
+- **非目标**：修改 CON-001..004 生产语义（`production_file_whitelist=NONE` 默认）；HTTP/API；ES/Mongo/Kafka 写；§2.3.8 软遗忘副作用；Session→Archive→Extraction 全链（E2E-001）；持久化 cursor/run 表；分布式锁/多实例调度长运行证明；APScheduler wall-clock E2E（CON-004 Unit 足够）。
+- **前置**：**CON-004** completed（PR #53 MERGED）；**CON-003** completed（PR #52）；**CON-002** completed（PR #51）；**CON-001** completed（PR #50）；EXT-001..009、RET-001..006 completed。
+- **测试**：Integration（INT-1..6 — CON-002 read、CON-003 write、enumeration、run smoke）；E2E（E2E-1..6 — 垂直切片 + 失败注入 + mutex 最小子场景）；Contract（零 src diff + 白名单）；Unit **无新增**（CON-001..004 回归）。
+- **Task Plan**：`02_开发管理/tasks/CON-005-consolidation-integration-e2e.md`。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=010d74112fb760907e710f2ba27123e021dd3d61` MATCH；**零** `src/**` 生产变更默认；Neo4j-only `compose.test`；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=Neo4j read-only（测试验证）`；`durable_write_scope=Neo4j Memory importance+last_consolidated_time（既有 CON-003 路径）`；E2E-6/INJ-7 Run B@T2>T1（T1 行再 eligible，§6.3）；`pytest_plugins` 显式加载 fixture；取代 CON-004 §15 in-process 范围 only；APScheduler/container wall-clock 仍 DEFERRED；E2E 暴露生产缺陷 → HALT；不得触碰 DEV-006/PR#13。
+- **状态备注**：`approved`（Human PLAN_APPROVED @ 2026-08-13T14:37:00Z；Round 2 Amendment 001 PLAN_APPROVED；Planner Amendment 001 Round 2 @ 2026-08-13 14:45 UTC）；`approval_posture=PLAN_APPROVED`；`next_action=Developer on feat/CON-005-consolidation-integration-e2e`；Developer authorized post-PLAN_LANDING；closes `v0.5.0-consolidation` on POST_MERGE_CLEANUP only；不得触碰 DEV-006/PR#13。
 
 ---
 

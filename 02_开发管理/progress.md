@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-004 completed (APScheduler mutex failure recovery)
+current_phase: Phase 4 — CON-005 approved (Consolidation Integration + E2E)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: CON-004
-current_task_status: completed
-current_branch: main
+current_task: CON-005
+current_task_status: approved
+current_branch: feat/CON-005-consolidation-integration-e2e
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -21,10 +21,10 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/CON-004-apscheduler-mutex-failure-recovery.md
+current_plan_file: 02_开发管理/tasks/CON-005-consolidation-integration-e2e.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "8998f627b6cf0c8f5beb103006903d8c3668542a"
+planning_baseline_main: "010d74112fb760907e710f2ba27123e021dd3d61"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -95,7 +95,30 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "CON-005 planned / NOT AUTO-STARTED"
+next_action: "Developer on feat/CON-005-consolidation-integration-e2e"
+formal_CON-005_plan_file: 02_开发管理/tasks/CON-005-consolidation-integration-e2e.md
+formal_CON-005_status: approved
+formal_CON-005_workflow_mode: NORMAL
+formal_CON-005_workflow_mode_source: explicit
+formal_CON-005_baseline: "010d74112fb760907e710f2ba27123e021dd3d61"
+formal_CON-005_branch: "feat/CON-005-consolidation-integration-e2e"
+formal_CON-005_milestone: "v0.5.0-consolidation"
+formal_CON-005_prerequisite: "SATISFIED — CON-004 completed (PR #53 MERGED); CON-003 completed (PR #52 MERGED); CON-002 completed (PR #51 MERGED); CON-001 completed (PR #50 MERGED); EXT-001..009 completed; RET-001..006 completed"
+formal_CON-005_scope: "§2.3.11–13 consolidation vertical slice Integration + E2E on real Neo4j; in-process ConsolidationRunService production wiring; INT-1..6 + E2E-1..6; zero CON-001..004 production semantics diff default; closes v0.5.0-consolidation"
+formal_CON-005_blocking_open_issues: []
+formal_CON-005_nonblocking_open_issues: []
+formal_CON-005_dependency_changes_expected: NONE
+formal_CON-005_migration_changes_expected: NONE
+formal_CON-005_durable_read_scope: "Neo4j read-only — CON-002 batch + CON-004 user enumeration (test verification)"
+formal_CON-005_durable_write_scope: "Neo4j Memory — importance, last_consolidated_time (via existing CON-003 path; test verification only)"
+formal_CON-005_production_file_whitelist: NONE
+formal_CON-005_test_file_whitelist: "tests/support/con005_neo4j_fixtures.py; tests/support/con005_failure_doubles.py; tests/integration/conftest_con005_neo4j.py; tests/integration/test_con005_consolidation_read_neo4j.py; tests/integration/test_con005_consolidation_write_neo4j.py; tests/integration/test_con005_consolidation_run_neo4j.py; tests/e2e/helpers/con005_e2e_helpers.py; tests/e2e/test_con005_consolidation_e2e.py; tests/contract/test_con005_scope_boundaries.py"
+formal_CON-005_note: "Human PLAN_APPROVED @ 2026-08-13T14:37:00Z; Round 2 Amendment 001 PLAN_APPROVED; MF-1 E2E-6/INJ-7 — Run B MUST T2>T1; T1 rows re-eligible at T2 (§6.3); SF-1..SF-5 absorbed; pytest_plugins explicit; CON-004 §15 supersede scoped to in-process only; APScheduler/container wall-clock still DEFERRED; baseline 010d741 MATCH; approval_posture=PLAN_APPROVED; Developer authorized post-PLAN_LANDING; 不得触碰 DEV-006/PR#13"
+formal_CON-005_plan_review: PLAN_APPROVED
+formal_CON-005_human_plan_approved: true
+formal_CON-005_human_plan_approved_at: "2026-08-13T14:37:00Z"
+formal_CON-005_approval_posture: PLAN_APPROVED
+formal_CON-005_next_action: "Developer on feat/CON-005-consolidation-integration-e2e"
 formal_CON-004_plan_file: 02_开发管理/tasks/CON-004-apscheduler-mutex-failure-recovery.md
 formal_CON-004_status: completed
 formal_CON-004_workflow_mode: NORMAL
@@ -646,7 +669,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: "POST_MERGE_CLEANUP — completed"
+current_task_approval_posture: PLAN_APPROVED
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -1697,6 +1720,9 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 14:37 UTC | CON-005 | planned → approved | Human PLAN_APPROVED; Release Operator `PLAN_LANDING`; docs(plan) on main; feat `feat/CON-005-consolidation-integration-e2e` created | `approval_posture=PLAN_APPROVED`; `next_action=Developer on feat/CON-005-consolidation-integration-e2e`; Developer authorized post-PLAN_LANDING; 不得触碰 DEV-006/PR#13 |
+| 2026-08-13 14:45 UTC | CON-005 | planned (amendment round 2) | Planner Amendment 001 — MF-1 E2E-6/INJ-7 option 1（Run B@T2>T1；T1 行再 eligible；§6.3 十断言）；SF-1..SF-5（INT 标题、pytest_plugins、CON-004 §15 取代边界、MV-4 invalid_memory_count、mypy 全模块）；无规格变更；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized |
+| 2026-08-13 22:15 UTC | CON-005 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan `02_开发管理/tasks/CON-005-consolidation-integration-e2e.md`；同步 progress/master_plan 规划态字段；baseline `010d74112fb760907e710f2ba27123e021dd3d61` MATCH；git status clean；§2.3.11–13 consolidation vertical slice Integration+E2E（Neo4j-only；in-process ConsolidationRunService 生产接线；INT-1..6 + E2E-1..6）；`production_file_whitelist=NONE`；APScheduler E2E deferred（CON-004 unit 足够）；closes `v0.5.0-consolidation` on POST_MERGE_CLEANUP；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 22:00 UTC | CON-004 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `abb2ceaf6579f9dfff9e46f4782d3d9d181d31c1`、merge `ae70a94fd08382ffd43fbdc0e64ec613423fc403`；仅更新 CON-004 三份治理文件并创建 `docs(status): complete CON-004 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=1 non-blocking（P2-1 C1 untracked blind spot；P2-2 Prometheus failure-path assertions；P3-1 telemetry naming）；scoped 37 passed；ruff/mypy PASS；§2.3.11 run orchestration — one evaluation_time per run；process-local mutex/finally release；per-user cursor orchestration；non-fatal version conflicts；no persistent cursor/run-state；zero CON-001/002/003 semantics diff；`next_action=CON-005 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 11:30 UTC | CON-003 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan `02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md`；同步 progress/master_plan 规划态字段；baseline `cabcc6f98e5cd676b962b49e3b0c943587a11689` MATCH；git status clean；§2.3.9 optimistic-lock batch write（importance + last_consolidated_time only；不递增 memory_version；不写 updated_time）；CON-002 scored handoff only；Integration DEFERRED CON-005；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 19:20 UTC | CON-002 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `a13ab31bb98598740198001d8bfee3f21d6b565a`、merge `3b26549c41b91a1bbdd72237865a5d3d4fb5324d`；仅更新 CON-002 三份治理文件并创建 `docs(status): complete CON-002 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking（P2-1 C1 untracked blind spot；P2-2 null archive_id test gap）；scoped 39 passed；ruff/mypy PASS；§2.3.4 read-only + per-user isolation + `count(DISTINCT archive_id)` + zero-Evidence→missing_evidence；零 durable write；`next_action=CON-003 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
