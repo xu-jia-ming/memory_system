@@ -5,14 +5,14 @@
 ```yaml
 task_id: CON-005
 task_name: Consolidation Integration + E2E
-status: planned
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "010d74112fb760907e710f2ba27123e021dd3d61"
 branch: "feat/CON-005-consolidation-integration-e2e"
 milestone: "v0.5.0-consolidation"
 created_at: "2026-08-13 22:15 UTC"
-updated_at: "2026-08-13 14:45 UTC"
+updated_at: "2026-08-13 23:30 UTC"
 spec_sections:
   - "§2.3.4 调度、互斥与批量扫描（cursor、evaluation_time、用户隔离 — E2E 验证）"
   - "§2.3.8 强化与软遗忘规则（边界 only — 无 status/ES/content 副作用）"
@@ -52,13 +52,13 @@ prerequisites:
     verification: "git branch --show-current=main; git status --short empty; git rev-parse HEAD=010d74112fb760907e710f2ba27123e021dd3d61"
 approval_gates:
   planning: "AWAIT_PLAN_REVIEW"
-  approval_posture: AWAIT_PLAN_REVIEW
+  approval_posture: PLAN_APPROVED
   amendment_recorded: true
-  human_plan_approved: false
-  human_plan_approved_at: null
-  developer_authorized: false
-  reviewer_authorized: false
-  release_operator_authorized: false
+  human_plan_approved: true
+  human_plan_approved_at: "2026-08-13T14:37:00Z"
+  developer_authorized: true
+  reviewer_authorized: true
+  release_operator_authorized: true
 release_phases:
   PLAN_LANDING: "NORMAL only; after PLAN_APPROVED, Release Operator may land approved planning files on main and create exact feature branch feat/CON-005-consolidation-integration-e2e"
   IMPLEMENTATION_RELEASE: "only after implementation is approved; feature branch whitelist only; no push to main"
@@ -696,7 +696,8 @@ out_of_scope_changes:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 2026-08-13 22:55 UTC | Steps 1-7 | 创建 §12 全部 9 个测试/support 文件；零 `src/**` diff | INT-1..6 6 passed；E2E-1..6 6 passed；CON-001..004 unit 92 passed；contract C1-C3 4 passed；ruff/mypy PASS | E2E-4 采用写前 bump wrapper；E2E-5 mutex 用 BlockingReadRepository；E2E-6 Run B@T2 全量重扫 T1 行 |
+| 2026-08-13 23:15 UTC | Code Review P1 fix | `tests/e2e/test_con005_consolidation_e2e.py` — E2E-5 INJ-5 durable readback after READ_FAILED；reuse `mutex_service` for write/read recovery；E2E-6 §6.3 #7 no-checkpoint comment/assertion | E2E-5 1 passed；INT+E2E+contract 16 passed | 零 `src/**` diff |
 
 ## 27. 实际执行结果
 
@@ -704,21 +705,30 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `tests/support/con005_neo4j_fixtures.py` | 创建 |
+| `tests/support/con005_failure_doubles.py` | 创建 |
+| `tests/integration/conftest_con005_neo4j.py` | 创建 |
+| `tests/integration/test_con005_consolidation_read_neo4j.py` | 创建 |
+| `tests/integration/test_con005_consolidation_write_neo4j.py` | 创建 |
+| `tests/integration/test_con005_consolidation_run_neo4j.py` | 创建 |
+| `tests/e2e/helpers/con005_e2e_helpers.py` | 创建 |
+| `tests/e2e/test_con005_consolidation_e2e.py` | 创建 |
+| `tests/contract/test_con005_scope_boundaries.py` | 创建 |
 
 ### 与原计划的差异
 
-暂无。
+无生产代码变更；E2E-4 增加 `VersionBumpBeforeWriteRepository`（写前 bump，对齐 INJ-3）；E2E-5 增加 `BlockingConsolidationMemoryReadRepository`（确定性 mutex 重叠）。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Integration |  |  |
-| E2E |  |  |
-| Regression |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Integration | `uv run pytest tests/integration/test_con005_consolidation_*.py -v` | 6 passed |
+| E2E | `uv run pytest tests/e2e/test_con005_consolidation_e2e.py -v` | 6 passed |
+| Regression | `uv run pytest tests/unit/test_consolidation_*.py -q` | 92 passed |
+| Contract | `uv run pytest tests/contract/test_con005_scope_boundaries.py -v` | 4 passed |
+| Ruff | Step 8 ruff check（§12 文件） | PASS |
+| Mypy | Step 8 mypy（§12 文件） | PASS |
 
 ### Review 结果
 
@@ -726,22 +736,29 @@ out_of_scope_changes:
 p0: 0
 p1: 0
 p2: 0
-p3: 0
+p3: 3
+code_review: CODE_REVIEW_APPROVED
 review_report: null
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/CON-005-consolidation-integration-e2e
+plan_commit: 2862b7a
+implementation_commit: a8625ea81f21a686f2c84a0a9e204e313c4e95c9
+implementation_commit_message: "test(con): add consolidation neo4j integration and e2e suite"
+pr: "#54"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/54"
+pr_state: OPEN
+pr_base: main
+pr_head: feat/CON-005-consolidation-integration-e2e
+release_gate: WAITING_FOR_PR_MERGE
 ```
 
 ### 最终状态
 
-`planned`
+`committed`
 
 ## 28. CON_005_PLAN_RESULT（Planner 摘要）
 
@@ -766,6 +783,6 @@ con004_section15_supersede: "owns in-process Integration/E2E + mutex; APSchedule
 metrics: "existing consolidation_runs_total + ConsolidationRunMetrics only (MV-4 incl. invalid_memory_count)"
 dependency_changes_expected: NONE
 completion_closes_milestone: "v0.5.0-consolidation"
-next_action: "计划审查"
-status: planned
+next_action: WAITING_FOR_PR_MERGE
+status: committed
 ```
