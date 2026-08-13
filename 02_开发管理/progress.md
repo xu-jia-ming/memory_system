@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-009 completed
+current_phase: Phase 3 — RET-001 planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: EXT-009
-current_task_status: completed
+current_task: RET-001
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,10 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
+current_plan_file: 02_开发管理/tasks/RET-001-bm25-retrieval.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "779963257e33a93ad02ef4e3f997b3c9f6706802"
+planning_baseline_main: "a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -95,7 +95,22 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "RET-001 planned / NOT AUTO-STARTED"
+next_action: "PLAN_LANDING"
+formal_RET-001_plan_file: 02_开发管理/tasks/RET-001-bm25-retrieval.md
+formal_RET-001_status: approved
+formal_RET-001_workflow_mode: NORMAL
+formal_RET-001_workflow_mode_source: explicit
+formal_RET-001_baseline: a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab
+formal_RET-001_branch: "feat/RET-001-bm25-retrieval"
+formal_RET-001_prerequisite: "SATISFIED — DEV-004 completed; DEV-007 completed; EXT-007 completed (write path; not hard test prereq)"
+formal_RET-001_scope: "§2.2.7 BM25 internal channel only; ES search on alias memory_retrieval_current; filters user_id/memory_type/status; multi_match field weights; output memory_id+rank+score; read-only; no HTTP/embedding/vector/RRF/Neo4j/ACT-R"
+formal_RET-001_blocking_open_issues: []
+formal_RET-001_nonblocking_open_issues: [OI-008]
+formal_RET-001_dependency_changes_expected: NONE
+formal_RET-001_migration_changes_expected: NONE
+formal_RET-001_note: "approved; PLAN_LANDING pending; planning baseline a780bb2d MATCH; Integration uses ES Fixture not EXT-007 pipeline; SF-1/2/3 absorbed; must not touch DEV-006/PR#13"
+formal_RET-001_approval_posture: "PLAN_APPROVED — human confirmed 2026-08-13"
+planning_baseline_RET-001: "a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab"
 planning_baseline_EXT-007: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
 formal_EXT-006_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
@@ -237,7 +252,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: "POST_MERGE_CLEANUP — EXT-009 completed; PR #43 MERGED"
+current_task_approval_posture: "PLAN_APPROVED — RET-001 approved; PLAN_LANDING"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS

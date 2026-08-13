@@ -604,6 +604,9 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **前置**：**DEV-004, DEV-007**（BM25 可不调用 Embedding；Vector 依赖 DEV-007，见 RET-002）。
 - **测试**：Integration —— Migration 后**直接写入固定 ES Fixture 文档**，再断言 BM25；**不**将 EXT-007 列为硬前置。
 - **E2E 协作**：与 EXT-007 的写入→可检索 放到 RET-006 / E2E-001。
+- **Task Plan**：`02_开发管理/tasks/RET-001-bm25-retrieval.md`。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab` MATCH；本轮仅规划态；内部 Service/Repository（非 HTTP）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`planned` / **NOT AUTO-STARTED**；`next_action=计划审查`。
 
 #### RET-002–RET-005
 
