@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-005 approved (Consolidation Integration + E2E)
+current_phase: Phase 4 — CON-005 tested (Consolidation Integration + E2E)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: CON-005
-current_task_status: approved
+current_task_status: tested
 current_branch: feat/CON-005-consolidation-integration-e2e
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "Developer on feat/CON-005-consolidation-integration-e2e"
+next_action: "Code Reviewer on feat/CON-005-consolidation-integration-e2e"
 formal_CON-005_plan_file: 02_开发管理/tasks/CON-005-consolidation-integration-e2e.md
-formal_CON-005_status: approved
+formal_CON-005_status: tested
 formal_CON-005_workflow_mode: NORMAL
 formal_CON-005_workflow_mode_source: explicit
 formal_CON-005_baseline: "010d74112fb760907e710f2ba27123e021dd3d61"
@@ -113,12 +113,15 @@ formal_CON-005_durable_read_scope: "Neo4j read-only — CON-002 batch + CON-004 
 formal_CON-005_durable_write_scope: "Neo4j Memory — importance, last_consolidated_time (via existing CON-003 path; test verification only)"
 formal_CON-005_production_file_whitelist: NONE
 formal_CON-005_test_file_whitelist: "tests/support/con005_neo4j_fixtures.py; tests/support/con005_failure_doubles.py; tests/integration/conftest_con005_neo4j.py; tests/integration/test_con005_consolidation_read_neo4j.py; tests/integration/test_con005_consolidation_write_neo4j.py; tests/integration/test_con005_consolidation_run_neo4j.py; tests/e2e/helpers/con005_e2e_helpers.py; tests/e2e/test_con005_consolidation_e2e.py; tests/contract/test_con005_scope_boundaries.py"
-formal_CON-005_note: "Human PLAN_APPROVED @ 2026-08-13T14:37:00Z; Round 2 Amendment 001 PLAN_APPROVED; MF-1 E2E-6/INJ-7 — Run B MUST T2>T1; T1 rows re-eligible at T2 (§6.3); SF-1..SF-5 absorbed; pytest_plugins explicit; CON-004 §15 supersede scoped to in-process only; APScheduler/container wall-clock still DEFERRED; baseline 010d741 MATCH; approval_posture=PLAN_APPROVED; Developer authorized post-PLAN_LANDING; 不得触碰 DEV-006/PR#13"
+formal_CON-005_scoped_tests: "Integration 6 passed; E2E 6 passed; CON-001..004 unit 92 passed; contract 4 passed"
+formal_CON-005_ruff: PASS
+formal_CON-005_mypy: PASS
+formal_CON-005_note: "Developer implementation complete @ 2026-08-13T22:55 UTC; INT-1..6 + E2E-1..6 green on real Neo4j (compose.test neo4j-only + init-infra); in-process ConsolidationRunService production wiring; zero src/** diff; E2E-6 Run B@T2>T1 re-selects T1 rows (§6.3); failure injection via test repository wrappers; ruff/mypy PASS; status=tested; next=Code Reviewer; 不得触碰 DEV-006/PR#13"
 formal_CON-005_plan_review: PLAN_APPROVED
 formal_CON-005_human_plan_approved: true
 formal_CON-005_human_plan_approved_at: "2026-08-13T14:37:00Z"
 formal_CON-005_approval_posture: PLAN_APPROVED
-formal_CON-005_next_action: "Developer on feat/CON-005-consolidation-integration-e2e"
+formal_CON-005_next_action: "Code Reviewer on feat/CON-005-consolidation-integration-e2e"
 formal_CON-004_plan_file: 02_开发管理/tasks/CON-004-apscheduler-mutex-failure-recovery.md
 formal_CON-004_status: completed
 formal_CON-004_workflow_mode: NORMAL
@@ -1720,6 +1723,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 22:55 UTC | CON-005 | approved → tested | Developer Steps 1-7；§12 九文件；INT-1..6 + E2E-1..6 green；CON-001..004 unit 92 passed；contract/ruff/mypy PASS；零 src/** diff | `next_action=Code Reviewer on feat/CON-005-consolidation-integration-e2e`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 14:37 UTC | CON-005 | planned → approved | Human PLAN_APPROVED; Release Operator `PLAN_LANDING`; docs(plan) on main; feat `feat/CON-005-consolidation-integration-e2e` created | `approval_posture=PLAN_APPROVED`; `next_action=Developer on feat/CON-005-consolidation-integration-e2e`; Developer authorized post-PLAN_LANDING; 不得触碰 DEV-006/PR#13 |
 | 2026-08-13 14:45 UTC | CON-005 | planned (amendment round 2) | Planner Amendment 001 — MF-1 E2E-6/INJ-7 option 1（Run B@T2>T1；T1 行再 eligible；§6.3 十断言）；SF-1..SF-5（INT 标题、pytest_plugins、CON-004 §15 取代边界、MV-4 invalid_memory_count、mypy 全模块）；无规格变更；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized |
 | 2026-08-13 22:15 UTC | CON-005 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan `02_开发管理/tasks/CON-005-consolidation-integration-e2e.md`；同步 progress/master_plan 规划态字段；baseline `010d74112fb760907e710f2ba27123e021dd3d61` MATCH；git status clean；§2.3.11–13 consolidation vertical slice Integration+E2E（Neo4j-only；in-process ConsolidationRunService 生产接线；INT-1..6 + E2E-1..6）；`production_file_whitelist=NONE`；APScheduler E2E deferred（CON-004 unit 足够）；closes `v0.5.0-consolidation` on POST_MERGE_CLEANUP；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
