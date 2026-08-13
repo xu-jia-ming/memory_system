@@ -618,9 +618,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=e5f5c9de9883d04759f19080c01f1f50d2c62513` MATCH；内部 Service/Repository；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；LD-1 SiliconFlow 无本地 `skipped_query_too_long` 预检；共享 `retrieval_filter_builder` 最小重构 BM25 repo；不得触碰 DEV-006/PR#13。
 - **状态备注**：`completed`（plan `da1736925b767777bd8f538d5719d5821bebc017`；implementation `3bf3a1b760080d4f581ab53dad0961a28dfb63a4`；PR #45 MERGED `2bfc2b2ddbd5ef69a2a3f473722b32a9ead3d461` mergedAt `2026-08-13T03:13:39Z`；scoped 71 passed（31 RET-002 unit + 7 integration + 33 RET-001 regression）；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 non-blocking；§2.2.6/§2.2.8/§2.2.9 Vector+RRF internal path；共享 `retrieval_filter_builder`；Integration ES Fixture + Fake embed；feat 分支已删；RET-003 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 
-#### RET-003–RET-005
+#### RET-003 Neo4j 权威回读 + 一跳扩展 + MGET
 
-- Vector+RRF；图扩展；评分与 Evidence；API 与降级矩阵（见 OI-008 编辑性问题，不阻塞实现规格正文）。
+- **目标**：RRF 候选 Neo4j 权威批量加载 Memory + subject/object Entity；再校验 user_id/memory_types/status；`graph_expand=true` 时一跳图扩展 + `graph_retrieval_score`；扩展候选 ES MGET 存在性校验；内部 `dirty_index_document` / `stale_index_document` / `graph_expansion_failed` Warning 种类。
+- **非目标**：HTTP API/Warning HTTP 字段；ACT-R/Evidence；`retrieval_count` 统计；修改 RET-002 RRF 或 EXT-007 索引同步扩展语义。
+- **前置**：**RET-002, EXT-006, EXT-007, DEV-004**（Integration 直接 Neo4j+ES Fixture；非 EXT-007 pipeline 硬前置）。
+- **测试**：Unit（status 矩阵、tier 排序、decay、重叠、failure mapping）；Integration — Neo4j 图关系 Fixture + ES MGET Fixture。
+- **Task Plan**：`02_开发管理/tasks/RET-003-neo4j-graph-expansion-mget.md`。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=21a99a5b217f45cd4e4c67b8758bf1705d9d0a74` MATCH；新建 `retrieval_memory_read_repository` + `mget_retrieval_repository`（禁止混用 EXT-007 扩展 Cypher）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；不得触碰 DEV-006/PR#13。
+
+#### RET-004–RET-005
+
+- ACT-R 评分与 Evidence；HTTP API 与降级矩阵（见 OI-008 编辑性问题，不阻塞实现规格正文）。
 
 #### RET-006
 
