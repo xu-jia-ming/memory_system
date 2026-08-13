@@ -5,13 +5,13 @@
 ```yaml
 task_id: RET-004
 task_name: ACT-R 评分 + Evidence 聚合
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "c8d9d38d92414b9e041dd3d97dcbfd17b9e61582"
 branch: "feat/RET-004-act-r-scoring-evidence-aggregation"
 created_at: "2026-08-13 06:01 UTC"
-updated_at: "2026-08-13 06:01 UTC"
+updated_at: "2026-08-13 14:30 UTC"
 spec_sections:
   - "§2.2.11 基础 ACT-R 近似评分（本任务唯一权威范围 — 评分与排序）"
   - "§2.2.12 Evidence 加载与 Retrieval Response 设计（本任务仅内部 Evidence 批量读与聚合；不含 HTTP Response DTO）"
@@ -40,7 +40,7 @@ approval_gates:
   approval_posture: "PLAN_APPROVED — human confirmed 2026-08-13"
   amendment_recorded: true
   human_plan_approved: true
-  developer_authorized: false
+  developer_authorized: true
   reviewer_authorized: false
   release_operator_authorized: false
 release_phases:
@@ -793,14 +793,14 @@ docs(plan): add RET-004 act-r scoring and evidence aggregation plan
 
 ## 24. 验收标准
 
-- [ ] §2.2.11 五分量 + 惩罚 + clamp + round(6) + 排序 + top_k
-- [ ] §2.2.12 Top-K 后单次 batch Evidence 读 + 确定性 `source_message_ids` + `evidence_count`
-- [ ] Evidence 失败 → 内部 `graph_load_failed`；不伪造空来源
-- [ ] RET-003 warnings 透传；不 HTTP 映射
-- [ ] 不修改 RET-001/002/003/EXT-005 生产语义
-- [ ] NC-1..NC-8 单元测试精确通过
-- [ ] Integration Neo4j Fixture I1..I5 通过；RET-003 回归通过
-- [ ] scoped unit + integration 全通过；Ruff/Mypy（变更文件）通过
+- [x] §2.2.11 五分量 + 惩罚 + clamp + round(6) + 排序 + top_k
+- [x] §2.2.12 Top-K 后单次 batch Evidence 读 + 确定性 `source_message_ids` + `evidence_count`
+- [x] Evidence 失败 → 内部 `graph_load_failed`；不伪造空来源
+- [x] RET-003 warnings 透传；不 HTTP 映射
+- [x] 不修改 RET-001/002/003/EXT-005 生产语义
+- [x] NC-1..NC-8 单元测试精确通过
+- [x] Integration Neo4j Fixture I1..I5 通过；RET-003 回归通过
+- [x] scoped unit + integration 全通过；Ruff/Mypy（变更文件）通过
 - [ ] Review 无 P0/P1
 
 ## 25. 风险与阻塞项
@@ -860,12 +860,14 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-13 06:01 UTC | planning | 创建 Task Plan；更新 progress/master_plan 规划态 | — | planning only；未 Git 写 |
+| 2026-08-13 14:30 UTC | implemented | 白名单 5 生产 + 6 测试文件；ACT-R 纯函数 + Evidence 聚合 + 编排服务 + Neo4j Evidence 读仓储 | scoped unit 44 passed；ruff/mypy PASS；integration I1-I5 待 Neo4j compose | plan_commit=e3e98ee；branch=feat/RET-004-act-r-scoring-evidence-aggregation；零 durable write；未 Git commit |
+| 2026-08-13 14:45 UTC | remediation | P1-1 I5 NC-3 对齐（recency=0.4、retrieval_count=4）；P2-1 Evidence 畸形行 fail-closed | scoped **52 passed**（unit 47 + integration 5）；ruff/mypy PASS | CODE_REVIEW_REJECTED 修复；未 Git commit |
 
 ## 31. 实际执行结果
 
 ### 最终状态
 
-`planned`
+`tested`
 
 ## 32. ready for plan review
 
