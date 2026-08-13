@@ -592,7 +592,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | RET-001 | BM25 查询 | §2.2.7 | DEV-004, DEV-007 | completed |
 | RET-002 | Vector 召回 + RRF | §2.2.6, §2.2.8, §2.2.9 | RET-001, DEV-007 | completed |
-| RET-003 | Neo4j 权威回读 + 一跳扩展 + MGET | §2.2.10 | RET-002 | planned |
+| RET-003 | Neo4j 权威回读 + 一跳扩展 + MGET | §2.2.10 | RET-002 | completed |
 | RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | planned |
 | RET-005 | Retrieval API、降级/超时、统计更新 | §2.2.5, §2.2.13–2.2.15 | RET-004, DEV-005 | planned |
 | RET-006 | Retrieval 阶段 E2E + 失败注入 | §2.2.16, §3.28 | RET-005, EXT-007 | planned |
@@ -626,6 +626,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit（status 矩阵、tier 排序、decay、重叠、failure mapping）；Integration — Neo4j 图关系 Fixture + ES MGET Fixture。
 - **Task Plan**：`02_开发管理/tasks/RET-003-neo4j-graph-expansion-mget.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=21a99a5b217f45cd4e4c67b8758bf1705d9d0a74` MATCH；新建 `retrieval_memory_read_repository` + `mget_retrieval_repository`（禁止混用 EXT-007 扩展 Cypher）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`completed`（plan `144844295bbd98b962e269e870e57685c2af9fe4`；implementation `64f71690d6c7ac08762b45d76a34158b49570e24`；PR #46 MERGED `3746f1bce38b4f6e4c0ab4d7899eff5622cc21c0` mergedAt `2026-08-13T05:03:28Z`；scoped 53 passed（30 RET-003 unit + 7 integration + 16 RET-002 regression）；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 non-blocking；§2.2.10 Neo4j authoritative recall + one-hop expansion + ES MGET read-only internal path；新建 `retrieval_memory_read_repository` + `mget_retrieval_repository`；Integration Neo4j+ES Fixture；feat 分支已删；RET-004 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 
 #### RET-004–RET-005
 
@@ -1494,5 +1495,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
 | 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
 | 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=RET-003 planned / NOT AUTO-STARTED`；不得自动启动 RET-003 |
+
+### CHANGE-076
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-13 |
+| 原因 | RET-003 POST_MERGE_CLEANUP：PR #46 MERGED；implementation 已在 main；完成治理状态并清理 exact feature branch |
+| 受影响任务 | `RET-003`（`completed`）；`RET-004` remains `planned` / **NOT AUTO-STARTED**；不改变 Appendix B、Neo4j/ACT-R/HTTP 语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
+| 事实记录 | plan `144844295bbd98b962e269e870e57685c2af9fe4`；implementation `64f71690d6c7ac08762b45d76a34158b49570e24`；PR #46 MERGED `3746f1bce38b4f6e4c0ab4d7899eff5622cc21c0`；mergedAt `2026-08-13T05:03:28Z`；CODE_REVIEW_APPROVED P0=0/P1=0/P2=2 non-blocking；fetch 后 origin/main 领先本地 main，已通过 --ff-only 同步 |
+| 交付与不变量 | §2.2.10 Neo4j authoritative recall + one-hop graph expansion + ES MGET existence；内部 `dirty_index_document` / `stale_index_document` / `graph_expansion_failed` Warning 种类；新建 `retrieval_memory_read_repository` + `mget_retrieval_repository`（禁止混用 EXT-007 扩展语义）；RET-002 RRF 零语义变更；Integration Neo4j+ES Fixture；零 durable write |
+| Open Issues | OI-008 non-blocking（RET-005 API 编辑性） |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
+| 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
+| 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=RET-004 planned / NOT AUTO-STARTED`；不得自动启动 RET-004 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

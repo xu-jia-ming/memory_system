@@ -5,13 +5,13 @@
 ```yaml
 task_id: RET-003
 task_name: Neo4j 权威回读 + 一跳扩展 + MGET
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "21a99a5b217f45cd4e4c67b8758bf1705d9d0a74"
 branch: "feat/RET-003-neo4j-graph-expansion-mget"
 created_at: "2026-08-13 11:50 UTC"
-updated_at: "2026-08-13 11:50 UTC"
+updated_at: "2026-08-13 13:04 UTC"
 spec_sections:
   - "§2.1.9 Neo4j 记忆图谱数据模型（Memory/Entity 权威字段加载范围）"
   - "§2.2.5 Memory Retrieval API 设计（graph_expand / memory_types / status 过滤语义；本任务内部消费，非 HTTP）"
@@ -869,6 +869,7 @@ out_of_scope_changes:
 | 2026-08-13 12:40 UTC | in_progress | 新建 §13/§14 白名单全部生产与测试文件 | — | 按 PLAN_APPROVED 契约实施 |
 | 2026-08-13 12:55 UTC | implemented | 7 生产模块 + 8 测试/fixture 文件 | — | 未改 RET-002/EXT-007 生产语义 |
 | 2026-08-13 13:00 UTC | tested | 执行记录写入 §26 | unit+integration+ruff+mypy 全绿 | 无计划外差异 |
+| 2026-08-13 13:04 UTC | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #46 MERGED；验证 main 含 implementation `64f71690d6c7ac08762b45d76a34158b49570e24`、merge `3746f1bce38b4f6e4c0ab4d7899eff5622cc21c0`；治理三文件 + `docs(status): complete`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2 non-blocking；`next_action=RET-004 planned / NOT AUTO-STARTED` | 无计划外差异 |
 
 ## 26. 实际执行结果
 
@@ -898,33 +899,42 @@ out_of_scope_changes:
 
 ### 测试结果
 
-| 测试 | 命令 | 结果 |
-|---|---|---|
-| Unit (RET-003) | `uv run pytest tests/unit/test_retrieval_memory_validator.py tests/unit/test_graph_expansion_ranker.py tests/unit/test_authoritative_recall_service.py tests/unit/test_mget_retrieval_repository.py tests/unit/test_retrieval_memory_read_repository.py -q` | 30 passed |
-| Unit (RET-002 regression) | `uv run pytest tests/unit/test_hybrid_retrieval_service.py tests/unit/test_rrf_fusion.py -q` | 16 passed |
-| Integration | `uv run pytest tests/integration/test_ret003_authoritative_recall.py -q` | 7 passed |
-| Ruff | `uv run ruff check`（§13/§14 白名单路径） | All checks passed |
-| Mypy | `uv run mypy`（§13 生产路径） | Success: 7 files |
+```yaml
+scoped_tests: "53 passed (30 RET-003 unit + 7 integration + 16 RET-002 regression)"
+ruff: PASS
+mypy: PASS
+```
 
 ### Review 结果
 
 ```yaml
 p0: 0
 p1: 0
-p2: 0
+p2: 2
 p3: 0
 review_report: null
+nonblocking_findings:
+  - "U16 user-entity unit"
+  - "I3 OBJECT tier integration"
 ```
 
 ### Git 记录
 
 ```yaml
-branch: feat/RET-003-neo4j-graph-expansion-mget
+branch: "feat/RET-003-neo4j-graph-expansion-mget"
 plan_commit: 144844295bbd98b962e269e870e57685c2af9fe4
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 64f71690d6c7ac08762b45d76a34158b49570e24
+implementation_commit_message: "feat(ret): add neo4j authoritative recall, one-hop graph expansion, and es mget"
+pr: "#46"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/46"
+pr_state: MERGED
+pr_base: main
+pr_head: "feat/RET-003-neo4j-graph-expansion-mget"
+merge_commit: 3746f1bce38b4f6e4c0ab4d7899eff5622cc21c0
+merged_at: "2026-08-13T05:03:28Z"
+status_record_committed: null
 ```
 
 ### 最终状态
 
-`tested`
+`completed`

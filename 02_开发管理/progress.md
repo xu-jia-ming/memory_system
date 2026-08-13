@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 3 — RET-003 planned
+current_phase: Phase 3 — RET-004 planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: RET-003
-current_task_status: approved
+current_task_status: completed
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "计划审查"
+next_action: "RET-004 planned / NOT AUTO-STARTED"
 formal_RET-003_plan_file: 02_开发管理/tasks/RET-003-neo4j-graph-expansion-mget.md
-formal_RET-003_status: planned
+formal_RET-003_status: completed
 formal_RET-003_workflow_mode: NORMAL
 formal_RET-003_workflow_mode_source: explicit
 formal_RET-003_baseline: 21a99a5b217f45cd4e4c67b8758bf1705d9d0a74
@@ -108,13 +108,33 @@ formal_RET-003_blocking_open_issues: []
 formal_RET-003_nonblocking_open_issues: [OI-008]
 formal_RET-003_dependency_changes_expected: NONE
 formal_RET-003_migration_changes_expected: NONE
-formal_RET-003_note: "planning only；baseline main 21a99a5 MATCH；workflow_mode=NORMAL explicit；不得复用 EXT-007 索引同步扩展语义；不得修改 RET-002 RRF；Integration Neo4j+ES Fixture not EXT-007 pipeline；不得触碰 DEV-006/PR#13"
-formal_RET-003_approval_posture: "PLAN_REVIEW_APPROVED — awaiting human PLAN_APPROVED"
+formal_RET-003_note: "POST_MERGE_CLEANUP；implementation 64f71690d6c7ac08762b45d76a34158b49570e24；plan 144844295bbd98b962e269e870e57685c2af9fe4；PR #46 MERGED（base=main，head=feat/RET-003-neo4j-graph-expansion-mget，merge 3746f1bce38b4f6e4c0ab4d7899eff5622cc21c0，mergedAt=2026-08-13T05:03:28Z）；fetch 后 origin/main 领先本地 main，已通过 --ff-only 同步；CODE_REVIEW_APPROVED P0=0/P1=0/P2=2 non-blocking（U16 user-entity unit；I3 OBJECT tier integration）；§2.2.10 Neo4j authoritative recall + one-hop graph expansion + ES MGET read-only internal path；新建 retrieval_memory_read_repository + mget_retrieval_repository（禁止混用 EXT-007 扩展语义）；Integration Neo4j+ES Fixture；feat 分支本地/远程已删除；next_action=RET-004 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13"
+formal_RET-003_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_RET-003_plan_review: PLAN_APPROVED
 formal_RET-003_plan_review_blocker: 0
 formal_RET-003_plan_review_must_fix: 0
 formal_RET-003_plan_review_should_fix: 3
-formal_RET-003_next_action: "人工确认 PLAN_APPROVED"
+formal_RET-003_next_action: "RET-004 planned / NOT AUTO-STARTED"
+formal_RET-003_scoped_tests: "53 passed (30 RET-003 unit + 7 integration + 16 RET-002 regression)"
+formal_RET-003_ruff: PASS
+formal_RET-003_mypy: PASS
+formal_RET-003_code_review: CODE_REVIEW_APPROVED
+formal_RET-003_p0: 0
+formal_RET-003_p1: 0
+formal_RET-003_p2: 2
+formal_RET-003_p3: 0
+formal_RET-003_plan_commit: 144844295bbd98b962e269e870e57685c2af9fe4
+formal_RET-003_implementation_commit: 64f71690d6c7ac08762b45d76a34158b49570e24
+formal_RET-003_implementation_commit_message: "feat(ret): add neo4j authoritative recall, one-hop graph expansion, and es mget"
+formal_RET-003_pr: "#46"
+formal_RET-003_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/46"
+formal_RET-003_pr_state: MERGED
+formal_RET-003_pr_base: main
+formal_RET-003_pr_head: "feat/RET-003-neo4j-graph-expansion-mget"
+formal_RET-003_merge_commit: 3746f1bce38b4f6e4c0ab4d7899eff5622cc21c0
+formal_RET-003_merged_at: "2026-08-13T05:03:28Z"
+formal_RET-003_status_record_committed: null
+formal_RET-003_release_gate: COMPLETED
 formal_RET-001_plan_file: 02_开发管理/tasks/RET-001-bm25-retrieval.md
 formal_RET-001_status: completed
 formal_RET-001_workflow_mode: NORMAL
@@ -329,7 +349,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: "PLAN_REVIEW_APPROVED — RET-003 awaiting human PLAN_APPROVED"
+current_task_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -1380,6 +1400,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 13:04 UTC | RET-003 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 领先本地 main，已通过 `--ff-only` 同步；验证 main 包含 implementation `64f71690d6c7ac08762b45d76a34158b49570e24`、merge `3746f1bce38b4f6e4c0ab4d7899eff5622cc21c0`；仅更新 RET-003 三份治理文件并创建 `docs(status): complete RET-003 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2 non-blocking；scoped 53 passed（30 RET-003 unit + 7 integration + 16 RET-002 regression）；§2.2.10 Neo4j authoritative recall + one-hop expansion + ES MGET read-only internal path；新建 `retrieval_memory_read_repository` + `mget_retrieval_repository`；Integration Neo4j+ES Fixture；`next_action=RET-004 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 11:50 UTC | RET-003 | planned | Planner created `02_开发管理/tasks/RET-003-neo4j-graph-expansion-mget.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `21a99a5b217f45cd4e4c67b8758bf1705d9d0a74` verified (main, clean tree); scope = §2.2.10 Neo4j authoritative recall + one-hop expansion + ES MGET; consume RET-002 HybridRetrievalSuccess; new `retrieval_memory_read_repository` + `mget_retrieval_repository`（禁止混用 EXT-007 扩展语义）; Integration Neo4j+ES Fixture; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-13 03:15 UTC | RET-002 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 领先本地 main，已通过 `--ff-only` 同步；验证 main 包含 implementation `3bf3a1b760080d4f581ab53dad0961a28dfb63a4`、merge `2bfc2b2ddbd5ef69a2a3f473722b32a9ead3d461`；仅更新 RET-002 三份治理文件并创建 `docs(status): complete RET-002 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=1 non-blocking；scoped 71 passed（31 RET-002 unit + 7 integration + 33 RET-001 regression）；§2.2.6/§2.2.8/§2.2.9 Vector+RRF internal path；共享 `retrieval_filter_builder`；Integration ES Fixture + Fake embed；`next_action=RET-003 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 03:01 UTC | RET-002 | approved → tested | Developer：Vector kNN + RRF fusion + Hybrid 并行编排；共享 `retrieval_filter_builder`；BM25 repository 零语义变更 | scoped **71 passed**（31 RET-002 unit + 7 integration + 33 RET-001 regression）；ruff/mypy PASS；未 Git 写；`next_action=代码审查`；不得触碰 DEV-006/PR#13 |
