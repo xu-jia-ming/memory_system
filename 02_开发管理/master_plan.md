@@ -638,9 +638,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=c8d9d38d92414b9e041dd3d97dcbfd17b9e61582` MATCH；新建 `act_r_scoring` + `retrieval_scoring_service` + `retrieval_evidence_read_repository`（禁止混用 EXT-005）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；不得触碰 DEV-006/PR#13。
 - **状态备注**：`completed`（plan `e3e98eeec645ed759fd90579149fae3e3420214c`；implementation `e631d206b26175d341602ffdfd42a3d8f43edd3f`；PR #47 MERGED `f505c25572f5695a772ac8598be9c8602b36aa9e` mergedAt `2026-08-13T06:47:29Z`；scoped 52 passed（unit 47 + integration 5）；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2 non-blocking；§2.2.11 ACT-R scoring；Top-K before Evidence；Evidence does not affect final_score；新建 `act_r_scoring` + `retrieval_scoring_service` + `retrieval_evidence_read_repository` + `evidence_aggregation`（禁止混用 EXT-005）；Integration Neo4j Evidence Fixture；零 durable write；feat 分支已删；RET-005 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 
-#### RET-005
+#### RET-005 Retrieval API、降级/超时、统计更新
 
-- HTTP API 与降级矩阵（见 OI-008 编辑性问题，不阻塞实现规格正文）。
+- **目标**：`POST /api/v1/memory/retrieval`（§2.2.5）；Request 校验与 `require_memory_api_key`；HTTP 层 TEI tokenize gate + 编排 BM25/Vector/`fuse_rrf`（synthetic `skipped_query_too_long`）；消费 RET-003/004 Outcome；§2.2.12 Response DTO（`score`←`final_score`）；§2.2.13 Top-K Neo4j `retrieval_count`/`last_retrieved_time` 批量更新；§2.2.15 全量 Warning/致命码与 `retrieval_total_timeout_seconds` 超时矩阵；闭合 OI-008 canonical DR 编号映射。
+- **非目标**：修改 RET-001..004 生产语义；RET-006 E2E；cache/reranking/pagination/streaming；ES/Mongo/Kafka 写入。
+- **前置**：**RET-004, DEV-005**（RET-001..003 经 RET-004 传递）。
+- **测试**：Unit（warning mapper、response mapper、编排、tokenize gate、超时分支）；Contract（路由/错误码/白名单）；Integration（TestClient + Neo4j stats Fixture）。
+- **Task Plan**：`02_开发管理/tasks/RET-005-retrieval-api-degradation-statistics.md`。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=c086b9953829d0ca19e930cde9b1c64dadde5fb9` MATCH；新建 `RetrievalApiService` + `RetrievalStatisticsRepository` + HTTP routes/schemas；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_write_scope=Neo4j stats only`；OI-008 `resolved_by_plan`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`planned`（Task Plan 已编写；`current_task_status=planned`；`next_action=计划审查`；未启动 Developer）。
 
 #### RET-006
 

@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 3 — RET-005 planned
+current_phase: Phase 3 — RET-005 planning
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: RET-004
-current_task_status: completed
+current_task: RET-005
+current_task_status: planned
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,10 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/RET-004-act-r-scoring-evidence-aggregation.md
+current_plan_file: 02_开发管理/tasks/RET-005-retrieval-api-degradation-statistics.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "c8d9d38d92414b9e041dd3d97dcbfd17b9e61582"
+planning_baseline_main: "c086b9953829d0ca19e930cde9b1c64dadde5fb9"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -95,7 +95,21 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "RET-005 planned / NOT AUTO-STARTED"
+next_action: "计划审查"
+formal_RET-005_plan_file: 02_开发管理/tasks/RET-005-retrieval-api-degradation-statistics.md
+formal_RET-005_status: planned
+formal_RET-005_workflow_mode: NORMAL
+formal_RET-005_workflow_mode_source: explicit
+formal_RET-005_baseline: c086b9953829d0ca19e930cde9b1c64dadde5fb9
+formal_RET-005_branch: "feat/RET-005-retrieval-api-degradation-statistics"
+formal_RET-005_prerequisite: "SATISFIED — RET-001..004 completed (PR #44..#47 MERGED); DEV-005 completed"
+formal_RET-005_scope: "§2.2.5 HTTP Retrieval API; §2.2.12 Response DTO; §2.2.13 Neo4j retrieval_count/last_retrieved_time; §2.2.15 degradation/timeout; tokenize gate orchestration; zero RET-001..004 semantic diff"
+formal_RET-005_blocking_open_issues: []
+formal_RET-005_nonblocking_open_issues: [OI-008]
+formal_RET-005_dependency_changes_expected: NONE
+formal_RET-005_migration_changes_expected: NONE
+formal_RET-005_durable_write_scope: "Neo4j Memory.retrieval_count + last_retrieved_time ONLY"
+formal_RET-005_note: "planning only；baseline c086b9953829d0ca19e930cde9b1c64dadde5fb9；OI-008 resolved_by_plan（canonical DR-1..DR-10）；不得触碰 DEV-006/PR#13；未启动 Developer"
 formal_RET-004_plan_file: 02_开发管理/tasks/RET-004-act-r-scoring-evidence-aggregation.md
 formal_RET-004_status: completed
 formal_RET-004_workflow_mode: NORMAL
@@ -1440,6 +1454,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 07:00 UTC | RET-005 | planned | Planner created `02_开发管理/tasks/RET-005-retrieval-api-degradation-statistics.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `c086b9953829d0ca19e930cde9b1c64dadde5fb9` verified (main, clean tree); scope = §2.2.5 HTTP Retrieval API + §2.2.12 Response DTO + §2.2.13 Neo4j stats + §2.2.15 degradation/timeout; OI-008 canonical DR-1..DR-10 `resolved_by_plan`; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-13 06:48 UTC | RET-004 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `e631d206b26175d341602ffdfd42a3d8f43edd3f`、merge `f505c25572f5695a772ac8598be9c8602b36aa9e`；仅更新 RET-004 三份治理文件并创建 `docs(status): complete RET-004 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking；scoped 52 passed（unit 47 + integration 5）；§2.2.11 ACT-R scoring；Top-K before Evidence；Evidence does not affect final_score；零 durable write；`next_action=RET-005 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 14:30 UTC | RET-004 | approved → tested | Developer：白名单 5 生产 + 6 测试文件；ACT-R 纯函数 + Evidence 聚合 + 编排服务 + Neo4j Evidence 读仓储 | scoped unit **44 passed**；ruff/mypy PASS；integration I1-I5 待 Neo4j compose；plan_commit=e3e98ee；零 durable write；未 Git commit；`next_action=代码审查`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 06:01 UTC | RET-004 | planned | Planner created `02_开发管理/tasks/RET-004-act-r-scoring-evidence-aggregation.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `c8d9d38d92414b9e041dd3d97dcbfd17b9e61582` verified (main, clean tree); scope = §2.2.11 ACT-R scoring + §2.2.12 Evidence batch aggregation; consume RET-003 AuthoritativeRecallSuccess; new `act_r_scoring` + `retrieval_scoring_service` + `retrieval_evidence_read_repository`（禁止混用 EXT-005）；Integration Neo4j Evidence Fixture; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
