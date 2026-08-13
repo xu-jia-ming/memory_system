@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-001 committed (consolidation formulas)
+current_phase: Phase 4 — CON-001 completed (consolidation formulas)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: CON-001
-current_task_status: committed
-current_branch: feat/CON-001-importance-decay-protection-formulas
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: WAITING_FOR_PR_MERGE
+next_action: "CON-002 planned / NOT AUTO-STARTED"
 formal_CON-001_plan_file: 02_开发管理/tasks/CON-001-importance-decay-protection-formulas.md
-formal_CON-001_status: committed
+formal_CON-001_status: completed
 formal_CON-001_workflow_mode: NORMAL
 formal_CON-001_workflow_mode_source: explicit
 formal_CON-001_baseline: "2159ad6cc5e3f31365677671d9588c69b776e8a0"
@@ -112,7 +112,7 @@ formal_CON-001_durable_read_scope: NONE
 formal_CON-001_durable_write_scope: NONE
 formal_CON-001_production_file_whitelist: "src/memory_system/domain/models/consolidation_importance.py; src/memory_system/domain/services/consolidation_importance.py"
 formal_CON-001_test_file_whitelist: "tests/unit/test_consolidation_importance.py; tests/contract/test_con001_scope_boundaries.py"
-formal_CON-001_note: "IMPLEMENTATION_RELEASE；implementation 41932b93431e43fa1d134cfed76dfedb9ec7f363；PR #50 OPEN；docs(status): record on feat；scoped 49 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；仅 feat push；禁 push main；不得自动 merge；不得触碰 DEV-006/PR#13"
+formal_CON-001_note: "POST_MERGE_CLEANUP；implementation 41932b93431e43fa1d134cfed76dfedb9ec7f363；record bef3ae23e8b12592cbdfcfb563654fb91c97cea2；PR #50 MERGED（base=main，head=feat/CON-001-importance-decay-protection-formulas，merge e9469d8ee61d363d7367a9b17ca2680794ce39f0，mergedAt=2026-08-13T10:24:42Z）；fetch 后 origin/main 已通过 --ff-only 同步；CODE_REVIEW_APPROVED P0=0/P1=0/P2=1/P3=2 non-blocking；scoped 49 passed；ruff/mypy PASS；§2.3.5–2.3.7 consolidation importance pure functions；零 durable I/O；feat 分支本地/远程已删除；next_action=CON-002 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13"
 formal_CON-001_scoped_tests: "49 passed"
 formal_CON-001_ruff: PASS
 formal_CON-001_mypy: PASS
@@ -121,19 +121,23 @@ formal_CON-001_plan_review: PLAN_APPROVED
 formal_CON-001_code_review: CODE_REVIEW_APPROVED
 formal_CON-001_p0: 0
 formal_CON-001_p1: 0
+formal_CON-001_p2: 1
+formal_CON-001_p3: 2
 formal_CON-001_implementation_commit: 41932b93431e43fa1d134cfed76dfedb9ec7f363
 formal_CON-001_implementation_commit_message: "feat(con): add consolidation importance pure functions"
 formal_CON-001_pr: "#50"
 formal_CON-001_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/50"
-formal_CON-001_pr_state: OPEN
+formal_CON-001_pr_state: MERGED
 formal_CON-001_pr_base: main
 formal_CON-001_pr_head: "feat/CON-001-importance-decay-protection-formulas"
+formal_CON-001_merge_commit: e9469d8ee61d363d7367a9b17ca2680794ce39f0
+formal_CON-001_merged_at: "2026-08-13T10:24:42Z"
 formal_CON-001_status_record_committed: bef3ae23e8b12592cbdfcfb563654fb91c97cea2
-formal_CON-001_release_gate: WAITING_FOR_PR_MERGE
-formal_CON-001_approval_posture: "IMPLEMENTATION_RELEASE — committed"
+formal_CON-001_release_gate: COMPLETED
+formal_CON-001_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_CON-001_human_plan_approved: true
 formal_CON-001_developer_authorized: true
-formal_CON-001_next_action: WAITING_FOR_PR_MERGE
+formal_CON-001_next_action: "CON-002 planned / NOT AUTO-STARTED"
 formal_RET-006_plan_file: 02_开发管理/tasks/RET-006-retrieval-e2e-failure-injection.md
 formal_RET-006_status: completed
 formal_RET-006_workflow_mode: NORMAL
@@ -1564,6 +1568,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 10:30 UTC | CON-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `41932b93431e43fa1d134cfed76dfedb9ec7f363`、record `bef3ae23e8b12592cbdfcfb563654fb91c97cea2`、merge `e9469d8ee61d363d7367a9b17ca2680794ce39f0`；仅更新 CON-001 三份治理文件并创建 `docs(status): complete CON-001 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=1/P3=2 non-blocking；scoped 49 passed；ruff/mypy PASS；§2.3.5–2.3.7 consolidation importance pure functions；零 durable I/O；`next_action=CON-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 10:02 UTC | CON-001 | tested → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `41932b93431e43fa1d134cfed76dfedb9ec7f363`；PR #50 OPEN；docs(status): record on feat | scoped 49 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；零 durable I/O；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 09:40 UTC | CON-001 | planned → approved | Human PLAN_APPROVED; Release Operator `PLAN_LANDING`; docs(plan) on main; feat `feat/CON-001-importance-decay-protection-formulas` created | `approval_posture=PLAN_APPROVED`; `next_action=Developer on feat/CON-001-importance-decay-protection-formulas`; Developer NOT authorized until in_progress; 不得触碰 DEV-006/PR#13 |
 | 2026-08-13 08:57 UTC | CON-001 | planned | Planner created `02_开发管理/tasks/CON-001-importance-decay-protection-formulas.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `2159ad6cc5e3f31365677671d9588c69b776e8a0` verified (main, clean tree); scope = §2.3.5–2.3.7 importance/decay/protection pure functions; `durable_read_scope=NONE`; `durable_write_scope=NONE`; `missing_evidence` skip semantics; determinism; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |

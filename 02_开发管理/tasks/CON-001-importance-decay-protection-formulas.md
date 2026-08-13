@@ -5,25 +5,29 @@
 ```yaml
 task_id: CON-001
 task_name: Importance/衰减/保护公式纯函数
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "2159ad6cc5e3f31365677671d9588c69b776e8a0"
 branch: "feat/CON-001-importance-decay-protection-formulas"
 created_at: "2026-08-13 08:57 UTC"
-updated_at: "2026-08-13 10:02 UTC"
+updated_at: "2026-08-13 10:30 UTC"
 implementation_commit: 41932b93431e43fa1d134cfed76dfedb9ec7f363
 implementation_commit_message: "feat(con): add consolidation importance pure functions"
 pr: "#50"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/50"
-pr_state: OPEN
+pr_state: MERGED
 pr_base: main
 pr_head: "feat/CON-001-importance-decay-protection-formulas"
+merge_commit: e9469d8ee61d363d7367a9b17ca2680794ce39f0
+merged_at: "2026-08-13T10:24:42Z"
 status_record_committed: bef3ae23e8b12592cbdfcfb563654fb91c97cea2
 code_review: CODE_REVIEW_APPROVED
 p0: 0
 p1: 0
-next_action: WAITING_FOR_PR_MERGE
+p2: 1
+p3: 2
+next_action: "CON-002 planned / NOT AUTO-STARTED"
 spec_sections:
   - "§2.3.2 MVP 范围与基本规则（规则 3、6、7、10 — 本任务仅引用与公式相关的只读语义）"
   - "§2.3.3 Memory 字段补充（importance / last_consolidated_time 语义引用；本任务不写入）"
@@ -723,6 +727,7 @@ out_of_scope_changes:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
+| 2026-08-13 10:30 UTC | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #50 MERGED；验证 main 含 implementation `41932b93431e43fa1d134cfed76dfedb9ec7f363`、record `bef3ae23e8b12592cbdfcfb563654fb91c97cea2`、merge `e9469d8ee61d363d7367a9b17ca2680794ce39f0`；治理三文件 + `docs(status): complete`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=1/P3=2 non-blocking；scoped 49 passed；ruff/mypy PASS；零 durable I/O；`next_action=CON-002 planned / NOT AUTO-STARTED` | 无计划外差异 |
 | 2026-08-13 10:02 UTC | IMPLEMENTATION_RELEASE | implementation `41932b93431e43fa1d134cfed76dfedb9ec7f363`; PR #50 OPEN; docs(status): record on feat | 49 passed; ruff PASS; mypy PASS | CODE_REVIEW_APPROVED P0=0 P1=0; feat push only; 不得自动 merge; 不得触碰 DEV-006/PR#13 |
 | 2026-08-13 10:00 UTC | implementation | 创建 consolidation_importance 模型/服务 + 单元/契约测试 | 49 passed; ruff PASS; mypy PASS | NC-1..NC-14 + U1..U9 + F1..F3 + C1..C3; SHOULD_FIX SF-1..SF-3 absorbed; zero durable I/O |
 | 2026-08-13 09:40 UTC | planning | Human PLAN_APPROVED; Release Operator PLAN_LANDING | N/A | baseline `2159ad6` verified |
@@ -758,8 +763,8 @@ out_of_scope_changes:
 ```yaml
 p0: 0
 p1: 0
-p2: 0
-p3: 0
+p2: 1
+p3: 2
 review_report: null
 ```
 
@@ -774,4 +779,29 @@ implementation_commit_message: "feat(con): add consolidation importance pure fun
 
 ### 最终状态
 
-`committed`
+`completed`
+
+```yaml
+next_action: "CON-002 planned / NOT AUTO-STARTED"
+status: completed
+implementation_commit: 41932b93431e43fa1d134cfed76dfedb9ec7f363
+implementation_commit_message: "feat(con): add consolidation importance pure functions"
+plan_commit: "6f4a35ad28ad90946f74e39bfa567acc71120b12"
+status_record_committed: bef3ae23e8b12592cbdfcfb563654fb91c97cea2
+pr: "#50"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/50"
+pr_state: MERGED
+pr_base: main
+pr_head: "feat/CON-001-importance-decay-protection-formulas"
+merge_commit: e9469d8ee61d363d7367a9b17ca2680794ce39f0
+merged_at: "2026-08-13T10:24:42Z"
+code_review: CODE_REVIEW_APPROVED
+p0: 0
+p1: 0
+p2: 1
+p3: 2
+durable_read_scope: NONE
+durable_write_scope: NONE
+release_gate: COMPLETED
+approval_posture: "POST_MERGE_CLEANUP — completed"
+```

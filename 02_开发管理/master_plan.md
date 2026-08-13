@@ -667,7 +667,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| CON-001 | Importance/衰减/保护公式纯函数 | §2.3.5–2.3.8 | EXT-004 | approved |
+| CON-001 | Importance/衰减/保护公式纯函数 | §2.3.5–2.3.8 | EXT-004 | completed |
 | CON-002 | Cursor 分页批量读取与 Evidence 计数 | §2.3.4 | CON-001 | planned |
 | CON-003 | 乐观锁批量更新 | §2.3.9 | CON-002 | planned |
 | CON-004 | APScheduler、互斥锁、失败恢复 | §2.3.4, §3.22 | CON-003 | planned |
@@ -683,7 +683,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit（NC-1..NC-14 数值算例、missing_evidence、确定性）；Contract（白名单 + 输入契约无旧 importance）；Integration/E2E **DEFERRED**。
 - **Task Plan**：`02_开发管理/tasks/CON-001-importance-decay-protection-formulas.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=2159ad6cc5e3f31365677671d9588c69b776e8a0` MATCH；新建 `consolidation_importance` models + services 纯函数（禁止与 RET-004 ACT-R recency 混用）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=NONE`；`durable_write_scope=NONE`；§2.3.8 文档对齐、不实现软遗忘副作用；不得触碰 DEV-006/PR#13。
-- **状态备注**：`approved`（Human PLAN_APPROVED 2026-08-13）；`approval_posture=PLAN_APPROVED`；`next_action=Developer on feat/CON-001-importance-decay-protection-formulas`；Developer NOT authorized until in_progress；不得触碰 DEV-006/PR#13。
+- **状态备注**：`completed`（plan `6f4a35ad28ad90946f74e39bfa567acc71120b12`；implementation `41932b93431e43fa1d134cfed76dfedb9ec7f363`；record `bef3ae23e8b12592cbdfcfb563654fb91c97cea2`；PR #50 MERGED `e9469d8ee61d363d7367a9b17ca2680794ce39f0` mergedAt `2026-08-13T10:24:42Z`；scoped 49 passed；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2 non-blocking；§2.3.5–2.3.7 consolidation importance pure functions；零 durable I/O；feat 分支已删）；`next_action=CON-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13）。
 
 ---
 
