@@ -134,6 +134,7 @@ formal_CON-005_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/54"
 formal_CON-005_pr_state: OPEN
 formal_CON-005_pr_base: main
 formal_CON-005_pr_head: "feat/CON-005-consolidation-integration-e2e"
+formal_CON-005_status_record_committed: 7875e92feb417e6e9705c90396ba6e7d5d2e3034
 formal_CON-005_release_gate: WAITING_FOR_PR_MERGE
 formal_CON-005_human_plan_approved: true
 formal_CON-005_human_plan_approved_at: "2026-08-13T14:37:00Z"
