@@ -5,13 +5,13 @@
 ```yaml
 task_id: RET-002
 task_name: Vector 召回 + RRF 融合
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "e5f5c9de9883d04759f19080c01f1f50d2c62513"
 branch: "feat/RET-002-vector-retrieval-rrf"
 created_at: "2026-08-13 02:40 UTC"
-updated_at: "2026-08-13 02:40 UTC"
+updated_at: "2026-08-13 03:01 UTC"
 spec_sections:
   - "§2.2.6 Query 标准化与 Embedding（RET-002 拥有检索内部路径的 query norm + single-query embed）"
   - "§2.2.8 Vector 语义召回（本任务 Vector 通道权威范围）"
@@ -702,12 +702,32 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-13 02:40 UTC | planning | 创建 Task Plan；更新 progress/master_plan 规划态 | — | planning only；未 Git 写 |
+| 2026-08-13 03:01 UTC | implemented → tested | 9 生产文件 + 8 测试文件；共享 filter 提取；BM25 零语义变更 | 71 passed（31 RET-002 unit + 7 integration + 33 RET-001 regression）；ruff/mypy PASS | 无计划外差异 |
 
 ## 26. 实际执行结果
 
 ### 实际修改文件
 
-（实施后填写）
+**Production (9)**:
+- `src/memory_system/domain/services/retrieval_query_normalizer.py` (create)
+- `src/memory_system/domain/models/vector_retrieval.py` (create)
+- `src/memory_system/domain/models/hybrid_retrieval.py` (create)
+- `src/memory_system/domain/services/rrf_fusion.py` (create)
+- `src/memory_system/domain/services/vector_retrieval_service.py` (create)
+- `src/memory_system/domain/services/hybrid_retrieval_service.py` (create)
+- `src/memory_system/infrastructure/elasticsearch/retrieval_filter_builder.py` (create)
+- `src/memory_system/infrastructure/elasticsearch/vector_retrieval_repository.py` (create)
+- `src/memory_system/infrastructure/elasticsearch/bm25_retrieval_repository.py` (modify — shared filter only)
+
+**Tests (8)**:
+- `tests/unit/test_retrieval_query_normalizer.py`
+- `tests/unit/test_retrieval_filter_builder.py`
+- `tests/unit/test_vector_retrieval_query_builder.py`
+- `tests/unit/test_vector_retrieval_service.py`
+- `tests/unit/test_rrf_fusion.py`
+- `tests/unit/test_hybrid_retrieval_service.py`
+- `tests/integration/test_ret002_vector_retrieval_rrf.py`
+- `tests/support/ret002_es_fixtures.py`
 
 ### 与原计划的差异
 
@@ -715,7 +735,11 @@ out_of_scope_changes:
 
 ### 测试结果
 
-（实施后填写）
+```yaml
+scoped_tests: "71 passed (31 RET-002 unit + 7 RET-002 integration + 33 RET-001 regression)"
+ruff: PASS
+mypy: PASS
+```
 
 ### Review 结果
 
@@ -738,4 +762,4 @@ implementation_commit_message: null
 
 ### 最终状态
 
-`planned`
+`tested`
