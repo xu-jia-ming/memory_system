@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-001 completed (consolidation formulas)
+current_phase: Phase 4 — CON-002 planned (consolidation batch read)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: CON-001
-current_task_status: completed
+current_task: CON-002
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,10 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/CON-001-importance-decay-protection-formulas.md
+current_plan_file: 02_开发管理/tasks/CON-002-cursor-batch-evidence-count.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "2159ad6cc5e3f31365677671d9588c69b776e8a0"
+planning_baseline_main: "85875ff4d86ad39ccff9d4632088713ef8b052af"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -95,7 +95,29 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "CON-002 planned / NOT AUTO-STARTED"
+next_action: "计划审查"
+formal_CON-002_plan_file: 02_开发管理/tasks/CON-002-cursor-batch-evidence-count.md
+formal_CON-002_status: approved
+formal_CON-002_workflow_mode: NORMAL
+formal_CON-002_workflow_mode_source: explicit
+formal_CON-002_baseline: "85875ff4d86ad39ccff9d4632088713ef8b052af"
+formal_CON-002_branch: "feat/CON-002-cursor-batch-evidence-count"
+formal_CON-002_prerequisite: "SATISFIED — CON-001 completed (PR #50 MERGED); EXT-001..009 completed; RET-001..006 completed"
+formal_CON-002_scope: "§2.3.4 cursor pagination Neo4j batch read + independent_archive_count + per-user isolation + CON-001 handoff; zero durable write"
+formal_CON-002_blocking_open_issues: []
+formal_CON-002_nonblocking_open_issues: []
+formal_CON-002_dependency_changes_expected: NONE
+formal_CON-002_migration_changes_expected: NONE
+formal_CON-002_durable_read_scope: "Neo4j read-only — consolidation candidate batch scan"
+formal_CON-002_durable_write_scope: NONE
+formal_CON-002_production_file_whitelist: "src/memory_system/domain/models/consolidation_batch.py; src/memory_system/domain/services/consolidation_batch_service.py; src/memory_system/infrastructure/neo4j/consolidation_memory_read_repository.py"
+formal_CON-002_test_file_whitelist: "tests/unit/test_consolidation_memory_read_repository.py; tests/unit/test_consolidation_batch_service.py; tests/contract/test_con002_scope_boundaries.py"
+formal_CON-002_note: "human PLAN_APPROVED 2026-08-13; Amendment 001 SF-1..SF-5 absorbed; baseline main @ 85875ff; CON-001 PR #50 MERGED; Developer authorized; PLAN_LANDING next; 不得触碰 DEV-006/PR#13"
+formal_CON-002_plan_review: PLAN_APPROVED
+formal_CON-002_approval_posture: PLAN_APPROVED
+formal_CON-002_human_plan_approved: true
+formal_CON-002_developer_authorized: true
+formal_CON-002_next_action: "PLAN_LANDING"
 formal_CON-001_plan_file: 02_开发管理/tasks/CON-001-importance-decay-protection-formulas.md
 formal_CON-001_status: completed
 formal_CON-001_workflow_mode: NORMAL
@@ -517,7 +539,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: "POST_MERGE_CLEANUP — completed"
+current_task_approval_posture: "AWAIT_PLAN_REVIEW"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS

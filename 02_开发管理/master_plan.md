@@ -685,6 +685,16 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=2159ad6cc5e3f31365677671d9588c69b776e8a0` MATCH；新建 `consolidation_importance` models + services 纯函数（禁止与 RET-004 ACT-R recency 混用）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=NONE`；`durable_write_scope=NONE`；§2.3.8 文档对齐、不实现软遗忘副作用；不得触碰 DEV-006/PR#13。
 - **状态备注**：`completed`（plan `6f4a35ad28ad90946f74e39bfa567acc71120b12`；implementation `41932b93431e43fa1d134cfed76dfedb9ec7f363`；record `bef3ae23e8b12592cbdfcfb563654fb91c97cea2`；PR #50 MERGED `e9469d8ee61d363d7367a9b17ca2680794ce39f0` mergedAt `2026-08-13T10:24:42Z`；scoped 49 passed；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2 non-blocking；§2.3.5–2.3.7 consolidation importance pure functions；零 durable I/O；feat 分支已删）；`next_action=CON-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13）。
 
+#### CON-002 Cursor 分页批量读取与 Evidence 计数
+
+- **目标**：§2.3.4 巩固候选 **Cursor 分页** Neo4j 批量只读；`count(DISTINCT e.archive_id)` 作为 `independent_archive_count`；per-user `user_id` + Evidence 双端隔离；组装 `ConsolidationImportanceInput` 并调用 `compute_consolidation_importance`；输出 scored/skip/`next_cursor`/批次元数据；**零** durable 写入。
+- **非目标**：`evaluation_time` 生成、调度/互斥锁（CON-004）；Neo4j 乐观锁批量写入（CON-003）；`consolidation_worker` 接线；E2E（CON-005）；ES 同步；HTTP API；修改 CON-001 公式 / Settings Contract。
+- **前置**：**CON-001** completed（PR #50 MERGED）；EXT-001..009、RET-001..006 completed。
+- **测试**：Unit（U1..U12 分页/隔离/计数/去重/skip/畸形/读失败/handoff/replay/零写）；Contract（C1..C5 白名单+边界）；Integration/E2E **DEFERRED**（CON-005）。
+- **Task Plan**：`02_开发管理/tasks/CON-002-cursor-batch-evidence-count.md`。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=85875ff4d86ad39ccff9d4632088713ef8b052af` MATCH；新建 `consolidation_batch` models + `consolidation_batch_service` + `consolidation_memory_read_repository`；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=Neo4j read-only`；`durable_write_scope=NONE`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`planned`（`approval_posture=AWAIT_PLAN_REVIEW`；Developer NOT authorized；`next_action=计划审查`；不得触碰 DEV-006/PR#13）。
+
 ---
 
 ### Phase 5：最终工程与发布候选
