@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-009 planned
+current_phase: Phase 2 — EXT-009 committed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-009
-current_task_status: planned
-current_branch: main
+current_task_status: committed
+current_branch: feat/EXT-009-extraction-e2e-pipeline-wiring
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -27,7 +27,7 @@ workflow_mode_source: explicit
 planning_baseline_main: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
-formal_EXT-009_status: planned
+formal_EXT-009_status: committed
 formal_EXT-009_workflow_mode: NORMAL
 formal_EXT-009_workflow_mode_source: explicit
 formal_EXT-009_baseline: 779963257e33a93ad02ef4e3f997b3c9f6706802
@@ -39,8 +39,16 @@ formal_EXT-009_nonblocking_open_issues: []
 formal_EXT-009_dependency_changes_expected: NONE
 formal_EXT-009_migration_changes_expected: NONE
 formal_EXT-009_pipeline_handoff: "ProductionExtractionPipeline + worker consumer loop; EXT-003→007 continuation CLOSED; consumer narrow LD-1 terminal idempotency"
-formal_EXT-009_note: "Planner only；baseline 779963257e33a93ad02ef4e3f997b3c9f6706802；prerequisites SATISFIED；v0.3.0-memory-extraction milestone gate；不得触碰 DEV-006/PR#13"
-formal_EXT-009_next_action: "计划审查"
+formal_EXT-009_note: "PLAN_APPROVED；CODE_REVIEW_APPROVED（P0=0/P1=0/P2=0）；terminal reload fail-closed（保留原始 cause）与 Task Plan YAML 缩进已实现并验证；EXT-009 scoped 33 passed；E2E 4 passed；YAML/Ruff/Mypy/lints PASS；IMPLEMENTATION_RELEASE：implementation d6a4bf596b78275ce3e8644a79e2dc8d218675d4；PR #43 OPEN（base=main，head=feat/EXT-009-extraction-e2e-pipeline-wiring）；full-repository Mypy 143 baseline errors；仅按 EXT-009 既有白名单修复；不得触碰 DEV-006/PR#13"
+formal_EXT-009_implementation_commit: d6a4bf596b78275ce3e8644a79e2dc8d218675d4
+formal_EXT-009_implementation_commit_message: "feat(ext): wire production extraction pipeline and worker"
+formal_EXT-009_pr: "#43"
+formal_EXT-009_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/43"
+formal_EXT-009_pr_state: OPEN
+formal_EXT-009_pr_base: main
+formal_EXT-009_pr_head: "feat/EXT-009-extraction-e2e-pipeline-wiring"
+formal_EXT-009_release_gate: COMMITTED
+formal_EXT-009_next_action: "等待 PR Merge"
 formal_EXT-008_plan_file: 02_开发管理/tasks/EXT-008-extraction-admin-api.md
 formal_EXT-008_status: completed
 formal_EXT-008_workflow_mode: NORMAL
@@ -76,7 +84,7 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "计划审查"
+next_action: "等待 PR Merge"
 planning_baseline_EXT-007: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
 formal_EXT-006_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
@@ -1269,6 +1277,11 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-12 14:47 UTC | EXT-009 | planned → in_progress | Developer：新建 `ProductionExtractionPipeline`，接线 extraction worker，consumer 增加 LD-1 terminal reload；新增 pipeline/consumer unit、contract、compose integration、E2E-1..4 测试与 Fake provider helpers；吸收 SF-1 同轮 reload/fall-through 与 SF-2 injectable F1 hook、SF-3 ASGI Admin auth | 首轮 scoped pipeline/consumer/contract 通过；worker 旧测试暴露的未初始化 consumer 已修复待复跑；compose/E2E 尚待环境验证；EXT-002..007 与 `PipelineTerminalDecision` 零 diff；未 Git 写；`next_action=实现`；不得触碰 DEV-006/PR#13 |
+| 2026-08-12 15:03 UTC | EXT-009 | in_progress → tested | 完成 pipeline/worker/consumer 接线、SF-1 同轮 fall-through、SF-2 F1 hook、SF-3 ASGI Admin auth；补齐共享 Kafka producer 与 integration 本地 fixture 包装 | scoped unit/contract/worker **35 passed**（4 个既有 AsyncMock warning）；compose integration **1 passed**；E2E-1..4 **4 passed**；Ruff PASS；Mypy（3 个 changed production modules）PASS；IDE lints clean；combined collection **5 collected**；未 Git 写；不得触碰 DEV-006/PR#13；`next_action=代码审查` |
+| 2026-08-13 00:26 UTC | EXT-009 | tested → in_progress | Developer：处理当前 Code Review 两项 finding；修复 Task Plan YAML 缩进，收紧 COMPLETE/FAIL terminal reload 异常为 fail-closed，并补充 focused tests | — | 不改 PipelineTerminalDecision、EXT-007 terminal ownership、Kafka offset、阶段内部或生产 scope；未 Git 写；`next_action=实现` |
+| 2026-08-13 00:30 UTC | EXT-009 | in_progress → implemented | terminal reload 异常经 `TerminalPersistError` 链式传播；focused tests 覆盖 COMPLETE/FAIL 的 expected-terminal、non-terminal、TypeError、repository exception；Task Plan YAML 已可解析 | terminal idempotency **10 passed**；YAML parse PASS；Ruff PASS；Mypy PASS；IDE lints clean；EXT-009 scoped suite 验证中；未 Git 写；`next_action=验证` |
+| 2026-08-13 00:32 UTC | EXT-009 | implemented → tested | 完成两项 Code Review remediation：Task Plan YAML 缩进修复；COMPLETE/FAIL reload 异常 fail-closed 并保留 cause；未改生产 scope 或终态/Offset contract | focused terminal idempotency **10 passed**；EXT-009 scoped **33 passed**；YAML parse PASS；full Ruff PASS；Mypy（remediation files）PASS；IDE lints clean；full-repository Mypy 143 baseline errors；legacy EXT-001 consumer unit 3 个旧 fixture failures 未修改（超出本轮窄白名单）；未 Git 写；`next_action=代码审查` |
 | 2026-08-12 22:30 UTC | EXT-009 | planned | Planner created `02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `779963257e33a93ad02ef4e3f997b3c9f6706802` verified (main, clean tree); scope = production pipeline wiring + worker + consumer LD-1 terminal idempotency + E2E-1..4; authoritative closure of EXT-003→EXT-007 DEFERRED_FOR_MVP; Fake LLM/embedding/tokenize; zero EXT-002..007 service diff; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-12 14:10 UTC | EXT-008 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #42 MERGED (`8bee66be25e140cd59a8dd74faa733211ab44382` mergedAt `2026-08-12T14:07:04Z`)；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；record `eefb52edea62c1d1a917f2393ff157c64421a2b0`；feat 分支已删 | scoped 25 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=3 non-blocking；GET/retry/rebuild Admin HTTP；OI-006 resolved_by_task；LD-3 Mongo before Kafka；zero consumer/worker/pipeline diff；`next_action=EXT-009 planned / NOT AUTO-STARTED`；governance completion commit created |
 | 2026-08-12 22:00 UTC | EXT-008 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；PR #42 OPEN；docs(status): record on feat | scoped 25 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge** |

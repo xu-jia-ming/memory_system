@@ -27,7 +27,7 @@ Clock = Callable[[], int]
 
 
 class TerminalPersistError(RuntimeError):
-    """Raised when terminal Mongo write fails; callers must not commit offset."""
+    """Raised when terminal Mongo persistence fails; callers must not commit offset."""
 
 
 def _log_failed_task(
@@ -152,6 +152,17 @@ async def process_archive_created_event(
 
     if decision.kind == PipelineTerminalKind.COMPLETE:
         try:
+            reloaded = await repo.find_extraction_task_by_archive_id(
+                mongodb,
+                task.archive_id,
+            )
+        except Exception as exc:
+            raise TerminalPersistError(
+                f"terminal completed reload failed archive_id={task.archive_id}"
+            ) from exc
+        if reloaded is not None and reloaded.status == ExtractionTaskStatus.COMPLETED:
+            return ProcessArchiveCreatedResult(should_commit_offset=True, task=reloaded)
+        try:
             completed = await repo.mark_completed(
                 mongodb,
                 archive_id=task.archive_id,
@@ -165,6 +176,17 @@ async def process_archive_created_event(
 
     if decision.kind == PipelineTerminalKind.FAIL:
         assert decision.last_error is not None
+        try:
+            reloaded = await repo.find_extraction_task_by_archive_id(
+                mongodb,
+                task.archive_id,
+            )
+        except Exception as exc:
+            raise TerminalPersistError(
+                f"terminal failed reload failed archive_id={task.archive_id}"
+            ) from exc
+        if reloaded is not None and reloaded.status == ExtractionTaskStatus.FAILED:
+            return ProcessArchiveCreatedResult(should_commit_offset=True, task=reloaded)
         try:
             failed = await repo.mark_failed(
                 mongodb,

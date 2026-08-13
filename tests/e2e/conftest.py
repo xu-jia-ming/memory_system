@@ -18,7 +18,10 @@ from typing import Any
 import httpx
 import pytest
 import redis.asyncio as aioredis
+from aiokafka import AIOKafkaProducer  # type: ignore[import-untyped]
+from elasticsearch import AsyncElasticsearch
 from httpx import ASGITransport
+from neo4j import AsyncDriver, AsyncGraphDatabase
 from pymongo import AsyncMongoClient
 
 from memory_system.api.app import create_app
@@ -71,6 +74,14 @@ class InfraStack:
 class FullContainerStack(InfraStack):
     api_base_url: str
     compression_trigger_tokens: int
+
+
+@dataclass(frozen=True)
+class Ext009Runtime:
+    settings: Any
+    neo4j_driver: AsyncDriver
+    elasticsearch: AsyncElasticsearch
+    http_client: httpx.AsyncClient
 
 
 def _docker_available() -> bool:
@@ -503,6 +514,71 @@ async def mongo_client(infra_stack: InfraStack) -> AsyncIterator[AsyncMongoClien
         yield client
     finally:
         await client.close()
+
+
+@pytest.fixture
+async def kafka_producer(infra_stack: InfraStack) -> AsyncIterator[AIOKafkaProducer]:
+    producer = AIOKafkaProducer(
+        bootstrap_servers=infra_stack.kafka_bootstrap,
+        acks="all",
+        enable_idempotence=True,
+    )
+    await producer.start()
+    try:
+        yield producer
+    finally:
+        await producer.stop()
+
+
+@pytest.fixture
+async def ext009_runtime(
+    infra_stack: InfraStack,
+    monkeypatch: pytest.MonkeyPatch,
+) -> AsyncIterator[Ext009Runtime]:
+    """EXT-009 in-process stage clients; provider calls remain fake in tests."""
+    monkeypatch.setenv("APP_ENV", "test")
+    monkeypatch.setenv("MONGODB__URI", infra_stack.mongo_url)
+    monkeypatch.setenv("KAFKA__BOOTSTRAP_SERVERS", infra_stack.kafka_bootstrap)
+    monkeypatch.setenv("NEO4J__URI", f"neo4j://{infra_stack.neo4j_ip}:7687")
+    monkeypatch.setenv("ELASTICSEARCH__URL", infra_stack.elasticsearch_url)
+    monkeypatch.setenv("LLM__BASE_URL", "https://api.deepseek.com")
+    monkeypatch.setenv("LLM__API_KEY", "sk-example-replace-me")
+    monkeypatch.setenv("LLM__COMPRESSION__MODEL", "deepseek-v4-flash")
+    monkeypatch.setenv("LLM__EXTRACTION__MODEL", "deepseek-v4-flash")
+    monkeypatch.setenv("EMBEDDING__MODEL_ID", "BAAI/bge-m3")
+    monkeypatch.setenv("EMBEDDING__BASE_URL", "http://embedding-service:80")
+    monkeypatch.setenv("EMBEDDING_EFFECTIVE_RUNTIME_MODE", "cpu")
+    monkeypatch.setenv("EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET", "4096")
+    monkeypatch.setenv("SILICONFLOW_API_KEY", "sk-example-replace-me")
+    get_settings.cache_clear()
+    settings = get_settings()
+    neo4j_driver = AsyncGraphDatabase.driver(
+        settings.neo4j.uri.get_secret_value(),
+        connection_timeout=settings.neo4j.connection_timeout_seconds,
+        connection_acquisition_timeout=settings.neo4j.connection_acquisition_timeout_seconds,
+        max_connection_pool_size=settings.neo4j.max_connection_pool_size,
+    )
+    elasticsearch = AsyncElasticsearch(
+        hosts=[settings.elasticsearch.url],
+        request_timeout=settings.elasticsearch.request_timeout_seconds,
+        max_retries=settings.elasticsearch.max_retries,
+        retry_on_timeout=settings.elasticsearch.retry_on_timeout,
+    )
+    http_client = httpx.AsyncClient()
+    try:
+        await elasticsearch.info()
+        async with neo4j_driver.session() as session:
+            await session.run("RETURN 1")
+        yield Ext009Runtime(
+            settings=settings,
+            neo4j_driver=neo4j_driver,
+            elasticsearch=elasticsearch,
+            http_client=http_client,
+        )
+    finally:
+        await elasticsearch.close()
+        await neo4j_driver.close()
+        await http_client.aclose()
 
 
 @pytest.fixture(autouse=True)
