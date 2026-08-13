@@ -5,13 +5,13 @@
 ```yaml
 task_id: RET-001
 task_name: BM25 关键词召回
-status: approved
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab"
 branch: "feat/RET-001-bm25-retrieval"
 created_at: "2026-08-13 01:40 UTC"
-updated_at: "2026-08-13 01:40 UTC"
+updated_at: "2026-08-13 02:30 UTC"
 spec_sections:
   - "§2.2.4 Elasticsearch Retrieval Index 数据结构（只读消费 Alias；不创建 Mapping）"
   - "§2.2.7 BM25 关键词召回（本任务唯一权威范围）"
@@ -39,9 +39,9 @@ approval_gates:
   approval_posture: "PLAN_APPROVED — human confirmed 2026-08-13"
   amendment_recorded: true
   human_plan_approved: true
-  developer_authorized: false
-  reviewer_authorized: false
-  release_operator_authorized: false
+  developer_authorized: true
+  reviewer_authorized: true
+  release_operator_authorized: true
 release_phases:
   PLAN_LANDING: "NORMAL only; after PLAN_APPROVED, Release Operator may land approved planning files on main and create the exact feature branch feat/RET-001-bm25-retrieval"
   IMPLEMENTATION_RELEASE: "only after implementation is approved; feature branch whitelist only; no push to main"
@@ -448,17 +448,17 @@ durable_write_scope: NONE
 
 ## 18. 验收标准
 
-- [ ] `Bm25RetrievalService.search` 实现 §2.2.7 BM25 语义；只读；零 durable 写
-- [ ] ES Query 与 §8 完全一致（filter、multi_match、size、_source=false）
-- [ ] 输出 `memory_id` + 1-based `rank` + ES `_score`
-- [ ] `user_id` 隔离经单元 + 集成双重验证
-- [ ] ES 失败映射为 `channel_failure`；**不** 使用 `bm25_retrieval_failed`
-- [ ] Integration 使用 ES Fixture；**不** 依赖 EXT-007 pipeline
-- [ ] 不修改 DEV-004 Mapping/Alias；不触碰 DEV-006/PR#13
-- [ ] scoped unit + integration 全通过
-- [ ] Ruff / Mypy（变更文件）通过
-- [ ] Review 无 P0/P1
-- [ ] `dependency_changes_expected=NONE`；`migration_changes_expected=NONE`
+- [x] `Bm25RetrievalService.search` 实现 §2.2.7 BM25 语义；只读；零 durable 写
+- [x] ES Query 与 §8 完全一致（filter、multi_match、size、_source=false）
+- [x] 输出 `memory_id` + 1-based `rank` + ES `_score`
+- [x] `user_id` 隔离经单元 + 集成双重验证
+- [x] ES 失败映射为 `channel_failure`；**不** 使用 `bm25_retrieval_failed`
+- [x] Integration 使用 ES Fixture；**不** 依赖 EXT-007 pipeline
+- [x] 不修改 DEV-004 Mapping/Alias；不触碰 DEV-006/PR#13
+- [x] scoped unit + integration 全通过
+- [x] Ruff / Mypy（变更文件）通过
+- [x] Review 无 P0/P1
+- [x] `dependency_changes_expected=NONE`；`migration_changes_expected=NONE`
 
 ## 19. 风险与阻塞项
 
@@ -549,40 +549,61 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-13 01:40 UTC | planning | 创建 Task Plan；更新 progress/master_plan 规划态 | — | planning only；未 Git 写 |
+| 2026-08-13 02:29 UTC | POST_MERGE_CLEANUP | fetch 后 origin/main 领先本地 main，按 `--ff-only` 同步；验证 PR #44 MERGED 与 implementation/merge facts；更新三份治理文件；创建 `docs(status): complete RET-001 after PR merge`；删除 exact feature branch local/remote | scoped 33 passed（25 unit + 8 integration）；ruff/mypy PASS | `status=completed`；仅治理白名单；`next_action=RET-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 
 ## 26. 实际执行结果
 
 ### 实际修改文件
 
-（实施前留空）
+- `src/memory_system/domain/models/bm25_retrieval.py`（创建）
+- `src/memory_system/domain/services/bm25_retrieval_service.py`（创建）
+- `src/memory_system/infrastructure/elasticsearch/bm25_retrieval_repository.py`（创建）
+- `tests/unit/test_bm25_retrieval_query_builder.py`（创建）
+- `tests/unit/test_bm25_retrieval_service.py`（创建）
+- `tests/integration/test_ret001_bm25_retrieval.py`（创建）
+- `tests/support/ret001_es_fixtures.py`（创建）
 
 ### 与原计划的差异
 
-暂无。
+暂无。Implementation 与 §13–§14 白名单一致；无 record commit on feat（IMPLEMENTATION_RELEASE 未追加 `docs(status): record`）。
 
 ### 测试结果
 
-（实施前留空）
+```yaml
+scoped_tests: "33 passed (25 unit + 8 integration)"
+ruff: PASS
+mypy: "PASS（remediation files）"
+```
 
 ### Review 结果
 
 ```yaml
-p0: null
-p1: null
-p2: null
-p3: null
-review_report: null
+p0: 0
+p1: 0
+p2: 2
+p3: 2
+review_report: CODE_REVIEW_APPROVED
+note: "P2/P3 non-blocking"
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/RET-001-bm25-retrieval
+plan_commit: "3f7e333132a6c1bc013eeb5ac0b5b47954734aab"
+implementation_commit: "fc435db722ed29c05980d6a1a60d9f57fda80968"
+implementation_commit_message: "feat(ret): add bm25 keyword retrieval channel"
+status_record_committed: null
+merge_commit: "a4dda57366b9e0cb2a1fb34b6526a07daa30ed31"
+merged_at: "2026-08-13T02:29:09Z"
+pr: "#44"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/44"
+pr_state: MERGED
+pr_base: main
+pr_head: feat/RET-001-bm25-retrieval
+next_action: "RET-002 planned / NOT AUTO-STARTED"
 ```
 
 ### 最终状态
 
-`approved`
+`completed` — POST_MERGE_CLEANUP；implementation `fc435db722ed29c05980d6a1a60d9f57fda80968`；plan `3f7e333132a6c1bc013eeb5ac0b5b47954734aab`；PR #44 MERGED（`https://github.com/xu-jia-ming/memory_system/pull/44`；merge `a4dda57366b9e0cb2a1fb34b6526a07daa30ed31`；mergedAt `2026-08-13T02:29:09Z`）；scoped 33 passed（25 unit + 8 integration）；Ruff PASS；Mypy remediation files PASS；CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking；§2.2.7 BM25 internal channel read-only；Integration ES Fixture not EXT-007 pipeline；feat 分支本地/远程已删除；`next_action=RET-002 planned / NOT AUTO-STARTED`；**不得触碰 DEV-006/PR#13**。

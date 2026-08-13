@@ -590,7 +590,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| RET-001 | BM25 查询 | §2.2.7 | DEV-004, DEV-007 | planned |
+| RET-001 | BM25 查询 | §2.2.7 | DEV-004, DEV-007 | completed |
 | RET-002 | Vector 召回 + RRF | §2.2.8, §2.2.9 | RET-001, DEV-007 | planned |
 | RET-003 | Neo4j 权威回读 + 一跳扩展 + MGET | §2.2.10 | RET-002 | planned |
 | RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | planned |
@@ -605,8 +605,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Integration —— Migration 后**直接写入固定 ES Fixture 文档**，再断言 BM25；**不**将 EXT-007 列为硬前置。
 - **E2E 协作**：与 EXT-007 的写入→可检索 放到 RET-006 / E2E-001。
 - **Task Plan**：`02_开发管理/tasks/RET-001-bm25-retrieval.md`。
-- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab` MATCH；本轮仅规划态；内部 Service/Repository（非 HTTP）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；不得触碰 DEV-006/PR#13。
-- **状态备注**：`planned` / **NOT AUTO-STARTED**；`next_action=计划审查`。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab` MATCH；内部 Service/Repository（非 HTTP）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`completed`（plan `3f7e333132a6c1bc013eeb5ac0b5b47954734aab`；implementation `fc435db722ed29c05980d6a1a60d9f57fda80968`；PR #44 MERGED `a4dda57366b9e0cb2a1fb34b6526a07daa30ed31` mergedAt `2026-08-13T02:29:09Z`；scoped 33 passed（25 unit + 8 integration）；Ruff PASS；Mypy remediation files PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2 non-blocking；§2.2.7 BM25 internal channel read-only；Integration ES Fixture not EXT-007 pipeline；feat 分支已删；RET-002 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 
 #### RET-002–RET-005
 
@@ -1434,5 +1434,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
 | 是否改变技术规格 | 否；仅完成治理状态、里程碑条件与证据登记 |
 | 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=RET-001 planned / NOT AUTO-STARTED`；不得自动启动 RET-001 |
+
+### CHANGE-073
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-13 |
+| 原因 | RET-001 POST_MERGE_CLEANUP：PR #44 MERGED；implementation 已在 main；完成治理状态并清理 exact feature branch |
+| 受影响任务 | `RET-001`（`completed`）；`RET-002` remains `planned` / **NOT AUTO-STARTED**；不改变 Appendix B、BM25/Vector/RRF 语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
+| 事实记录 | plan `3f7e333132a6c1bc013eeb5ac0b5b47954734aab`；implementation `fc435db722ed29c05980d6a1a60d9f57fda80968`；PR #44 MERGED `a4dda57366b9e0cb2a1fb34b6526a07daa30ed31`；mergedAt `2026-08-13T02:29:09Z`；CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking；fetch stale resolved with ff-only |
+| 交付与不变量 | §2.2.7 BM25 internal channel read-only；`Bm25RetrievalService` + ES `multi_match` on alias；user_id isolation；Integration ES Fixture not EXT-007 pipeline；零 durable write |
+| Open Issues | OI-008 non-blocking（RET-005 API 编辑性） |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
+| 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
+| 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=RET-002 planned / NOT AUTO-STARTED`；不得自动启动 RET-002 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

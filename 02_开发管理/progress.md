@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 3 — RET-001 planned
+current_phase: Phase 3 — RET-002 planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: RET-001
-current_task_status: approved
+current_task_status: completed
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "PLAN_LANDING"
+next_action: "RET-002 planned / NOT AUTO-STARTED"
 formal_RET-001_plan_file: 02_开发管理/tasks/RET-001-bm25-retrieval.md
-formal_RET-001_status: approved
+formal_RET-001_status: completed
 formal_RET-001_workflow_mode: NORMAL
 formal_RET-001_workflow_mode_source: explicit
 formal_RET-001_baseline: a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab
@@ -108,8 +108,29 @@ formal_RET-001_blocking_open_issues: []
 formal_RET-001_nonblocking_open_issues: [OI-008]
 formal_RET-001_dependency_changes_expected: NONE
 formal_RET-001_migration_changes_expected: NONE
-formal_RET-001_note: "approved; PLAN_LANDING pending; planning baseline a780bb2d MATCH; Integration uses ES Fixture not EXT-007 pipeline; SF-1/2/3 absorbed; must not touch DEV-006/PR#13"
-formal_RET-001_approval_posture: "PLAN_APPROVED — human confirmed 2026-08-13"
+formal_RET-001_note: "POST_MERGE_CLEANUP；implementation fc435db722ed29c05980d6a1a60d9f57fda80968；plan 3f7e333132a6c1bc013eeb5ac0b5b47954734aab；PR #44 MERGED（base=main，head=feat/RET-001-bm25-retrieval，merge a4dda57366b9e0cb2a1fb34b6526a07daa30ed31，mergedAt=2026-08-13T02:29:09Z）；fetch 后 origin/main 领先本地 main，已通过 --ff-only 同步；CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking；§2.2.7 BM25 internal channel read-only；Integration ES Fixture not EXT-007 pipeline；feat 分支本地/远程已删除；next_action=RET-002 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13"
+formal_RET-001_approval_posture: "POST_MERGE_CLEANUP — completed"
+formal_RET-001_scoped_tests: "33 passed (25 unit + 8 integration)"
+formal_RET-001_ruff: PASS
+formal_RET-001_mypy: "PASS（remediation files）"
+formal_RET-001_code_review: CODE_REVIEW_APPROVED
+formal_RET-001_p0: 0
+formal_RET-001_p1: 0
+formal_RET-001_p2: 2
+formal_RET-001_p3: 2
+formal_RET-001_plan_commit: 3f7e333132a6c1bc013eeb5ac0b5b47954734aab
+formal_RET-001_implementation_commit: fc435db722ed29c05980d6a1a60d9f57fda80968
+formal_RET-001_implementation_commit_message: "feat(ret): add bm25 keyword retrieval channel"
+formal_RET-001_pr: "#44"
+formal_RET-001_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/44"
+formal_RET-001_pr_state: MERGED
+formal_RET-001_pr_base: main
+formal_RET-001_pr_head: "feat/RET-001-bm25-retrieval"
+formal_RET-001_merge_commit: a4dda57366b9e0cb2a1fb34b6526a07daa30ed31
+formal_RET-001_merged_at: "2026-08-13T02:29:09Z"
+formal_RET-001_status_record_committed: null
+formal_RET-001_release_gate: COMPLETED
+formal_RET-001_next_action: "RET-002 planned / NOT AUTO-STARTED"
 planning_baseline_RET-001: "a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab"
 planning_baseline_EXT-007: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
@@ -252,7 +273,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: "PLAN_APPROVED — RET-001 approved; PLAN_LANDING"
+current_task_approval_posture: "POST_MERGE_CLEANUP — RET-001 completed"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -1303,7 +1324,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
-| 2026-08-13 01:11 UTC | EXT-009 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后发现 origin/main 领先本地 main，按 `SAFE_AUTO_REMEDIATION` 通过 `--ff-only` 同步；验证 main 包含 implementation `d6a4bf596b78275ce3e8644a79e2dc8d218675d4`、record `ddfb89ca8e466e0802d9e98177295a9effb41725`、merge `c05691144b650b22be714736de3c200076c340c3`；仅更新 EXT-009 三份治理文件并创建 `docs(status): complete EXT-009 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=0；pipeline continuation 闭合；terminal Mongo 持久化先于 Kafka Offset；extraction_result replay 跳过 LLM，Retrieval ES upsert 收敛且无重复 Memory/Evidence/ES 文档；`next_action=RET-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
+| 2026-08-13 02:30 UTC | RET-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 领先本地 main，已通过 `--ff-only` 同步；验证 main 包含 implementation `fc435db722ed29c05980d6a1a60d9f57fda80968`、merge `a4dda57366b9e0cb2a1fb34b6526a07daa30ed31`；仅更新 RET-001 三份治理文件并创建 `docs(status): complete RET-001 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking；scoped 33 passed（25 unit + 8 integration）；§2.2.7 BM25 internal channel read-only；Integration ES Fixture not EXT-007 pipeline；`next_action=RET-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-12 14:47 UTC | EXT-009 | planned → in_progress | Developer：新建 `ProductionExtractionPipeline`，接线 extraction worker，consumer 增加 LD-1 terminal reload；新增 pipeline/consumer unit、contract、compose integration、E2E-1..4 测试与 Fake provider helpers；吸收 SF-1 同轮 reload/fall-through 与 SF-2 injectable F1 hook、SF-3 ASGI Admin auth | 首轮 scoped pipeline/consumer/contract 通过；worker 旧测试暴露的未初始化 consumer 已修复待复跑；compose/E2E 尚待环境验证；EXT-002..007 与 `PipelineTerminalDecision` 零 diff；未 Git 写；`next_action=实现`；不得触碰 DEV-006/PR#13 |
 | 2026-08-12 15:03 UTC | EXT-009 | in_progress → tested | 完成 pipeline/worker/consumer 接线、SF-1 同轮 fall-through、SF-2 F1 hook、SF-3 ASGI Admin auth；补齐共享 Kafka producer 与 integration 本地 fixture 包装 | scoped unit/contract/worker **35 passed**（4 个既有 AsyncMock warning）；compose integration **1 passed**；E2E-1..4 **4 passed**；Ruff PASS；Mypy（3 个 changed production modules）PASS；IDE lints clean；combined collection **5 collected**；未 Git 写；不得触碰 DEV-006/PR#13；`next_action=代码审查` |
 | 2026-08-13 00:26 UTC | EXT-009 | tested → in_progress | Developer：处理当前 Code Review 两项 finding；修复 Task Plan YAML 缩进，收紧 COMPLETE/FAIL terminal reload 异常为 fail-closed，并补充 focused tests | — | 不改 PipelineTerminalDecision、EXT-007 terminal ownership、Kafka offset、阶段内部或生产 scope；未 Git 写；`next_action=实现` |
