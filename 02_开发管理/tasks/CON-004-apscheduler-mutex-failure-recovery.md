@@ -5,7 +5,7 @@
 ```yaml
 task_id: CON-004
 task_name: APScheduler、互斥锁、失败恢复
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "8998f627b6cf0c8f5beb103006903d8c3668542a"
@@ -681,19 +681,19 @@ dependency_changes_expected: NONE
 
 ## 29. 验收标准
 
-- [ ] `pytest tests/unit/test_consolidation_run_service.py tests/unit/test_consolidation_mutex.py tests/unit/test_consolidation_scheduler.py tests/unit/test_consolidation_user_enumeration_repository.py tests/unit/test_consolidation_worker_entrypoint.py tests/contract/test_con004_scope_boundaries.py` 全部通过
-- [ ] U1 单用户多页 happy path；U2 多用户；U3 cursor 推进
-- [ ] U8 同一 `evaluation_time` 传播至所有 CON-002/003 调用
-- [ ] U5/U6 mutex 防重叠且异常释放
-- [ ] U7 版本冲突不终止 run
-- [ ] U11 missing_evidence/invalid 不终止 run
-- [ ] U9 读失败终止；U10 写失败终止且前批保留
-- [ ] U13 下次 scheduled run 恢复语义
-- [ ] U14/U17 Scheduler 注册与 lifecycle
-- [ ] C4 CON-001/002/003 服务文件零 diff；C7 无 CON-005 漂移
-- [ ] `consolidation_worker` 可启动（mock/smoke）且 graceful shutdown 路径存在
-- [ ] Ruff 通过
-- [ ] Mypy 通过（新增文件）
+- [x] `pytest tests/unit/test_consolidation_run_service.py tests/unit/test_consolidation_mutex.py tests/unit/test_consolidation_scheduler.py tests/unit/test_consolidation_user_enumeration_repository.py tests/unit/test_consolidation_worker_entrypoint.py tests/contract/test_con004_scope_boundaries.py` 全部通过
+- [x] U1 单用户多页 happy path；U2 多用户；U3 cursor 推进
+- [x] U8 同一 `evaluation_time` 传播至所有 CON-002/003 调用
+- [x] U5/U6 mutex 防重叠且异常释放
+- [x] U7 版本冲突不终止 run
+- [x] U11 missing_evidence/invalid 不终止 run
+- [x] U9 读失败终止；U10 写失败终止且前批保留
+- [x] U13 下次 scheduled run 恢复语义
+- [x] U14/U17 Scheduler 注册与 lifecycle
+- [x] C4 CON-001/002/003 服务文件零 diff；C7 无 CON-005 漂移
+- [x] `consolidation_worker` 可启动（mock/smoke）且 graceful shutdown 路径存在
+- [x] Ruff 通过
+- [x] Mypy 通过（新增文件）
 - [ ] Review 无 P0/P1
 
 ## 30. 风险与阻塞项
@@ -737,7 +737,9 @@ out_of_scope_changes:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 2026-08-13 21:45 UTC | Step 1–7 实现 | 7 个生产文件 + consolidation_worker 接线 | — | 无 |
+| 2026-08-13 21:50 UTC | Step 8 测试 | 6 个测试文件（U1..U18/C1..C7/F1..F3） | 37 passed | 无 |
+| 2026-08-13 21:52 UTC | 静态检查 | ruff + mypy 新增 src | PASS | 无 |
 
 ## 34. 实际执行结果
 
@@ -745,7 +747,19 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `src/memory_system/domain/models/consolidation_run.py` | 已创建 |
+| `src/memory_system/domain/services/consolidation_run_service.py` | 已创建 |
+| `src/memory_system/infrastructure/consolidation_mutex.py` | 已创建 |
+| `src/memory_system/infrastructure/scheduling/consolidation_scheduler.py` | 已创建 |
+| `src/memory_system/infrastructure/neo4j/consolidation_user_enumeration_repository.py` | 已创建 |
+| `src/memory_system/observability/consolidation_run_telemetry.py` | 已创建 |
+| `src/memory_system/entrypoints/consolidation_worker.py` | 已修改 |
+| `tests/unit/test_consolidation_run_service.py` | 已创建 |
+| `tests/unit/test_consolidation_mutex.py` | 已创建 |
+| `tests/unit/test_consolidation_scheduler.py` | 已创建 |
+| `tests/unit/test_consolidation_user_enumeration_repository.py` | 已创建 |
+| `tests/unit/test_consolidation_worker_entrypoint.py` | 已创建 |
+| `tests/contract/test_con004_scope_boundaries.py` | 已创建 |
 
 ### 与原计划的差异
 
@@ -755,12 +769,11 @@ out_of_scope_changes:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit + Contract | `pytest tests/unit/test_consolidation_run_service.py tests/unit/test_consolidation_mutex.py tests/unit/test_consolidation_scheduler.py tests/unit/test_consolidation_user_enumeration_repository.py tests/unit/test_consolidation_worker_entrypoint.py tests/contract/test_con004_scope_boundaries.py` | 37 passed |
+| Integration | — | DEFERRED (CON-005) |
+| E2E | — | DEFERRED (CON-005) |
+| Ruff | `ruff check` on 7 new src files | PASS |
+| Mypy | `mypy` on 7 new src files | PASS |
 
 ### Review 结果
 
@@ -775,12 +788,12 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/CON-004-apscheduler-mutex-failure-recovery
+plan_commit: e124b23
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`planned`
+`tested`
