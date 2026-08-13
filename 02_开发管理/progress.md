@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-002 planned (consolidation batch read)
+current_phase: Phase 4 — CON-002 tested (consolidation batch read)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: CON-002
-current_task_status: approved
-current_branch: main
+current_task_status: tested
+current_branch: feat/CON-002-cursor-batch-evidence-count
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "计划审查"
+next_action: CODE_REVIEW
 formal_CON-002_plan_file: 02_开发管理/tasks/CON-002-cursor-batch-evidence-count.md
-formal_CON-002_status: approved
+formal_CON-002_status: tested
 formal_CON-002_workflow_mode: NORMAL
 formal_CON-002_workflow_mode_source: explicit
 formal_CON-002_baseline: "85875ff4d86ad39ccff9d4632088713ef8b052af"
@@ -112,12 +112,15 @@ formal_CON-002_durable_read_scope: "Neo4j read-only — consolidation candidate 
 formal_CON-002_durable_write_scope: NONE
 formal_CON-002_production_file_whitelist: "src/memory_system/domain/models/consolidation_batch.py; src/memory_system/domain/services/consolidation_batch_service.py; src/memory_system/infrastructure/neo4j/consolidation_memory_read_repository.py"
 formal_CON-002_test_file_whitelist: "tests/unit/test_consolidation_memory_read_repository.py; tests/unit/test_consolidation_batch_service.py; tests/contract/test_con002_scope_boundaries.py"
-formal_CON-002_note: "human PLAN_APPROVED 2026-08-13; Amendment 001 SF-1..SF-5 absorbed; baseline main @ 85875ff; CON-001 PR #50 MERGED; Developer authorized; PLAN_LANDING next; 不得触碰 DEV-006/PR#13"
+formal_CON-002_note: "implementation complete 2026-08-13; 39 scoped tests passed; ruff/mypy PASS; §2.3.4 cursor batch read + independent_archive_count + CON-001 handoff; zero durable write; READY_FOR_CODE_REVIEW; 不得触碰 DEV-006/PR#13"
 formal_CON-002_plan_review: PLAN_APPROVED
-formal_CON-002_approval_posture: PLAN_APPROVED
+formal_CON-002_approval_posture: READY_FOR_CODE_REVIEW
 formal_CON-002_human_plan_approved: true
 formal_CON-002_developer_authorized: true
-formal_CON-002_next_action: "PLAN_LANDING"
+formal_CON-002_scoped_tests: "39 passed"
+formal_CON-002_ruff: PASS
+formal_CON-002_mypy: "PASS（3 new src files）"
+formal_CON-002_next_action: CODE_REVIEW
 formal_CON-001_plan_file: 02_开发管理/tasks/CON-001-importance-decay-protection-formulas.md
 formal_CON-001_status: completed
 formal_CON-001_workflow_mode: NORMAL
@@ -1590,6 +1593,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 18:55 UTC | CON-002 | approved → tested | Developer implementation on `feat/CON-002-cursor-batch-evidence-count`；3 生产 + 3 测试白名单文件；§2.3.4 cursor batch Neo4j read + `independent_archive_count` + CON-001 handoff | scoped **39 passed**；ruff PASS；mypy PASS（3 new src files）；零 durable write；OPTIONAL MATCH 零 Evidence；U13-U15 pagination metadata；`next_action=CODE_REVIEW`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 10:30 UTC | CON-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `41932b93431e43fa1d134cfed76dfedb9ec7f363`、record `bef3ae23e8b12592cbdfcfb563654fb91c97cea2`、merge `e9469d8ee61d363d7367a9b17ca2680794ce39f0`；仅更新 CON-001 三份治理文件并创建 `docs(status): complete CON-001 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=1/P3=2 non-blocking；scoped 49 passed；ruff/mypy PASS；§2.3.5–2.3.7 consolidation importance pure functions；零 durable I/O；`next_action=CON-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 10:02 UTC | CON-001 | tested → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `41932b93431e43fa1d134cfed76dfedb9ec7f363`；PR #50 OPEN；docs(status): record on feat | scoped 49 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；零 durable I/O；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 09:40 UTC | CON-001 | planned → approved | Human PLAN_APPROVED; Release Operator `PLAN_LANDING`; docs(plan) on main; feat `feat/CON-001-importance-decay-protection-formulas` created | `approval_posture=PLAN_APPROVED`; `next_action=Developer on feat/CON-001-importance-decay-protection-formulas`; Developer NOT authorized until in_progress; 不得触碰 DEV-006/PR#13 |
