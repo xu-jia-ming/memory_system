@@ -667,13 +667,23 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| CON-001 | Importance/衰减/保护公式纯函数 | §2.3.5–2.3.8 | EXT-004 | planned |
+| CON-001 | Importance/衰减/保护公式纯函数 | §2.3.5–2.3.8 | EXT-004 | approved |
 | CON-002 | Cursor 分页批量读取与 Evidence 计数 | §2.3.4 | CON-001 | planned |
 | CON-003 | 乐观锁批量更新 | §2.3.9 | CON-002 | planned |
 | CON-004 | APScheduler、互斥锁、失败恢复 | §2.3.4, §3.22 | CON-003 | planned |
 | CON-005 | Consolidation Integration + E2E | §2.3.11–2.3.13 | CON-004 | planned |
 
 - **非目标（阶段）**：独立 Consolidation HTTP API；ES importance 同步；多实例调度。
+
+#### CON-001 Importance/衰减/保护公式纯函数
+
+- **目标**：§2.3.5–§2.3.7 巩固信号与动态重要性 **纯函数**（`base_importance` / `confidence_score` / `evidence_score` / `recency_score` / `reinforcement_score` / `new_importance`）；`independent_archive_count=0` → `missing_evidence` skip；相同 `evaluation_time` + 相同输入确定性；**不**使用旧 `importance` 或检索统计字段；只读消费 `MemoryConsolidationSettings` 与 `IMPORTANCE_BY_TYPE`。
+- **非目标**：Neo4j 读/写；Cursor 分页与 Evidence 计数（CON-002）；乐观锁批量更新（CON-003）；APScheduler/互斥锁/Worker（CON-004）；E2E（CON-005）；ES 同步；HTTP API；修改 `act_r_scoring` / `consolidation_worker` / Settings Contract。
+- **前置**：**EXT-004**（登记）；EXT-001..009、RET-001..006 completed。
+- **测试**：Unit（NC-1..NC-14 数值算例、missing_evidence、确定性）；Contract（白名单 + 输入契约无旧 importance）；Integration/E2E **DEFERRED**。
+- **Task Plan**：`02_开发管理/tasks/CON-001-importance-decay-protection-formulas.md`。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=2159ad6cc5e3f31365677671d9588c69b776e8a0` MATCH；新建 `consolidation_importance` models + services 纯函数（禁止与 RET-004 ACT-R recency 混用）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=NONE`；`durable_write_scope=NONE`；§2.3.8 文档对齐、不实现软遗忘副作用；不得触碰 DEV-006/PR#13。
+- **状态备注**：`approved`（Human PLAN_APPROVED 2026-08-13）；`approval_posture=PLAN_APPROVED`；`next_action=Developer on feat/CON-001-importance-decay-protection-formulas`；Developer NOT authorized until in_progress；不得触碰 DEV-006/PR#13。
 
 ---
 

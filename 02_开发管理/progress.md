@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 3 — RET-006 completed (milestone v0.4.0-memory-retrieval closed)
+current_phase: Phase 4 — CON-001 approved (consolidation formulas)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: RET-006
-current_task_status: completed
-current_branch: main
+current_task: CON-001
+current_task_status: approved
+current_branch: feat/CON-001-importance-decay-protection-formulas
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -21,10 +21,10 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/RET-006-retrieval-e2e-failure-injection.md
+current_plan_file: 02_开发管理/tasks/CON-001-importance-decay-protection-formulas.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "538cf13ac3d33d1f337a9e5f5b450626ddd6529d"
+planning_baseline_main: "2159ad6cc5e3f31365677671d9588c69b776e8a0"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -95,7 +95,29 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "CON-001 planned / NOT AUTO-STARTED"
+next_action: "Developer on feat/CON-001-importance-decay-protection-formulas"
+formal_CON-001_plan_file: 02_开发管理/tasks/CON-001-importance-decay-protection-formulas.md
+formal_CON-001_status: approved
+formal_CON-001_workflow_mode: NORMAL
+formal_CON-001_workflow_mode_source: explicit
+formal_CON-001_baseline: "2159ad6cc5e3f31365677671d9588c69b776e8a0"
+formal_CON-001_branch: "feat/CON-001-importance-decay-protection-formulas"
+formal_CON-001_prerequisite: "SATISFIED — EXT-004 completed; EXT-001..009 completed; RET-001..006 completed; v0.3.0 and v0.4.0 milestones closed"
+formal_CON-001_scope: "§2.3.5–2.3.7 consolidation importance pure functions; consume MemoryConsolidationSettings; missing_evidence skip; zero durable read/write; §2.3.8 documentation-only"
+formal_CON-001_blocking_open_issues: []
+formal_CON-001_nonblocking_open_issues: []
+formal_CON-001_dependency_changes_expected: NONE
+formal_CON-001_migration_changes_expected: NONE
+formal_CON-001_durable_read_scope: NONE
+formal_CON-001_durable_write_scope: NONE
+formal_CON-001_production_file_whitelist: "src/memory_system/domain/models/consolidation_importance.py; src/memory_system/domain/services/consolidation_importance.py"
+formal_CON-001_test_file_whitelist: "tests/unit/test_consolidation_importance.py; tests/contract/test_con001_scope_boundaries.py"
+formal_CON-001_note: "Human PLAN_APPROVED; Release Operator PLAN_LANDING; docs(plan) on main; feat feat/CON-001-importance-decay-protection-formulas created; Developer NOT authorized until in_progress; 不得触碰 DEV-006/PR#13"
+formal_CON-001_plan_review: PLAN_APPROVED
+formal_CON-001_approval_posture: PLAN_APPROVED
+formal_CON-001_human_plan_approved: true
+formal_CON-001_developer_authorized: false
+formal_CON-001_next_action: "Developer on feat/CON-001-importance-decay-protection-formulas"
 formal_RET-006_plan_file: 02_开发管理/tasks/RET-006-retrieval-e2e-failure-injection.md
 formal_RET-006_status: completed
 formal_RET-006_workflow_mode: NORMAL
@@ -1526,6 +1548,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 09:40 UTC | CON-001 | planned → approved | Human PLAN_APPROVED; Release Operator `PLAN_LANDING`; docs(plan) on main; feat `feat/CON-001-importance-decay-protection-formulas` created | `approval_posture=PLAN_APPROVED`; `next_action=Developer on feat/CON-001-importance-decay-protection-formulas`; Developer NOT authorized until in_progress; 不得触碰 DEV-006/PR#13 |
+| 2026-08-13 08:57 UTC | CON-001 | planned | Planner created `02_开发管理/tasks/CON-001-importance-decay-protection-formulas.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `2159ad6cc5e3f31365677671d9588c69b776e8a0` verified (main, clean tree); scope = §2.3.5–2.3.7 importance/decay/protection pure functions; `durable_read_scope=NONE`; `durable_write_scope=NONE`; `missing_evidence` skip semantics; determinism; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-13 08:50 UTC | RET-006 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `6e5517c11f0c7b6417264064d718937dd0aca62b`、record `4637279313e2fac61b986bbe45be8dfb847318b2`、merge `295c5faa3b0160db349b926dc8eb0a001d67c7ce`；仅更新 RET-006 三份治理文件并创建 `docs(status): complete RET-006 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=1/P3=2 non-blocking；scoped 9 passed（E2E-1,2,3,4a,4b,5a,5b,6 + auth）；零 src/** diff；closes `v0.4.0-memory-retrieval` milestone；`next_action=CON-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 08:45 UTC | RET-006 | tested → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `6e5517c11f0c7b6417264064d718937dd0aca62b`；PR #49 OPEN；docs(status): record on feat | scoped 9 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；零 src/** diff；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 08:08 UTC | RET-006 | planned → approved | Human PLAN_APPROVED Round 2；Release Operator `PLAN_LANDING`；docs(plan) on main；feat `feat/RET-006-retrieval-e2e-failure-injection` created | Round 2 PLAN_APPROVED MF-1/SF-1；E2E-4a/4b + INJ-1..6；`next_action=Developer on feat/RET-006-retrieval-e2e-failure-injection`；不得触碰 DEV-006/PR#13 |
