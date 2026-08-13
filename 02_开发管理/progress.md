@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-002 completed (consolidation batch read)
+current_phase: Phase 4 — CON-003 planned (consolidation optimistic lock write)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: CON-002
-current_task_status: completed
+current_task: CON-003
+current_task_status: planned
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,10 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/CON-002-cursor-batch-evidence-count.md
+current_plan_file: 02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "85875ff4d86ad39ccff9d4632088713ef8b052af"
+planning_baseline_main: "cabcc6f98e5cd676b962b49e3b0c943587a11689"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -95,7 +95,26 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "CON-003 planned / NOT AUTO-STARTED"
+next_action: "PLAN_LANDING then Developer"
+formal_CON-003_plan_file: 02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md
+formal_CON-003_status: planned
+formal_CON-003_workflow_mode: NORMAL
+formal_CON-003_workflow_mode_source: explicit
+formal_CON-003_baseline: "cabcc6f98e5cd676b962b49e3b0c943587a11689"
+formal_CON-003_branch: "feat/CON-003-optimistic-lock-batch-update"
+formal_CON-003_prerequisite: "SATISFIED — CON-002 completed (PR #51 MERGED); CON-001 completed (PR #50 MERGED); EXT-001..009 completed; RET-001..006 completed"
+formal_CON-003_scope: "§2.3.9 Neo4j optimistic-lock batch write — SET importance + last_consolidated_time only; expected_memory_version predicate; batch transaction; version_conflict_count; zero memory_version/updated_time mutation; CON-002 scored handoff only"
+formal_CON-003_blocking_open_issues: []
+formal_CON-003_nonblocking_open_issues: []
+formal_CON-003_dependency_changes_expected: NONE
+formal_CON-003_migration_changes_expected: NONE
+formal_CON-003_durable_read_scope: NONE
+formal_CON-003_durable_write_scope: "Neo4j Memory — importance, last_consolidated_time"
+formal_CON-003_production_file_whitelist: "src/memory_system/domain/models/consolidation_write.py; src/memory_system/domain/services/consolidation_write_service.py; src/memory_system/infrastructure/neo4j/consolidation_memory_write_repository.py"
+formal_CON-003_test_file_whitelist: "tests/unit/test_consolidation_memory_write_repository.py; tests/unit/test_consolidation_write_service.py; tests/contract/test_con003_scope_boundaries.py"
+formal_CON-003_note: "human PLAN_APPROVED；Amendment 001 SF-1..SF-3 absorbed；baseline cabcc6f MATCH；§2.3.9 authoritative Cypher；不递增 memory_version；不写 updated_time；skipped 永不写入；ES/Mongo/Kafka 禁止；Integration DEFERRED CON-005；不得触碰 DEV-006/PR#13"
+formal_CON-003_plan_review: PLAN_APPROVED
+formal_CON-003_approval_posture: PLAN_APPROVED
 formal_CON-002_plan_file: 02_开发管理/tasks/CON-002-cursor-batch-evidence-count.md
 formal_CON-002_status: completed
 formal_CON-002_workflow_mode: NORMAL
@@ -561,7 +580,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: "AWAIT_PLAN_REVIEW"
+current_task_approval_posture: "AWAIT_PLAN_REVIEW — CON-003"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -1612,6 +1631,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 11:30 UTC | CON-003 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan `02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md`；同步 progress/master_plan 规划态字段；baseline `cabcc6f98e5cd676b962b49e3b0c943587a11689` MATCH；git status clean；§2.3.9 optimistic-lock batch write（importance + last_consolidated_time only；不递增 memory_version；不写 updated_time）；CON-002 scored handoff only；Integration DEFERRED CON-005；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 19:20 UTC | CON-002 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `a13ab31bb98598740198001d8bfee3f21d6b565a`、merge `3b26549c41b91a1bbdd72237865a5d3d4fb5324d`；仅更新 CON-002 三份治理文件并创建 `docs(status): complete CON-002 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking（P2-1 C1 untracked blind spot；P2-2 null archive_id test gap）；scoped 39 passed；ruff/mypy PASS；§2.3.4 read-only + per-user isolation + `count(DISTINCT archive_id)` + zero-Evidence→missing_evidence；零 durable write；`next_action=CON-003 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 18:55 UTC | CON-002 | approved → tested | Developer implementation on `feat/CON-002-cursor-batch-evidence-count`；3 生产 + 3 测试白名单文件；§2.3.4 cursor batch Neo4j read + `independent_archive_count` + CON-001 handoff | scoped **39 passed**；ruff PASS；mypy PASS（3 new src files）；零 durable write；OPTIONAL MATCH 零 Evidence；U13-U15 pagination metadata；`next_action=CODE_REVIEW`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 10:30 UTC | CON-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `41932b93431e43fa1d134cfed76dfedb9ec7f363`、record `bef3ae23e8b12592cbdfcfb563654fb91c97cea2`、merge `e9469d8ee61d363d7367a9b17ca2680794ce39f0`；仅更新 CON-001 三份治理文件并创建 `docs(status): complete CON-001 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=1/P3=2 non-blocking；scoped 49 passed；ruff/mypy PASS；§2.3.5–2.3.7 consolidation importance pure functions；零 durable I/O；`next_action=CON-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |

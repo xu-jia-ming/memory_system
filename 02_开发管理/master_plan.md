@@ -695,6 +695,16 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=85875ff4d86ad39ccff9d4632088713ef8b052af` MATCH；新建 `consolidation_batch` models + `consolidation_batch_service` + `consolidation_memory_read_repository`；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=Neo4j read-only`；`durable_write_scope=NONE`；不得触碰 DEV-006/PR#13。
 - **状态备注**：`completed`（plan `a3d0c26f1864e399d2562f1648c99584fe77d8e4`；implementation `a13ab31bb98598740198001d8bfee3f21d6b565a`；PR #51 MERGED `3b26549c41b91a1bbdd72237865a5d3d4fb5324d` mergedAt `2026-08-13T11:15:50Z`；scoped 39 passed；Ruff PASS；Mypy PASS（3 new src files）；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2 non-blocking（P2-1 C1 untracked blind spot；P2-2 null archive_id test gap）；§2.3.4 read-only cursor batch + `count(DISTINCT archive_id)` + per-user isolation + zero-Evidence→`missing_evidence`；零 durable write；feat 分支已删）；`next_action=CON-003 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13）。
 
+#### CON-003 乐观锁批量更新
+
+- **目标**：§2.3.9 Neo4j **乐观锁批量写入** — 将 CON-002 `scored` 的 `new_importance` 持久化为 `importance`，`last_consolidated_time = evaluation_time`；`expected_memory_version` 谓词；单批 transaction；批内版本冲突部分成功（`version_conflict_count`）；空写跳过；用户隔离。
+- **非目标**：`memory_version` 递增 / `updated_time` 写入；CON-002 读路径与 skipped 写入；APScheduler/互斥锁/cursor 循环/指标落盘（CON-004）；ES 同步；`consolidation_worker` 接线；E2E（CON-005）；修改 CON-001/CON-002 已完成语义 / Settings Contract。
+- **前置**：**CON-002** completed（PR #51 MERGED）；**CON-001** completed（PR #50 MERGED）；EXT-001..009、RET-001..006 completed。
+- **测试**：Unit（U1..U17 乐观锁/隔离/精确字段/replay/冲突/空写/失败）；Contract（C1..C6 白名单+无 memory_version/updated_time SET+无 ES/Mongo）；Integration/E2E **DEFERRED**（CON-005）。
+- **Task Plan**：`02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md`。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=cabcc6f98e5cd676b962b49e3b0c943587a11689` MATCH；新建 `consolidation_write` models + `consolidation_write_service` + `consolidation_memory_write_repository`；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=NONE`；`durable_write_scope=Neo4j Memory（importance, last_consolidated_time）`；§2.3.9 权威 Cypher；巩固不递增 `memory_version`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`planned`（`approval_posture=PLAN_APPROVED`；human approved；Amendment 001 SF-1..SF-3；Developer NOT authorized until PLAN_LANDING）；`next_action=PLAN_LANDING then Developer`；不得触碰 DEV-006/PR#13。
+
 ---
 
 ### Phase 5：最终工程与发布候选
