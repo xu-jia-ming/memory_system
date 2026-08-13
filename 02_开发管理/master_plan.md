@@ -595,7 +595,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | RET-003 | Neo4j 权威回读 + 一跳扩展 + MGET | §2.2.10 | RET-002 | completed |
 | RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | completed |
 | RET-005 | Retrieval API、降级/超时、统计更新 | §2.2.5, §2.2.13–2.2.15 | RET-004, DEV-005 | completed |
-| RET-006 | Retrieval 阶段 E2E + 失败注入 | §2.2.16, §3.28 | RET-005, EXT-007 | planned |
+| RET-006 | Retrieval 阶段 E2E + 失败注入 | §2.2.16, §3.28 | RET-005, EXT-007 | approved |
 
 #### RET-001 BM25 查询
 
@@ -648,9 +648,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=c086b9953829d0ca19e930cde9b1c64dadde5fb9` MATCH；新建 `RetrievalApiService` + `RetrievalStatisticsRepository` + HTTP routes/schemas；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_write_scope=Neo4j stats only`；OI-008 `resolved_by_plan`；不得触碰 DEV-006/PR#13。
 - **状态备注**：`completed`（plan `a6b0884f9cc6489f009d3d02a68a422dba88574b`；implementation `9baf16a7c6f7b0ad3cec8155b54c9fdeeb8c4250`；PR #48 MERGED `5b577d6e04c8b1e0a7336169a18855c66e4a2a3a` mergedAt `2026-08-13T07:42:25Z`；scoped 48 passed（unit 34 + contract 8 + integration HTTP 8）；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=2 non-blocking（P2 remediated pre-commit）；§2.2.5 POST /api/v1/memory/retrieval + §2.2.12 Response DTO + §2.2.13 Neo4j stats + §2.2.15 degradation/timeout；OI-008 resolved_by_task（canonical DR-1..DR-10）；零 RET-001..004 production semantic diff；feat 分支已删；RET-006 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 
-#### RET-006
+#### RET-006 Retrieval 阶段 E2E + 失败注入
 
-- 阶段 E2E：**包含** EXT-007 同步文档可被 BM25/检索链路消费的验证；失败注入（单通道失败、总超时、Embedding 不可用等）。
+- **目标**：交付 Retrieval 阶段 E2E（§2.2.16 HTTP 边界 + §3.28 失败注入）；闭合 EXT-007 write→retrieve 延后验证；**不**实现 Session→Consolidation 全链路。
+- **非目标**：修改 RET-001..005 / EXT-007 生产语义；E2E-001 全链；真实 SiliconFlow/TEI 计费 API；新 retry 框架。
+- **前置**：**RET-005, EXT-007**（RET-001..004 经 RET-005 传递）。
+- **Fixture 策略**：**Both** — A pre-seeded ES+Neo4j（E2E-1,3..6）；B EXT-007 `RetrievalIndexSyncService` write→retrieve（E2E-2 **REQUIRED**）。
+- **基础设施**：`compose.test` ES + Neo4j（+Mongo 仅 E2E-2）；in-process ASGI；`--embedding=none`；Fake Embedding/Tokenize。
+- **测试**：E2E-1 happy+stats；E2E-2 EXT-007 sync→retrieve；E2E-3/4a 通道降级；**E2E-4b 双通道 503 retrieval_unavailable**；E2E-5 超时/降级；E2E-6 用户隔离。
+- **生产白名单**：**NONE**（默认零 `src/**` diff；缺陷暴露 → HALT）。
+- **Task Plan**：`02_开发管理/tasks/RET-006-retrieval-e2e-failure-injection.md`。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=538cf13ac3d33d1f337a9e5f5b450626ddd6529d` MATCH；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_write_scope=existing RET-005 stats + EXT-007 ES upsert only`；里程碑 `v0.4.0-memory-retrieval`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`approved`（Round 2 `PLAN_APPROVED`；human PLAN_APPROVED granted 2026-08-13；`approval_posture=PLAN_APPROVED`；`developer_authorized=true` post-PLAN_LANDING；`next_action=Developer on feat/RET-006-retrieval-e2e-failure-injection`；里程碑 `v0.4.0-memory-retrieval`；不得触碰 DEV-006/PR#13）。
 
 ---
 

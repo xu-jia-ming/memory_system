@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 3 — RET-006 planned
+current_phase: Phase 3 — RET-006 committed (awaiting PR merge)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: RET-005
-current_task_status: completed
-current_branch: main
+current_task: RET-006
+current_task_status: committed
+current_branch: feat/RET-006-retrieval-e2e-failure-injection
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -21,10 +21,10 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/RET-005-retrieval-api-degradation-statistics.md
+current_plan_file: 02_开发管理/tasks/RET-006-retrieval-e2e-failure-injection.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "c086b9953829d0ca19e930cde9b1c64dadde5fb9"
+planning_baseline_main: "538cf13ac3d33d1f337a9e5f5b450626ddd6529d"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -95,7 +95,48 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "RET-006 planned / NOT AUTO-STARTED"
+next_action: "WAITING_FOR_PR_MERGE"
+formal_RET-006_plan_file: 02_开发管理/tasks/RET-006-retrieval-e2e-failure-injection.md
+formal_RET-006_status: committed
+formal_RET-006_workflow_mode: NORMAL
+formal_RET-006_workflow_mode_source: explicit
+formal_RET-006_baseline: 538cf13ac3d33d1f337a9e5f5b450626ddd6529d
+formal_RET-006_branch: "feat/RET-006-retrieval-e2e-failure-injection"
+formal_RET-006_milestone: "v0.4.0-memory-retrieval"
+formal_RET-006_prerequisite: "SATISFIED — RET-001..005 completed (PR #44..#48 MERGED); EXT-007 completed (PR #41 MERGED); OI-008 resolved_by_task=RET-005"
+formal_RET-006_scope: "§2.2.16 Retrieval stage E2E + §3.28 failure injection; EXT-007 write→retrieve (E2E-2); real ES+Neo4j; in-process ASGI; zero production diff default"
+formal_RET-006_fixture_strategy: "BOTH — A pre-seeded fixtures (E2E-1,3..6) + B EXT-007 sync path (E2E-2 REQUIRED)"
+formal_RET-006_write_to_retrieve: REQUIRED
+formal_RET-006_blocking_open_issues: []
+formal_RET-006_nonblocking_open_issues: []
+formal_RET-006_dependency_changes_expected: NONE
+formal_RET-006_migration_changes_expected: NONE
+formal_RET-006_durable_write_scope: "existing RET-005 Neo4j stats + EXT-007 ES upsert (E2E-2 only)"
+formal_RET-006_production_file_whitelist: NONE
+formal_RET-006_note: "IMPLEMENTATION_RELEASE；implementation 6e5517c11f0c7b6417264064d718937dd0aca62b；PR #49 OPEN；scoped 9 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；零 src/** diff；不得触碰 DEV-006/PR#13"
+formal_RET-006_plan_review_round: 2
+formal_RET-006_plan_review: PLAN_APPROVED
+formal_RET-006_approval_posture: PLAN_APPROVED
+formal_RET-006_human_plan_approved: true
+formal_RET-006_human_plan_approved_at: "2026-08-13T08:08:00Z"
+formal_RET-006_developer_authorized: true
+formal_RET-006_next_action: "WAITING_FOR_PR_MERGE"
+formal_RET-006_scoped_tests: "9 passed (E2E-1,2,3,4a,4b,5a,5b,6 + auth)"
+formal_RET-006_ruff: PASS
+formal_RET-006_mypy: PASS
+formal_RET-006_production_diff: "src/** empty"
+formal_RET-006_code_review: CODE_REVIEW_APPROVED
+formal_RET-006_p0: 0
+formal_RET-006_p1: 0
+formal_RET-006_plan_commit: e1abc1ca77566da645a8087844d0da28cd8c87fe
+formal_RET-006_implementation_commit: 6e5517c11f0c7b6417264064d718937dd0aca62b
+formal_RET-006_implementation_commit_message: "test(ret): add retrieval stage e2e with failure injection"
+formal_RET-006_pr: "#49"
+formal_RET-006_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/49"
+formal_RET-006_pr_state: OPEN
+formal_RET-006_pr_base: main
+formal_RET-006_pr_head: "feat/RET-006-retrieval-e2e-failure-injection"
+formal_RET-006_release_gate: IMPLEMENTATION_RELEASE
 formal_RET-005_plan_file: 02_开发管理/tasks/RET-005-retrieval-api-degradation-statistics.md
 formal_RET-005_status: completed
 formal_RET-005_workflow_mode: NORMAL
@@ -1479,6 +1520,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 08:45 UTC | RET-006 | tested → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `6e5517c11f0c7b6417264064d718937dd0aca62b`；PR #49 OPEN；docs(status): record on feat | scoped 9 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；零 src/** diff；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；不得触碰 DEV-006/PR#13 |
+| 2026-08-13 08:08 UTC | RET-006 | planned → approved | Human PLAN_APPROVED Round 2；Release Operator `PLAN_LANDING`；docs(plan) on main；feat `feat/RET-006-retrieval-e2e-failure-injection` created | Round 2 PLAN_APPROVED MF-1/SF-1；E2E-4a/4b + INJ-1..6；`next_action=Developer on feat/RET-006-retrieval-e2e-failure-injection`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 07:48 UTC | RET-005 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `9baf16a7c6f7b0ad3cec8155b54c9fdeeb8c4250`、merge `5b577d6e04c8b1e0a7336169a18855c66e4a2a3a`；仅更新 RET-005 四份治理文件并创建 `docs(status): complete RET-005 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=3/P3=2 non-blocking；scoped 48 passed（unit 34 + contract 8 + integration HTTP 8）；§2.2.5 HTTP Retrieval API + §2.2.13 Neo4j stats + §2.2.15 degradation/timeout；OI-008 resolved_by_task（canonical DR-1..DR-10）；零 RET-001..004 production semantic diff；`next_action=RET-006 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 16:00 UTC | RET-005 | tested (P2 remediation) | Developer：P2-1 ruff import/E501；P2-2 `validate_retrieval_input` 返回 canonical stripped `user_id` 并全链路传播；P2-3 vector search 包裹 `_await_with_deadline` | scoped **48 passed**；ruff PASS；未 Git commit；`next_action=代码审查` |
 | 2026-08-13 15:30 UTC | RET-005 | planned → tested | Developer：§15 生产 7 文件 + §16 测试 8 文件；`POST /api/v1/memory/retrieval` + `RetrievalApiService` 编排（tokenize gate、bypass HybridRetrievalService.search、超时降级、Neo4j stats） | scoped **48 passed**（unit 34 + contract 8 + integration HTTP 8）；RET-001..004 unit regression **34 passed**；ruff/mypy PASS；Neo4j I3 integration 需 compose 网络（本环境 DNS 未解析 neo4j）；未 Git commit；`next_action=代码审查`；不得触碰 DEV-006/PR#13 |

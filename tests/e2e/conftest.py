@@ -589,6 +589,27 @@ def _clear_settings_cache() -> Iterator[None]:
 
 
 @pytest.fixture
+async def ret006_retrieval_client(
+    infra_stack: InfraStack,
+    monkeypatch: pytest.MonkeyPatch,
+) -> AsyncIterator[httpx.AsyncClient]:
+    """Default RET-006 in-process retrieval client with aligned fake embedding."""
+    from memory_system.infrastructure.tei.fake_tokenize_client import FakeTokenizeClient
+    from tests.e2e.helpers.ret006_e2e_helpers import (
+        Ret006AlignedEmbeddingClient,
+        build_retrieval_client,
+    )
+
+    async with build_retrieval_client(
+        infra_stack,
+        monkeypatch,
+        embedding=Ret006AlignedEmbeddingClient(),
+        tokenize=FakeTokenizeClient(token_count=10),
+    ) as runtime:
+        yield runtime.http_client
+
+
+@pytest.fixture
 async def hybrid_api_client(
     infra_stack: InfraStack,
     monkeypatch: pytest.MonkeyPatch,
