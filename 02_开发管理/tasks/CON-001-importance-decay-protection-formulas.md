@@ -19,6 +19,7 @@ pr_url: "https://github.com/xu-jia-ming/memory_system/pull/50"
 pr_state: OPEN
 pr_base: main
 pr_head: "feat/CON-001-importance-decay-protection-formulas"
+status_record_committed: bef3ae23e8b12592cbdfcfb563654fb91c97cea2
 code_review: CODE_REVIEW_APPROVED
 p0: 0
 p1: 0

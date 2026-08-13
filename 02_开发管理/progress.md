@@ -128,6 +128,7 @@ formal_CON-001_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/50"
 formal_CON-001_pr_state: OPEN
 formal_CON-001_pr_base: main
 formal_CON-001_pr_head: "feat/CON-001-importance-decay-protection-formulas"
+formal_CON-001_status_record_committed: bef3ae23e8b12592cbdfcfb563654fb91c97cea2
 formal_CON-001_release_gate: WAITING_FOR_PR_MERGE
 formal_CON-001_approval_posture: "IMPLEMENTATION_RELEASE — committed"
 formal_CON-001_human_plan_approved: true
