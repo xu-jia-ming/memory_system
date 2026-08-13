@@ -11,7 +11,7 @@ workflow_mode_source: explicit
 planning_baseline_main: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 branch: "feat/EXT-009-extraction-e2e-pipeline-wiring"
 created_at: "2026-08-12 22:30 UTC"
-updated_at: "2026-08-13 00:32 UTC"
+updated_at: "2026-08-13 00:56 UTC"
 spec_sections:
   - "§2.1.3 Memory Extraction Task"
   - "§2.1.4 Kafka 消费与任务幂等（completed 早退；terminal 持久化后才 Offset）"
@@ -571,18 +571,24 @@ out_of_scope_changes:
 | 2026-08-13 00:26 UTC | remediation start | 切换 `in_progress`；修复 terminal reload 异常 fail-closed 与本文件 YAML 缩进；补充 TypeError/代表性 repository exception focused tests | — | 仅处理当前 Code Review 两项 finding；COMPLETE/FAIL、Offset、PipelineTerminalDecision 与阶段服务语义不变；未 Git 写 |
 | 2026-08-13 00:30 UTC | remediation implemented | COMPLETE/FAIL reload 异常统一经 `TerminalPersistError` fail-closed 并保留原始 cause；补充 expected-terminal/non-terminal/TypeError/repository-error 双分支测试；YAML 缩进已修复 | focused terminal idempotency **10 passed**；YAML parse PASS；Ruff PASS；Mypy PASS；IDE lints clean；scoped suite pending | 仅修改既有 EXT-009 白名单；不改变 mark_* 正常路径、Offset、PipelineTerminalDecision 或生产 scope；未 Git 写 |
 | 2026-08-13 00:32 UTC | remediation tested | — | focused terminal idempotency **10 passed**；EXT-009 scoped unit/contract/integration/E2E **33 passed**；YAML parse PASS；full Ruff PASS；Mypy（remediation files）PASS；IDE lints clean | full-repository Mypy remains baseline-failing with **143** errors outside this remediation；legacy EXT-001 consumer unit has **3** fixture failures because it models swallowed reload `TypeError` and is outside this narrow whitelist；未 Git 写 |
+| 2026-08-13 00:56 UTC | Release IMPLEMENTATION_RELEASE | implementation `d6a4bf596b78275ce3e8644a79e2dc8d218675d4`；PR #43 OPEN | scoped 33 passed；E2E 4 passed；YAML/Ruff/Mypy/lints PASS | `status=committed`；仅 exact feature branch push；等待人工 Merge；不触碰 DEV-006/PR#13 |
 
 ## 20. 实际执行结果
 
 ### 最终状态
 
-`tested` — PLAN_APPROVED；`developer_authorized=true`；当前 Code Review 两项 remediation 已实现并完成 EXT-009 scoped validation；`next_action=代码审查`；**不得触碰 DEV-006/PR#13**。
+`committed` — PLAN_APPROVED；`developer_authorized=true`；CODE_REVIEW_APPROVED；implementation `d6a4bf596b78275ce3e8644a79e2dc8d218675d4`；PR #43 OPEN；`next_action=等待 PR Merge`；**不得触碰 DEV-006/PR#13**。
 
 ### Git 记录
 
 ```yaml
 branch: feat/EXT-009-extraction-e2e-pipeline-wiring
 plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: "d6a4bf596b78275ce3e8644a79e2dc8d218675d4"
+implementation_commit_message: "feat(ext): wire production extraction pipeline and worker"
+pr: "#43"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/43"
+pr_state: OPEN
+pr_base: main
+pr_head: feat/EXT-009-extraction-e2e-pipeline-wiring
 ```

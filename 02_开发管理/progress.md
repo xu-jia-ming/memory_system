@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 2 — EXT-009 tested
+current_phase: Phase 2 — EXT-009 committed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-009
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/EXT-009-extraction-e2e-pipeline-wiring
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -27,7 +27,7 @@ workflow_mode_source: explicit
 planning_baseline_main: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
-formal_EXT-009_status: tested
+formal_EXT-009_status: committed
 formal_EXT-009_workflow_mode: NORMAL
 formal_EXT-009_workflow_mode_source: explicit
 formal_EXT-009_baseline: 779963257e33a93ad02ef4e3f997b3c9f6706802
@@ -39,8 +39,16 @@ formal_EXT-009_nonblocking_open_issues: []
 formal_EXT-009_dependency_changes_expected: NONE
 formal_EXT-009_migration_changes_expected: NONE
 formal_EXT-009_pipeline_handoff: "ProductionExtractionPipeline + worker consumer loop; EXT-003→007 continuation CLOSED; consumer narrow LD-1 terminal idempotency"
-formal_EXT-009_note: "PLAN_APPROVED；收到 CODE_REVIEW_REJECTED（P0/P1/P2）；当前两项 finding 已实现并验证：terminal reload fail-closed（保留原始 cause）与 Task Plan YAML 缩进；focused terminal idempotency 10 passed；EXT-009 scoped 33 passed；YAML/Ruff/Mypy（remediation files）/lints PASS；full-repository Mypy 143 baseline errors；仅按 EXT-009 既有白名单修复；不得触碰 DEV-006/PR#13"
-formal_EXT-009_next_action: "代码审查"
+formal_EXT-009_note: "PLAN_APPROVED；CODE_REVIEW_APPROVED（P0=0/P1=0/P2=0）；terminal reload fail-closed（保留原始 cause）与 Task Plan YAML 缩进已实现并验证；EXT-009 scoped 33 passed；E2E 4 passed；YAML/Ruff/Mypy/lints PASS；IMPLEMENTATION_RELEASE：implementation d6a4bf596b78275ce3e8644a79e2dc8d218675d4；PR #43 OPEN（base=main，head=feat/EXT-009-extraction-e2e-pipeline-wiring）；full-repository Mypy 143 baseline errors；仅按 EXT-009 既有白名单修复；不得触碰 DEV-006/PR#13"
+formal_EXT-009_implementation_commit: d6a4bf596b78275ce3e8644a79e2dc8d218675d4
+formal_EXT-009_implementation_commit_message: "feat(ext): wire production extraction pipeline and worker"
+formal_EXT-009_pr: "#43"
+formal_EXT-009_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/43"
+formal_EXT-009_pr_state: OPEN
+formal_EXT-009_pr_base: main
+formal_EXT-009_pr_head: "feat/EXT-009-extraction-e2e-pipeline-wiring"
+formal_EXT-009_release_gate: COMMITTED
+formal_EXT-009_next_action: "等待 PR Merge"
 formal_EXT-008_plan_file: 02_开发管理/tasks/EXT-008-extraction-admin-api.md
 formal_EXT-008_status: completed
 formal_EXT-008_workflow_mode: NORMAL
@@ -76,7 +84,7 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "代码审查"
+next_action: "等待 PR Merge"
 planning_baseline_EXT-007: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
 formal_EXT-006_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
