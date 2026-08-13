@@ -5,13 +5,13 @@
 ```yaml
 task_id: CON-001
 task_name: Importance/衰减/保护公式纯函数
-status: approved
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "2159ad6cc5e3f31365677671d9588c69b776e8a0"
 branch: "feat/CON-001-importance-decay-protection-formulas"
 created_at: "2026-08-13 08:57 UTC"
-updated_at: "2026-08-13 09:40 UTC"
+updated_at: "2026-08-13 10:00 UTC"
 spec_sections:
   - "§2.3.2 MVP 范围与基本规则（规则 3、6、7、10 — 本任务仅引用与公式相关的只读语义）"
   - "§2.3.3 Memory 字段补充（importance / last_consolidated_time 语义引用；本任务不写入）"
@@ -40,7 +40,7 @@ approval_gates:
   approval_posture: PLAN_APPROVED
   amendment_recorded: false
   human_plan_approved: true
-  developer_authorized: false
+  developer_authorized: true
   reviewer_authorized: false
   release_operator_authorized: false
 release_phases:
@@ -711,6 +711,8 @@ out_of_scope_changes:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
+| 2026-08-13 10:00 UTC | implementation | 创建 consolidation_importance 模型/服务 + 单元/契约测试 | 49 passed; ruff PASS; mypy PASS | NC-1..NC-14 + U1..U9 + F1..F3 + C1..C3; SHOULD_FIX SF-1..SF-3 absorbed; zero durable I/O |
+| 2026-08-13 09:40 UTC | planning | Human PLAN_APPROVED; Release Operator PLAN_LANDING | N/A | baseline `2159ad6` verified |
 | 2026-08-13 08:57 UTC | planning | 创建 Task Plan；同步 progress/master_plan | N/A（规划-only） | baseline `2159ad6` verified；`approval_posture=AWAIT_PLAN_REVIEW`；Developer NOT authorized |
 
 ## 30. 实际执行结果
@@ -719,22 +721,24 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-| — | 规划轮次未实施 |
+| `src/memory_system/domain/models/consolidation_importance.py` | 创建 — Input/Outcome/Components frozen dataclasses |
+| `src/memory_system/domain/services/consolidation_importance.py` | 创建 — §2.3.5–2.3.7 纯函数 + `compute_consolidation_importance` |
+| `tests/unit/test_consolidation_importance.py` | 创建 — NC-1..NC-14 + U1..U9 + F1..F3 + SF-1..SF-3 |
+| `tests/contract/test_con001_scope_boundaries.py` | 创建 — C1..C3 白名单与输入契约 |
 
 ### 与原计划的差异
 
-暂无。
+无。SHOULD_FIX SF-1..SF-3 已吸收（4 位小数边界、负 count ValueError、§2.3.8 文档说明）。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | — | 未运行 |
-| Contract | — | 未运行 |
+| Unit + Contract | `uv run pytest tests/unit/test_consolidation_importance.py tests/contract/test_con001_scope_boundaries.py -q` | 49 passed |
+| Ruff | `uv run ruff check`（4 新文件） | PASS |
+| Mypy | `uv run mypy`（2 生产文件） | PASS |
 | Integration | — | DEFERRED |
 | E2E | — | DEFERRED |
-| Ruff | — | 未运行 |
-| Mypy | — | 未运行 |
 
 ### Review 结果
 
@@ -750,11 +754,11 @@ review_report: null
 
 ```yaml
 branch: "feat/CON-001-importance-decay-protection-formulas"
-plan_commit: null
+plan_commit: "6f4a35ad28ad90946f74e39bfa567acc71120b12"
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`approved`
+`tested`

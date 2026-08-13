@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-001 approved (consolidation formulas)
+current_phase: Phase 4 — CON-001 tested (consolidation formulas)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: CON-001
-current_task_status: approved
+current_task_status: tested
 current_branch: feat/CON-001-importance-decay-protection-formulas
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "Developer on feat/CON-001-importance-decay-protection-formulas"
+next_action: "Code Reviewer on feat/CON-001-importance-decay-protection-formulas"
 formal_CON-001_plan_file: 02_开发管理/tasks/CON-001-importance-decay-protection-formulas.md
-formal_CON-001_status: approved
+formal_CON-001_status: tested
 formal_CON-001_workflow_mode: NORMAL
 formal_CON-001_workflow_mode_source: explicit
 formal_CON-001_baseline: "2159ad6cc5e3f31365677671d9588c69b776e8a0"
@@ -112,12 +112,16 @@ formal_CON-001_durable_read_scope: NONE
 formal_CON-001_durable_write_scope: NONE
 formal_CON-001_production_file_whitelist: "src/memory_system/domain/models/consolidation_importance.py; src/memory_system/domain/services/consolidation_importance.py"
 formal_CON-001_test_file_whitelist: "tests/unit/test_consolidation_importance.py; tests/contract/test_con001_scope_boundaries.py"
-formal_CON-001_note: "Human PLAN_APPROVED; Release Operator PLAN_LANDING; docs(plan) on main; feat feat/CON-001-importance-decay-protection-formulas created; Developer NOT authorized until in_progress; 不得触碰 DEV-006/PR#13"
+formal_CON-001_note: "Developer implemented §2.3.5–2.3.7 pure functions; 49 scoped tests passed; ruff/mypy PASS; no commit; awaiting Code Review; 不得触碰 DEV-006/PR#13"
+formal_CON-001_scoped_tests: "49 passed"
+formal_CON-001_ruff: PASS
+formal_CON-001_mypy: PASS
+formal_CON-001_plan_commit: "6f4a35ad28ad90946f74e39bfa567acc71120b12"
 formal_CON-001_plan_review: PLAN_APPROVED
 formal_CON-001_approval_posture: PLAN_APPROVED
 formal_CON-001_human_plan_approved: true
-formal_CON-001_developer_authorized: false
-formal_CON-001_next_action: "Developer on feat/CON-001-importance-decay-protection-formulas"
+formal_CON-001_developer_authorized: true
+formal_CON-001_next_action: "Code Reviewer on feat/CON-001-importance-decay-protection-formulas"
 formal_RET-006_plan_file: 02_开发管理/tasks/RET-006-retrieval-e2e-failure-injection.md
 formal_RET-006_status: completed
 formal_RET-006_workflow_mode: NORMAL
