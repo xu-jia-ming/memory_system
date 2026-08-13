@@ -5,13 +5,13 @@
 ```yaml
 task_id: CON-002
 task_name: Cursor 分页批量读取与 Evidence 计数
-status: approved
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "85875ff4d86ad39ccff9d4632088713ef8b052af"
 branch: "feat/CON-002-cursor-batch-evidence-count"
 created_at: "2026-08-13 10:37 UTC"
-updated_at: "2026-08-13 10:50 UTC"
+updated_at: "2026-08-13 18:55 UTC"
 spec_sections:
   - "§2.1.9 Neo4j 记忆图谱数据模型（Memory / Evidence 字段；user_id 隔离）"
   - "§2.2.12 Evidence 加载（user_id 双端隔离模式；本任务复用 OPTIONAL MATCH 隔离语义，非 retrieval evidence_count）"
@@ -605,19 +605,19 @@ docs(plan): add CON-002 cursor batch evidence count plan
 
 ## 25. 验收标准
 
-- [ ] `pytest tests/unit/test_consolidation_memory_read_repository.py tests/unit/test_consolidation_batch_service.py tests/contract/test_con002_scope_boundaries.py` 全部通过
-- [ ] U1 Cursor 分页、`next_cursor`、`ORDER BY memory_id ASC` 断言通过
-- [ ] U2 用户隔离：跨用户 Evidence 不计入
-- [ ] U3/U4 `independent_archive_count` 正确计数与去重
-- [ ] U5/U5b `independent_archive_count=0` → `missing_evidence` skip
-- [ ] U6/U6b 畸形 Memory → `invalid_memory_state` skip
-- [ ] U7/U8 Neo4j 读失败 → `consolidation_read_failed`
-- [ ] U9 CON-001 handoff 字段精确（无 `importance` / `retrieval_count`）
-- [ ] U10 重放确定性
-- [ ] F1 零 durable write
-- [ ] C1..C5 白名单与边界契约通过
-- [ ] Ruff 通过
-- [ ] Mypy 通过（新增文件）
+- [x] `pytest tests/unit/test_consolidation_memory_read_repository.py tests/unit/test_consolidation_batch_service.py tests/contract/test_con002_scope_boundaries.py` 全部通过
+- [x] U1 Cursor 分页、`next_cursor`、`ORDER BY memory_id ASC` 断言通过
+- [x] U2 用户隔离：跨用户 Evidence 不计入
+- [x] U3/U4 `independent_archive_count` 正确计数与去重
+- [x] U5/U5b `independent_archive_count=0` → `missing_evidence` skip
+- [x] U6/U6b 畸形 Memory → `invalid_memory_state` skip
+- [x] U7/U8 Neo4j 读失败 → `consolidation_read_failed`
+- [x] U9 CON-001 handoff 字段精确（无 `importance` / `retrieval_count`）
+- [x] U10 重放确定性
+- [x] F1 零 durable write
+- [x] C1..C5 白名单与边界契约通过
+- [x] Ruff 通过
+- [x] Mypy 通过（新增文件）
 - [ ] Review 无 P0/P1
 
 ## 26. 风险与阻塞项
@@ -665,6 +665,7 @@ out_of_scope_changes:
 |---|---|---|---|---|
 | 2026-08-13 10:37 UTC | planning | 创建 Task Plan；同步 progress/master_plan | N/A（规划-only） | baseline `85875ff` verified；`approval_posture=AWAIT_PLAN_REVIEW`；Developer NOT authorized |
 | 2026-08-13 10:50 UTC | plan_amendment_001 | 人工 PLAN_APPROVED；吸收 SF-1..SF-5 | N/A | `approval_posture=PLAN_APPROVED`；Developer authorized；Release Operator PLAN_LANDING next |
+| 2026-08-13 18:55 UTC | implementation | 创建 consolidation_batch models、batch service、Neo4j read repository；unit + contract 测试 | 39 passed；ruff PASS；mypy PASS（3 new src files） | `status=tested`；零 durable write；OPTIONAL MATCH 零 Evidence 契约；U13-U15 pagination metadata |
 
 ## 30. 实际执行结果
 
@@ -672,7 +673,12 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `src/memory_system/domain/models/consolidation_batch.py` | 创建 — ConsolidationBatchRequest/Result、Scored/Skipped、ConsolidationMemoryRow |
+| `src/memory_system/domain/services/consolidation_batch_service.py` | 创建 — 批次编排、CON-001 handoff、分页元数据 |
+| `src/memory_system/infrastructure/neo4j/consolidation_memory_read_repository.py` | 创建 — §2.3.4 权威 Cypher、ConsolidationReadError |
+| `tests/unit/test_consolidation_memory_read_repository.py` | 创建 — U1..U8、F1 |
+| `tests/unit/test_consolidation_batch_service.py` | 创建 — U5b..U15、F1..F4 |
+| `tests/contract/test_con002_scope_boundaries.py` | 创建 — C1..C5 |
 
 ### 与原计划的差异
 
@@ -682,12 +688,12 @@ out_of_scope_changes:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit | `pytest tests/unit/test_consolidation_memory_read_repository.py tests/unit/test_consolidation_batch_service.py` | 31 passed |
+| Contract | `pytest tests/contract/test_con002_scope_boundaries.py` | 8 passed |
+| Integration | — | DEFERRED（CON-005） |
+| E2E | — | DEFERRED（CON-005） |
+| Ruff | `ruff check`（6 whitelist files） | PASS |
+| Mypy | `mypy`（3 new src files） | PASS |
 
 ### Review 结果
 
@@ -702,12 +708,12 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/CON-002-cursor-batch-evidence-count
+plan_commit: a3d0c26f1864e399d2562f1648c99584fe77d8e4
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`planned`
+`tested`

@@ -668,7 +668,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | CON-001 | Importance/衰减/保护公式纯函数 | §2.3.5–2.3.8 | EXT-004 | completed |
-| CON-002 | Cursor 分页批量读取与 Evidence 计数 | §2.3.4 | CON-001 | planned |
+| CON-002 | Cursor 分页批量读取与 Evidence 计数 | §2.3.4 | CON-001 | tested |
 | CON-003 | 乐观锁批量更新 | §2.3.9 | CON-002 | planned |
 | CON-004 | APScheduler、互斥锁、失败恢复 | §2.3.4, §3.22 | CON-003 | planned |
 | CON-005 | Consolidation Integration + E2E | §2.3.11–2.3.13 | CON-004 | planned |
@@ -693,7 +693,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit（U1..U12 分页/隔离/计数/去重/skip/畸形/读失败/handoff/replay/零写）；Contract（C1..C5 白名单+边界）；Integration/E2E **DEFERRED**（CON-005）。
 - **Task Plan**：`02_开发管理/tasks/CON-002-cursor-batch-evidence-count.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=85875ff4d86ad39ccff9d4632088713ef8b052af` MATCH；新建 `consolidation_batch` models + `consolidation_batch_service` + `consolidation_memory_read_repository`；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=Neo4j read-only`；`durable_write_scope=NONE`；不得触碰 DEV-006/PR#13。
-- **状态备注**：`planned`（`approval_posture=AWAIT_PLAN_REVIEW`；Developer NOT authorized；`next_action=计划审查`；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`tested`（plan `a3d0c26f1864e399d2562f1648c99584fe77d8e4`；branch `feat/CON-002-cursor-batch-evidence-count`；scoped 39 passed；Ruff PASS；Mypy PASS（3 new src files）；§2.3.4 cursor batch read + independent_archive_count + CON-001 handoff；零 durable write；`approval_posture=READY_FOR_CODE_REVIEW`；不得触碰 DEV-006/PR#13）。
 
 ---
 
