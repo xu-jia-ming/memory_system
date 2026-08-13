@@ -5,13 +5,13 @@
 ```yaml
 task_id: RET-005
 task_name: Retrieval API、降级/超时、统计更新
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "c086b9953829d0ca19e930cde9b1c64dadde5fb9"
 branch: "feat/RET-005-retrieval-api-degradation-statistics"
 created_at: "2026-08-13 07:00 UTC"
-updated_at: "2026-08-13 07:00 UTC"
+updated_at: "2026-08-13 16:00 UTC"
 spec_sections:
   - "§2.2.5 Memory Retrieval API（HTTP Request 校验与字段）"
   - "§2.2.12 Evidence + Response DTO（score=final_score；retrieval_source；evidence_count；source_message_ids）"
@@ -872,6 +872,8 @@ docs(plan): add RET-005 retrieval api degradation and statistics plan
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-13 07:00 UTC | planning | 创建 Task Plan；更新 progress/master_plan 规划态 | — | planning only；未 Git 写；baseline c086b99 verified |
+| 2026-08-13 15:30 UTC | implementation | §15 生产 7 文件 + §16 测试 8 文件；`RetrievalApiService` 编排 + tokenize gate + 超时降级 + Neo4j stats | scoped 48 passed（unit 34 + contract 8 + integration HTTP 8）；RET-001..004 unit regression 34 passed；ruff/mypy clean；Neo4j I3 需 docker（未在本轮执行） | HTTP 编排 bypass `HybridRetrievalService.search`（LD-1）；mapper 使用 domain dataclass 避免 api 循环导入；未 Git commit |
+| 2026-08-13 16:00 UTC | P2 remediation | `retrieval_api_service.py`：ruff import/E501；`validate_retrieval_input` 返回 canonical `user_id` 并全链路传播；vector search 包裹 `_await_with_deadline` | scoped 48 passed；ruff PASS；未 Git commit | 最小 diff；仅 P2-1/2/3 |
 
 ## 30. Plan Amendment
 
