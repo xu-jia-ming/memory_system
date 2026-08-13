@@ -5,13 +5,13 @@
 ```yaml
 task_id: CON-003
 task_name: 乐观锁批量更新
-status: planned
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "cabcc6f98e5cd676b962b49e3b0c943587a11689"
 branch: "feat/CON-003-optimistic-lock-batch-update"
 created_at: "2026-08-13 11:30 UTC"
-updated_at: "2026-08-13 11:30 UTC"
+updated_at: "2026-08-13 12:55 UTC"
 spec_sections:
   - "§2.1.9 Neo4j 记忆图谱数据模型（Memory 字段；user_id 隔离；memory_version 由萃取维护）"
   - "§2.3.2 MVP 范围与基本规则（规则 2、4、6、7 — 用户隔离、仅改 importance/last_consolidated_time、统一 evaluation_time）"
@@ -633,6 +633,7 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-13 11:30 UTC | planning | 创建 Task Plan；同步 progress/master_plan | N/A（规划-only） | baseline `cabcc6f` verified；`approval_posture=AWAIT_PLAN_REVIEW`；Developer NOT authorized |
+| 2026-08-13 20:47 UTC | implementation | 创建 `consolidation_write.py` models、`consolidation_write_service.py` PV/handoff/聚合、`consolidation_memory_write_repository.py` §2.3.9 Cypher | 35 passed（U1-U20、F1-F4、C1-C6） | ruff/mypy pass；§2.3.9 Cypher verbatim；仅 SET importance/last_consolidated_time |
 
 ## 30. 实际执行结果
 
@@ -640,7 +641,12 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-| （尚未实施） | — |
+| `src/memory_system/domain/models/consolidation_write.py` | 创建 |
+| `src/memory_system/domain/services/consolidation_write_service.py` | 创建 |
+| `src/memory_system/infrastructure/neo4j/consolidation_memory_write_repository.py` | 创建 |
+| `tests/unit/test_consolidation_memory_write_repository.py` | 创建 |
+| `tests/unit/test_consolidation_write_service.py` | 创建 |
+| `tests/contract/test_con003_scope_boundaries.py` | 创建 |
 
 ### 与原计划的差异
 
@@ -650,33 +656,33 @@ out_of_scope_changes:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | — | 待实施 |
-| Contract | — | 待实施 |
+| Unit | `pytest tests/unit/test_consolidation_memory_write_repository.py tests/unit/test_consolidation_write_service.py -q` | 35 passed |
+| Contract | `pytest tests/contract/test_con003_scope_boundaries.py -q` | passed |
 | Integration | — | DEFERRED（CON-005） |
 | E2E | — | DEFERRED（CON-005） |
-| Ruff | — | 待实施 |
-| Mypy | — | 待实施 |
+| Ruff | `ruff check`（6 新文件） | passed |
+| Mypy | `mypy`（3 src 文件） | passed |
 
 ### Review 结果
 
 ```yaml
-code_review: null
+code_review: CODE_REVIEW_APPROVED
 p0: 0
 p1: 0
-p2: 0
-p3: 0
+p2: 1
+p3: 2
 review_report: null
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: "feat/CON-003-optimistic-lock-batch-update"
+plan_commit: "0146b5dd53d37dfbdec0ea9bc9e87d6fe373221a"
 implementation_commit: null
-implementation_commit_message: null
+implementation_commit_message: "feat(con): add consolidation optimistic lock batch write"
 ```
 
 ### 最终状态
 
-`planned`
+`committed`
