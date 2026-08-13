@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-005 committed (Consolidation Integration + E2E)
+current_phase: Phase 4 — CON-005 completed (milestone v0.5.0-consolidation closed)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: CON-005
-current_task_status: committed
-current_branch: feat/CON-005-consolidation-integration-e2e
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: WAITING_FOR_PR_MERGE
+next_action: "OPS-001 planned / NOT AUTO-STARTED"
 formal_CON-005_plan_file: 02_开发管理/tasks/CON-005-consolidation-integration-e2e.md
-formal_CON-005_status: committed
+formal_CON-005_status: completed
 formal_CON-005_workflow_mode: NORMAL
 formal_CON-005_workflow_mode_source: explicit
 formal_CON-005_baseline: "010d74112fb760907e710f2ba27123e021dd3d61"
@@ -119,7 +119,7 @@ formal_CON-005_test_file_whitelist: "tests/support/con005_neo4j_fixtures.py; tes
 formal_CON-005_scoped_tests: "Integration 6 passed; E2E 6 passed; CON-001..004 unit 92 passed; contract 4 passed"
 formal_CON-005_ruff: PASS
 formal_CON-005_mypy: PASS
-formal_CON-005_note: "IMPLEMENTATION_RELEASE；implementation a8625ea81f21a686f2c84a0a9e204e313c4e95c9；PR #54 OPEN（base=main，head=feat/CON-005-consolidation-integration-e2e）；CODE_REVIEW_APPROVED P0=0/P1=0/P2=0/P3=3 non-blocking（P3-1 C1 untracked blind spot；P3-2 E2E-4 conflict importance；P3-3 E2E-2 trailing empty page）；scoped INT 6 + E2E 6 + contract 4 + unit 92 passed；ruff/mypy PASS；零 src/** diff；in-process ConsolidationRunService + real Neo4j；E2E-6 Run B@T2>T1 re-selects T1 rows (§6.3)；仅 feat push；禁 push main；next_action=WAITING_FOR_PR_MERGE；不得自动 merge；不得触碰 DEV-006/PR#13"
+formal_CON-005_note: "POST_MERGE_CLEANUP；implementation a8625ea81f21a686f2c84a0a9e204e313c4e95c9；record 7875e92feb417e6e9705c90396ba6e7d5d2e3034；PR #54 MERGED（base=main，head=feat/CON-005-consolidation-integration-e2e，merge 8427868a2448fe11c9af64e3faedf5752badf8e9，mergedAt=2026-08-13T15:35:15Z）；fetch 后 origin/main 已通过 --ff-only 同步；CODE_REVIEW_APPROVED R2 P0=0/P1=0/P2=0/P3=3 non-blocking（P3-1 C1 untracked blind spot；P3-2 E2E-4 conflict importance；P3-3 E2E-2 trailing empty page）；production src/** diff=NONE；real Neo4j INT 6 + E2E 6 passed；CON-001..004 regression 92 passed；contract 4 passed；ruff/mypy PASS；Amendment 001 recovery semantics preserved — Run A@T1 partial+fail；Run B@T2>T1 full rescan；T1 rows re-eligible；last_consolidated_time=T2；no checkpoint；in-process ConsolidationRunService + real Neo4j；closes v0.5.0-consolidation milestone ONLY（NOT v0.9/v1.0）；feat 分支本地/远程已删除；next_action=OPS-001 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13"
 formal_CON-005_plan_commit: "2862b7a"
 formal_CON-005_plan_review: PLAN_APPROVED
 formal_CON-005_code_review: CODE_REVIEW_APPROVED
@@ -131,15 +131,18 @@ formal_CON-005_implementation_commit: a8625ea81f21a686f2c84a0a9e204e313c4e95c9
 formal_CON-005_implementation_commit_message: "test(con): add consolidation neo4j integration and e2e suite"
 formal_CON-005_pr: "#54"
 formal_CON-005_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/54"
-formal_CON-005_pr_state: OPEN
+formal_CON-005_pr_state: MERGED
 formal_CON-005_pr_base: main
 formal_CON-005_pr_head: "feat/CON-005-consolidation-integration-e2e"
+formal_CON-005_merge_commit: 8427868a2448fe11c9af64e3faedf5752badf8e9
+formal_CON-005_merged_at: "2026-08-13T15:35:15Z"
 formal_CON-005_status_record_committed: 7875e92feb417e6e9705c90396ba6e7d5d2e3034
-formal_CON-005_release_gate: WAITING_FOR_PR_MERGE
+formal_CON-005_milestone_status: closed
+formal_CON-005_release_gate: COMPLETED
 formal_CON-005_human_plan_approved: true
 formal_CON-005_human_plan_approved_at: "2026-08-13T14:37:00Z"
-formal_CON-005_approval_posture: "IMPLEMENTATION_RELEASE — committed"
-formal_CON-005_next_action: WAITING_FOR_PR_MERGE
+formal_CON-005_approval_posture: "POST_MERGE_CLEANUP — completed"
+formal_CON-005_next_action: "OPS-001 planned / NOT AUTO-STARTED"
 formal_CON-004_plan_file: 02_开发管理/tasks/CON-004-apscheduler-mutex-failure-recovery.md
 formal_CON-004_status: completed
 formal_CON-004_workflow_mode: NORMAL
@@ -690,7 +693,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: PLAN_APPROVED
+current_task_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -1741,6 +1744,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 23:40 UTC | CON-005 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `a8625ea81f21a686f2c84a0a9e204e313c4e95c9`、record `7875e92feb417e6e9705c90396ba6e7d5d2e3034`、merge `8427868a2448fe11c9af64e3faedf5752badf8e9`；仅更新 CON-005 三份治理文件并创建 `docs(status): complete CON-005 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED R2 P0=0/P1=0/P2=0/P3=3 non-blocking；production src/** diff=NONE；real Neo4j INT 6 + E2E 6 + CON-001..004 regression 92 passed；Amendment 001 recovery semantics preserved（Run A@T1 partial+fail；Run B@T2>T1 full rescan；T1 rows re-eligible；last_consolidated_time=T2；no checkpoint）；closes `v0.5.0-consolidation` milestone ONLY；`next_action=OPS-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 23:30 UTC | CON-005 | tested → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `a8625ea81f21a686f2c84a0a9e204e313c4e95c9`；PR #54 OPEN；docs(status): record on feat | scoped INT 6 + E2E 6 + contract 4 + unit 92 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0/P1=0/P2=0/P3=3；零 src/** diff；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 22:55 UTC | CON-005 | approved → tested | Developer Steps 1-7；§12 九文件；INT-1..6 + E2E-1..6 green；CON-001..004 unit 92 passed；contract/ruff/mypy PASS；零 src/** diff | `next_action=Code Reviewer on feat/CON-005-consolidation-integration-e2e`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 14:37 UTC | CON-005 | planned → approved | Human PLAN_APPROVED; Release Operator `PLAN_LANDING`; docs(plan) on main; feat `feat/CON-005-consolidation-integration-e2e` created | `approval_posture=PLAN_APPROVED`; `next_action=Developer on feat/CON-005-consolidation-integration-e2e`; Developer authorized post-PLAN_LANDING; 不得触碰 DEV-006/PR#13 |

@@ -5,14 +5,14 @@
 ```yaml
 task_id: CON-005
 task_name: Consolidation Integration + E2E
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "010d74112fb760907e710f2ba27123e021dd3d61"
 branch: "feat/CON-005-consolidation-integration-e2e"
 milestone: "v0.5.0-consolidation"
 created_at: "2026-08-13 22:15 UTC"
-updated_at: "2026-08-13 23:30 UTC"
+updated_at: "2026-08-13 23:40 UTC"
 spec_sections:
   - "§2.3.4 调度、互斥与批量扫描（cursor、evaluation_time、用户隔离 — E2E 验证）"
   - "§2.3.8 强化与软遗忘规则（边界 only — 无 status/ES/content 副作用）"
@@ -750,15 +750,18 @@ implementation_commit: a8625ea81f21a686f2c84a0a9e204e313c4e95c9
 implementation_commit_message: "test(con): add consolidation neo4j integration and e2e suite"
 pr: "#54"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/54"
-pr_state: OPEN
+pr_state: MERGED
 pr_base: main
 pr_head: feat/CON-005-consolidation-integration-e2e
-release_gate: WAITING_FOR_PR_MERGE
+merge_commit: 8427868a2448fe11c9af64e3faedf5752badf8e9
+merged_at: "2026-08-13T15:35:15Z"
+status_record_committed: 7875e92feb417e6e9705c90396ba6e7d5d2e3034
+release_gate: COMPLETED
 ```
 
 ### 最终状态
 
-`committed`
+`completed`
 
 ## 28. CON_005_PLAN_RESULT（Planner 摘要）
 
@@ -783,6 +786,6 @@ con004_section15_supersede: "owns in-process Integration/E2E + mutex; APSchedule
 metrics: "existing consolidation_runs_total + ConsolidationRunMetrics only (MV-4 incl. invalid_memory_count)"
 dependency_changes_expected: NONE
 completion_closes_milestone: "v0.5.0-consolidation"
-next_action: WAITING_FOR_PR_MERGE
-status: committed
+next_action: OPS-001 planned / NOT AUTO-STARTED
+status: completed
 ```

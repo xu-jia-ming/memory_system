@@ -671,7 +671,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | CON-002 | Cursor 分页批量读取与 Evidence 计数 | §2.3.4 | CON-001 | completed |
 | CON-003 | 乐观锁批量更新 | §2.3.9 | CON-002 | completed |
 | CON-004 | APScheduler、互斥锁、失败恢复 | §2.3.4, §3.22 | CON-003 | completed |
-| CON-005 | Consolidation Integration + E2E | §2.3.11–2.3.13 | CON-004 | approved |
+| CON-005 | Consolidation Integration + E2E | §2.3.11–2.3.13 | CON-004 | completed |
 
 - **非目标（阶段）**：独立 Consolidation HTTP API；ES importance 同步；多实例调度。
 
@@ -723,7 +723,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Integration（INT-1..6 — CON-002 read、CON-003 write、enumeration、run smoke）；E2E（E2E-1..6 — 垂直切片 + 失败注入 + mutex 最小子场景）；Contract（零 src diff + 白名单）；Unit **无新增**（CON-001..004 回归）。
 - **Task Plan**：`02_开发管理/tasks/CON-005-consolidation-integration-e2e.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=010d74112fb760907e710f2ba27123e021dd3d61` MATCH；**零** `src/**` 生产变更默认；Neo4j-only `compose.test`；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=Neo4j read-only（测试验证）`；`durable_write_scope=Neo4j Memory importance+last_consolidated_time（既有 CON-003 路径）`；E2E-6/INJ-7 Run B@T2>T1（T1 行再 eligible，§6.3）；`pytest_plugins` 显式加载 fixture；取代 CON-004 §15 in-process 范围 only；APScheduler/container wall-clock 仍 DEFERRED；E2E 暴露生产缺陷 → HALT；不得触碰 DEV-006/PR#13。
-- **状态备注**：`approved`（Human PLAN_APPROVED @ 2026-08-13T14:37:00Z；Round 2 Amendment 001 PLAN_APPROVED；Planner Amendment 001 Round 2 @ 2026-08-13 14:45 UTC）；`approval_posture=PLAN_APPROVED`；`next_action=Developer on feat/CON-005-consolidation-integration-e2e`；Developer authorized post-PLAN_LANDING；closes `v0.5.0-consolidation` on POST_MERGE_CLEANUP only；不得触碰 DEV-006/PR#13。
+- **状态备注**：`completed`（plan `2862b7a`；implementation `a8625ea81f21a686f2c84a0a9e204e313c4e95c9`；record `7875e92feb417e6e9705c90396ba6e7d5d2e3034`；PR #54 MERGED `8427868a2448fe11c9af64e3faedf5752badf8e9` mergedAt `2026-08-13T15:35:15Z`；scoped INT 6 + E2E 6 + contract 4 + CON-001..004 unit 92 passed；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED R2 P0=0 P1=0 P2=0 P3=3 non-blocking；production `src/**` diff=NONE；real Neo4j Integration + E2E vertical slice；Amendment 001 recovery semantics preserved（Run A@T1 partial+fail；Run B@T2>T1 full rescan；T1 rows re-eligible；`last_consolidated_time=T2`；no checkpoint）；feat 分支已删）；**closes `v0.5.0-consolidation` milestone ONLY**（NOT v0.9/v1.0）；`next_action=OPS-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13。
 
 ---
 
@@ -748,7 +748,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | `v0.2.0-short-term-memory` | STM-013 完成 |
 | `v0.3.0-memory-extraction` | EXT-009 完成（已满足） |
 | `v0.4.0-memory-retrieval` | RET-006 完成（已满足） |
-| `v0.5.0-consolidation` | CON-005 完成 |
+| `v0.5.0-consolidation` | CON-005 完成（已满足） |
 | `v0.9.0-mvp-rc1` | E2E-001 与审查完成 |
 | `v1.0.0-mvp` | MVP 验收清单全部通过 |
 
