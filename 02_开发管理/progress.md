@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 3 — RET-004 tested
+current_phase: Phase 3 — RET-005 planned
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: RET-004
-current_task_status: tested
-current_branch: feat/RET-004-act-r-scoring-evidence-aggregation
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "代码审查"
+next_action: "RET-005 planned / NOT AUTO-STARTED"
 formal_RET-004_plan_file: 02_开发管理/tasks/RET-004-act-r-scoring-evidence-aggregation.md
-formal_RET-004_status: tested
+formal_RET-004_status: completed
 formal_RET-004_workflow_mode: NORMAL
 formal_RET-004_workflow_mode_source: explicit
 formal_RET-004_baseline: c8d9d38d92414b9e041dd3d97dcbfd17b9e61582
@@ -108,8 +108,8 @@ formal_RET-004_blocking_open_issues: []
 formal_RET-004_nonblocking_open_issues: [OI-008]
 formal_RET-004_dependency_changes_expected: NONE
 formal_RET-004_migration_changes_expected: NONE
-formal_RET-004_note: "Developer remediation 2026-08-13 14:45 UTC；P1-1 I5 NC-3 recency=0.4 + retrieval_count=4；P2-1 Evidence malformed row fail-closed；scoped 52 passed（unit 47 + integration 5）；ruff/mypy PASS；未 Git commit；不得触碰 DEV-006/PR#13"
-formal_RET-004_approval_posture: "PLAN_APPROVED — human confirmed 2026-08-13"
+formal_RET-004_note: "POST_MERGE_CLEANUP；implementation e631d206b26175d341602ffdfd42a3d8f43edd3f；plan e3e98eeec645ed759fd90579149fae3e3420214c；PR #47 MERGED（base=main，head=feat/RET-004-act-r-scoring-evidence-aggregation，merge f505c25572f5695a772ac8598be9c8602b36aa9e，mergedAt=2026-08-13T06:47:29Z）；fetch 后 origin/main 已通过 --ff-only 同步；CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking；§2.2.11 ACT-R scoring；Top-K before Evidence；Evidence does not affect final_score；零 durable write；新建 act_r_scoring + retrieval_scoring_service + retrieval_evidence_read_repository + evidence_aggregation（禁止混用 EXT-005）；Integration Neo4j Evidence Fixture；feat 分支本地/远程已删除；next_action=RET-005 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13"
+formal_RET-004_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_RET-004_plan_review: PLAN_APPROVED
 formal_RET-004_plan_review_blocker: 0
 formal_RET-004_plan_review_must_fix: 0
@@ -117,7 +117,24 @@ formal_RET-004_plan_review_should_fix: 3
 formal_RET-004_scoped_tests: "52 passed (unit 47 + integration 5)"
 formal_RET-004_ruff: PASS
 formal_RET-004_mypy: PASS
-formal_RET-004_next_action: "代码审查"
+formal_RET-004_next_action: "RET-005 planned / NOT AUTO-STARTED"
+formal_RET-004_code_review: CODE_REVIEW_APPROVED
+formal_RET-004_p0: 0
+formal_RET-004_p1: 0
+formal_RET-004_p2: 2
+formal_RET-004_p3: 2
+formal_RET-004_plan_commit: e3e98eeec645ed759fd90579149fae3e3420214c
+formal_RET-004_implementation_commit: e631d206b26175d341602ffdfd42a3d8f43edd3f
+formal_RET-004_implementation_commit_message: "feat(ret): add act-r scoring, top-k ordering, and evidence aggregation"
+formal_RET-004_pr: "#47"
+formal_RET-004_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/47"
+formal_RET-004_pr_state: MERGED
+formal_RET-004_pr_base: main
+formal_RET-004_pr_head: "feat/RET-004-act-r-scoring-evidence-aggregation"
+formal_RET-004_merge_commit: f505c25572f5695a772ac8598be9c8602b36aa9e
+formal_RET-004_merged_at: "2026-08-13T06:47:29Z"
+formal_RET-004_status_record_committed: null
+formal_RET-004_release_gate: COMPLETED
 formal_RET-003_plan_file: 02_开发管理/tasks/RET-003-neo4j-graph-expansion-mget.md
 formal_RET-003_status: completed
 formal_RET-003_workflow_mode: NORMAL
@@ -1423,6 +1440,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 06:48 UTC | RET-004 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `e631d206b26175d341602ffdfd42a3d8f43edd3f`、merge `f505c25572f5695a772ac8598be9c8602b36aa9e`；仅更新 RET-004 三份治理文件并创建 `docs(status): complete RET-004 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking；scoped 52 passed（unit 47 + integration 5）；§2.2.11 ACT-R scoring；Top-K before Evidence；Evidence does not affect final_score；零 durable write；`next_action=RET-005 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 14:30 UTC | RET-004 | approved → tested | Developer：白名单 5 生产 + 6 测试文件；ACT-R 纯函数 + Evidence 聚合 + 编排服务 + Neo4j Evidence 读仓储 | scoped unit **44 passed**；ruff/mypy PASS；integration I1-I5 待 Neo4j compose；plan_commit=e3e98ee；零 durable write；未 Git commit；`next_action=代码审查`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 06:01 UTC | RET-004 | planned | Planner created `02_开发管理/tasks/RET-004-act-r-scoring-evidence-aggregation.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `c8d9d38d92414b9e041dd3d97dcbfd17b9e61582` verified (main, clean tree); scope = §2.2.11 ACT-R scoring + §2.2.12 Evidence batch aggregation; consume RET-003 AuthoritativeRecallSuccess; new `act_r_scoring` + `retrieval_scoring_service` + `retrieval_evidence_read_repository`（禁止混用 EXT-005）；Integration Neo4j Evidence Fixture; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-13 13:04 UTC | RET-003 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 领先本地 main，已通过 `--ff-only` 同步；验证 main 包含 implementation `64f71690d6c7ac08762b45d76a34158b49570e24`、merge `3746f1bce38b4f6e4c0ab4d7899eff5622cc21c0`；仅更新 RET-003 三份治理文件并创建 `docs(status): complete RET-003 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2 non-blocking；scoped 53 passed（30 RET-003 unit + 7 integration + 16 RET-002 regression）；§2.2.10 Neo4j authoritative recall + one-hop expansion + ES MGET read-only internal path；新建 `retrieval_memory_read_repository` + `mget_retrieval_repository`；Integration Neo4j+ES Fixture；`next_action=RET-004 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |

@@ -5,13 +5,13 @@
 ```yaml
 task_id: RET-004
 task_name: ACT-R 评分 + Evidence 聚合
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "c8d9d38d92414b9e041dd3d97dcbfd17b9e61582"
 branch: "feat/RET-004-act-r-scoring-evidence-aggregation"
 created_at: "2026-08-13 06:01 UTC"
-updated_at: "2026-08-13 14:30 UTC"
+updated_at: "2026-08-13 06:48 UTC"
 spec_sections:
   - "§2.2.11 基础 ACT-R 近似评分（本任务唯一权威范围 — 评分与排序）"
   - "§2.2.12 Evidence 加载与 Retrieval Response 设计（本任务仅内部 Evidence 批量读与聚合；不含 HTTP Response DTO）"
@@ -801,7 +801,7 @@ docs(plan): add RET-004 act-r scoring and evidence aggregation plan
 - [x] NC-1..NC-8 单元测试精确通过
 - [x] Integration Neo4j Fixture I1..I5 通过；RET-003 回归通过
 - [x] scoped unit + integration 全通过；Ruff/Mypy（变更文件）通过
-- [ ] Review 无 P0/P1
+- [x] Review 无 P0/P1
 
 ## 25. 风险与阻塞项
 
@@ -862,18 +862,65 @@ out_of_scope_changes:
 | 2026-08-13 06:01 UTC | planning | 创建 Task Plan；更新 progress/master_plan 规划态 | — | planning only；未 Git 写 |
 | 2026-08-13 14:30 UTC | implemented | 白名单 5 生产 + 6 测试文件；ACT-R 纯函数 + Evidence 聚合 + 编排服务 + Neo4j Evidence 读仓储 | scoped unit 44 passed；ruff/mypy PASS；integration I1-I5 待 Neo4j compose | plan_commit=e3e98ee；branch=feat/RET-004-act-r-scoring-evidence-aggregation；零 durable write；未 Git commit |
 | 2026-08-13 14:45 UTC | remediation | P1-1 I5 NC-3 对齐（recency=0.4、retrieval_count=4）；P2-1 Evidence 畸形行 fail-closed | scoped **52 passed**（unit 47 + integration 5）；ruff/mypy PASS | CODE_REVIEW_REJECTED 修复；未 Git commit |
+| 2026-08-13 06:48 UTC | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #47 MERGED；验证 main 含 implementation `e631d206b26175d341602ffdfd42a3d8f43edd3f`、merge `f505c25572f5695a772ac8598be9c8602b36aa9e`；治理三文件 + `docs(status): complete`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking；`next_action=RET-005 planned / NOT AUTO-STARTED` | 无计划外差异 |
 
 ## 31. 实际执行结果
 
+### 实际修改文件
+
+| 文件 | 结果 |
+|---|---|
+| `src/memory_system/domain/models/retrieval_scoring.py` | 已创建 |
+| `src/memory_system/domain/services/act_r_scoring.py` | 已创建 |
+| `src/memory_system/domain/services/evidence_aggregation.py` | 已创建 |
+| `src/memory_system/domain/services/retrieval_scoring_service.py` | 已创建 |
+| `src/memory_system/infrastructure/neo4j/retrieval_evidence_read_repository.py` | 已创建 |
+| `tests/unit/test_act_r_scoring.py` | 已创建 |
+| `tests/unit/test_evidence_aggregation.py` | 已创建 |
+| `tests/unit/test_retrieval_scoring_service.py` | 已创建 |
+| `tests/unit/test_retrieval_evidence_read_repository.py` | 已创建 |
+| `tests/integration/test_ret004_evidence_aggregation.py` | 已创建 |
+| `tests/support/ret004_neo4j_fixtures.py` | 已创建 |
+
+### 与原计划的差异
+
+暂无。
+
+### 测试结果
+
+```yaml
+scoped_tests: "52 passed (unit 47 + integration 5)"
+ruff: PASS
+mypy: PASS
+```
+
+### Review 结果
+
+```yaml
+p0: 0
+p1: 0
+p2: 2
+p3: 2
+review_report: null
+```
+
+### Git 记录
+
+```yaml
+branch: "feat/RET-004-act-r-scoring-evidence-aggregation"
+plan_commit: e3e98eeec645ed759fd90579149fae3e3420214c
+implementation_commit: e631d206b26175d341602ffdfd42a3d8f43edd3f
+implementation_commit_message: "feat(ret): add act-r scoring, top-k ordering, and evidence aggregation"
+pr: "#47"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/47"
+pr_state: MERGED
+pr_base: main
+pr_head: "feat/RET-004-act-r-scoring-evidence-aggregation"
+merge_commit: f505c25572f5695a772ac8598be9c8602b36aa9e
+merged_at: "2026-08-13T06:47:29Z"
+status_record_committed: null
+```
+
 ### 最终状态
 
-`tested`
-
-## 32. ready for plan review
-
-- 全部 16 节用户清单已覆盖：§2 authoritative_scope … §17 NORMAL classification。
-- `progress.md` 已同步 `current_task=RET-004`、`current_task_status=planned`、`next_action=计划审查`。
-- `master_plan.md` RET-004 节已登记 Task Plan 路径。
-- 未编写业务代码；未 Git 写；Developer 未授权。
-
-READY_FOR_PLAN_REVIEW
+`completed`

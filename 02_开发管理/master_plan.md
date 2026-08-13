@@ -593,7 +593,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | RET-001 | BM25 查询 | §2.2.7 | DEV-004, DEV-007 | completed |
 | RET-002 | Vector 召回 + RRF | §2.2.6, §2.2.8, §2.2.9 | RET-001, DEV-007 | completed |
 | RET-003 | Neo4j 权威回读 + 一跳扩展 + MGET | §2.2.10 | RET-002 | completed |
-| RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | tested |
+| RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | completed |
 | RET-005 | Retrieval API、降级/超时、统计更新 | §2.2.5, §2.2.13–2.2.15 | RET-004, DEV-005 | planned |
 | RET-006 | Retrieval 阶段 E2E + 失败注入 | §2.2.16, §3.28 | RET-005, EXT-007 | planned |
 
@@ -636,7 +636,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit（NC-1..NC-8 数值算例、排序 tie-break、failure mapping）；Integration — Neo4j Evidence SUPPORTS Fixture。
 - **Task Plan**：`02_开发管理/tasks/RET-004-act-r-scoring-evidence-aggregation.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=c8d9d38d92414b9e041dd3d97dcbfd17b9e61582` MATCH；新建 `act_r_scoring` + `retrieval_scoring_service` + `retrieval_evidence_read_repository`（禁止混用 EXT-005）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；不得触碰 DEV-006/PR#13。
-- **状态备注**：`tested`（plan `e3e98ee` PLAN_LANDING；implementation 待 commit；branch `feat/RET-004-act-r-scoring-evidence-aggregation`；scoped unit **44 passed**；ruff/mypy PASS；integration I1-I5 待 Neo4j compose；§2.2.11 ACT-R + §2.2.12 Evidence batch aggregation；新建 `act_r_scoring` + `retrieval_scoring_service` + `retrieval_evidence_read_repository` + `evidence_aggregation`（禁止混用 EXT-005）；`next_action=代码审查`；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`completed`（plan `e3e98eeec645ed759fd90579149fae3e3420214c`；implementation `e631d206b26175d341602ffdfd42a3d8f43edd3f`；PR #47 MERGED `f505c25572f5695a772ac8598be9c8602b36aa9e` mergedAt `2026-08-13T06:47:29Z`；scoped 52 passed（unit 47 + integration 5）；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2 non-blocking；§2.2.11 ACT-R scoring；Top-K before Evidence；Evidence does not affect final_score；新建 `act_r_scoring` + `retrieval_scoring_service` + `retrieval_evidence_read_repository` + `evidence_aggregation`（禁止混用 EXT-005）；Integration Neo4j Evidence Fixture；零 durable write；feat 分支已删；RET-005 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 
 #### RET-005
 
@@ -1519,5 +1519,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
 | 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
 | 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=RET-004 planned / NOT AUTO-STARTED`；不得自动启动 RET-004 |
+
+### CHANGE-077
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-13 |
+| 原因 | RET-004 POST_MERGE_CLEANUP：PR #47 MERGED；implementation 已在 main；完成治理状态并清理 exact feature branch |
+| 受影响任务 | `RET-004`（`completed`）；`RET-005` remains `planned` / **NOT AUTO-STARTED**；不改变 Appendix B、Neo4j/ACT-R/HTTP 语义或 unrelated issues；不触碰 DEV-006 / PR #13 |
+| 事实记录 | plan `e3e98eeec645ed759fd90579149fae3e3420214c`；implementation `e631d206b26175d341602ffdfd42a3d8f43edd3f`；PR #47 MERGED `f505c25572f5695a772ac8598be9c8602b36aa9e`；mergedAt `2026-08-13T06:47:29Z`；CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking；fetch 后 origin/main 已通过 --ff-only 同步 |
+| 交付与不变量 | §2.2.11 ACT-R scoring；Top-K before Evidence；Evidence does not affect final_score；新建 `act_r_scoring` + `retrieval_scoring_service` + `retrieval_evidence_read_repository` + `evidence_aggregation`（禁止混用 EXT-005）；Integration Neo4j Evidence Fixture；零 durable write |
+| Open Issues | OI-008 non-blocking（RET-005 API 编辑性） |
+| 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
+| 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
+| 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=RET-005 planned / NOT AUTO-STARTED`；不得自动启动 RET-005 |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
