@@ -5,7 +5,7 @@
 ```yaml
 task_id: RET-006
 task_name: Retrieval 阶段 E2E + 失败注入
-status: tested
+status: committed
 plan_review_round: 2
 workflow_mode: NORMAL
 workflow_mode_source: explicit
@@ -13,7 +13,7 @@ planning_baseline_main: "538cf13ac3d33d1f337a9e5f5b450626ddd6529d"
 branch: "feat/RET-006-retrieval-e2e-failure-injection"
 milestone: "v0.4.0-memory-retrieval"
 created_at: "2026-08-13 08:00 UTC"
-updated_at: "2026-08-13 08:08 UTC"
+updated_at: "2026-08-13 08:45 UTC"
 human_plan_approved_at: "2026-08-13T08:08:00Z"
 spec_sections:
   - "§2.2.5 Memory Retrieval API（HTTP Request/Response；鉴权；user_id 隔离）"
@@ -644,6 +644,7 @@ out_of_scope_changes:
 |---|---|---|---|---|
 | 2026-08-13 08:15 UTC | plan amendment round 2 | MF-1：新增 E2E-4b 双通道致命；INJ-1..6 重命名；SF-1 Route monkeypatch；§6.1 用户矩阵映射 | — | Plan Review remediation |
 | 2026-08-13 08:08 UTC | human PLAN_APPROVED + PLAN_LANDING pending | approval gates → PLAN_APPROVED；`developer_authorized=true`；Release Operator docs(plan) on main + feat branch | — | Round 2 PLAN_APPROVED；不得触碰 DEV-006/PR#13 |
+| 2026-08-13 08:45 UTC | Release IMPLEMENTATION_RELEASE | implementation `6e5517c11f0c7b6417264064d718937dd0aca62b`；PR #49 OPEN；feat push only | scoped 9 passed；ruff PASS；mypy PASS | `status=committed`；`next_action=WAITING_FOR_PR_MERGE`；零 `src/**` diff |
 | 2026-08-13 16:35 UTC | implementation resumed | `tests/e2e/helpers/ret006_e2e_helpers.py`；`tests/e2e/test_ret006_retrieval_e2e.py`；`tests/e2e/conftest.py`（`ret006_retrieval_client`）；`tests/support/ret006_e2e_fixtures.py`（EXT-007 graph seed fix） | `uv run pytest tests/e2e/test_ret006_retrieval_e2e.py -v` → **9 passed**；ruff/mypy PASS（scoped）；`git diff src/` empty | 零 `src/**` diff；Route factory monkeypatch SF-1；E2E-1..6 + auth 子用例全绿 |
 
 ---
@@ -700,6 +701,17 @@ deferred_for_mvp:
   - "Cache/reranking/pagination/streaming"
   - "DEV-006/PR#13"
 completion_closes_milestone: "v0.4.0-memory-retrieval"
-next_action: "Code Reviewer on feat/RET-006-retrieval-e2e-failure-injection"
-status: tested
+next_action: "WAITING_FOR_PR_MERGE"
+status: committed
+implementation_commit: 6e5517c11f0c7b6417264064d718937dd0aca62b
+implementation_commit_message: "test(ret): add retrieval stage e2e with failure injection"
+plan_commit: e1abc1ca77566da645a8087844d0da28cd8c87fe
+pr: "#49"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/49"
+pr_state: OPEN
+pr_base: main
+pr_head: "feat/RET-006-retrieval-e2e-failure-injection"
+code_review: CODE_REVIEW_APPROVED
+p0: 0
+p1: 0
 ```
