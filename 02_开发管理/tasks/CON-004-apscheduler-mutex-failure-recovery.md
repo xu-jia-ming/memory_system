@@ -5,13 +5,13 @@
 ```yaml
 task_id: CON-004
 task_name: APScheduler、互斥锁、失败恢复
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "8998f627b6cf0c8f5beb103006903d8c3668542a"
 branch: "feat/CON-004-apscheduler-mutex-failure-recovery"
 created_at: "2026-08-13 21:15 UTC"
-updated_at: "2026-08-13 21:30 UTC"
+updated_at: "2026-08-13 22:00 UTC"
 spec_sections:
   - "§2.3.2 MVP 范围与基本规则（规则 2、7、11 — 用户隔离、统一 evaluation_time、单实例本地锁）"
   - "§2.3.4 调度、互斥与批量扫描（evaluation_time、run_id、mutex、cursor 编排 — 本任务拥有调度侧；读 Cypher 由 CON-002 实现）"
@@ -778,10 +778,21 @@ out_of_scope_changes:
 ### Review 结果
 
 ```yaml
+code_review: CODE_REVIEW_APPROVED
 p0: 0
 p1: 0
-p2: 0
-p3: 0
+p2: 2
+p3: 1
+nonblocking_notes:
+  - "P2-1: C1 contract test untracked-file blind spot"
+  - "P2-2: Prometheus failure-path assertions gap"
+  - "P3-1: telemetry naming consistency"
+contract_semantics_preserved:
+  - "one evaluation_time per run"
+  - "process-local mutex with finally release"
+  - "per-user cursor orchestration"
+  - "non-fatal version conflicts"
+  - "no persistent cursor/run-state"
 review_report: null
 ```
 
@@ -790,10 +801,19 @@ review_report: null
 ```yaml
 branch: feat/CON-004-apscheduler-mutex-failure-recovery
 plan_commit: e124b23
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: abb2ceaf6579f9dfff9e46f4782d3d9d181d31c1
+implementation_commit_message: "feat(con): add consolidation scheduler run orchestration and worker"
+pr: "#53"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/53"
+pr_state: MERGED
+pr_base: main
+pr_head: feat/CON-004-apscheduler-mutex-failure-recovery
+merge_commit: ae70a94fd08382ffd43fbdc0e64ec613423fc403
+merged_at: "2026-08-13T13:59:12Z"
+status_record_committed: null
+release_gate: COMPLETED
 ```
 
 ### 最终状态
 
-`tested`
+`completed`

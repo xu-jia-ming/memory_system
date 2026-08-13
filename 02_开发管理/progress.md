@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-004 tested (APScheduler mutex failure recovery)
+current_phase: Phase 4 — CON-004 completed (APScheduler mutex failure recovery)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: CON-004
-current_task_status: tested
-current_branch: feat/CON-004-apscheduler-mutex-failure-recovery
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -95,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: PLAN_LANDING
+next_action: "CON-005 planned / NOT AUTO-STARTED"
 formal_CON-004_plan_file: 02_开发管理/tasks/CON-004-apscheduler-mutex-failure-recovery.md
-formal_CON-004_status: tested
+formal_CON-004_status: completed
 formal_CON-004_workflow_mode: NORMAL
 formal_CON-004_workflow_mode_source: explicit
 formal_CON-004_baseline: "8998f627b6cf0c8f5beb103006903d8c3668542a"
@@ -105,16 +105,39 @@ formal_CON-004_branch: "feat/CON-004-apscheduler-mutex-failure-recovery"
 formal_CON-004_prerequisite: "SATISFIED — CON-003 completed (PR #52 MERGED); CON-002 completed (PR #51 MERGED); CON-001 completed (PR #50 MERGED); EXT-001..009 completed; RET-001..006 completed"
 formal_CON-004_scope: "§2.3.11 run orchestration + §3.22 APScheduler + §2.3.4 process-local mutex + §2.3.13 failure recovery/metrics + consolidation_worker wiring; reuse CON-002 read + CON-003 write; zero CON-001/002/003 semantics diff"
 formal_CON-004_blocking_open_issues: []
-formal_CON-004_nonblocking_open_issues: []
+formal_CON-004_nonblocking_open_issues:
+  - "P2-1: C1 contract test untracked-file blind spot"
+  - "P2-2: Prometheus failure-path assertions gap"
+  - "P3-1: telemetry naming consistency"
 formal_CON-004_dependency_changes_expected: NONE
 formal_CON-004_migration_changes_expected: NONE
 formal_CON-004_durable_read_scope: "Neo4j read-only — DISTINCT user_id enumeration"
 formal_CON-004_durable_write_scope: "NONE at orchestration layer — delegated to CON-003 Neo4j write"
 formal_CON-004_production_file_whitelist: "src/memory_system/domain/models/consolidation_run.py; src/memory_system/domain/services/consolidation_run_service.py; src/memory_system/infrastructure/consolidation_mutex.py; src/memory_system/infrastructure/scheduling/consolidation_scheduler.py; src/memory_system/infrastructure/neo4j/consolidation_user_enumeration_repository.py; src/memory_system/observability/consolidation_run_telemetry.py; src/memory_system/entrypoints/consolidation_worker.py"
 formal_CON-004_test_file_whitelist: "tests/unit/test_consolidation_run_service.py; tests/unit/test_consolidation_mutex.py; tests/unit/test_consolidation_scheduler.py; tests/unit/test_consolidation_user_enumeration_repository.py; tests/unit/test_consolidation_worker_entrypoint.py; tests/contract/test_con004_scope_boundaries.py"
-formal_CON-004_note: "PLAN_APPROVED @ main 8998f627b6cf0c8f5beb103006903d8c3668542a；human approval 2026-08-13 21:30 UTC；SF-1..SF-3 absorbed；workflow_mode=NORMAL explicit；CON-004 owns scheduler/mutex/run loop/user enum/cursor orchestration/worker wiring；禁止修改 CON-001/002/003 服务语义；Integration/E2E DEFERRED CON-005；不得触碰 DEV-006/PR#13"
-formal_CON-004_next_action: CODE_REVIEW
-formal_CON-004_approval_posture: PLAN_APPROVED
+formal_CON-004_note: "POST_MERGE_CLEANUP；implementation abb2ceaf6579f9dfff9e46f4782d3d9d181d31c1；PR #53 MERGED（base=main，head=feat/CON-004-apscheduler-mutex-failure-recovery，merge ae70a94fd08382ffd43fbdc0e64ec613423fc403，mergedAt=2026-08-13T13:59:12Z）；fetch 后 origin/main 已通过 --ff-only 同步；CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=1 non-blocking（P2-1 C1 untracked blind spot；P2-2 Prometheus failure-path assertions；P3-1 telemetry naming）；scoped 37 passed；ruff/mypy PASS；§2.3.11 run orchestration — one evaluation_time per run；process-local mutex/finally release；per-user cursor orchestration；non-fatal version conflicts；no persistent cursor/run-state；zero CON-001/002/003 semantics diff；Integration DEFERRED CON-005；feat 分支本地/远程已删除；next_action=CON-005 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13"
+formal_CON-004_plan_commit: "e124b23"
+formal_CON-004_code_review: CODE_REVIEW_APPROVED
+formal_CON-004_p0: 0
+formal_CON-004_p1: 0
+formal_CON-004_p2: 2
+formal_CON-004_p3: 1
+formal_CON-004_scoped_tests: "37 passed"
+formal_CON-004_ruff: PASS
+formal_CON-004_mypy: "PASS（7 new src files）"
+formal_CON-004_implementation_commit: abb2ceaf6579f9dfff9e46f4782d3d9d181d31c1
+formal_CON-004_implementation_commit_message: "feat(con): add consolidation scheduler run orchestration and worker"
+formal_CON-004_pr: "#53"
+formal_CON-004_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/53"
+formal_CON-004_pr_state: MERGED
+formal_CON-004_pr_base: main
+formal_CON-004_pr_head: "feat/CON-004-apscheduler-mutex-failure-recovery"
+formal_CON-004_merge_commit: ae70a94fd08382ffd43fbdc0e64ec613423fc403
+formal_CON-004_merged_at: "2026-08-13T13:59:12Z"
+formal_CON-004_status_record_committed: null
+formal_CON-004_release_gate: COMPLETED
+formal_CON-004_next_action: "CON-005 planned / NOT AUTO-STARTED"
+formal_CON-004_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_CON-004_human_plan_approved: true
 formal_CON-003_plan_file: 02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md
 formal_CON-003_status: completed
@@ -1674,7 +1697,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
-| 2026-08-13 13:05 UTC | CON-003 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `8563466feeb8aea38fb6997a3e99d4d54eb3878c`、merge `7337c861150c9312a7a37b2b884839c186cb43d1`；仅更新 CON-003 三份治理文件并创建 `docs(status): complete CON-003 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=1/P3=2 non-blocking；scoped 35 passed；ruff/mypy PASS；§2.3.9 optimistic-lock write contract preserved — expected_memory_version predicate-only / no memory_version increment；partial-success batch semantics；CON-002 scored handoff only；`next_action=CON-004 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
+| 2026-08-13 22:00 UTC | CON-004 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `abb2ceaf6579f9dfff9e46f4782d3d9d181d31c1`、merge `ae70a94fd08382ffd43fbdc0e64ec613423fc403`；仅更新 CON-004 三份治理文件并创建 `docs(status): complete CON-004 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=1 non-blocking（P2-1 C1 untracked blind spot；P2-2 Prometheus failure-path assertions；P3-1 telemetry naming）；scoped 37 passed；ruff/mypy PASS；§2.3.11 run orchestration — one evaluation_time per run；process-local mutex/finally release；per-user cursor orchestration；non-fatal version conflicts；no persistent cursor/run-state；zero CON-001/002/003 semantics diff；`next_action=CON-005 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 11:30 UTC | CON-003 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan `02_开发管理/tasks/CON-003-optimistic-lock-batch-update.md`；同步 progress/master_plan 规划态字段；baseline `cabcc6f98e5cd676b962b49e3b0c943587a11689` MATCH；git status clean；§2.3.9 optimistic-lock batch write（importance + last_consolidated_time only；不递增 memory_version；不写 updated_time）；CON-002 scored handoff only；Integration DEFERRED CON-005；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 19:20 UTC | CON-002 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `a13ab31bb98598740198001d8bfee3f21d6b565a`、merge `3b26549c41b91a1bbdd72237865a5d3d4fb5324d`；仅更新 CON-002 三份治理文件并创建 `docs(status): complete CON-002 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking（P2-1 C1 untracked blind spot；P2-2 null archive_id test gap）；scoped 39 passed；ruff/mypy PASS；§2.3.4 read-only + per-user isolation + `count(DISTINCT archive_id)` + zero-Evidence→missing_evidence；零 durable write；`next_action=CON-003 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 18:55 UTC | CON-002 | approved → tested | Developer implementation on `feat/CON-002-cursor-batch-evidence-count`；3 生产 + 3 测试白名单文件；§2.3.4 cursor batch Neo4j read + `independent_archive_count` + CON-001 handoff | scoped **39 passed**；ruff PASS；mypy PASS（3 new src files）；零 durable write；OPTIONAL MATCH 零 Evidence；U13-U15 pagination metadata；`next_action=CODE_REVIEW`；不得触碰 DEV-006/PR#13 |

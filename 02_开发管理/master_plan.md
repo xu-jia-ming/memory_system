@@ -670,7 +670,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | CON-001 | Importance/衰减/保护公式纯函数 | §2.3.5–2.3.8 | EXT-004 | completed |
 | CON-002 | Cursor 分页批量读取与 Evidence 计数 | §2.3.4 | CON-001 | completed |
 | CON-003 | 乐观锁批量更新 | §2.3.9 | CON-002 | completed |
-| CON-004 | APScheduler、互斥锁、失败恢复 | §2.3.4, §3.22 | CON-003 | planned |
+| CON-004 | APScheduler、互斥锁、失败恢复 | §2.3.4, §3.22 | CON-003 | completed |
 | CON-005 | Consolidation Integration + E2E | §2.3.11–2.3.13 | CON-004 | planned |
 
 - **非目标（阶段）**：独立 Consolidation HTTP API；ES importance 同步；多实例调度。
@@ -713,7 +713,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit（U1..U18 编排/互斥/scheduler/枚举/worker + fake CON-002/003 ports）；Contract（C1..C7 白名单+零 CON-001/002/003 diff）；Integration/E2E **DEFERRED**（CON-005）。
 - **Task Plan**：`02_开发管理/tasks/CON-004-apscheduler-mutex-failure-recovery.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=8998f627b6cf0c8f5beb103006903d8c3668542a` MATCH；新建 `consolidation_run` models + `consolidation_run_service` + `consolidation_mutex` + `consolidation_scheduler` + `consolidation_user_enumeration_repository` + `consolidation_run_telemetry`；**修改** `consolidation_worker.py`；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_read_scope=Neo4j DISTINCT user_id enumeration`；`durable_write_scope=NONE（编排层）/ delegated CON-003 Neo4j write`；不得触碰 DEV-006/PR#13。
-- **状态备注**：`approved`（planning @ main `8998f627b6cf0c8f5beb103006903d8c3668542a`；human PLAN_APPROVED 2026-08-13；SF-1..SF-3 absorbed）；`next_action=PLAN_LANDING`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`completed`（plan `e124b23`；implementation `abb2ceaf6579f9dfff9e46f4782d3d9d181d31c1`；PR #53 MERGED `ae70a94fd08382ffd43fbdc0e64ec613423fc403` mergedAt `2026-08-13T13:59:12Z`；scoped 37 passed；Ruff PASS；Mypy PASS（7 new src files）；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=1 non-blocking（P2-1 C1 untracked blind spot；P2-2 Prometheus failure-path assertions；P3-1 telemetry naming）；§2.3.11 run orchestration — one evaluation_time per run；process-local mutex/finally release；per-user cursor orchestration；non-fatal version conflicts；no persistent cursor/run-state；zero CON-001/002/003 semantics diff；Integration DEFERRED CON-005；feat 分支已删）；`next_action=CON-005 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13。
 
 ---
 
