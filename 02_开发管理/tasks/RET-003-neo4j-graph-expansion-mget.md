@@ -5,7 +5,7 @@
 ```yaml
 task_id: RET-003
 task_name: Neo4j 权威回读 + 一跳扩展 + MGET
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "21a99a5b217f45cd4e4c67b8758bf1705d9d0a74"
@@ -866,6 +866,9 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-13 11:50 UTC | planning | 创建 Task Plan；更新 progress/master_plan 规划态 | — | planning only；未 Git 写 |
+| 2026-08-13 12:40 UTC | in_progress | 新建 §13/§14 白名单全部生产与测试文件 | — | 按 PLAN_APPROVED 契约实施 |
+| 2026-08-13 12:55 UTC | implemented | 7 生产模块 + 8 测试/fixture 文件 | — | 未改 RET-002/EXT-007 生产语义 |
+| 2026-08-13 13:00 UTC | tested | 执行记录写入 §26 | unit+integration+ruff+mypy 全绿 | 无计划外差异 |
 
 ## 26. 实际执行结果
 
@@ -873,7 +876,21 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-| — | 待实施 |
+| `src/memory_system/domain/models/authoritative_recall.py` | 已创建 |
+| `src/memory_system/domain/models/retrieval_memory_snapshot.py` | 已创建 |
+| `src/memory_system/domain/services/retrieval_memory_validator.py` | 已创建 |
+| `src/memory_system/domain/services/graph_expansion_ranker.py` | 已创建 |
+| `src/memory_system/domain/services/authoritative_recall_service.py` | 已创建 |
+| `src/memory_system/infrastructure/neo4j/retrieval_memory_read_repository.py` | 已创建 |
+| `src/memory_system/infrastructure/elasticsearch/mget_retrieval_repository.py` | 已创建 |
+| `tests/unit/test_retrieval_memory_validator.py` | 已创建 |
+| `tests/unit/test_graph_expansion_ranker.py` | 已创建 |
+| `tests/unit/test_authoritative_recall_service.py` | 已创建 |
+| `tests/unit/test_mget_retrieval_repository.py` | 已创建 |
+| `tests/unit/test_retrieval_memory_read_repository.py` | 已创建 |
+| `tests/integration/test_ret003_authoritative_recall.py` | 已创建 |
+| `tests/support/ret003_neo4j_fixtures.py` | 已创建 |
+| `tests/support/ret003_es_fixtures.py` | 已创建 |
 
 ### 与原计划的差异
 
@@ -883,10 +900,11 @@ out_of_scope_changes:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | — | 待实施 |
-| Integration | — | 待实施 |
-| Ruff | — | 待实施 |
-| Mypy | — | 待实施 |
+| Unit (RET-003) | `uv run pytest tests/unit/test_retrieval_memory_validator.py tests/unit/test_graph_expansion_ranker.py tests/unit/test_authoritative_recall_service.py tests/unit/test_mget_retrieval_repository.py tests/unit/test_retrieval_memory_read_repository.py -q` | 30 passed |
+| Unit (RET-002 regression) | `uv run pytest tests/unit/test_hybrid_retrieval_service.py tests/unit/test_rrf_fusion.py -q` | 16 passed |
+| Integration | `uv run pytest tests/integration/test_ret003_authoritative_recall.py -q` | 7 passed |
+| Ruff | `uv run ruff check`（§13/§14 白名单路径） | All checks passed |
+| Mypy | `uv run mypy`（§13 生产路径） | Success: 7 files |
 
 ### Review 结果
 
@@ -901,12 +919,12 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
+branch: feat/RET-003-neo4j-graph-expansion-mget
+plan_commit: 144844295bbd98b962e269e870e57685c2af9fe4
 implementation_commit: null
 implementation_commit_message: null
 ```
 
 ### 最终状态
 
-`planned`
+`tested`
