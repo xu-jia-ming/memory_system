@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 3 — RET-002 planned
+current_phase: Phase 3 — RET-002 approved
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: RET-001
-current_task_status: completed
-current_branch: main
+current_task: RET-002
+current_task_status: approved
+current_branch: feat/RET-002-vector-retrieval-rrf
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -21,10 +21,10 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/RET-001-bm25-retrieval.md
+current_plan_file: 02_开发管理/tasks/RET-002-vector-retrieval-rrf.md
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab"
+planning_baseline_main: "e5f5c9de9883d04759f19080c01f1f50d2c62513"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -95,7 +95,7 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "RET-002 planned / NOT AUTO-STARTED"
+next_action: "PLAN_LANDING then Developer"
 formal_RET-001_plan_file: 02_开发管理/tasks/RET-001-bm25-retrieval.md
 formal_RET-001_status: completed
 formal_RET-001_workflow_mode: NORMAL
@@ -131,7 +131,23 @@ formal_RET-001_merged_at: "2026-08-13T02:29:09Z"
 formal_RET-001_status_record_committed: null
 formal_RET-001_release_gate: COMPLETED
 formal_RET-001_next_action: "RET-002 planned / NOT AUTO-STARTED"
+formal_RET-002_plan_file: 02_开发管理/tasks/RET-002-vector-retrieval-rrf.md
+formal_RET-002_status: planned
+formal_RET-002_workflow_mode: NORMAL
+formal_RET-002_workflow_mode_source: explicit
+formal_RET-002_baseline: e5f5c9de9883d04759f19080c01f1f50d2c62513
+formal_RET-002_branch: "feat/RET-002-vector-retrieval-rrf"
+formal_RET-002_prerequisite: "SATISFIED — RET-001 completed (PR #44 MERGED); DEV-007 completed; DEV-004 completed; EXT-007 completed (write path; not hard test prereq)"
+formal_RET-002_scope: "§2.2.6 retrieval-path query norm + single-query embed; §2.2.8 Vector kNN; §2.2.9 RRF fusion + retrieval_mode; HybridRetrievalService parallel BM25+Vector; internal retrieval_unavailable; read-only; no HTTP/Neo4j/ACT-R"
+formal_RET-002_blocking_open_issues: []
+formal_RET-002_nonblocking_open_issues: [OI-008]
+formal_RET-002_dependency_changes_expected: NONE
+formal_RET-002_migration_changes_expected: NONE
+formal_RET-002_note: "Planner 初版 Task Plan；baseline e5f5c9de9883d04759f19080c01f1f50d2c62513 verified (main, clean tree)；reuse Bm25RetrievalService + create_embedding_client；shared retrieval_filter_builder；Integration ES Fixture + Fake embed；LD-1 SiliconFlow 无本地 token 预检；不得触碰 DEV-006/PR#13"
+formal_RET-002_approval_posture: "PLAN_APPROVED — human confirmed 2026-08-13; SF-1/SF-2/SF-3 absorbed in plan Amendment"
+formal_RET-002_next_action: "PLAN_LANDING then Developer"
 planning_baseline_RET-001: "a780bb2d6ae6d0e47d22f508326aed8f0e4fb7ab"
+planning_baseline_RET-002: "e5f5c9de9883d04759f19080c01f1f50d2c62513"
 planning_baseline_EXT-007: "2db6f5a8957e26a672aa4fcba3bf69eb65b0de1e"
 planning_baseline_EXT-006: "59281d1e8d6e3fabfc0fe55f70b3fa50ac44bac2"
 formal_EXT-006_plan_file: 02_开发管理/tasks/EXT-006-neo4j-graph-transaction-write.md
@@ -273,7 +289,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: "POST_MERGE_CLEANUP — RET-001 completed"
+current_task_approval_posture: "AWAIT_PLAN_REVIEW — RET-002 planned"
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -1324,6 +1340,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-13 02:40 UTC | RET-002 | planned | Planner created `02_开发管理/tasks/RET-002-vector-retrieval-rrf.md`; synchronized progress/master_plan only; no `src/**`, `tests/**`, config, dependency, migration, or specification-body change; no Git write | baseline `e5f5c9de9883d04759f19080c01f1f50d2c62513` verified (main, clean tree); scope = §2.2.6 retrieval-path query norm + embed, §2.2.8 Vector kNN, §2.2.9 RRF fusion; reuse RET-001 BM25 + DEV-007 EmbeddingClient; shared filter builder; Integration ES Fixture + Fake embed; LD-1 no local token pre-check on SiliconFlow; `dependency_changes_expected=NONE`; `next_action=计划审查`; Developer NOT authorized; 不得触碰 DEV-006/PR#13 |
 | 2026-08-13 02:30 UTC | RET-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 领先本地 main，已通过 `--ff-only` 同步；验证 main 包含 implementation `fc435db722ed29c05980d6a1a60d9f57fda80968`、merge `a4dda57366b9e0cb2a1fb34b6526a07daa30ed31`；仅更新 RET-001 三份治理文件并创建 `docs(status): complete RET-001 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED P0=0/P1=0/P2=2/P3=2 non-blocking；scoped 33 passed（25 unit + 8 integration）；§2.2.7 BM25 internal channel read-only；Integration ES Fixture not EXT-007 pipeline；`next_action=RET-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-12 14:47 UTC | EXT-009 | planned → in_progress | Developer：新建 `ProductionExtractionPipeline`，接线 extraction worker，consumer 增加 LD-1 terminal reload；新增 pipeline/consumer unit、contract、compose integration、E2E-1..4 测试与 Fake provider helpers；吸收 SF-1 同轮 reload/fall-through 与 SF-2 injectable F1 hook、SF-3 ASGI Admin auth | 首轮 scoped pipeline/consumer/contract 通过；worker 旧测试暴露的未初始化 consumer 已修复待复跑；compose/E2E 尚待环境验证；EXT-002..007 与 `PipelineTerminalDecision` 零 diff；未 Git 写；`next_action=实现`；不得触碰 DEV-006/PR#13 |
 | 2026-08-12 15:03 UTC | EXT-009 | in_progress → tested | 完成 pipeline/worker/consumer 接线、SF-1 同轮 fall-through、SF-2 F1 hook、SF-3 ASGI Admin auth；补齐共享 Kafka producer 与 integration 本地 fixture 包装 | scoped unit/contract/worker **35 passed**（4 个既有 AsyncMock warning）；compose integration **1 passed**；E2E-1..4 **4 passed**；Ruff PASS；Mypy（3 个 changed production modules）PASS；IDE lints clean；combined collection **5 collected**；未 Git 写；不得触碰 DEV-006/PR#13；`next_action=代码审查` |
