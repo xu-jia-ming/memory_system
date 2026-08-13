@@ -628,9 +628,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=21a99a5b217f45cd4e4c67b8758bf1705d9d0a74` MATCH；新建 `retrieval_memory_read_repository` + `mget_retrieval_repository`（禁止混用 EXT-007 扩展 Cypher）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；不得触碰 DEV-006/PR#13。
 - **状态备注**：`completed`（plan `144844295bbd98b962e269e870e57685c2af9fe4`；implementation `64f71690d6c7ac08762b45d76a34158b49570e24`；PR #46 MERGED `3746f1bce38b4f6e4c0ab4d7899eff5622cc21c0` mergedAt `2026-08-13T05:03:28Z`；scoped 53 passed（30 RET-003 unit + 7 integration + 16 RET-002 regression）；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 non-blocking；§2.2.10 Neo4j authoritative recall + one-hop expansion + ES MGET read-only internal path；新建 `retrieval_memory_read_repository` + `mget_retrieval_repository`；Integration Neo4j+ES Fixture；feat 分支已删；RET-004 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 
-#### RET-004–RET-005
+#### RET-004 ACT-R 评分 + Evidence 聚合
 
-- ACT-R 评分与 Evidence；HTTP API 与降级矩阵（见 OI-008 编辑性问题，不阻塞实现规格正文）。
+- **目标**：消费 RET-003 `AuthoritativeRecallSuccess`；§2.2.11 ACT-R 五分量 + status 惩罚 + 6 位小数 `final_score`；确定性排序 + `top_k` 截断；§2.2.12 Top-K 后 Neo4j 批量 Evidence 读 + `evidence_count` / `source_message_ids` 确定性聚合；内部 `graph_load_failed`；透传 RET-003 warnings。
+- **非目标**：HTTP API/Response DTO；`retrieval_count`/`last_retrieved_time` 更新；修改 RET-001/002/003/EXT-005 生产语义。
+- **前置**：**RET-003, EXT-005, EXT-006**（Integration Neo4j Evidence Fixture；非 EXT-007 pipeline 硬前置）。
+- **测试**：Unit（NC-1..NC-8 数值算例、排序 tie-break、failure mapping）；Integration — Neo4j Evidence SUPPORTS Fixture。
+- **Task Plan**：`02_开发管理/tasks/RET-004-act-r-scoring-evidence-aggregation.md`。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=c8d9d38d92414b9e041dd3d97dcbfd17b9e61582` MATCH；新建 `act_r_scoring` + `retrieval_scoring_service` + `retrieval_evidence_read_repository`（禁止混用 EXT-005）；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`approved`（PLAN_APPROVED human confirmed 2026-08-13；Task Plan 已创建 2026-08-13 06:01 UTC；`next_action=PLAN_LANDING`；Developer NOT authorized until landing；不得触碰 DEV-006/PR#13）。
+
+#### RET-005
+
+- HTTP API 与降级矩阵（见 OI-008 编辑性问题，不阻塞实现规格正文）。
 
 #### RET-006
 
