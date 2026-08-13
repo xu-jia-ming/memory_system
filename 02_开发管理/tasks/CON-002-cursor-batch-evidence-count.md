@@ -5,13 +5,13 @@
 ```yaml
 task_id: CON-002
 task_name: Cursor 分页批量读取与 Evidence 计数
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "85875ff4d86ad39ccff9d4632088713ef8b052af"
 branch: "feat/CON-002-cursor-batch-evidence-count"
 created_at: "2026-08-13 10:37 UTC"
-updated_at: "2026-08-13 18:55 UTC"
+updated_at: "2026-08-13 19:20 UTC"
 spec_sections:
   - "§2.1.9 Neo4j 记忆图谱数据模型（Memory / Evidence 字段；user_id 隔离）"
   - "§2.2.12 Evidence 加载（user_id 双端隔离模式；本任务复用 OPTIONAL MATCH 隔离语义，非 retrieval evidence_count）"
@@ -41,7 +41,7 @@ approval_gates:
   amendment_recorded: true
   human_plan_approved: true
   developer_authorized: true
-  reviewer_authorized: false
+  reviewer_authorized: true
   release_operator_authorized: true
 release_phases:
   PLAN_LANDING: "NORMAL only; after PLAN_APPROVED, Release Operator may land approved planning files on main and create exact feature branch feat/CON-002-cursor-batch-evidence-count"
@@ -618,7 +618,7 @@ docs(plan): add CON-002 cursor batch evidence count plan
 - [x] C1..C5 白名单与边界契约通过
 - [x] Ruff 通过
 - [x] Mypy 通过（新增文件）
-- [ ] Review 无 P0/P1
+- [x] Review 无 P0/P1
 
 ## 26. 风险与阻塞项
 
@@ -666,6 +666,7 @@ out_of_scope_changes:
 | 2026-08-13 10:37 UTC | planning | 创建 Task Plan；同步 progress/master_plan | N/A（规划-only） | baseline `85875ff` verified；`approval_posture=AWAIT_PLAN_REVIEW`；Developer NOT authorized |
 | 2026-08-13 10:50 UTC | plan_amendment_001 | 人工 PLAN_APPROVED；吸收 SF-1..SF-5 | N/A | `approval_posture=PLAN_APPROVED`；Developer authorized；Release Operator PLAN_LANDING next |
 | 2026-08-13 18:55 UTC | implementation | 创建 consolidation_batch models、batch service、Neo4j read repository；unit + contract 测试 | 39 passed；ruff PASS；mypy PASS（3 new src files） | `status=tested`；零 durable write；OPTIONAL MATCH 零 Evidence 契约；U13-U15 pagination metadata |
+| 2026-08-13 19:20 UTC | post_merge_cleanup | Release Operator `POST_MERGE_CLEANUP`；治理文件标记 completed；feat 分支删除 | N/A | PR #51 MERGED；implementation `a13ab31`；merge `3b26549`；CODE_REVIEW_APPROVED P0=0 P1=0 P2=2 P3=2 non-blocking；`next_action=CON-003 planned / NOT AUTO-STARTED` |
 
 ## 30. 实际执行结果
 
@@ -698,10 +699,16 @@ out_of_scope_changes:
 ### Review 结果
 
 ```yaml
+code_review: CODE_REVIEW_APPROVED
 p0: 0
 p1: 0
-p2: 0
-p3: 0
+p2: 2
+p3: 2
+p2_nonblocking:
+  - id: P2-1
+    summary: "C1 contract test untracked-file blind spot（白名单 diff 未覆盖未跟踪文件）"
+  - id: P2-2
+    summary: "null archive_id Evidence 不计入 distinct 的显式测试缺口（LD-2 已文档化）"
 review_report: null
 ```
 
@@ -710,10 +717,19 @@ review_report: null
 ```yaml
 branch: feat/CON-002-cursor-batch-evidence-count
 plan_commit: a3d0c26f1864e399d2562f1648c99584fe77d8e4
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: a13ab31bb98598740198001d8bfee3f21d6b565a
+implementation_commit_message: "feat(con): add consolidation cursor batch read and evidence count"
+pr: "#51"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/51"
+pr_state: MERGED
+pr_base: main
+pr_head: feat/CON-002-cursor-batch-evidence-count
+merge_commit: 3b26549c41b91a1bbdd72237865a5d3d4fb5324d
+merged_at: "2026-08-13T11:15:50Z"
+status_record_committed: null
+release_gate: COMPLETED
 ```
 
 ### 最终状态
 
-`tested`
+`completed`
