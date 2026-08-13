@@ -5,14 +5,14 @@
 ```yaml
 task_id: CON-005
 task_name: Consolidation Integration + E2E
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "010d74112fb760907e710f2ba27123e021dd3d61"
 branch: "feat/CON-005-consolidation-integration-e2e"
 milestone: "v0.5.0-consolidation"
 created_at: "2026-08-13 22:15 UTC"
-updated_at: "2026-08-13 23:15 UTC"
+updated_at: "2026-08-13 23:30 UTC"
 spec_sections:
   - "§2.3.4 调度、互斥与批量扫描（cursor、evaluation_time、用户隔离 — E2E 验证）"
   - "§2.3.8 强化与软遗忘规则（边界 only — 无 status/ES/content 副作用）"
@@ -57,8 +57,8 @@ approval_gates:
   human_plan_approved: true
   human_plan_approved_at: "2026-08-13T14:37:00Z"
   developer_authorized: true
-  reviewer_authorized: false
-  release_operator_authorized: false
+  reviewer_authorized: true
+  release_operator_authorized: true
 release_phases:
   PLAN_LANDING: "NORMAL only; after PLAN_APPROVED, Release Operator may land approved planning files on main and create exact feature branch feat/CON-005-consolidation-integration-e2e"
   IMPLEMENTATION_RELEASE: "only after implementation is approved; feature branch whitelist only; no push to main"
@@ -736,7 +736,8 @@ out_of_scope_changes:
 p0: 0
 p1: 0
 p2: 0
-p3: 0
+p3: 3
+code_review: CODE_REVIEW_APPROVED
 review_report: null
 ```
 
@@ -745,13 +746,19 @@ review_report: null
 ```yaml
 branch: feat/CON-005-consolidation-integration-e2e
 plan_commit: 2862b7a
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: a8625ea81f21a686f2c84a0a9e204e313c4e95c9
+implementation_commit_message: "test(con): add consolidation neo4j integration and e2e suite"
+pr: "#54"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/54"
+pr_state: OPEN
+pr_base: main
+pr_head: feat/CON-005-consolidation-integration-e2e
+release_gate: WAITING_FOR_PR_MERGE
 ```
 
 ### 最终状态
 
-`tested`
+`committed`
 
 ## 28. CON_005_PLAN_RESULT（Planner 摘要）
 
@@ -776,6 +783,6 @@ con004_section15_supersede: "owns in-process Integration/E2E + mutex; APSchedule
 metrics: "existing consolidation_runs_total + ConsolidationRunMetrics only (MV-4 incl. invalid_memory_count)"
 dependency_changes_expected: NONE
 completion_closes_milestone: "v0.5.0-consolidation"
-next_action: "Code Reviewer on feat/CON-005-consolidation-integration-e2e"
-status: tested
+next_action: WAITING_FOR_PR_MERGE
+status: committed
 ```
