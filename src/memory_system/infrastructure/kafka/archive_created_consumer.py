@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import time
@@ -25,6 +26,17 @@ from memory_system.domain.services.extraction_task_consumer_service import (
 from memory_system.settings.models import KafkaConsumerSettings
 
 MEMORY_EXTRACTION_CONSUMER_GROUP: Final[str] = "memory-extraction-group"
+
+
+def remaining_shutdown_seconds(
+    shutdown_started_monotonic: float | None,
+    shutdown_timeout_seconds: int,
+) -> float:
+    if shutdown_started_monotonic is None:
+        return float(shutdown_timeout_seconds)
+    elapsed = time.monotonic() - shutdown_started_monotonic
+    return max(0.0, float(shutdown_timeout_seconds) - elapsed)
+
 
 _EMPTY_ID_FIELDS: Final[tuple[str, ...]] = (
     "archive_id",
@@ -194,6 +206,8 @@ async def run_archive_created_consumer_loop(
     on_record: Callable[[ConsumerRecord[Any, Any], bool], Awaitable[None]] | None = None,
     max_records: int | None = None,
     idle_deadline_monotonic: float | None = None,
+    get_shutdown_started: Callable[[], float | None] | None = None,
+    shutdown_timeout_seconds: int = 0,
 ) -> int:
     """Serial poll loop (max 1). Commits only when processing returns True.
 
@@ -219,14 +233,51 @@ async def run_archive_created_consumer_loop(
 
         for _tp, records in batch.items():
             for record in records:
+                shutdown_started = (
+                    get_shutdown_started() if get_shutdown_started is not None else None
+                )
                 try:
-                    should_commit = await process_consumer_record(
-                        record=record,
-                        mongodb=mongodb,
-                        pipeline=pipeline,
-                        clock=clock,
-                        logger=log,
+                    if shutdown_started is not None and shutdown_timeout_seconds > 0:
+                        remaining = remaining_shutdown_seconds(
+                            shutdown_started,
+                            shutdown_timeout_seconds,
+                        )
+                        if remaining <= 0:
+                            log.error(
+                                "shutdown budget exhausted before in-flight record "
+                                "topic=%s partition=%s offset=%s",
+                                record.topic,
+                                record.partition,
+                                record.offset,
+                            )
+                            return processed
+                        should_commit = await asyncio.wait_for(
+                            process_consumer_record(
+                                record=record,
+                                mongodb=mongodb,
+                                pipeline=pipeline,
+                                clock=clock,
+                                logger=log,
+                            ),
+                            timeout=remaining,
+                        )
+                    else:
+                        should_commit = await process_consumer_record(
+                            record=record,
+                            mongodb=mongodb,
+                            pipeline=pipeline,
+                            clock=clock,
+                            logger=log,
+                        )
+                except TimeoutError:
+                    log.error(
+                        "in-flight archive created record timed out during shutdown "
+                        "topic=%s partition=%s offset=%s",
+                        record.topic,
+                        record.partition,
+                        record.offset,
                     )
+                    return processed
                 except (MalformedArchiveCreatedEventError, ArchiveCreatedKeyMismatchError):
                     log.error(
                         "stopping consumer after fail-closed record topic=%s partition=%s "

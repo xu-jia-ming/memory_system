@@ -6,6 +6,7 @@ import asyncio
 import logging
 import signal
 import sys
+import time
 
 from neo4j import AsyncDriver, AsyncGraphDatabase
 
@@ -36,6 +37,16 @@ from memory_system.settings.models import Settings
 _logger = logging.getLogger(__name__)
 
 
+def remaining_shutdown_seconds(
+    shutdown_started_monotonic: float | None,
+    shutdown_timeout_seconds: int,
+) -> float:
+    if shutdown_started_monotonic is None:
+        return float(shutdown_timeout_seconds)
+    elapsed = time.monotonic() - shutdown_started_monotonic
+    return max(0.0, float(shutdown_timeout_seconds) - elapsed)
+
+
 class _WriteBatchAdapter:
     def __init__(self, repository: ConsolidationMemoryWriteRepository) -> None:
         self._repository = repository
@@ -47,11 +58,19 @@ class _WriteBatchAdapter:
         return await write_batch(request, self._repository)
 
 
-def _install_stop_handlers(stop_event: asyncio.Event) -> None:
+def _install_stop_handlers(
+    stop_event: asyncio.Event,
+    shutdown_started_monotonic: list[float | None],
+) -> None:
     loop = asyncio.get_running_loop()
+
+    def _handle_stop() -> None:
+        shutdown_started_monotonic[0] = time.monotonic()
+        stop_event.set()
+
     for signum in (signal.SIGINT, signal.SIGTERM):
         try:
-            loop.add_signal_handler(signum, stop_event.set)
+            loop.add_signal_handler(signum, _handle_stop)
         except (NotImplementedError, RuntimeError):
             continue
 
@@ -72,6 +91,9 @@ async def _run_worker(settings: Settings) -> None:
         max_connection_pool_size=settings.neo4j.max_connection_pool_size,
     )
     scheduler = None
+    mutex: ConsolidationMutex | None = None
+    current_run_task: asyncio.Task[None] | None = None
+    shutdown_started_monotonic: list[float | None] = [None]
     try:
         async with neo4j_driver.session() as session:
             await session.run("RETURN 1")
@@ -100,21 +122,78 @@ async def _run_worker(settings: Settings) -> None:
         )
 
         async def run_callback(evaluation_time: int) -> None:
-            await run_service.execute_run(evaluation_time)
+            nonlocal current_run_task
+
+            async def _run() -> None:
+                try:
+                    await run_service.execute_run(evaluation_time)
+                finally:
+                    nonlocal current_run_task
+                    current_run_task = None
+
+            current_run_task = asyncio.create_task(_run())
+            await current_run_task
 
         scheduler = create_consolidation_scheduler(settings, run_callback)
         if scheduler is not None:
             scheduler.start()
 
         stop_event = asyncio.Event()
-        _install_stop_handlers(stop_event)
+        _install_stop_handlers(stop_event, shutdown_started_monotonic)
         await stop_event.wait()
     finally:
+        shutdown_timeout_seconds = settings.shutdown.consolidation_worker_timeout_seconds
+        remaining = remaining_shutdown_seconds(
+            shutdown_started_monotonic[0],
+            shutdown_timeout_seconds,
+        )
+
+        in_flight_task = current_run_task
+        if in_flight_task is not None and not in_flight_task.done():
+            try:
+                await asyncio.wait_for(
+                    in_flight_task,
+                    timeout=remaining,
+                )
+            except TimeoutError:
+                _logger.error(
+                    "memory-consolidation-worker in-flight run timed out during shutdown"
+                )
+                if not in_flight_task.done():
+                    in_flight_task.cancel()
+                    try:
+                        await in_flight_task
+                    except asyncio.CancelledError:
+                        pass
+                if mutex is not None and mutex.is_held():
+                    _logger.warning(
+                        "releasing consolidation mutex after shutdown deadline cancel"
+                    )
+                    await mutex.release()
+
+        remaining = remaining_shutdown_seconds(
+            shutdown_started_monotonic[0],
+            shutdown_timeout_seconds,
+        )
+
         if scheduler is not None:
-            scheduler.shutdown(wait=True)
+            try:
+                await asyncio.wait_for(
+                    asyncio.to_thread(scheduler.shutdown, wait=True),
+                    timeout=remaining,
+                )
+            except TimeoutError:
+                _logger.error(
+                    "memory-consolidation-worker scheduler shutdown timed out"
+                )
+
+        remaining = remaining_shutdown_seconds(
+            shutdown_started_monotonic[0],
+            shutdown_timeout_seconds,
+        )
         await _close_neo4j(
             neo4j_driver,
-            timeout_seconds=settings.shutdown.consolidation_worker_timeout_seconds,
+            timeout_seconds=int(remaining),
         )
 
 

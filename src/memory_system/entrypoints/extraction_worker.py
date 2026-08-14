@@ -29,6 +29,16 @@ from memory_system.settings.models import Settings
 _logger = logging.getLogger(__name__)
 
 
+def remaining_shutdown_seconds(
+    shutdown_started_monotonic: float | None,
+    shutdown_timeout_seconds: int,
+) -> float:
+    if shutdown_started_monotonic is None:
+        return float(shutdown_timeout_seconds)
+    elapsed = time.monotonic() - shutdown_started_monotonic
+    return max(0.0, float(shutdown_timeout_seconds) - elapsed)
+
+
 async def _close_worker_resources(
     *,
     consumer: AIOKafkaConsumer | None,
@@ -52,11 +62,19 @@ async def _close_worker_resources(
         _logger.error("memory-extraction-worker graceful shutdown timed out")
 
 
-def _install_stop_handlers(stop_event: asyncio.Event) -> None:
+def _install_stop_handlers(
+    stop_event: asyncio.Event,
+    shutdown_started_monotonic: list[float | None],
+) -> None:
     loop = asyncio.get_running_loop()
+
+    def _handle_stop() -> None:
+        shutdown_started_monotonic[0] = time.monotonic()
+        stop_event.set()
+
     for signum in (signal.SIGINT, signal.SIGTERM):
         try:
-            loop.add_signal_handler(signum, stop_event.set)
+            loop.add_signal_handler(signum, _handle_stop)
         except (NotImplementedError, RuntimeError):
             # Some embedding environments do not expose signal handlers.
             continue
@@ -94,6 +112,7 @@ async def _run_worker(settings: Settings) -> None:
         ),
     )
     consumer: AIOKafkaConsumer | None = None
+    shutdown_started_monotonic: list[float | None] = [None]
     try:
         await mongodb.admin.command("ping")
         async with neo4j_driver.session() as session:
@@ -115,22 +134,30 @@ async def _run_worker(settings: Settings) -> None:
         )
         await consumer.start()
         stop_event = asyncio.Event()
-        _install_stop_handlers(stop_event)
+        _install_stop_handlers(stop_event, shutdown_started_monotonic)
         await run_archive_created_consumer_loop(
             consumer=consumer,
             mongodb=mongodb,
             pipeline=pipeline,
             clock=lambda: int(time.time()),
             should_stop=stop_event.is_set,
+            get_shutdown_started=lambda: shutdown_started_monotonic[0],
+            shutdown_timeout_seconds=settings.shutdown.extraction_worker_timeout_seconds,
         )
     finally:
+        close_timeout_seconds = int(
+            remaining_shutdown_seconds(
+                shutdown_started_monotonic[0],
+                settings.shutdown.extraction_worker_timeout_seconds,
+            )
+        )
         await _close_worker_resources(
             consumer=consumer,
             mongodb=mongodb,
             neo4j_driver=neo4j_driver,
             elasticsearch=elasticsearch,
             http_client=http_client,
-            timeout_seconds=settings.shutdown.extraction_worker_timeout_seconds,
+            timeout_seconds=close_timeout_seconds,
         )
 
 

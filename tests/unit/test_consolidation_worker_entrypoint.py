@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -47,7 +48,10 @@ class TestW2EnabledSchedulerWiring:
             ) as create_scheduler,
             patch(
                 "memory_system.entrypoints.consolidation_worker._install_stop_handlers",
-                side_effect=lambda event: event.set(),
+                side_effect=lambda event, started: (
+                    started.__setitem__(0, time.monotonic()),
+                    event.set(),
+                ),
             ),
         ):
             await consolidation_worker._run_worker(SETTINGS)

@@ -731,7 +731,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| OPS-001 | Graceful Shutdown、连接池、Timeout 与 Retry 总检 | §3.24, §3.25 | 前述全部业务阶段 | approved |
+| OPS-001 | Graceful Shutdown、连接池、Timeout 与 Retry 总检 | §3.24, §3.25 | 前述全部业务阶段 | committed |
 | OPS-002 | 日志、指标、敏感信息与用户隔离审计 | §3.27, §3.21 | 前述全部 | planned |
 | OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | planned |
 | OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | planned |
@@ -747,7 +747,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **预期生产变更**：3 文件（`extraction_worker.py` + `archive_created_consumer.py` + `consolidation_worker.py`）若 HARD_BLOCK 修复；否则 NONE。
 - **测试**：4 unit 文件 + U10a/b/c + U12/U13；既有 settings/compose/kafka INT 回归。
 - **计划文件**：`02_开发管理/tasks/OPS-001-graceful-shutdown-pools-timeout-retry.md`
-- **规划备注**：Amendment 001（2026-08-14）落实 shared shutdown budget + consumer 白名单 + run task 跟踪；`workflow_mode=NORMAL`；baseline `8fb64f1`；Round 2 `PLAN_APPROVED`（人工确认 2026-08-14）；**approved — PLAN_LANDING 进行中**。
+- **状态备注**：`committed`（implementation_commit `61afe0d9fc44116e8a8f08b1058840a3d3f4701c`；plan_commit `1ce8b65`；CODE_REVIEW_APPROVED R2 P0=0 P1=0；F-008/F-011 shared 270s budget；scoped 20 unit + entrypoint regression passed；ruff/mypy PASS；`next_action=WAITING_FOR_PR_MERGE`；不得触碰 DEV-006/PR#13）。
 
 ---
 
