@@ -12,7 +12,7 @@ phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: OPS-004
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/OPS-004-ci-gates-coverage-threshold
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -26,7 +26,7 @@ planning_baseline_main: "85c1470417c27c4d2c688f22db7a36775b0aef79"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_OPS-004_plan_file: 02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md
-formal_OPS-004_status: tested
+formal_OPS-004_status: committed
 formal_OPS-004_workflow_mode: NORMAL
 formal_OPS-004_workflow_mode_source: explicit
 formal_OPS-004_baseline: "85c1470417c27c4d2c688f22db7a36775b0aef79"
@@ -53,7 +53,17 @@ formal_OPS-004_human_plan_approved: true
 formal_OPS-004_human_plan_approved_at: "2026-08-14 06:06 UTC"
 formal_OPS-004_plan_commit: "4d5d5199f071d4205d7ce7c4aa3d67efe9ef5436"
 formal_OPS-004_plan_landing_completed_at: "2026-08-14 06:06 UTC"
-formal_OPS-004_next_action: "Code Reviewer on feat/OPS-004-ci-gates-coverage-threshold"
+formal_OPS-004_implementation_commit: "599650108a3441f92e9fd586a9ae7ac020c81548"
+formal_OPS-004_implementation_commit_message: "ci(ops): add GitHub Actions merge-gate and coverage threshold"
+formal_OPS-004_code_review: CODE_REVIEW_APPROVED
+formal_OPS-004_p0: 0
+formal_OPS-004_p1: 0
+formal_OPS-004_pr: "#58"
+formal_OPS-004_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/58"
+formal_OPS-004_pr_state: OPEN
+formal_OPS-004_pr_base: main
+formal_OPS-004_pr_head: "feat/OPS-004-ci-gates-coverage-threshold"
+formal_OPS-004_next_action: "await human PR #58 merge; POST_MERGE_CLEANUP after MERGED"
 formal_OPS-003_plan_file: 02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md
 formal_OPS-003_status: completed
 formal_OPS-003_workflow_mode: NORMAL

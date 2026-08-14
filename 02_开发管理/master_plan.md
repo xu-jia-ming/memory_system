@@ -734,7 +734,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | OPS-001 | Graceful Shutdown、连接池、Timeout 与 Retry 总检 | §3.24, §3.25 | 前述全部业务阶段 | completed |
 | OPS-002 | 日志、指标、敏感信息与用户隔离审计 | §3.27, §3.21 | 前述全部 | completed |
 | OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | completed |
-| OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | planned |
+| OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | committed |
 | E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | planned |
 | REL-001 | MVP RC Review 与验收清单 | `05_测试与验收/mvp_acceptance_checklist.md` | E2E-001 | planned |
 
@@ -784,7 +784,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **预期生产变更**：`.github/workflows/ci.yml`；`scripts/ci/run_merge_gate.sh`；`pyproject.toml`（`fail_under` + marker）；`README.md`（CI 文档）。
 - **测试**：`test_ops004_ci_workflow_contract.py`；条件修 `test_extraction_llm_service` / `test_extraction_task_consumer_service` mock；scope-boundary marker 分层。
 - **计划文件**：`02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md`
-- **状态备注**：`planned`（Amendment 002 absorbed from CODE_REVIEW_REJECTED P1-1）；1395 unit+contract pass / 91.26% cov；71 integration pass / 183 skip；9 OPS-004 contract pass；`mypy src` = 0 errors；BL-RUFF-001 8-file ruff auto-fix pending；BL-MYPY-001 tests/scripts mypy DEFERRED；`next_action=DEVELOPER_RESUME Amendment 002`。
+- **状态备注**：`committed`（implementation `599650108a3441f92e9fd586a9ae7ac020c81548`；PR #58 OPEN base=main head=feat/OPS-004-ci-gates-coverage-threshold；CODE_REVIEW_APPROVED P0=0/P1=0；1395 unit+contract pass / 91.26% cov；71 integration pass / 183 skip；9 OPS-004 contract pass；`mypy src` = 0 errors；BL-MYPY-001 tests/scripts mypy DEFERRED；`next_action=await PR #58 merge`）。
 
 ---
 
