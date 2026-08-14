@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — OPS-003 approved (post OPS-002)
+current_phase: Phase 5 — OPS-003 tested (post OPS-002)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: OPS-003
-current_task_status: approved
-current_branch: main
+current_task_status: tested
+current_branch: feat/OPS-003-full-migration-compose-blank-environment-validation
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -26,7 +26,7 @@ planning_baseline_main: "93ffefdcbba8fc74a45842b956185bee8d0f2004"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_OPS-003_plan_file: 02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md
-formal_OPS-003_status: approved
+formal_OPS-003_status: tested
 formal_OPS-003_workflow_mode: NORMAL
 formal_OPS-003_workflow_mode_source: explicit
 formal_OPS-003_baseline: "93ffefdcbba8fc74a45842b956185bee8d0f2004"
@@ -37,10 +37,10 @@ formal_OPS-003_blocking_open_issues: []
 formal_OPS-003_nonblocking_open_issues: []
 formal_OPS-003_dependency_changes_expected: NONE
 formal_OPS-003_migration_changes_expected: NONE
-formal_OPS-003_production_file_whitelist: "README.md; scripts/compose.sh; scripts/start_embedding.sh; scripts/migrate.py; runtime.py; compose.yaml; compose.test.yaml (Phase A confirm; default NONE if audit clean)"
-formal_OPS-003_test_file_whitelist: "tests/contract/test_ops003_migration_compose_inventory.py; tests/integration/test_ops003_blank_environment_bootstrap.py; tests/integration/test_api_readiness.py (optional align)"
-formal_OPS-003_audit_summary: "17 preliminary findings — 6 COMPLIANT baseline; 3 HARD_BLOCK (§3.17 full bootstrap INT / three apps / readiness ready); 4 DEFERRED (check_env_example CI/preflight/GPU/OPS-004); BLANK-ENV-001 locked test stack isolation"
-formal_OPS-003_note: "Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=0; human PLAN_APPROVED 2026-08-14; Amendment 001; BLANK-ENV-001 test stack only; forbidden modify 001–004 migration content;不得触碰 DEV-006/PR#13"
+formal_OPS-003_production_file_whitelist: "NONE (Phase A audit clean — no production remediations)"
+formal_OPS-003_test_file_whitelist: "tests/contract/test_ops003_migration_compose_inventory.py; tests/integration/test_ops003_blank_environment_bootstrap.py; tests/integration/test_api_readiness.py"
+formal_OPS-003_audit_summary: "17 findings — 8 COMPLIANT; 3 HARD_BLOCK REMEDIATED (I-OPS3-01/02 + INJ-OPS3-01); 1 SAFE_AUTO REMEDIATED (BLANK-ENV-001 none); 4 DEFERRED"
+formal_OPS-003_note: "Implementation complete; BLANK-ENV-001 locked --embedding=none; INT-SKIP-001 module skip; no 001-004 migration changes; no production file changes"
 formal_OPS-003_plan_review: PLAN_APPROVED
 formal_OPS-003_plan_review_round: 2
 formal_OPS-003_plan_review_blocker: 0
@@ -49,7 +49,12 @@ formal_OPS-003_plan_review_should_fix: 0
 formal_OPS-003_human_plan_approved: true
 formal_OPS-003_human_plan_approved_at: "2026-08-14 03:57 UTC"
 formal_OPS-003_amendment: "001 — §19/§20 whitelist alignment; INJ-OPS3-01 Step 2b; INT-SKIP-001; embedding mode clarification"
-formal_OPS-003_next_action: "Developer Step 0 — Phase A 只读审计"
+formal_OPS-003_plan_commit: "6d007ea00dfd565b5e3ac0f193de4b18867ba336"
+formal_OPS-003_plan_landing_completed_at: "2026-08-14 04:05 UTC"
+formal_OPS-003_scoped_tests: "53 passed / 1 skipped (legacy readiness host:8000)"
+formal_OPS-003_ruff: PASS
+formal_OPS-003_mypy: PASS
+formal_OPS-003_next_action: "Code Reviewer — scoped §16 regression"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -1860,6 +1865,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-14 04:05 UTC | OPS-003 | approved → PLAN_LANDING | Release Operator PLAN_LANDING；plan_commit `6d007ea` on main；push via 17890 proxy；feat `feat/OPS-003-full-migration-compose-blank-environment-validation` created @ 6d007ea | 未实施 | 不得触碰 DEV-006/PR#13 |
 | 2026-08-14 10:29 UTC | OPS-002 | planned (Amendment 001) | Round 1 PLAN_REJECTED 修订：MF-1 `api/app.py`；MF-2 F-006 方案 A（7-file HARD_BLOCK inventory + 4-file DEFERRED）；SF-1 MET-AUDIT-001 解释 A；SF-2 F-007 optional；SF-3 scoped test commands；SF-4 structlog rationale；未实施 | MUST_FIX #1/#2 + SHOULD_FIX 已落实；`next_action=计划审查 Round 2`；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 02:17 UTC | OPS-002 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan；preliminary Findings §12；同步 progress/master_plan 规划态；baseline `c7011aa` MATCH | `approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 10:04 UTC | OPS-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `61afe0d9fc44116e8a8f08b1058840a3d3f4701c`、record `70b5084cc67251dbfb193459b3840a6fb52141e7`、merge `9749bd6a86d94919daf4a59be4035872d070fe1e`；仅更新 OPS-001 三份治理文件并创建 `docs(status): complete OPS-001 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED R2 P0=0/P1=0/P2=2/P3=2 non-blocking；F-008/F-011 shared 270s budget；scoped 20 unit + entrypoint regression passed；ruff/mypy PASS；Amendment 001；`next_action=OPS-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
