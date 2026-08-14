@@ -732,7 +732,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | OPS-001 | Graceful Shutdown、连接池、Timeout 与 Retry 总检 | §3.24, §3.25 | 前述全部业务阶段 | completed |
-| OPS-002 | 日志、指标、敏感信息与用户隔离审计 | §3.27, §3.21 | 前述全部 | approved |
+| OPS-002 | 日志、指标、敏感信息与用户隔离审计 | §3.27, §3.21 | 前述全部 | completed |
 | OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | planned |
 | OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | planned |
 | E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | planned |
@@ -759,7 +759,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **预期生产变更**：`api/app.py` + observability + 7-file F-006 inventory + coordinator/consumer/retrieval + entrypoints（见 Task Plan §20）；isolation 生产变更仅 F-015 审计后追加；`middleware.py` 仅 F-007 可选。
 - **测试**：`test_ops002_*` unit/contract + 复跑既有 privacy/isolation integration。
 - **计划文件**：`02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md`
-- **状态备注**：`tested`（implementation on `feat/OPS-002-logging-metrics-sensitive-user-isolation-audit`；OPS-002 unit 14 + contract 7 + DEV-005 12 + EXT-008 INT 7 passed；ruff/mypy scoped PASS；F-007 optional skipped；F-013 DEFERRED；context_read INT 需 Redis 未跑）；`next_action=Code Reviewer`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`completed`（plan `f79f815`；implementation `7ddcf9234bbc56e227db956b83ecc38c73d1aa90`；record `f2e95ca97fb5472838859886bac8db85c8697735`；PR #56 MERGED `fef784dbae4de421507eb9dbe5b7ac7f94588b0d` mergedAt `2026-08-14T03:43:24Z`；OPS-002 unit 14 + contract 7 + DEV-005 12 + EXT-008 INT 7 passed；ruff/mypy scoped PASS；CODE_REVIEW_APPROVED P0=0 P1=0；F-007 optional skipped；F-013 DEFERRED；context_read INT 需 Redis 未跑；Amendment 001；feat 分支已删）；`next_action=OPS-003 planned`；不得触碰 DEV-006/PR#13。
 
 ---
 

@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — OPS-002 approved (post OPS-001)
+current_phase: Phase 5 — OPS-002 completed (post OPS-001)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: OPS-002
-current_task_status: committed
-current_branch: feat/OPS-002-logging-metrics-sensitive-user-isolation-audit
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -97,7 +97,7 @@ formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
 next_action: "计划审查"
 formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
-formal_OPS-002_status: approved
+formal_OPS-002_status: completed
 formal_OPS-002_workflow_mode: NORMAL
 formal_OPS-002_workflow_mode_source: explicit
 formal_OPS-002_baseline: "c7011aaac123915976389da8d8f18191269a0313"
@@ -120,11 +120,27 @@ formal_OPS-002_plan_review_must_fix: 0
 formal_OPS-002_plan_review_should_fix: 0
 formal_OPS-002_human_plan_approved: true
 formal_OPS-002_human_plan_approved_at: "2026-08-14 02:51 UTC"
-formal_OPS-002_next_action: "Await PR merge / POST_MERGE_CLEANUP"
-formal_OPS-002_status: committed
+formal_OPS-002_next_action: "OPS-003 planned / NOT AUTO-STARTED"
 formal_OPS-002_plan_commit: "f79f81537f55b4e28bc07b55a0aff1cd5864b72a"
 formal_OPS-002_implementation_commit: "7ddcf9234bbc56e227db956b83ecc38c73d1aa90"
 formal_OPS-002_implementation_commit_message: "fix(ops): OPS-002 logging metrics sensitive info user isolation audit"
+formal_OPS-002_status_record_committed: f2e95ca97fb5472838859886bac8db85c8697735
+formal_OPS-002_code_review: CODE_REVIEW_APPROVED
+formal_OPS-002_p0: 0
+formal_OPS-002_p1: 0
+formal_OPS-002_p2: 0
+formal_OPS-002_p3: 0
+formal_OPS-002_scoped_tests: "OPS-002 unit 14 + contract 7 + DEV-005 12 + EXT-008 INT 7; ruff/mypy scoped PASS"
+formal_OPS-002_pr: "#56"
+formal_OPS-002_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/56"
+formal_OPS-002_pr_state: MERGED
+formal_OPS-002_pr_base: main
+formal_OPS-002_pr_head: "feat/OPS-002-logging-metrics-sensitive-user-isolation-audit"
+formal_OPS-002_merge_commit: fef784dbae4de421507eb9dbe5b7ac7f94588b0d
+formal_OPS-002_merged_at: "2026-08-14T03:43:24Z"
+formal_OPS-002_release_gate: COMPLETED
+formal_OPS-002_approval_posture: "POST_MERGE_CLEANUP — completed"
+formal_OPS-002_note: "POST_MERGE_CLEANUP；implementation 7ddcf9234bbc56e227db956b83ecc38c73d1aa90；record f2e95ca97fb5472838859886bac8db85c8697735；PR #56 MERGED（base=main，head=feat/OPS-002-logging-metrics-sensitive-user-isolation-audit，merge fef784dbae4de421507eb9dbe5b7ac7f94588b0d，mergedAt=2026-08-14T03:43:24Z）；fetch 后 origin/main 已通过 --ff-only 同步；CODE_REVIEW_APPROVED P0=0/P1=0；F-007 optional skipped；F-013 DEFERRED；scoped unit+contract+regression passed；ruff/mypy PASS；Amendment 001；feat 分支本地/远程已删除；next_action=OPS-003 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13"
 formal_OPS-001_plan_file: 02_开发管理/tasks/OPS-001-graceful-shutdown-pools-timeout-retry.md
 formal_OPS-001_status: completed
 formal_OPS-001_plan_commit: "1ce8b65feaf8569c971e93c1b33ef7a4e9cafb5d"
@@ -1509,7 +1525,7 @@ formal_DEV-OPS-008_mypy: PASS
 formal_DEV-OPS-008_kafka_lz4_integration: "2 passed"
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
 historical_next_action_EXT-002: "EXT-002 tested; next_action=Code Review; do NOT start EXT-003; do NOT touch DEV-006/PR#13"
-next_action: "Developer on feat/OPS-002-logging-metrics-sensitive-user-isolation-audit post-PLAN_LANDING"
+next_action: "OPS-003 planned / NOT AUTO-STARTED"
 last_role_result: PLANNER
 blocking_reason: null
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
