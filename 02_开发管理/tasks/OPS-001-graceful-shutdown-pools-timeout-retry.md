@@ -5,7 +5,7 @@
 ```yaml
 task_id: OPS-001
 task_name: Graceful Shutdown, Connection Pools, Timeout & Retry MVP-wide Audit
-status: approved
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "8fb64f10255add1a57404f6894cc374780d33413"
@@ -538,12 +538,34 @@ out_of_scope_changes:
 |---|---|---|---|---|
 | 2026-08-13 23:55 UTC | planning | 创建本 Task Plan；审计矩阵；progress/master_plan 规划态 | 未实施 | 发现 F-008/F-011 HARD_BLOCK；F-015 DEFERRED |
 | 2026-08-14 00:45 UTC | planning (Amendment 001) | Round 1 PLAN_REJECTED 修订：共享 270s 总预算；consumer 入白名单；F-011 run task 跟踪；U10a/b/c | 未实施 | MUST_FIX #1/#2 + SHOULD_FIX 已落实；等待 Round 2 Review |
-| 2026-08-14 08:53 UTC | approved | 人工确认 PLAN_APPROVED；Round 2 PLAN_APPROVED（BLOCKER=0/MUST_FIX=0/SHOULD_FIX=3） | 未实施 | 等待 Release Operator PLAN_LANDING |
+| 2026-08-14 10:00 UTC | IMPLEMENTATION_RELEASE | implementation `61afe0d9fc44116e8a8f08b1058840a3d3f4701c`；docs(status): record on feat | scoped 20 unit + entrypoint regression；ruff/mypy PASS | phase=IMPLEMENTATION_RELEASE；`next_action=WAITING_FOR_PR_MERGE` |
+| 2026-08-14 09:11 UTC | PLAN_LANDING | Release Operator；plan_commit `1ce8b65` pushed main；feat branch created | N/A | phase=PLAN_LANDING RELEASE_COMPLETED |
 
 ## 27. 实际执行结果
 
-（实施后填写）
+### 实际修改文件
+
+| 文件 | 结果 |
+|---|---|
+| `src/memory_system/entrypoints/extraction_worker.py` | F-008 shared shutdown budget wiring |
+| `src/memory_system/infrastructure/kafka/archive_created_consumer.py` | F-008 cancellable in-flight + no commit on timeout |
+| `src/memory_system/entrypoints/consolidation_worker.py` | F-011 in_flight_task + Phase A/B/C shared budget |
+| `tests/unit/test_ops001_extraction_worker_shutdown.py` | 创建 |
+| `tests/unit/test_ops001_consolidation_worker_shutdown.py` | 创建 |
+| `tests/unit/test_ops001_runtime_pools_timeouts.py` | 创建 |
+| `tests/unit/test_ops001_kafka_offset_shutdown.py` | 创建 |
+| `tests/unit/test_consolidation_worker_entrypoint.py` | entrypoint regression fix |
+
+### Git 记录
+
+```yaml
+branch: feat/OPS-001-graceful-shutdown-pools-timeout-retry
+plan_commit: 1ce8b65feaf8569c971e93c1b33ef7a4e9cafb5d
+implementation_commit: 61afe0d9fc44116e8a8f08b1058840a3d3f4701c
+implementation_commit_message: "fix(ops): bound worker shutdown shared 270s budget"
+release_gate: WAITING_FOR_PR_MERGE
+```
 
 ### 最终状态
 
-`approved`
+`committed`
