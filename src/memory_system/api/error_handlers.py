@@ -43,15 +43,30 @@ def build_error_response(
     )
 
 
+def _should_redact_validation_key(key: str) -> bool:
+    lower = key.lower()
+    return "secret" in lower or "api_key" in lower or "authorization" in lower
+
+
 def _sanitize_validation_errors(errors: list[dict[str, Any]] | Any) -> list[dict[str, Any]]:
     sanitized: list[dict[str, Any]] = []
     for item in list(errors):
         entry = dict(item)
+        location = entry.get("loc")
+        if isinstance(location, tuple | list):
+            entry["loc"] = [
+                (
+                    "<redacted>"
+                    if isinstance(part, str) and _should_redact_validation_key(part)
+                    else part
+                )
+                for part in location
+            ]
         if "ctx" in entry:
             ctx = entry.get("ctx")
             if isinstance(ctx, dict):
                 entry["ctx"] = {
-                    key: "<redacted>" if "secret" in key.lower() else value
+                    key: "<redacted>" if _should_redact_validation_key(key) else value
                     for key, value in ctx.items()
                 }
         sanitized.append(entry)

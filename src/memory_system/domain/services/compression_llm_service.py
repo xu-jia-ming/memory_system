@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import json
-import logging
 import time
 from typing import TYPE_CHECKING, Literal
 
+import structlog
 from pydantic import ValidationError
 
 from memory_system.domain.models.compression_llm import (
@@ -29,7 +29,7 @@ if TYPE_CHECKING:
     from memory_system.infrastructure.llm.protocol import LLMClient
 
 MAX_SCHEMA_ATTEMPTS = 2
-_logger = logging.getLogger(__name__)
+_logger = structlog.get_logger(__name__)
 
 
 def _validate_input(input: CompressionLlmInput) -> str | None:
@@ -247,13 +247,12 @@ def _log_outcome(
     duration_ms: int,
 ) -> None:
     _logger.info(
-        "compression_llm outcome=%s model=%s prompt_version=%s "
-        "request_id=%s error_code=%s attempt_count=%s duration_ms=%s",
-        outcome.value,
-        model,
-        COMPRESSION_PROMPT_VERSION,
-        request_id,
-        error_code,
-        attempt_count,
-        duration_ms,
+        "compression_llm",
+        outcome=outcome.value,
+        model=model,
+        prompt_version=COMPRESSION_PROMPT_VERSION,
+        request_id=request_id,
+        error_code=error_code,
+        attempt_count=attempt_count,
+        duration_ms=duration_ms,
     )

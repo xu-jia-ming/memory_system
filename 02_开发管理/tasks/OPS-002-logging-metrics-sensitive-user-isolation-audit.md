@@ -5,13 +5,13 @@
 ```yaml
 task_id: OPS-002
 task_name: Logging, Metrics, Sensitive Information & User Isolation Audit
-status: approved
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "c7011aaac123915976389da8d8f18191269a0313"
 branch: "feat/OPS-002-logging-metrics-sensitive-user-isolation-audit"
 created_at: "2026-08-14 02:17 UTC"
-updated_at: "2026-08-14 02:51 UTC"
+updated_at: "2026-08-14 03:05 UTC"
 spec_sections:
   - "§3.21 Memory API 鉴权与接口暴露"
   - "§3.23 Request ID（worker task_run_id 交叉引用）"
@@ -679,6 +679,9 @@ test_file_whitelist:
 | 2026-08-14 02:17 UTC | planning | 创建本 Task Plan；preliminary Findings §12；progress/master_plan 规划态 | 未实施 | 19 preliminary findings；6 HARD_BLOCK；2 DEFERRED；MET-AUDIT-001 待 Step 0 确认 |
 | 2026-08-14 10:29 UTC | planning (Amendment 001) | Round 1 PLAN_REJECTED 修订：MF-1 `api/app.py`；MF-2 F-006 方案 A（7-file inventory）；SF-1..SF-4 | 未实施 | MUST_FIX #1/#2 + SHOULD_FIX 已落实；`next_action=计划审查 Round 2` |
 | 2026-08-14 02:51 UTC | plan review Round 2 | PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=0；human PLAN_APPROVED；治理回写 approved | 未实施 | `next_action=PLAN_LANDING` → Developer on feat post-landing |
+| 2026-08-14 03:05 UTC | Step 0 audit confirm | Phase A：F-015→COMPLIANT（§7.3 INT + C-OPS2 inventory）；F-013/F-006-D 保持 DEFERRED；MET-AUDIT-001 解释 A 确认 | 未改代码 | 无新增 HARD_BLOCK |
+| 2026-08-14 03:05 UTC | Steps 1-4 implement | logging service_name/task_run_id；7-file structlog；metrics F-008..F-012；F-017 validation redact | OPS-002 unit+contract 21 passed | 无 Contract 变更 |
+| 2026-08-14 03:05 UTC | Step 6 + regression | scoped ruff/mypy PASS；DEV-005 contract 12 passed；EXT-008 INT 7 passed | 40 passed scoped | context_read INT 需 Redis（环境不可用 SKIP） |
 
 ## 24. 实际执行结果
 
@@ -686,22 +689,43 @@ test_file_whitelist:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `src/memory_system/observability/logging.py` | 参数化 `service_name`；合并 contextvars 允许字段 |
+| `src/memory_system/observability/request_context.py` | `task_run_id` + `bind_log_context` / `clear_task_context` |
+| `src/memory_system/observability/metrics.py` | `record_compression` / `record_extraction_terminal` / `record_retrieval` |
+| `src/memory_system/observability/consolidation_run_telemetry.py` | structlog JSON kwargs |
+| `src/memory_system/api/app.py` | `configure_logging(..., service_name="memory-api")` |
+| `src/memory_system/api/error_handlers.py` | validation `api_key`/`secret` loc+ctx redaction (F-017) |
+| `src/memory_system/domain/services/compression_llm_service.py` | structlog 迁移 |
+| `src/memory_system/domain/services/extraction_llm_service.py` | structlog 迁移 |
+| `src/memory_system/domain/services/extraction_task_consumer_service.py` | structlog + extraction metrics |
+| `src/memory_system/domain/services/compression_coordinator_service.py` | `compression_total` 接线 |
+| `src/memory_system/domain/services/retrieval_api_service.py` | `retrieval_*` metrics 接线 |
+| `src/memory_system/entrypoints/extraction_worker.py` | service_name + structlog |
+| `src/memory_system/entrypoints/consolidation_worker.py` | service_name + task_run_id + structlog |
+| `src/memory_system/infrastructure/kafka/archive_created_consumer.py` | structlog + per-record `task_run_id` bind |
+| `tests/unit/test_ops002_logging_context.py` | 新建 U-OPS2-01..05 |
+| `tests/unit/test_ops002_metrics_wiring.py` | 新建 U-OPS2-10..12 |
+| `tests/unit/test_ops002_sensitive_log_guards.py` | 新建 U-OPS2-07 + guards |
+| `tests/contract/test_ops002_observability_contract.py` | 新建 C-OPS2-01..04 |
+| `tests/contract/test_ops002_user_isolation_inventory.py` | 新建 isolation inventory |
 
 ### 与原计划的差异
 
-暂无。
+- F-007（API `user_id` bind）未实现（optional；不阻塞验收）。
+- F-013 `kafka_consumer_lag` 保持 DEFERRED_FOR_MVP。
+- `test_context_read_redis` 回归需 live Redis；本环境连接拒绝，未计入 scoped PASS。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit (OPS-002) | `uv run pytest tests/unit/test_ops002_*.py -q` | 14 passed |
+| Contract (OPS-002) | `uv run pytest tests/contract/test_ops002_*.py -q` | 7 passed |
+| Regression DEV-005 | `uv run pytest tests/contract/test_api_shell_contract.py -q` | 12 passed |
+| Regression EXT-008 INT | `uv run pytest tests/integration/test_ext008_extraction_admin_http.py -q` | 7 passed |
+| Regression context_read | `uv run pytest tests/integration/test_context_read_redis.py -q` | SKIP（Redis 不可用） |
+| Ruff | scoped §16 whitelist | PASS |
+| Mypy | scoped §16 whitelist | PASS |
 
 ### Review 结果
 
@@ -716,12 +740,12 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/OPS-002-logging-metrics-sensitive-user-isolation-audit
+plan_commit: f79f81537f55b4e28bc07b55a0aff1cd5864b72a
+implementation_commit: 7ddcf9234bbc56e227db956b83ecc38c73d1aa90
+implementation_commit_message: "fix(ops): OPS-002 logging metrics sensitive info user isolation audit"
 ```
 
 ### 最终状态
 
-`approved`
+`committed`

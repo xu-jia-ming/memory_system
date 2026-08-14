@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import asyncio
-import logging
 import signal
 import sys
 import time
+from uuid import uuid4
 
+import structlog
 from neo4j import AsyncDriver, AsyncGraphDatabase
 
 from memory_system.domain.models.consolidation_write import (
@@ -31,10 +32,11 @@ from memory_system.infrastructure.scheduling.consolidation_scheduler import (
     create_consolidation_scheduler,
 )
 from memory_system.observability.logging import configure_logging
+from memory_system.observability.request_context import bind_log_context, clear_task_context
 from memory_system.settings import get_settings
 from memory_system.settings.models import Settings
 
-_logger = logging.getLogger(__name__)
+_logger = structlog.get_logger(__name__)
 
 
 def remaining_shutdown_seconds(
@@ -125,9 +127,12 @@ async def _run_worker(settings: Settings) -> None:
             nonlocal current_run_task
 
             async def _run() -> None:
+                task_run_id = str(uuid4())
+                bind_log_context(task_run_id=task_run_id)
                 try:
                     await run_service.execute_run(evaluation_time)
                 finally:
+                    clear_task_context()
                     nonlocal current_run_task
                     current_run_task = None
 
@@ -209,7 +214,7 @@ def main() -> int:
         )
         return 1
 
-    configure_logging(settings)
+    configure_logging(settings, service_name="memory-consolidation-worker")
     try:
         asyncio.run(_run_worker(settings))
     except KeyboardInterrupt:

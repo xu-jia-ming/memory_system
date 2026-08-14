@@ -7,10 +7,14 @@ from typing import Any, cast
 
 import structlog
 
-from memory_system.observability.request_context import get_request_id
+from memory_system.observability.request_context import (
+    _LOG_CONTEXT_FIELDS,
+    get_request_id,
+)
 from memory_system.settings.models import Settings
 
-SERVICE_NAME = "memory-api"
+DEFAULT_SERVICE_NAME = "memory-api"
+_configured_service_name = DEFAULT_SERVICE_NAME
 
 
 def _add_service_context(
@@ -18,15 +22,21 @@ def _add_service_context(
     _method_name: str,
     event_dict: dict[str, Any],
 ) -> dict[str, Any]:
-    event_dict.setdefault("service_name", SERVICE_NAME)
+    event_dict.setdefault("service_name", _configured_service_name)
     request_id = get_request_id()
     if request_id is not None:
         event_dict.setdefault("request_id", request_id)
+    for field_name, context_var in _LOG_CONTEXT_FIELDS.items():
+        value = context_var.get()
+        if value is not None:
+            event_dict.setdefault(field_name, value)
     return event_dict
 
 
-def configure_logging(settings: Settings) -> None:
+def configure_logging(settings: Settings, *, service_name: str = DEFAULT_SERVICE_NAME) -> None:
     """Configure structlog JSON logging with spec minimum fields."""
+    global _configured_service_name
+    _configured_service_name = service_name
     structlog.configure(
         processors=cast(
             Any,

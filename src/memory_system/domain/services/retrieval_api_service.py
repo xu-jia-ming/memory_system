@@ -66,6 +66,7 @@ from memory_system.infrastructure.tei.tei_tokenize_client import (
     TeiTokenizeClient,
     TokenizeServiceError,
 )
+from memory_system.observability.metrics import record_retrieval
 from memory_system.settings.models import Settings
 
 _logger = structlog.get_logger(__name__)
@@ -172,6 +173,33 @@ class RetrievalApiService:
         deadline: float,
     ) -> RetrievalApiSuccess:
         loop = asyncio.get_event_loop()
+        started = time.perf_counter()
+        metric_mode_holder = {"mode": "hybrid"}
+        try:
+            return await self._retrieve_impl(
+                input_data,
+                deadline=deadline,
+                loop=loop,
+                started=started,
+                metric_mode_holder=metric_mode_holder,
+            )
+        except RetrievalApiFatalError:
+            record_retrieval(
+                mode=metric_mode_holder["mode"],
+                status="error",
+                duration_seconds=time.perf_counter() - started,
+            )
+            raise
+
+    async def _retrieve_impl(
+        self,
+        input_data: RetrievalApiInput,
+        *,
+        deadline: float,
+        loop: asyncio.AbstractEventLoop,
+        started: float,
+        metric_mode_holder: dict[str, str],
+    ) -> RetrievalApiSuccess:
         current_time = int(time.time())
         user_id, normalized_query, memory_types = validate_retrieval_input(input_data)
         query_hash = hashlib.sha256(normalized_query.encode()).hexdigest()
@@ -292,6 +320,12 @@ class RetrievalApiService:
 
         if not self._has_remaining_time(deadline, loop):
             warning_entries.append(WarningEntry("retrieval_timeout_degraded"))
+            metric_mode_holder["mode"] = scoring_success.retrieval_mode
+            record_retrieval(
+                mode=scoring_success.retrieval_mode,
+                status="degraded",
+                duration_seconds=time.perf_counter() - started,
+            )
             return RetrievalApiSuccess(
                 retrieval_mode=scoring_success.retrieval_mode,
                 warnings=collect_and_order_warnings(warning_entries),
@@ -327,6 +361,17 @@ class RetrievalApiService:
                     else:
                         raise
 
+        metric_mode_holder["mode"] = scoring_success.retrieval_mode
+        status = (
+            "degraded"
+            if any(entry.kind == "retrieval_timeout_degraded" for entry in warning_entries)
+            else "success"
+        )
+        record_retrieval(
+            mode=scoring_success.retrieval_mode,
+            status=status,
+            duration_seconds=time.perf_counter() - started,
+        )
         return RetrievalApiSuccess(
             retrieval_mode=scoring_success.retrieval_mode,
             warnings=collect_and_order_warnings(warning_entries),
