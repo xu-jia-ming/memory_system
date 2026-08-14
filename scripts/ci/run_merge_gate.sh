@@ -29,8 +29,8 @@ if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
   export INTEGRATION_SHARED_STACK=1
   export PYTEST_INTEGRATION_STRICT_SKIPS=1
   uv run pytest tests/integration \
-    -m "not runtime_contract_gate" \
-    -q
+    -m "not runtime_contract_gate and not preflight_integration" \
+    -v --durations=15 --timeout=300
 else
   echo "Docker not available — skipping integration (INT-SKIP-001)"
 fi

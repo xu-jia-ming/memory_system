@@ -33,7 +33,9 @@ INTEGRATION_INVENTORY = (
     "INTEGRATION_SHARED_STACK",
     "PYTEST_INTEGRATION_STRICT_SKIPS",
     "uv run pytest tests/integration",
-    "not runtime_contract_gate",
+    "not runtime_contract_gate and not preflight_integration",
+    "--timeout=300",
+    "--durations=15",
 )
 
 GHA_BOOTSTRAP_INVENTORY = (

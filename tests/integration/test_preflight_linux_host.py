@@ -9,6 +9,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.preflight_integration
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PREFLIGHT_SH = REPO_ROOT / "scripts" / "preflight" / "check_linux_host.sh"
 

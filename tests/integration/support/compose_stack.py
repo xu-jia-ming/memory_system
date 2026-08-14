@@ -86,6 +86,11 @@ def neo4j_uri_from_container() -> str:
     return f"neo4j://{ip}:7687"
 
 
+def redis_uri_from_container() -> str:
+    ip = wait_container_ip(CONTAINER_NAMES["redis"])
+    return f"redis://{ip}:6379/0"
+
+
 def mongo_uri_from_container() -> str:
     ip = wait_container_ip(CONTAINER_NAMES["mongodb"])
     return f"mongodb://{ip}:27017/{MONGODB_DATABASE}"

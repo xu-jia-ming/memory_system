@@ -32,6 +32,7 @@ test = [
     "pytest>=9.1,<9.2",
     "pytest-asyncio>=1.4,<1.5",
     "pytest-cov>=7.1,<7.2",
+    "pytest-timeout>=2.4,<2.5",
 ]
 
 [build-system]
@@ -66,6 +67,7 @@ addopts = ["--strict-markers"]
 markers = [
     "runtime_contract_gate: real TEI CPU 8g reference contract gate (not default CI)",
     "task_scope_boundary: task-plan git-diff scope guard (not default CI)",
+    "preflight_integration: slow Linux host preflight checks (not default CI)",
     "integration: integration tests requiring infrastructure",
 ]
 

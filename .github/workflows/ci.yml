@@ -53,8 +53,8 @@ jobs:
       - run: bash scripts/ci/prewarm_integration_stack.sh
       - run: |
           uv run pytest tests/integration \
-            -m "not runtime_contract_gate" \
-            -q
+            -m "not runtime_contract_gate and not preflight_integration" \
+            -v --durations=15 --timeout=300
         env:
           INTEGRATION_SHARED_STACK: "1"
           PYTEST_INTEGRATION_STRICT_SKIPS: "1"
