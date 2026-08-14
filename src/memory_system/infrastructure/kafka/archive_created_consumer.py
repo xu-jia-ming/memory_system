@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import asyncio
 import json
-import logging
 import time
 from collections.abc import Awaitable, Callable, Mapping
 from typing import Any, Final
+from uuid import uuid4
 
+import structlog
 from aiokafka import AIOKafkaConsumer, TopicPartition  # type: ignore[import-untyped]
 from aiokafka.structs import ConsumerRecord  # type: ignore[import-untyped]
 from pydantic import ValidationError
@@ -23,7 +24,10 @@ from memory_system.domain.services.extraction_pipeline_port import ExtractionPip
 from memory_system.domain.services.extraction_task_consumer_service import (
     process_archive_created_event,
 )
+from memory_system.observability.request_context import bind_log_context, clear_task_context
 from memory_system.settings.models import KafkaConsumerSettings
+
+_logger = structlog.get_logger(__name__)
 
 MEMORY_EXTRACTION_CONSUMER_GROUP: Final[str] = "memory-extraction-group"
 
@@ -166,32 +170,41 @@ async def process_consumer_record(
     mongodb: AsyncMongoClient[Any],
     pipeline: ExtractionPipelinePort,
     clock: Callable[[], int],
-    logger: logging.Logger | None = None,
+    logger: structlog.stdlib.BoundLogger | None = None,
 ) -> bool:
     """Parse + key-check + process one record. Returns whether offset should commit.
 
     Malformed / key mismatch raise (C8 / C3.1) — caller must not commit and must stop.
     """
-    log = logger or logging.getLogger(__name__)
+    log = logger or _logger
     event = parse_archive_created_event_value(record.value)
     try:
         assert_message_key_matches_user_id(record.key, event)
     except ArchiveCreatedKeyMismatchError:
         log.error(
-            "archive created key mismatch archive_id=%s event_user_id=%s key=%r",
-            event.archive_id,
-            event.user_id,
-            None if record.key is None else record.key[:64],
+            "archive created key mismatch",
+            archive_id=event.archive_id,
+            event_user_id=event.user_id,
+            key_prefix=None if record.key is None else record.key[:64],
         )
         raise
 
-    result = await process_archive_created_event(
-        mongodb=mongodb,
-        event=event,
-        pipeline=pipeline,
-        clock=clock,
-        logger=log,
+    task_run_id = str(uuid4())
+    bind_log_context(
+        task_run_id=task_run_id,
+        user_id=event.user_id,
+        archive_id=event.archive_id,
     )
+    try:
+        result = await process_archive_created_event(
+            mongodb=mongodb,
+            event=event,
+            pipeline=pipeline,
+            clock=clock,
+            logger=log,
+        )
+    finally:
+        clear_task_context()
     return result.should_commit_offset
 
 
@@ -201,7 +214,7 @@ async def run_archive_created_consumer_loop(
     mongodb: AsyncMongoClient[Any],
     pipeline: ExtractionPipelinePort,
     clock: Callable[[], int],
-    logger: logging.Logger | None = None,
+    logger: structlog.stdlib.BoundLogger | None = None,
     should_stop: Callable[[], bool] | None = None,
     on_record: Callable[[ConsumerRecord[Any, Any], bool], Awaitable[None]] | None = None,
     max_records: int | None = None,
@@ -217,7 +230,7 @@ async def run_archive_created_consumer_loop(
     ``idle_deadline_monotonic``: when set, return after this ``time.monotonic()``
     if no further records arrive (test harness stop condition).
     """
-    log = logger or logging.getLogger(__name__)
+    log = logger or _logger
     processed = 0
     while True:
         if should_stop is not None and should_stop():
@@ -244,11 +257,10 @@ async def run_archive_created_consumer_loop(
                         )
                         if remaining <= 0:
                             log.error(
-                                "shutdown budget exhausted before in-flight record "
-                                "topic=%s partition=%s offset=%s",
-                                record.topic,
-                                record.partition,
-                                record.offset,
+                                "shutdown budget exhausted before in-flight record",
+                                topic=record.topic,
+                                partition=record.partition,
+                                offset=record.offset,
                             )
                             return processed
                         should_commit = await asyncio.wait_for(
@@ -271,20 +283,18 @@ async def run_archive_created_consumer_loop(
                         )
                 except TimeoutError:
                     log.error(
-                        "in-flight archive created record timed out during shutdown "
-                        "topic=%s partition=%s offset=%s",
-                        record.topic,
-                        record.partition,
-                        record.offset,
+                        "in-flight archive created record timed out during shutdown",
+                        topic=record.topic,
+                        partition=record.partition,
+                        offset=record.offset,
                     )
                     return processed
                 except (MalformedArchiveCreatedEventError, ArchiveCreatedKeyMismatchError):
                     log.error(
-                        "stopping consumer after fail-closed record topic=%s partition=%s "
-                        "offset=%s",
-                        record.topic,
-                        record.partition,
-                        record.offset,
+                        "stopping consumer after fail-closed record",
+                        topic=record.topic,
+                        partition=record.partition,
+                        offset=record.offset,
                     )
                     raise
 

@@ -86,3 +86,17 @@ def observe_http_request(
     }
     HTTP_REQUESTS_TOTAL.labels(**labels).inc()
     HTTP_REQUEST_DURATION_SECONDS.labels(**labels).observe(duration_seconds)
+
+
+def record_compression(status: str) -> None:
+    COMPRESSION_TOTAL.labels(status=status.lower()).inc()
+
+
+def record_extraction_terminal(*, status: str, duration_seconds: float) -> None:
+    EXTRACTION_TASKS_TOTAL.labels(status=status.lower()).inc()
+    EXTRACTION_TASK_DURATION_SECONDS.observe(duration_seconds)
+
+
+def record_retrieval(*, mode: str, status: str, duration_seconds: float) -> None:
+    RETRIEVAL_REQUESTS_TOTAL.labels(mode=mode, status=status).inc()
+    RETRIEVAL_DURATION_SECONDS.labels(mode=mode).observe(duration_seconds)

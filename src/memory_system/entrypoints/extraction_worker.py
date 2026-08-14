@@ -3,13 +3,13 @@
 from __future__ import annotations
 
 import asyncio
-import logging
 import signal
 import sys
 import time
 from typing import Any
 
 import httpx
+import structlog
 from aiokafka import AIOKafkaConsumer  # type: ignore[import-untyped]
 from elasticsearch import AsyncElasticsearch
 from neo4j import AsyncDriver, AsyncGraphDatabase
@@ -26,7 +26,7 @@ from memory_system.observability.logging import configure_logging
 from memory_system.settings import get_settings
 from memory_system.settings.models import Settings
 
-_logger = logging.getLogger(__name__)
+_logger = structlog.get_logger(__name__)
 
 
 def remaining_shutdown_seconds(
@@ -173,7 +173,7 @@ def main() -> int:
         )
         return 1
 
-    configure_logging(settings)
+    configure_logging(settings, service_name="memory-extraction-worker")
     try:
         asyncio.run(_run_worker(settings))
     except KeyboardInterrupt:

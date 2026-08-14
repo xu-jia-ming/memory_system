@@ -759,7 +759,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **预期生产变更**：`api/app.py` + observability + 7-file F-006 inventory + coordinator/consumer/retrieval + entrypoints（见 Task Plan §20）；isolation 生产变更仅 F-015 审计后追加；`middleware.py` 仅 F-007 可选。
 - **测试**：`test_ops002_*` unit/contract + 复跑既有 privacy/isolation integration。
 - **计划文件**：`02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md`
-- **状态备注**：`approved`（Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0；human PLAN_APPROVED 2026-08-14；baseline `c7011aa`；workflow_mode=NORMAL explicit；Amendment 001；`next_action=Developer on feat/OPS-002-logging-metrics-sensitive-user-isolation-audit post-PLAN_LANDING`；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`tested`（implementation on `feat/OPS-002-logging-metrics-sensitive-user-isolation-audit`；OPS-002 unit 14 + contract 7 + DEV-005 12 + EXT-008 INT 7 passed；ruff/mypy scoped PASS；F-007 optional skipped；F-013 DEFERRED；context_read INT 需 Redis 未跑）；`next_action=Code Reviewer`；不得触碰 DEV-006/PR#13。
 
 ---
 

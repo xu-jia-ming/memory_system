@@ -12,8 +12,8 @@ phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: OPS-002
-current_task_status: approved
-current_branch: main
+current_task_status: tested
+current_branch: feat/OPS-002-logging-metrics-sensitive-user-isolation-audit
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed

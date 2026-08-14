@@ -42,7 +42,7 @@ def create_app(
     llm_client: LLMClient | None = None,
 ) -> FastAPI:
     resolved_settings = settings or get_settings()
-    configure_logging(resolved_settings)
+    configure_logging(resolved_settings, service_name="memory-api")
 
     if app_state is not None:
 

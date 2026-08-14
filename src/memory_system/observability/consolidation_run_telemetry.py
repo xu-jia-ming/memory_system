@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-import logging
 from typing import Literal
+
+import structlog
 
 from memory_system.domain.models.consolidation_run import ConsolidationRunMetrics
 from memory_system.observability.metrics import CONSOLIDATION_RUNS_TOTAL
 
-_logger = logging.getLogger(__name__)
+_logger = structlog.get_logger(__name__)
 
 RunPrometheusStatus = Literal["success", "read_failed", "write_failed"]
 
@@ -28,27 +29,23 @@ def log_run_completed(
     batch_size: int | None = None,
     error_code: str | None = None,
 ) -> None:
-    payload = {
-        "run_id": run_id,
-        "evaluation_time": evaluation_time,
-        "status": status,
-        "scanned_count": metrics.scanned_count,
-        "updated_count": metrics.updated_count,
-        "version_conflict_count": metrics.version_conflict_count,
-        "invalid_memory_count": metrics.invalid_memory_count,
-        "missing_evidence_count": metrics.missing_evidence_count,
-        "batch_count": metrics.batch_count,
-        "run_duration_ms": metrics.run_duration_ms,
-    }
-    if user_id is not None:
-        payload["user_id"] = user_id
-    if cursor is not None:
-        payload["cursor"] = cursor
-    if batch_size is not None:
-        payload["batch_size"] = batch_size
-    if error_code is not None:
-        payload["error_code"] = error_code
-    _logger.info("consolidation run completed", extra={"consolidation_run": payload})
+    _logger.info(
+        "consolidation run completed",
+        run_id=run_id,
+        evaluation_time=evaluation_time,
+        status=status,
+        scanned_count=metrics.scanned_count,
+        updated_count=metrics.updated_count,
+        version_conflict_count=metrics.version_conflict_count,
+        invalid_memory_count=metrics.invalid_memory_count,
+        missing_evidence_count=metrics.missing_evidence_count,
+        batch_count=metrics.batch_count,
+        run_duration_ms=metrics.run_duration_ms,
+        user_id=user_id,
+        cursor=cursor,
+        batch_size=batch_size,
+        error_code=error_code,
+    )
 
 
 def log_run_failed(
@@ -77,13 +74,9 @@ def log_run_failed(
 def log_mutex_skipped(*, evaluation_time: int, skipped_trigger_count: int) -> None:
     _logger.info(
         "consolidation run skipped: mutex already held",
-        extra={
-            "consolidation_run": {
-                "evaluation_time": evaluation_time,
-                "error_code": "consolidation_already_running",
-                "skipped_trigger_count": skipped_trigger_count,
-            },
-        },
+        evaluation_time=evaluation_time,
+        error_code="consolidation_already_running",
+        skipped_trigger_count=skipped_trigger_count,
     )
 
 
@@ -95,12 +88,8 @@ def log_unhandled_run_error(
 ) -> None:
     _logger.error(
         "consolidation run unhandled error",
-        extra={
-            "consolidation_run": {
-                "run_id": run_id,
-                "evaluation_time": evaluation_time,
-                "error_type": type(exc).__name__,
-            },
-        },
+        run_id=run_id,
+        evaluation_time=evaluation_time,
+        error_type=type(exc).__name__,
         exc_info=exc,
     )

@@ -56,6 +56,7 @@ from memory_system.infrastructure.mongodb.context_archive_repository import (
     find_context_archive_by_batch_key,
 )
 from memory_system.infrastructure.redis.working_memory_repository import get_working_memory_meta
+from memory_system.observability.metrics import record_compression
 from memory_system.settings.models import ContextSettings, Settings
 
 if TYPE_CHECKING:
@@ -63,6 +64,13 @@ if TYPE_CHECKING:
 
 Clock = Callable[[], int]
 _logger = structlog.get_logger(__name__)
+
+
+def _finalize_coordination(
+    result: CompressionCoordinationResult,
+) -> CompressionCoordinationResult:
+    record_compression(result.status.value)
+    return result
 
 
 class InvalidMessageTimestampError(ValueError):
@@ -397,20 +405,26 @@ async def run_compression_coordination(
                 rounds_completed=rounds_completed,
                 round_status=CompressionStatus.FAILED,
             )
-            return CompressionCoordinationResult(
+            return _finalize_coordination(
+                CompressionCoordinationResult(
                 status=status,
                 rounds_completed=rounds_completed,
+                )
             )
 
         if meta.estimated_tokens < context.compression_trigger_tokens:
             if rounds_completed > 0:
-                return CompressionCoordinationResult(
-                    status=CompressionStatus.COMPLETED,
-                    rounds_completed=rounds_completed,
+                return _finalize_coordination(
+                    CompressionCoordinationResult(
+                        status=CompressionStatus.COMPLETED,
+                        rounds_completed=rounds_completed,
+                    )
                 )
-            return CompressionCoordinationResult(
-                status=CompressionStatus.NOT_TRIGGERED,
-                rounds_completed=0,
+            return _finalize_coordination(
+                CompressionCoordinationResult(
+                    status=CompressionStatus.NOT_TRIGGERED,
+                    rounds_completed=0,
+                )
             )
 
         round_status = await _run_single_compression_round(
@@ -433,9 +447,11 @@ async def run_compression_coordination(
                 meta_after is not None
                 and meta_after.estimated_tokens < context.compression_trigger_tokens
             ):
-                return CompressionCoordinationResult(
-                    status=CompressionStatus.COMPLETED,
-                    rounds_completed=rounds_completed,
+                return _finalize_coordination(
+                    CompressionCoordinationResult(
+                        status=CompressionStatus.COMPLETED,
+                        rounds_completed=rounds_completed,
+                    )
                 )
             continue
 
@@ -443,9 +459,11 @@ async def run_compression_coordination(
             rounds_completed=rounds_completed,
             round_status=round_status,
         )
-        return CompressionCoordinationResult(
-            status=status,
-            rounds_completed=rounds_completed,
+        return _finalize_coordination(
+            CompressionCoordinationResult(
+                status=status,
+                rounds_completed=rounds_completed,
+            )
         )
 
     meta_final = await get_working_memory_meta(redis, user_id, session_id)
@@ -453,13 +471,17 @@ async def run_compression_coordination(
         meta_final is not None
         and meta_final.estimated_tokens >= context.compression_trigger_tokens
     ):
-        return CompressionCoordinationResult(
-            status=CompressionStatus.PARTIAL_COMPLETED,
+        return _finalize_coordination(
+            CompressionCoordinationResult(
+                status=CompressionStatus.PARTIAL_COMPLETED,
+                rounds_completed=rounds_completed,
+            )
+        )
+    return _finalize_coordination(
+        CompressionCoordinationResult(
+            status=CompressionStatus.COMPLETED,
             rounds_completed=rounds_completed,
         )
-    return CompressionCoordinationResult(
-        status=CompressionStatus.COMPLETED,
-        rounds_completed=rounds_completed,
     )
 
 
@@ -530,6 +552,7 @@ async def write_working_message_with_coordination(
             raise MessageTooLargeCoordinatorError()
 
     if write_result.status == MessageWriteStatus.DUPLICATE:
+        record_compression(CompressionStatus.NOT_TRIGGERED.value)
         return WriteMessageCoordinatorResult(
             message_id=input.message_id,
             status="duplicate",
@@ -560,6 +583,8 @@ async def write_working_message_with_coordination(
             clock=now_fn,
         )
         compression_status = coord.status
+    else:
+        record_compression(CompressionStatus.NOT_TRIGGERED.value)
 
     _logger.info(
         "message_write_coordination",

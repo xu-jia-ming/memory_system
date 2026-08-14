@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import json
-import logging
 import re
 import time
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, Literal
 
+import structlog
 from pydantic import ValidationError
 from pymongo import AsyncMongoClient
 
@@ -100,7 +100,7 @@ _YEAR_PATTERN = re.compile(r"^\d{4}$")
 _YEAR_MONTH_PATTERN = re.compile(r"^\d{4}-\d{2}$")
 _YEAR_MONTH_DAY_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
-_logger = logging.getLogger(__name__)
+_logger = structlog.get_logger(__name__)
 Clock = Callable[[], int]
 
 
@@ -443,21 +443,13 @@ def _log_failure(
     error_code: str,
 ) -> None:
     _logger.error(
-        "extraction llm failed task_id=%s archive_id=%s user_id=%s "
-        "failed_stage=%s attempt_count=%s error_code=%s",
-        task_id,
-        archive_id,
-        user_id,
-        failed_stage,
-        attempt_count,
-        error_code,
-        extra={
-            "task_id": task_id,
-            "archive_id": archive_id,
-            "user_id": user_id,
-            "failed_stage": failed_stage,
-            "attempt_count": attempt_count,
-        },
+        "extraction llm failed",
+        task_id=task_id,
+        archive_id=archive_id,
+        user_id=user_id,
+        failed_stage=failed_stage,
+        attempt_count=attempt_count,
+        error_code=error_code,
     )
 
 
