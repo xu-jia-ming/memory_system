@@ -34,6 +34,7 @@ _ALLOWED_SKIP_SUBSTRINGS: tuple[str, ...] = (
 _FORBIDDEN_SKIP_SUBSTRINGS_WHEN_DOCKER: tuple[str, ...] = (
     "Docker not available",
     "did not become ready in time",
+    "did not get an IP",
     "Could not resolve",
     "Unable to start",
     "init-infra migration failed",
@@ -92,11 +93,11 @@ def _integration_shared_compose_stack() -> Iterator[None]:
         argv = cmd if isinstance(cmd, list) else []
         joined = " ".join(str(part) for part in argv)
         if "compose.sh" in joined:
-            if "down" in argv and "-v" in argv:
+            if "down" in argv:
                 if not stack_destroy_allowed():
                     return subprocess.CompletedProcess(argv, 0, "", "")
                 result = real_run(cmd, *args, **kwargs)
-                if result.returncode == 0:
+                if result.returncode == 0 and "-v" in argv:
                     reset_shared_stack_state()
                 return result
             if "run" in argv and "init-infra" in joined:
