@@ -5,13 +5,13 @@
 ```yaml
 task_id: OPS-001
 task_name: Graceful Shutdown, Connection Pools, Timeout & Retry MVP-wide Audit
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "8fb64f10255add1a57404f6894cc374780d33413"
 branch: "feat/OPS-001-graceful-shutdown-pools-timeout-retry"
 created_at: "2026-08-13 23:55 UTC"
-updated_at: "2026-08-14 00:45 UTC"
+updated_at: "2026-08-14 10:04 UTC"
 spec_sections:
   - "§3.24 连接池、超时与重试"
   - "§3.25 优雅关闭"
@@ -538,6 +538,7 @@ out_of_scope_changes:
 |---|---|---|---|---|
 | 2026-08-13 23:55 UTC | planning | 创建本 Task Plan；审计矩阵；progress/master_plan 规划态 | 未实施 | 发现 F-008/F-011 HARD_BLOCK；F-015 DEFERRED |
 | 2026-08-14 00:45 UTC | planning (Amendment 001) | Round 1 PLAN_REJECTED 修订：共享 270s 总预算；consumer 入白名单；F-011 run task 跟踪；U10a/b/c | 未实施 | MUST_FIX #1/#2 + SHOULD_FIX 已落实；等待 Round 2 Review |
+| 2026-08-14 10:04 UTC | POST_MERGE_CLEANUP | Release Operator；fetch + ff-only main；验证 merge `9749bd6` + implementation `61afe0d`；docs(status): complete on main；feat 分支已删 | N/A | phase=POST_MERGE_CLEANUP；`next_action=OPS-002 planned / NOT AUTO-STARTED` |
 | 2026-08-14 10:00 UTC | IMPLEMENTATION_RELEASE | implementation `61afe0d9fc44116e8a8f08b1058840a3d3f4701c`；docs(status): record on feat | scoped 20 unit + entrypoint regression；ruff/mypy PASS | phase=IMPLEMENTATION_RELEASE；`next_action=WAITING_FOR_PR_MERGE` |
 | 2026-08-14 09:11 UTC | PLAN_LANDING | Release Operator；plan_commit `1ce8b65` pushed main；feat branch created | N/A | phase=PLAN_LANDING RELEASE_COMPLETED |
 
@@ -563,9 +564,18 @@ branch: feat/OPS-001-graceful-shutdown-pools-timeout-retry
 plan_commit: 1ce8b65feaf8569c971e93c1b33ef7a4e9cafb5d
 implementation_commit: 61afe0d9fc44116e8a8f08b1058840a3d3f4701c
 implementation_commit_message: "fix(ops): bound worker shutdown shared 270s budget"
-release_gate: WAITING_FOR_PR_MERGE
+status_record_committed: 70b5084cc67251dbfb193459b3840a6fb52141e7
+pr: "#55"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/55"
+pr_state: MERGED
+pr_base: main
+pr_head: feat/OPS-001-graceful-shutdown-pools-timeout-retry
+merge_commit: 9749bd6a86d94919daf4a59be4035872d070fe1e
+merged_at: "2026-08-14T02:04:00Z"
+release_gate: COMPLETED
+next_action: "OPS-002 planned / NOT AUTO-STARTED"
 ```
 
 ### 最终状态
 
-`committed`
+`completed`

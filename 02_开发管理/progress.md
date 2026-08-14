@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — OPS-001 planned (post v0.5.0-consolidation)
+current_phase: Phase 5 — OPS-002 planned (post OPS-001)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: OPS-001
-current_task_status: committed
+current_task: OPS-002
+current_task_status: planned
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,8 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/OPS-001-graceful-shutdown-pools-timeout-retry.md
-planning_baseline_main: "8fb64f10255add1a57404f6894cc374780d33413"
-plan_commit: "1ce8b65feaf8569c971e93c1b33ef7a4e9cafb5d"
-current_branch: feat/OPS-001-graceful-shutdown-pools-timeout-retry
+current_plan_file: null  # OPS-002 plan not yet created
+planning_baseline_main: "9749bd6a86d94919daf4a59be4035872d070fe1e"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
@@ -97,9 +95,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "WAITING_FOR_PR_MERGE"
+next_action: "OPS-002 planned / NOT AUTO-STARTED"
 formal_OPS-001_plan_file: 02_开发管理/tasks/OPS-001-graceful-shutdown-pools-timeout-retry.md
-formal_OPS-001_status: committed
+formal_OPS-001_status: completed
 formal_OPS-001_plan_commit: "1ce8b65feaf8569c971e93c1b33ef7a4e9cafb5d"
 formal_OPS-001_workflow_mode: NORMAL
 formal_OPS-001_workflow_mode_source: explicit
@@ -122,7 +120,7 @@ formal_OPS-001_plan_review_blocker: 0
 formal_OPS-001_plan_review_must_fix: 0
 formal_OPS-001_plan_review_should_fix: 3
 formal_OPS-001_human_plan_approved_at: "2026-08-14 08:53 UTC"
-formal_OPS-001_next_action: "WAITING_FOR_PR_MERGE"
+formal_OPS-001_next_action: "OPS-002 planned / NOT AUTO-STARTED"
 formal_OPS-001_implementation_commit: "61afe0d9fc44116e8a8f08b1058840a3d3f4701c"
 formal_OPS-001_implementation_commit_message: "fix(ops): bound worker shutdown shared 270s budget"
 formal_OPS-001_plan_landing_completed_at: "2026-08-14 09:11 UTC"
@@ -133,7 +131,17 @@ formal_OPS-001_p1: 0
 formal_OPS-001_p2: 2
 formal_OPS-001_p3: 2
 formal_OPS-001_scoped_tests: "20 OPS-001 unit + entrypoint regression; kafka INT 8; settings/compose contract 5; ruff/mypy PASS"
-formal_OPS-001_note: "Amendment 001; plan_commit 1ce8b65; F-008/F-011 shared 270s budget; in_flight_task race fix; CODE_REVIEW_APPROVED R2 P0=0 P1=0 P2=2 P3=2 non-blocking;不得触碰 DEV-006/PR#13"
+formal_OPS-001_pr: "#55"
+formal_OPS-001_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/55"
+formal_OPS-001_pr_state: MERGED
+formal_OPS-001_pr_base: main
+formal_OPS-001_pr_head: "feat/OPS-001-graceful-shutdown-pools-timeout-retry"
+formal_OPS-001_merge_commit: 9749bd6a86d94919daf4a59be4035872d070fe1e
+formal_OPS-001_merged_at: "2026-08-14T02:04:00Z"
+formal_OPS-001_status_record_committed: 70b5084cc67251dbfb193459b3840a6fb52141e7
+formal_OPS-001_release_gate: COMPLETED
+formal_OPS-001_approval_posture: "POST_MERGE_CLEANUP — completed"
+formal_OPS-001_note: "POST_MERGE_CLEANUP；implementation 61afe0d9fc44116e8a8f08b1058840a3d3f4701c；record 70b5084cc67251dbfb193459b3840a6fb52141e7；PR #55 MERGED（base=main，head=feat/OPS-001-graceful-shutdown-pools-timeout-retry，merge 9749bd6a86d94919daf4a59be4035872d070fe1e，mergedAt=2026-08-14T02:04:00Z）；fetch 后 origin/main 已通过 --ff-only 同步；CODE_REVIEW_APPROVED R2 P0=0/P1=0/P2=2/P3=2 non-blocking；F-008/F-011 shared 270s budget；scoped 20 unit + entrypoint regression passed；ruff/mypy PASS；Amendment 001；feat 分支本地/远程已删除；next_action=OPS-002 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13"
 formal_CON-005_plan_file: 02_开发管理/tasks/CON-005-consolidation-integration-e2e.md
 formal_CON-005_status: completed
 formal_CON-005_workflow_mode: NORMAL
@@ -1782,6 +1790,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-14 10:04 UTC | OPS-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `61afe0d9fc44116e8a8f08b1058840a3d3f4701c`、record `70b5084cc67251dbfb193459b3840a6fb52141e7`、merge `9749bd6a86d94919daf4a59be4035872d070fe1e`；仅更新 OPS-001 三份治理文件并创建 `docs(status): complete OPS-001 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED R2 P0=0/P1=0/P2=2/P3=2 non-blocking；F-008/F-011 shared 270s budget；scoped 20 unit + entrypoint regression passed；ruff/mypy PASS；Amendment 001；`next_action=OPS-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 10:00 UTC | OPS-001 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `61afe0d9fc44116e8a8f08b1058840a3d3f4701c`；docs(status): record on feat | scoped 20 OPS-001 unit + entrypoint regression passed；ruff/mypy PASS；CODE_REVIEW_APPROVED R2 P0=0 P1=0；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 00:45 UTC | OPS-001 | planned (Amendment 001) | Round 1 PLAN_REJECTED 修订：§5.1 共享 270s 总预算；F-008 consumer 白名单；F-011 current_run_task+mutex；U10a/b/c/U12/U13；未实施 | MUST_FIX #1/#2 + SHOULD_FIX 已落实；`next_action=计划审查` Round 2 |
 | 2026-08-14 09:11 UTC | OPS-001 | approved → PLAN_LANDING | Release Operator PLAN_LANDING；plan_commit `1ce8b65` on main；push via 17890 proxy；feat `feat/OPS-001-graceful-shutdown-pools-timeout-retry` created @ 1ce8b65 | 未实施 | 不得触碰 DEV-006/PR#13 |
