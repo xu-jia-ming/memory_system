@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 4 — CON-005 completed (milestone v0.5.0-consolidation closed)
+current_phase: Phase 5 — OPS-001 planned (post v0.5.0-consolidation)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: CON-005
-current_task_status: completed
+current_task: OPS-001
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,10 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/CON-005-consolidation-integration-e2e.md
+current_plan_file: 02_开发管理/tasks/OPS-001-graceful-shutdown-pools-timeout-retry.md
+planning_baseline_main: "8fb64f10255add1a57404f6894cc374780d33413"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
-planning_baseline_main: "010d74112fb760907e710f2ba27123e021dd3d61"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -95,7 +95,31 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "OPS-001 planned / NOT AUTO-STARTED"
+next_action: "PLAN_LANDING — docs(plan) on main + create feat/OPS-001-graceful-shutdown-pools-timeout-retry"
+formal_OPS-001_plan_file: 02_开发管理/tasks/OPS-001-graceful-shutdown-pools-timeout-retry.md
+formal_OPS-001_status: approved
+formal_OPS-001_workflow_mode: NORMAL
+formal_OPS-001_workflow_mode_source: explicit
+formal_OPS-001_baseline: "8fb64f10255add1a57404f6894cc374780d33413"
+formal_OPS-001_branch: "feat/OPS-001-graceful-shutdown-pools-timeout-retry"
+formal_OPS-001_prerequisite: "SATISFIED — CON-001..005 completed; v0.5.0-consolidation closed; STM/EXT/RET all completed"
+formal_OPS-001_scope: "§3.24 pools/timeouts/retry + §3.25 graceful shutdown MVP-wide audit; Kafka extraction offset ordering; settings consistency; entrypoint lifecycle; focused failure tests (NOT E2E-001)"
+formal_OPS-001_blocking_open_issues: []
+formal_OPS-001_nonblocking_open_issues: []
+formal_OPS-001_dependency_changes_expected: NONE
+formal_OPS-001_migration_changes_expected: NONE
+formal_OPS-001_production_file_whitelist: "src/memory_system/entrypoints/extraction_worker.py; src/memory_system/infrastructure/kafka/archive_created_consumer.py; src/memory_system/entrypoints/consolidation_worker.py (Amendment 001 shared 270s budget; else NONE)"
+formal_OPS-001_test_file_whitelist: "tests/unit/test_ops001_extraction_worker_shutdown.py; tests/unit/test_ops001_consolidation_worker_shutdown.py; tests/unit/test_ops001_runtime_pools_timeouts.py; tests/unit/test_ops001_kafka_offset_shutdown.py"
+formal_OPS-001_audit_summary: "21 findings — 17 COMPLIANT; 2 HARD_BLOCK (F-008/F-011 §3.25#8 shared 270s total budget in-flight+close); 2 DEFERRED (F-015/F-016)"
+formal_OPS-001_note: "Amendment 001 @ planning; Round 1 PLAN_REJECTED revised — shared shutdown budget; archive_created_consumer.py in whitelist; current_run_task tracking + mutex defensive release; U10a/b/c; planning only @ main 8fb64f1;不得触碰 DEV-006/PR#13"
+formal_OPS-001_amendment: "001 — shared 270s budget; consumer whitelist; F-011 run task tracking"
+formal_OPS-001_plan_review: PLAN_APPROVED
+formal_OPS-001_plan_review_round: 2
+formal_OPS-001_plan_review_blocker: 0
+formal_OPS-001_plan_review_must_fix: 0
+formal_OPS-001_plan_review_should_fix: 3
+formal_OPS-001_human_plan_approved_at: "2026-08-14 08:53 UTC"
+formal_OPS-001_next_action: "PLAN_LANDING — docs(plan) on main + create feat/OPS-001-graceful-shutdown-pools-timeout-retry"
 formal_CON-005_plan_file: 02_开发管理/tasks/CON-005-consolidation-integration-e2e.md
 formal_CON-005_status: completed
 formal_CON-005_workflow_mode: NORMAL
@@ -1744,6 +1768,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-14 00:45 UTC | OPS-001 | planned (Amendment 001) | Round 1 PLAN_REJECTED 修订：§5.1 共享 270s 总预算；F-008 consumer 白名单；F-011 current_run_task+mutex；U10a/b/c/U12/U13；未实施 | MUST_FIX #1/#2 + SHOULD_FIX 已落实；`next_action=计划审查` Round 2 |
+| 2026-08-13 23:55 UTC | OPS-001 | — → planned | Planner 创建 Task Plan；审计矩阵 §4–§15；21 findings（17 COMPLIANT / 2 HARD_BLOCK F-008+F-011 §3.25#8 / 2 DEFERRED F-015+F-016）；progress/master_plan 规划态；main @ 8fb64f1 clean；未实施、未 Git 写 | `next_action=计划审查`；`production_file_whitelist` 默认 2 worker entrypoints 若 HARD_BLOCK 确认；否则 NONE；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 23:40 UTC | CON-005 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `a8625ea81f21a686f2c84a0a9e204e313c4e95c9`、record `7875e92feb417e6e9705c90396ba6e7d5d2e3034`、merge `8427868a2448fe11c9af64e3faedf5752badf8e9`；仅更新 CON-005 三份治理文件并创建 `docs(status): complete CON-005 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED R2 P0=0/P1=0/P2=0/P3=3 non-blocking；production src/** diff=NONE；real Neo4j INT 6 + E2E 6 + CON-001..004 regression 92 passed；Amendment 001 recovery semantics preserved（Run A@T1 partial+fail；Run B@T2>T1 full rescan；T1 rows re-eligible；last_consolidated_time=T2；no checkpoint）；closes `v0.5.0-consolidation` milestone ONLY；`next_action=OPS-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 23:30 UTC | CON-005 | tested → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `a8625ea81f21a686f2c84a0a9e204e313c4e95c9`；PR #54 OPEN；docs(status): record on feat | scoped INT 6 + E2E 6 + contract 4 + unit 92 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0/P1=0/P2=0/P3=3；零 src/** diff；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；不得触碰 DEV-006/PR#13 |
 | 2026-08-13 22:55 UTC | CON-005 | approved → tested | Developer Steps 1-7；§12 九文件；INT-1..6 + E2E-1..6 green；CON-001..004 unit 92 passed；contract/ruff/mypy PASS；零 src/** diff | `next_action=Code Reviewer on feat/CON-005-consolidation-integration-e2e`；不得触碰 DEV-006/PR#13 |

@@ -731,12 +731,23 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| OPS-001 | Graceful Shutdown、连接池、Timeout 与 Retry 总检 | §3.24, §3.25 | 前述全部业务阶段 | planned |
+| OPS-001 | Graceful Shutdown、连接池、Timeout 与 Retry 总检 | §3.24, §3.25 | 前述全部业务阶段 | approved |
 | OPS-002 | 日志、指标、敏感信息与用户隔离审计 | §3.27, §3.21 | 前述全部 | planned |
 | OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | planned |
 | OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | planned |
 | E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | planned |
 | REL-001 | MVP RC Review 与验收清单 | `05_测试与验收/mvp_acceptance_checklist.md` | E2E-001 | planned |
+
+#### OPS-001 Graceful Shutdown、连接池、Timeout 与 Retry 总检
+
+- **目标**：对照 §3.24 / §3.25 对三 Entrypoint、基础设施 Client、Kafka extraction offset 顺序、Settings/Compose 一致性做 MVP 全仓审计；仅对真实违规做最小修复；补齐 focused failure tests（非 E2E-001）。
+- **非目标**：OPS-002+；通用 Retry Framework；架构重写；DEV-006/PR#13；SiliconFlow embedding retry 回退（F-015 DEFERRED）。
+- **前置**：CON-001..005、STM/EXT/RET 全 completed；`v0.5.0-consolidation` closed；baseline `main @ 8fb64f1`。
+- **审计结论（规划态，Amendment 001）**：21 findings — **17 COMPLIANT**；**2 HARD_BLOCK**（F-008/F-011：§3.25 #8 worker shutdown **270s 总预算**未覆盖 in-flight+close；close 可双计 270s）；**2 DEFERRED**（F-015/F-016）。
+- **预期生产变更**：3 文件（`extraction_worker.py` + `archive_created_consumer.py` + `consolidation_worker.py`）若 HARD_BLOCK 修复；否则 NONE。
+- **测试**：4 unit 文件 + U10a/b/c + U12/U13；既有 settings/compose/kafka INT 回归。
+- **计划文件**：`02_开发管理/tasks/OPS-001-graceful-shutdown-pools-timeout-retry.md`
+- **规划备注**：Amendment 001（2026-08-14）落实 shared shutdown budget + consumer 白名单 + run task 跟踪；`workflow_mode=NORMAL`；baseline `8fb64f1`；Round 2 `PLAN_APPROVED`（人工确认 2026-08-14）；**approved — PLAN_LANDING 进行中**。
 
 ---
 
