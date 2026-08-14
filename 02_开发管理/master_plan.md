@@ -732,7 +732,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
 | OPS-001 | Graceful Shutdown、连接池、Timeout 与 Retry 总检 | §3.24, §3.25 | 前述全部业务阶段 | completed |
-| OPS-002 | 日志、指标、敏感信息与用户隔离审计 | §3.27, §3.21 | 前述全部 | planned |
+| OPS-002 | 日志、指标、敏感信息与用户隔离审计 | §3.27, §3.21 | 前述全部 | approved |
 | OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | planned |
 | OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | planned |
 | E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | planned |
@@ -747,7 +747,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **预期生产变更**：3 文件（`extraction_worker.py` + `archive_created_consumer.py` + `consolidation_worker.py`）若 HARD_BLOCK 修复；否则 NONE。
 - **测试**：4 unit 文件 + U10a/b/c + U12/U13；既有 settings/compose/kafka INT 回归。
 - **计划文件**：`02_开发管理/tasks/OPS-001-graceful-shutdown-pools-timeout-retry.md`
-- **状态备注**：`completed`（plan `1ce8b65`；implementation `61afe0d9fc44116e8a8f08b1058840a3d3f4701c`；record `70b5084cc67251dbfb193459b3840a6fb52141e7`；PR #55 MERGED `9749bd6a86d94919daf4a59be4035872d070fe1e` mergedAt `2026-08-14T02:04:00Z`；scoped 20 unit + entrypoint regression + kafka INT 8 + settings/compose contract 5 passed；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED R2 P0=0 P1=0 P2=2 P3=2 non-blocking；F-008/F-011 shared 270s budget；Amendment 001；feat 分支已删）；`next_action=OPS-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`completed`（plan `1ce8b65`；implementation `61afe0d9fc44116e8a8f08b1058840a3d3f4701c`；record `70b5084cc67251dbfb193459b3840a6fb52141e7`；PR #55 MERGED `9749bd6a86d94919daf4a59be4035872d070fe1e` mergedAt `2026-08-14T02:04:00Z`；scoped 20 unit + entrypoint regression + kafka INT 8 + settings/compose contract 5 passed；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED R2 P0=0 P1=0 P2=2 P3=2 non-blocking；F-008/F-011 shared 270s budget；Amendment 001；feat 分支已删）；`next_action=OPS-002 planned`；不得触碰 DEV-006/PR#13。
+
+#### OPS-002 日志、指标、敏感信息与用户隔离审计
+
+- **目标**：对照 §3.27 / §3.21 对 MVP 全仓做只读审计；修复 logging（structlog JSON、按进程 `service_name`、`task_run_id`）、缺失 Prometheus 业务指标接线、敏感信息泄漏与用户隔离 GAP；补齐 focused unit/contract tests（非 E2E-001）。
+- **非目标**：OPS-003+；OpenTelemetry；DEV-006/PR#13；API Contract/Schema 变更；CI 80% 门禁（OPS-004）。
+- **前置**：OPS-001 completed；CON/STM/EXT/RET 全 completed；DEV-005 observability 基线。
+- **规格章节**：§3.21、§3.23（task_run_id）、§3.27、§3.32 #8。
+- **审计结论（规划态 preliminary；Amendment 001）**：20 findings — **6 HARD_BLOCK**（worker `service_name`、`task_run_id`、F-006 7-file structlog inventory、compression/extraction/retrieval metrics 未接线）；**3 DEFERRED**（F-006-D 4 stdlib 模块 + `kafka_consumer_lag`/OpenTelemetry）；MET-AUDIT-001 **解释 A 锁定**（api scrape 见 api series；worker 非零样本见 unit）。
+- **预期生产变更**：`api/app.py` + observability + 7-file F-006 inventory + coordinator/consumer/retrieval + entrypoints（见 Task Plan §20）；isolation 生产变更仅 F-015 审计后追加；`middleware.py` 仅 F-007 可选。
+- **测试**：`test_ops002_*` unit/contract + 复跑既有 privacy/isolation integration。
+- **计划文件**：`02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md`
+- **状态备注**：`approved`（Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0；human PLAN_APPROVED 2026-08-14；baseline `c7011aa`；workflow_mode=NORMAL explicit；Amendment 001；`next_action=Developer on feat/OPS-002-logging-metrics-sensitive-user-isolation-audit post-PLAN_LANDING`；不得触碰 DEV-006/PR#13）。
 
 ---
 

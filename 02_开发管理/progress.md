@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — OPS-002 planned (post OPS-001)
+current_phase: Phase 5 — OPS-002 approved (post OPS-001)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: OPS-002
-current_task_status: planned
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,8 +21,8 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: null  # OPS-002 plan not yet created
-planning_baseline_main: "9749bd6a86d94919daf4a59be4035872d070fe1e"
+current_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
+planning_baseline_main: "c7011aaac123915976389da8d8f18191269a0313"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
@@ -95,7 +95,32 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "OPS-002 planned / NOT AUTO-STARTED"
+next_action: "计划审查"
+formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
+formal_OPS-002_status: approved
+formal_OPS-002_workflow_mode: NORMAL
+formal_OPS-002_workflow_mode_source: explicit
+formal_OPS-002_baseline: "c7011aaac123915976389da8d8f18191269a0313"
+formal_OPS-002_branch: "feat/OPS-002-logging-metrics-sensitive-user-isolation-audit"
+formal_OPS-002_prerequisite: "SATISFIED — OPS-001 completed (PR #55 MERGED); CON-001..005 completed; v0.5.0-consolidation closed; STM/EXT/RET all completed; DEV-005 completed"
+formal_OPS-002_scope: "§3.27 logging/metrics/sensitive info + §3.21 auth/user isolation MVP-wide audit; wire missing Prometheus business metrics; structlog JSON + task_run_id; focused tests (NOT E2E-001/OPS-004)"
+formal_OPS-002_blocking_open_issues: []
+formal_OPS-002_nonblocking_open_issues: []
+formal_OPS-002_dependency_changes_expected: NONE
+formal_OPS-002_migration_changes_expected: NONE
+formal_OPS-002_production_file_whitelist: "api/app.py; observability/logging.py; request_context.py; consolidation_run_telemetry.py; metrics.py; compression_llm_service.py; extraction_llm_service.py; extraction_task_consumer_service.py; compression_coordinator_service.py; retrieval_api_service.py; production_extraction_pipeline.py; entrypoints extraction/consolidation_worker.py; error_handlers.py; archive_created_consumer.py; middleware.py conditional (F-007 only); Phase A may append F-006/F-015"
+formal_OPS-002_test_file_whitelist: "tests/unit/test_ops002_logging_context.py; test_ops002_metrics_wiring.py; test_ops002_sensitive_log_guards.py; tests/contract/test_ops002_observability_contract.py; test_ops002_user_isolation_inventory.py"
+formal_OPS-002_audit_summary: "20 preliminary findings — 6 COMPLIANT baseline; 6 HARD_BLOCK (service_name/task_run_id/F-006 7-file inventory/metrics wiring); 3 DEFERRED (F-006-D 4 stdlib modules + kafka_consumer_lag/OpenTelemetry); MET-AUDIT-001 解释 A locked (api scrape vs worker unit samples)"
+formal_OPS-002_note: "Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=0; human PLAN_APPROVED 2026-08-14; Amendment 001 MF-1 api/app.py MF-2 F-006 scheme A; MET-AUDIT-001 interpretation A; baseline c7011aa; PLAN_LANDING pending;不得触碰 DEV-006/PR#13"
+formal_OPS-002_amendment: "001 — api/app.py; F-006 7-file HARD_BLOCK inventory; MET-AUDIT-001 interpretation A; scoped test commands"
+formal_OPS-002_plan_review: PLAN_APPROVED
+formal_OPS-002_plan_review_round: 2
+formal_OPS-002_plan_review_blocker: 0
+formal_OPS-002_plan_review_must_fix: 0
+formal_OPS-002_plan_review_should_fix: 0
+formal_OPS-002_human_plan_approved: true
+formal_OPS-002_human_plan_approved_at: "2026-08-14 02:51 UTC"
+formal_OPS-002_next_action: "Developer on feat/OPS-002-logging-metrics-sensitive-user-isolation-audit post-PLAN_LANDING"
 formal_OPS-001_plan_file: 02_开发管理/tasks/OPS-001-graceful-shutdown-pools-timeout-retry.md
 formal_OPS-001_status: completed
 formal_OPS-001_plan_commit: "1ce8b65feaf8569c971e93c1b33ef7a4e9cafb5d"
@@ -1480,7 +1505,7 @@ formal_DEV-OPS-008_mypy: PASS
 formal_DEV-OPS-008_kafka_lz4_integration: "2 passed"
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
 historical_next_action_EXT-002: "EXT-002 tested; next_action=Code Review; do NOT start EXT-003; do NOT touch DEV-006/PR#13"
-next_action: "计划审查 Round 2"
+next_action: "Developer on feat/OPS-002-logging-metrics-sensitive-user-isolation-audit post-PLAN_LANDING"
 last_role_result: PLANNER
 blocking_reason: null
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
@@ -1790,6 +1815,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-14 10:29 UTC | OPS-002 | planned (Amendment 001) | Round 1 PLAN_REJECTED 修订：MF-1 `api/app.py`；MF-2 F-006 方案 A（7-file HARD_BLOCK inventory + 4-file DEFERRED）；SF-1 MET-AUDIT-001 解释 A；SF-2 F-007 optional；SF-3 scoped test commands；SF-4 structlog rationale；未实施 | MUST_FIX #1/#2 + SHOULD_FIX 已落实；`next_action=计划审查 Round 2`；不得触碰 DEV-006/PR#13 |
+| 2026-08-14 02:17 UTC | OPS-002 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan；preliminary Findings §12；同步 progress/master_plan 规划态；baseline `c7011aa` MATCH | `approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 10:04 UTC | OPS-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `61afe0d9fc44116e8a8f08b1058840a3d3f4701c`、record `70b5084cc67251dbfb193459b3840a6fb52141e7`、merge `9749bd6a86d94919daf4a59be4035872d070fe1e`；仅更新 OPS-001 三份治理文件并创建 `docs(status): complete OPS-001 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED R2 P0=0/P1=0/P2=2/P3=2 non-blocking；F-008/F-011 shared 270s budget；scoped 20 unit + entrypoint regression passed；ruff/mypy PASS；Amendment 001；`next_action=OPS-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 10:00 UTC | OPS-001 | reviewed → committed | Release Operator `IMPLEMENTATION_RELEASE`；implementation `61afe0d9fc44116e8a8f08b1058840a3d3f4701c`；docs(status): record on feat | scoped 20 OPS-001 unit + entrypoint regression passed；ruff/mypy PASS；CODE_REVIEW_APPROVED R2 P0=0 P1=0；仅 feat push；禁 push main；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 00:45 UTC | OPS-001 | planned (Amendment 001) | Round 1 PLAN_REJECTED 修订：§5.1 共享 270s 总预算；F-008 consumer 白名单；F-011 current_run_task+mutex；U10a/b/c/U12/U13；未实施 | MUST_FIX #1/#2 + SHOULD_FIX 已落实；`next_action=计划审查` Round 2 |
