@@ -7,6 +7,8 @@ cd "${REPO_ROOT}"
 
 uv sync --locked
 
+cp .env.example .env
+
 echo "=== Static checks ==="
 uv run ruff check src tests scripts
 uv run mypy src

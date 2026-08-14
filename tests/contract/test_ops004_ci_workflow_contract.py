@@ -19,6 +19,7 @@ STATIC_INVENTORY = (
 )
 
 UNIT_CONTRACT_INVENTORY = (
+    "cp .env.example .env",
     "uv run pytest tests/unit tests/contract",
     "not runtime_contract_gate and not task_scope_boundary",
     "--cov=memory_system.domain",
