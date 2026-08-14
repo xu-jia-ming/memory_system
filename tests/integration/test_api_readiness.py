@@ -1,4 +1,8 @@
-"""Integration tests for memory-api readiness against compose test stack."""
+"""Integration tests for memory-api readiness against compose test stack.
+
+Superseded for full bootstrap by ``test_ops003_blank_environment_bootstrap`` (I-OPS3-01).
+INJ-OPS3-01 migrate-before-api coverage lives in OPS-003 bootstrap module.
+"""
 
 from __future__ import annotations
 
@@ -22,6 +26,10 @@ def _docker_available() -> bool:
         return False
     result = subprocess.run(["docker", "info"], capture_output=True, check=False)
     return result.returncode == 0
+
+
+if not _docker_available():
+    pytestmark = pytest.mark.skip(reason="Docker not available (INT-SKIP-001)")
 
 
 def _compose_env() -> dict[str, str]:
@@ -58,8 +66,6 @@ def _ensure_dotenv() -> None:
 
 @pytest.fixture(scope="module")
 def test_stack() -> Iterator[None]:
-    if not _docker_available():
-        pytest.skip("Docker not available")
     _ensure_dotenv()
     _compose("up", "-d", "mongodb", "kafka", "neo4j", "elasticsearch", "redis")
     deadline = time.time() + 180
@@ -69,24 +75,25 @@ def test_stack() -> Iterator[None]:
             break
         time.sleep(3)
     else:
-        pytest.skip("Test stack did not become ready in time")
+        pytest.fail("Test stack did not become ready in time (INT-SKIP-001 hard fail)")
     yield
     _compose("down", check=False)
 
 
 @pytest.mark.integration
 def test_readiness_reports_migrations_not_ready_before_migrate(test_stack: None) -> None:
+    """Legacy narrow check; full INJ-OPS3-01 in OPS-003 bootstrap module."""
     host = "127.0.0.1"
     port = 8000
     try:
         with httpx.Client(base_url=f"http://{host}:{port}", timeout=5.0) as client:
             response = client.get("/health/ready")
     except httpx.HTTPError:
-        pytest.skip("memory-api not running on test host; optional integration")
+        pytest.skip("memory-api not published on host:8000; covered by OPS-003 bootstrap INT")
         return
 
     if response.status_code not in {200, 503}:
-        pytest.skip("memory-api endpoint unavailable for optional integration")
+        pytest.skip("memory-api endpoint unavailable; covered by OPS-003 bootstrap INT")
     payload = response.json()
     assert "checks" in payload
     if payload["status"] == "ready":

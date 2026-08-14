@@ -5,13 +5,13 @@
 ```yaml
 task_id: OPS-003
 task_name: Full Migration, Compose & Blank-Environment Validation
-status: approved
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "93ffefdcbba8fc74a45842b956185bee8d0f2004"
 branch: "feat/OPS-003-full-migration-compose-blank-environment-validation"
 created_at: "2026-08-14 03:48 UTC"
-updated_at: "2026-08-14 03:57 UTC"
+updated_at: "2026-08-14 04:30 UTC"
 spec_sections:
   - "§3.3 Docker Compose 服务拓扑"
   - "§3.12 基础设施初始化"
@@ -283,18 +283,18 @@ Phase D — 回归
 | F-002 | init-infra = migrate | compose command | §3.26.6 | COMPLIANT | none | compose contract | `compose.yaml` |
 | F-003 | 无第二 init 脚本 | single entry | §3.12 | COMPLIANT | none | migrate paths contract | `scripts/` |
 | F-004 | test stack 隔离 | `memory-system-test` volumes | §3.28.2 | COMPLIANT | none | compose + migrate INT | `compose.test.yaml` |
-| F-005 | §3.17 全序列自动化 | 无单一 INT | §3.32 #1 | **HARD_BLOCK** | 新 bootstrap integration | I-OPS3-01 | 见 §13 Step 2 |
-| F-006 | migrate 后三应用启动 | 未 INT 验证 | §3.32 #1 | **HARD_BLOCK** | 同上 | I-OPS3-01 | `compose.yaml` |
-| F-007 | readiness migrations=ready | weak optional INT | §3.26.5 / §3.32 #1 | **HARD_BLOCK** | bootstrap INT poll `/health/ready` | I-OPS3-02 | `runtime.py` **仅若检查逻辑缺口** |
-| F-008 | README vs §3.17 | 表面一致 | §3.32 #9 | **AUDIT REQUIRED** | docs fix if drift | C-OPS3-01 | `README.md` |
+| F-005 | §3.17 全序列自动化 | 无单一 INT | §3.32 #1 | **HARD_BLOCK** → **REMEDIATED** | I-OPS3-01 bootstrap INT | I-OPS3-01 | `tests/integration/test_ops003_blank_environment_bootstrap.py` |
+| F-006 | migrate 后三应用启动 | 未 INT 验证 | §3.32 #1 | **HARD_BLOCK** → **REMEDIATED** | 同上 | I-OPS3-01 | `compose.yaml` (no change) |
+| F-007 | readiness migrations=ready | weak optional INT | §3.26.5 / §3.32 #1 | **HARD_BLOCK** → **REMEDIATED** | bootstrap INT poll + I-OPS3-02 | I-OPS3-01/02 | `runtime.py` (no change) |
+| F-008 | README vs §3.17 | 表面一致 | §3.32 #9 | **COMPLIANT** | C-OPS3-01 inventory | C-OPS3-01 | `README.md` (no change) |
 | F-009 | `.env.example` CI 校验 | script 存在未 CI | §3.30 P1 | DEFERRED_FOR_MVP | OPS-004 | — | `scripts/check_env_example.py` |
 | F-010 | Preflight 自动化 | manual script | Checklist A | DEFERRED_FOR_MVP | 文档映射 | optional | `scripts/preflight/` |
-| F-011 | Kafka topic 配置断言 | partial | §3.12.6 | **AUDIT REQUIRED** | extend INT or contract | I-OPS3-03 / C-OPS3-02 | `004_initial_kafka_topics.py` |
+| F-011 | Kafka topic 配置断言 | partial | §3.12.6 | **COMPLIANT** | `test_migrate_infra` covers partitions | I-OPS3-03 deferred | — | `004_initial_kafka_topics.py` (no change) |
 | F-012 | bare compose 禁令 | allowlist locked | §3.10.2 | COMPLIANT | none | wrapper contract | — |
-| F-013 | start_embedding atomic fallback | script exists | §3.17 / §3.10.5 | **AUDIT REQUIRED** | script fix if race | C-OPS3-03 | `start_embedding.sh` |
+| F-013 | start_embedding atomic fallback | script exists | §3.17 / §3.10.5 | **COMPLIANT** | C-OPS3-03 static audit | C-OPS3-03 | `start_embedding.sh` (no change) |
 | F-014 | 修改已执行 migration 内容 | 禁止 | §3.26.1 | COMPLIANT（流程） | HALT if needed | — | — |
 | F-015 | dev volumes 污染风险 | test isolation fail-closed | safety | COMPLIANT | none | migrate INT guards | — |
-| F-016 | embedding none vs current 测试策略 | inconsistent across tests | BLANK-ENV-001 | SAFE_AUTO | 统一 test bootstrap env 策略 | I-OPS3-01 | test fixtures |
+| F-016 | embedding none vs current 测试策略 | inconsistent across tests | BLANK-ENV-001 | **SAFE_AUTO** → **REMEDIATED** | locked `none` in I-OPS3-01 | I-OPS3-01 | test fixtures |
 | F-017 | check_env_example completeness | not OPS-003 gate | OPS-004 | DEFERRED | none | — | — |
 
 ## 12. 实现方案（仅 HARD_BLOCK + 必要 SAFE_AUTO）
@@ -469,17 +469,17 @@ uv run mypy scripts/migrate.py \
 
 ## 16. 验收标准
 
-- [ ] §4–§11 审计矩阵与 Findings 表完整，每项有分类与证据
-- [ ] 所有 `HARD_BLOCK` 已修复或 Reviewer 书面接受（不得静默遗留）
-- [ ] §3.32 #2：首次 migrate 成功、重复幂等、checksum 篡改失败（既有 + OPS-003 回归）
-- [ ] §3.32 #1：test stack 空白环境可完成 infra → migrate → 三应用 → `/health/ready` ready（I-OPS3-01）
-- [ ] **INJ-OPS3-01**：migrate 前启动 memory-api → `checks.migrations==not_ready` 或 HTTP 503（Step 2b）
-- [ ] **INJ-OPS3-02**：checksum 篡改 → `init-infra` non-zero（复用 `test_migrate_infra` 回归）
-- [ ] §3.32 #9：README / compose / migration 交叉引用一致（C-OPS3-01/02）；无影响主流程 TODO
-- [ ] `migration_changes_expected: NONE` 保持；未修改 001–004 已执行脚本内容
-- [ ] 既有 migrate/compose wrapper contracts 无回归
-- [ ] scoped `ruff check` / `mypy` PASS
-- [ ] `progress.md` / `master_plan.md` 实施态同步
+- [x] §4–§11 审计矩阵与 Findings 表完整，每项有分类与证据
+- [x] 所有 `HARD_BLOCK` 已修复或 Reviewer 书面接受（不得静默遗留）
+- [x] §3.32 #2：首次 migrate 成功、重复幂等、checksum 篡改失败（既有 + OPS-003 回归）
+- [x] §3.32 #1：test stack 空白环境可完成 infra → migrate → 三应用 → `/health/ready` ready（I-OPS3-01）
+- [x] **INJ-OPS3-01**：migrate 前启动 memory-api → `checks.migrations==not_ready` 或 HTTP 503（Step 2b）
+- [x] **INJ-OPS3-02**：checksum 篡改 → `init-infra` non-zero（复用 `test_migrate_infra` 回归）
+- [x] §3.32 #9：README / compose / migration 交叉引用一致（C-OPS3-01/02）；无影响主流程 TODO
+- [x] `migration_changes_expected: NONE` 保持；未修改 001–004 已执行脚本内容
+- [x] 既有 migrate/compose wrapper contracts 无回归
+- [x] scoped `ruff check` / `mypy` PASS
+- [x] `progress.md` / `master_plan.md` 实施态同步
 - [ ] Review 无 P0/P1
 
 ## 17. 风险与阻塞项
@@ -617,6 +617,11 @@ protected_regression_tests:
 | 2026-08-14 03:48 UTC | planning | 创建本 Task Plan；preliminary Findings §11；progress/master_plan 规划态 | 未实施 | 17 preliminary findings；3 HARD_BLOCK；4 DEFERRED；BLANK-ENV-001 locked test stack |
 | 2026-08-14 04:00 UTC | planning (Amendment 001) | Round 1 PLAN_REJECTED 修订：§19/§20 白名单对齐；INJ-OPS3-01 Step 2b；INT-SKIP-001；embedding 模式澄清 | 未实施 | MF-1 + SF-1～4 已落实；等待 Round 2 Review |
 | 2026-08-14 03:57 UTC | planning (Round 2) | Plan Review Round 2 PLAN_APPROVED（BLOCKER=0 MUST_FIX=0）；human PLAN_APPROVED 2026-08-14；status=approved | 未实施 | PLAN_LANDING pending |
+| 2026-08-14 04:05 UTC | PLAN_LANDING | Release Operator；plan_commit `6d007ea` pushed main；feat branch created | N/A | phase=PLAN_LANDING RELEASE_COMPLETED |
+| 2026-08-14 04:12 UTC | Step 0 Phase A | 只读审计确认 F-008/F-011/F-013 COMPLIANT；BLANK-ENV-001 锁定 `none`；production whitelist 收缩为 NONE | contract inventory 7 pass | 3 HARD_BLOCK 仅需测试 remediations |
+| 2026-08-14 04:15 UTC | Step 1–3 implement | 新建 C-OPS3 inventory + I-OPS3 bootstrap/INJ；对齐 test_api_readiness INT-SKIP-001 | 见 §23 | 无 production 文件变更 |
+| 2026-08-14 04:18 UTC | Step 4 regression | scoped §16 全套 PASS | 53 pass / 1 skip (legacy readiness) | ruff/mypy scoped PASS |
+| 2026-08-14 04:30 UTC | IMPLEMENTATION_RELEASE | implementation `978ae9c` pushed feat；docs(status): record on feat | scoped 53 pass / 1 skip | phase=IMPLEMENTATION_RELEASE；WAITING_FOR_PR_MERGE |
 
 ## 23. 实际执行结果
 
@@ -624,21 +629,27 @@ protected_regression_tests:
 
 | 文件 | 结果 |
 |---|---|
-| （实施后填写） | |
+| `tests/contract/test_ops003_migration_compose_inventory.py` | 新建 — C-OPS3-01/02/03 inventory |
+| `tests/integration/test_ops003_blank_environment_bootstrap.py` | 新建 — I-OPS3-01/02 + INJ-OPS3-01 |
+| `tests/integration/test_api_readiness.py` | 修改 — INT-SKIP-001 module skip；superseded 注记 |
+| `02_开发管理/progress.md` | 修改 — tested 态同步 |
+| `02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md` | 修改 — 执行记录 + Findings 确认 |
 
 ### 与原计划的差异
 
-暂无。
+Phase A 审计确认 F-008/F-011/F-013 COMPLIANT；production_file_whitelist 实际为 NONE（无 README/scripts/runtime/compose 变更）。BLANK-ENV-001 选定 `--embedding=none`（与 `test_migrate_infra` 对齐，避免 TEI pull）。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Contract | | |
-| Integration | | |
-| Regression | | |
-| Ruff | | |
-| Mypy | | |
+| Contract OPS-003 | `uv run pytest tests/contract/test_ops003_migration_compose_inventory.py -q` | 7 passed |
+| Integration OPS-003 | `uv run pytest tests/integration/test_ops003_blank_environment_bootstrap.py -q` | 3 passed (~132s) |
+| Migrate/compose regression | `uv run pytest tests/unit/test_migrate_runner.py tests/contract/test_migrate_paths_contract.py tests/contract/test_compose_config_contract.py tests/unit/test_compose_wrapper_contract.py -q` | 31 passed |
+| Migrate INT regression | `uv run pytest tests/integration/test_migrate_infra.py -q` | 1 passed |
+| Readiness regression | `uv run pytest tests/integration/test_api_readiness.py tests/contract/test_api_shell_contract.py -q` | 12 passed, 1 skipped |
+| Ruff | `uv run ruff check scripts/migrate.py tests/contract/test_ops003_migration_compose_inventory.py tests/integration/test_ops003_blank_environment_bootstrap.py tests/integration/test_api_readiness.py` | PASS |
+| Mypy | `uv run mypy scripts/migrate.py src/memory_system/infrastructure/runtime.py tests/contract/test_ops003_migration_compose_inventory.py tests/integration/test_ops003_blank_environment_bootstrap.py` | PASS |
 
 ### Review 结果
 
@@ -653,12 +664,12 @@ review_report: null
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/OPS-003-full-migration-compose-blank-environment-validation
+plan_commit: 6d007ea00dfd565b5e3ac0f193de4b18867ba336
+implementation_commit: 978ae9ccaf80a87c772a6691a7f1b66db2b3c846
+implementation_commit_message: "test(ops): add OPS-003 blank environment bootstrap tests"
 ```
 
 ### 最终状态
 
-`approved`
+`committed`
