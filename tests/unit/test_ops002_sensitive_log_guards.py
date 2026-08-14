@@ -7,7 +7,6 @@ from collections.abc import Iterator
 
 import pytest
 from fastapi import FastAPI
-from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel
 
 from memory_system.api.error_handlers import _sanitize_validation_errors, register_error_handlers

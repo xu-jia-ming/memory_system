@@ -6,7 +6,11 @@ import subprocess
 from dataclasses import fields
 from pathlib import Path
 
+import pytest
+
 from memory_system.domain.models.consolidation_importance import ConsolidationImportanceInput
+
+pytestmark = pytest.mark.task_scope_boundary
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PLAN_COMMIT = "6f4a35ad28ad90946f74e39bfa567acc71120b12"

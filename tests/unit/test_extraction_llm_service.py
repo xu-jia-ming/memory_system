@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import logging
 from collections.abc import Iterator
 from typing import Any
 from unittest.mock import AsyncMock, patch
@@ -410,19 +409,18 @@ def test_u21_duplicate_memories_merge_source_ids(valid_env: None) -> None:
 @pytest.mark.asyncio
 async def test_u25_failure_logs_required_metadata(
     valid_env: None,
-    caplog: pytest.LogCaptureFixture,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     settings = get_settings()
     client = FakeLlmClient(responses=["not-json", "still-not-json"])
-    with caplog.at_level(logging.ERROR):
-        await run_extraction_llm(_llm_input(), client, settings)
-    joined = " ".join(record.getMessage() for record in caplog.records)
-    assert "task_id=" in joined
-    assert "archive_id=" in joined
-    assert "user_id=" in joined
-    assert "failed_stage=" in joined
-    assert "attempt_count=" in joined
-    assert "not-json" not in joined
+    await run_extraction_llm(_llm_input(), client, settings)
+    captured = capsys.readouterr().out
+    assert "task_id=" in captured
+    assert "archive_id=" in captured
+    assert "user_id=" in captured
+    assert "failed_stage=" in captured
+    assert "attempt_count=" in captured
+    assert "not-json" not in captured
 
 
 @pytest.mark.asyncio

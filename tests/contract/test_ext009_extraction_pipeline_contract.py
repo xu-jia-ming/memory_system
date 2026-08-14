@@ -6,6 +6,8 @@ import inspect
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from memory_system.domain.enums.extraction_task import PipelineTerminalKind
 from memory_system.domain.services.extraction_pipeline_port import ExtractionPipelinePort
 from memory_system.domain.services.production_extraction_pipeline import (
@@ -38,6 +40,7 @@ def test_pipeline_implements_existing_port_without_contract_replacement() -> Non
     }
 
 
+@pytest.mark.task_scope_boundary
 def test_ext002_to_ext007_services_and_terminal_port_have_zero_diff() -> None:
     result = subprocess.run(
         ["git", "diff", "--exit-code", PLAN_COMMIT, "--", *UPSTREAM_PRODUCTION_PATHS],

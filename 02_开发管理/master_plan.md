@@ -784,7 +784,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **预期生产变更**：`.github/workflows/ci.yml`；`scripts/ci/run_merge_gate.sh`；`pyproject.toml`（`fail_under` + marker）；`README.md`（CI 文档）。
 - **测试**：`test_ops004_ci_workflow_contract.py`；条件修 `test_extraction_llm_service` / `test_extraction_task_consumer_service` mock；scope-boundary marker 分层。
 - **计划文件**：`02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md`
-- **状态备注**：`planned`（规划态 2026-08-14）；`next_action=计划审查`；不得触碰 DEV-006/PR#13；不得自动开始实施。
+- **状态备注**：`planned`（Amendment 002 absorbed from CODE_REVIEW_REJECTED P1-1）；1395 unit+contract pass / 91.26% cov；71 integration pass / 183 skip；9 OPS-004 contract pass；`mypy src` = 0 errors；BL-RUFF-001 8-file ruff auto-fix pending；BL-MYPY-001 tests/scripts mypy DEFERRED；`next_action=DEVELOPER_RESUME Amendment 002`。
 
 ---
 

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock
 
 import pytest
@@ -41,7 +41,7 @@ class TestU14JobRegistration:
         assert job.misfire_grace_time == consolidation.scheduler_misfire_grace_time_seconds
 
     def test_evaluation_time_from_scheduled_run_utc(self) -> None:
-        scheduled = datetime(2026, 8, 13, 3, 0, 0, tzinfo=timezone.utc)
+        scheduled = datetime(2026, 8, 13, 3, 0, 0, tzinfo=UTC)
         assert evaluation_time_from_scheduled_run(scheduled) == int(scheduled.timestamp())
 
 

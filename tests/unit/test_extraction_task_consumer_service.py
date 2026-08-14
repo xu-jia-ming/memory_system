@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import logging
 from unittest.mock import AsyncMock, patch
 
 import pytest
@@ -155,6 +154,12 @@ async def test_pending_transitions_and_port_complete() -> None:
             new_callable=AsyncMock,
             return_value=completed,
         ) as mark_done,
+        patch(
+            "memory_system.domain.services.extraction_task_consumer_service.repo."
+            "find_extraction_task_by_archive_id",
+            new_callable=AsyncMock,
+            return_value=None,
+        ),
     ):
         result = await process_archive_created_event(
             mongodb=AsyncMock(),
@@ -206,6 +211,12 @@ async def test_processing_recovery_bumps_attempt_skips_llm_when_result() -> None
             new_callable=AsyncMock,
             return_value=completed,
         ),
+        patch(
+            "memory_system.domain.services.extraction_task_consumer_service.repo."
+            "find_extraction_task_by_archive_id",
+            new_callable=AsyncMock,
+            return_value=None,
+        ),
     ):
         result = await process_archive_created_event(
             mongodb=AsyncMock(),
@@ -219,7 +230,9 @@ async def test_processing_recovery_bumps_attempt_skips_llm_when_result() -> None
 
 
 @pytest.mark.asyncio
-async def test_port_fail_commits_and_logs_sf004(caplog: pytest.LogCaptureFixture) -> None:
+async def test_port_fail_commits_and_logs_sf004(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     err = ExtractionLastError(
         error_code="graph_write_failed",
         failed_stage="graph_write",
@@ -252,7 +265,12 @@ async def test_port_fail_commits_and_logs_sf004(caplog: pytest.LogCaptureFixture
             new_callable=AsyncMock,
             return_value=failed,
         ) as mark_failed,
-        caplog.at_level(logging.ERROR),
+        patch(
+            "memory_system.domain.services.extraction_task_consumer_service.repo."
+            "find_extraction_task_by_archive_id",
+            new_callable=AsyncMock,
+            return_value=None,
+        ),
     ):
         result = await process_archive_created_event(
             mongodb=AsyncMock(),
@@ -263,12 +281,12 @@ async def test_port_fail_commits_and_logs_sf004(caplog: pytest.LogCaptureFixture
     assert result.should_commit_offset is True
     mark_failed.assert_awaited_once()
     # SF-004 five fields present in log message
-    joined = " ".join(r.getMessage() for r in caplog.records)
-    assert failed.task_id in joined
-    assert "arch-1" in joined
-    assert "user-1" in joined
-    assert "graph_write" in joined
-    assert "attempt_count=1" in joined
+    captured = capsys.readouterr().out
+    assert failed.task_id in captured
+    assert "arch-1" in captured
+    assert "user-1" in captured
+    assert "graph_write" in captured
+    assert "attempt_count=1" in captured
 
 
 @pytest.mark.asyncio

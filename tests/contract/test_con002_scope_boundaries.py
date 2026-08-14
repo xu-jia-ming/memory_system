@@ -6,11 +6,15 @@ import subprocess
 from dataclasses import fields
 from pathlib import Path
 
+import pytest
+
 from memory_system.domain.models.consolidation_importance import ConsolidationImportanceInput
 from memory_system.infrastructure.neo4j.consolidation_memory_read_repository import (
     Q_FETCH_CANDIDATE_BATCH,
     authorized_read_cypher_queries,
 )
+
+pytestmark = pytest.mark.task_scope_boundary
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PLAN_COMMIT = "a3d0c26f1864e399d2562f1648c99584fe77d8e4"
