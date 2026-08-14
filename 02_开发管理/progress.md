@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — OPS-002 completed (post OPS-001)
+current_phase: Phase 5 — OPS-003 approved (post OPS-002)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: OPS-002
-current_task_status: completed
+current_task: OPS-003
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,35 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
-planning_baseline_main: "c7011aaac123915976389da8d8f18191269a0313"
+current_plan_file: 02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md
+planning_baseline_main: "93ffefdcbba8fc74a45842b956185bee8d0f2004"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
+formal_OPS-003_plan_file: 02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md
+formal_OPS-003_status: approved
+formal_OPS-003_workflow_mode: NORMAL
+formal_OPS-003_workflow_mode_source: explicit
+formal_OPS-003_baseline: "93ffefdcbba8fc74a45842b956185bee8d0f2004"
+formal_OPS-003_branch: "feat/OPS-003-full-migration-compose-blank-environment-validation"
+formal_OPS-003_prerequisite: "SATISFIED — OPS-001 completed (PR #55 MERGED); OPS-002 completed (PR #56 MERGED); DEV-003/004/005 completed; DEV-OPS-008 completed; CON-001..005 completed; v0.5.0-consolidation closed; STM/EXT/RET all completed"
+formal_OPS-003_scope: "§3.12/§3.26 full migration runner audit + §3.17/§3.3 compose blank-environment validation + §3.32 #1/#2/#9 engineering consistency; focused contract/integration tests (NOT E2E-001/OPS-004 CI 80%)"
+formal_OPS-003_blocking_open_issues: []
+formal_OPS-003_nonblocking_open_issues: []
+formal_OPS-003_dependency_changes_expected: NONE
+formal_OPS-003_migration_changes_expected: NONE
+formal_OPS-003_production_file_whitelist: "README.md; scripts/compose.sh; scripts/start_embedding.sh; scripts/migrate.py; runtime.py; compose.yaml; compose.test.yaml (Phase A confirm; default NONE if audit clean)"
+formal_OPS-003_test_file_whitelist: "tests/contract/test_ops003_migration_compose_inventory.py; tests/integration/test_ops003_blank_environment_bootstrap.py; tests/integration/test_api_readiness.py (optional align)"
+formal_OPS-003_audit_summary: "17 preliminary findings — 6 COMPLIANT baseline; 3 HARD_BLOCK (§3.17 full bootstrap INT / three apps / readiness ready); 4 DEFERRED (check_env_example CI/preflight/GPU/OPS-004); BLANK-ENV-001 locked test stack isolation"
+formal_OPS-003_note: "Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=0; human PLAN_APPROVED 2026-08-14; Amendment 001; BLANK-ENV-001 test stack only; forbidden modify 001–004 migration content;不得触碰 DEV-006/PR#13"
+formal_OPS-003_plan_review: PLAN_APPROVED
+formal_OPS-003_plan_review_round: 2
+formal_OPS-003_plan_review_blocker: 0
+formal_OPS-003_plan_review_must_fix: 0
+formal_OPS-003_plan_review_should_fix: 0
+formal_OPS-003_human_plan_approved: true
+formal_OPS-003_human_plan_approved_at: "2026-08-14 03:57 UTC"
+formal_OPS-003_amendment: "001 — §19/§20 whitelist alignment; INJ-OPS3-01 Step 2b; INT-SKIP-001; embedding mode clarification"
+formal_OPS-003_next_action: "Developer Step 0 — Phase A 只读审计"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -95,7 +120,9 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "计划审查"
+next_action: "计划审查 Round 2"
+last_role_result: PLANNER
+blocking_reason: null
 formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
 formal_OPS-002_status: completed
 formal_OPS-002_workflow_mode: NORMAL
@@ -1525,9 +1552,7 @@ formal_DEV-OPS-008_mypy: PASS
 formal_DEV-OPS-008_kafka_lz4_integration: "2 passed"
 formal_DEV-OPS-008_stm013_shim_note: "post-merge STM-013 revalidation must check tests/e2e/conftest.py _patch_aiokafka_bootstrap_connected for cleanup"
 historical_next_action_EXT-002: "EXT-002 tested; next_action=Code Review; do NOT start EXT-003; do NOT touch DEV-006/PR#13"
-next_action: "OPS-003 planned / NOT AUTO-STARTED"
-last_role_result: PLANNER
-blocking_reason: null
+historical_next_action_OPS-003_pre_plan: "OPS-003 planned / NOT AUTO-STARTED"
 # note: human confirmed PLAN_APPROVED for Amendment 001；Orchestrator records approved only
 human_plan_approved_at: "2026-08-10T12:35:00Z"
 human_plan_approved_note: "Human PLAN_APPROVED STM-006 Amendment 001；Round 2 Plan Reviewer PLAN_APPROVED BLOCKER=0 MUST_FIX=0；absorb R2 SHOULD_FIX count/tokens fail-closed；scope lock+pending+Kafka only"

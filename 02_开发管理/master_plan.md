@@ -733,7 +733,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | OPS-001 | Graceful Shutdown、连接池、Timeout 与 Retry 总检 | §3.24, §3.25 | 前述全部业务阶段 | completed |
 | OPS-002 | 日志、指标、敏感信息与用户隔离审计 | §3.27, §3.21 | 前述全部 | completed |
-| OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | planned |
+| OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | approved |
 | OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | planned |
 | E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | planned |
 | REL-001 | MVP RC Review 与验收清单 | `05_测试与验收/mvp_acceptance_checklist.md` | E2E-001 | planned |
@@ -760,6 +760,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：`test_ops002_*` unit/contract + 复跑既有 privacy/isolation integration。
 - **计划文件**：`02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md`
 - **状态备注**：`completed`（plan `f79f815`；implementation `7ddcf9234bbc56e227db956b83ecc38c73d1aa90`；record `f2e95ca97fb5472838859886bac8db85c8697735`；PR #56 MERGED `fef784dbae4de421507eb9dbe5b7ac7f94588b0d` mergedAt `2026-08-14T03:43:24Z`；OPS-002 unit 14 + contract 7 + DEV-005 12 + EXT-008 INT 7 passed；ruff/mypy scoped PASS；CODE_REVIEW_APPROVED P0=0 P1=0；F-007 optional skipped；F-013 DEFERRED；context_read INT 需 Redis 未跑；Amendment 001；feat 分支已删）；`next_action=OPS-003 planned`；不得触碰 DEV-006/PR#13。
+
+#### OPS-003 全量 Migration、Compose 与空白环境验证
+
+- **目标**：对照 §3.12 / §3.26 / §3.17 / §3.32 #1/#2/#9 对 Migration Runner（`001`–`004` + `scripts/migrate.py` + `init-infra`）、Compose Wrapper、`start_embedding.sh`、README 与空白环境 bootstrap 做 MVP 全仓审计；仅对真实违规做最小修复；补齐 focused contract/integration tests（**非** E2E-001 / **非** OPS-004 CI 80%）。
+- **非目标**：OPS-004 CI / 80% 覆盖率；E2E-001 全链路；REL-001；修改已执行 Migration 001–004 内容；DEV-006/PR#13；业务语义变更；镜像版本升级。
+- **前置**：OPS-001/002 completed；DEV-003/004/005；DEV-OPS-008；CON/STM/EXT/RET 全 completed；baseline `main @ 93ffefd`。
+- **规格章节**：§3.3、§3.12、§3.17、§3.26、§3.32 #1/#2/#9（§3.32.2 交叉 DEV-004）。
+- **审计结论（规划态 preliminary）**：17 findings — **6 COMPLIANT**（DEV-004 migrate + compose contracts）；**3 HARD_BLOCK**（F-005/F-006/F-007：§3.17 全序列 automation / 三应用启动 / readiness ready）；**4 DEFERRED**（check_env_example CI、preflight 自动化、GPU、OPS-004）；**BLANK-ENV-001** 锁定 `--stack=test` 隔离。
+- **预期生产变更**：默认 NONE；可能 `README.md` / `scripts/*` / `runtime.py` / compose health depends（见 Task Plan §19）；**禁止**改 001–004 migration 文件内容。
+- **测试**：`test_ops003_*` contract + blank bootstrap integration；回归 migrate/compose wrapper contracts。
+- **计划文件**：`02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md`
+- **状态备注**：`approved`（Round 2 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=0；human PLAN_APPROVED 2026-08-14；Amendment 001 §19/§20 白名单对齐、INJ-OPS3-01 Step 2b、INT-SKIP-001、embedding 模式澄清；planning @ main `93ffefd`；`workflow_mode=NORMAL` explicit；`next_action=Developer Step 0 Phase A 只读审计`；不得触碰 DEV-006/PR#13）。
 
 ---
 
