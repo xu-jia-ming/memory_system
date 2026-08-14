@@ -12,7 +12,7 @@ phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: OPS-002
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/OPS-002-logging-metrics-sensitive-user-isolation-audit
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -120,7 +120,11 @@ formal_OPS-002_plan_review_must_fix: 0
 formal_OPS-002_plan_review_should_fix: 0
 formal_OPS-002_human_plan_approved: true
 formal_OPS-002_human_plan_approved_at: "2026-08-14 02:51 UTC"
-formal_OPS-002_next_action: "Developer on feat/OPS-002-logging-metrics-sensitive-user-isolation-audit post-PLAN_LANDING"
+formal_OPS-002_next_action: "Await PR merge / POST_MERGE_CLEANUP"
+formal_OPS-002_status: committed
+formal_OPS-002_plan_commit: "f79f81537f55b4e28bc07b55a0aff1cd5864b72a"
+formal_OPS-002_implementation_commit: "7ddcf9234bbc56e227db956b83ecc38c73d1aa90"
+formal_OPS-002_implementation_commit_message: "fix(ops): OPS-002 logging metrics sensitive info user isolation audit"
 formal_OPS-001_plan_file: 02_开发管理/tasks/OPS-001-graceful-shutdown-pools-timeout-retry.md
 formal_OPS-001_status: completed
 formal_OPS-001_plan_commit: "1ce8b65feaf8569c971e93c1b33ef7a4e9cafb5d"
