@@ -771,7 +771,20 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **预期生产变更**：默认 NONE；可能 `README.md` / `scripts/*` / `runtime.py` / compose health depends（见 Task Plan §19）；**禁止**改 001–004 migration 文件内容。
 - **测试**：`test_ops003_*` contract + blank bootstrap integration；回归 migrate/compose wrapper contracts。
 - **计划文件**：`02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md`
-- **状态备注**：`completed`（plan `6d007ea`；implementation `978ae9ccaf80a87c772a6691a7f1b66db2b3c846`；record `815da73b`；PR #57 MERGED `89912ec` mergedAt `2026-08-14T04:31:53Z`；Phase A F-008/F-011/F-013 COMPLIANT → production NONE；BLANK-ENV-001 `--embedding=none`；3 HARD_BLOCK remediated via I-OPS3-01/02 + INJ-OPS3-01；scoped 53 pass / 1 skip；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；feat 分支已删）；`next_action=OPS-004 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`completed`（plan `6d007ea`；implementation `978ae9ccaf80a87c772a6691a7f1b66db2b3c846`；record `815da73b`；PR #57 MERGED `89912ec` mergedAt `2026-08-14T04:31:53Z`；Phase A F-008/F-011/F-013 COMPLIANT → production NONE；BLANK-ENV-001 `--embedding=none`；3 HARD_BLOCK remediated via I-OPS3-01/02 + INJ-OPS3-01；scoped 53 pass / 1 skip；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；feat 分支已删）；`next_action=OPS-004 planned`；不得触碰 DEV-006/PR#13）。
+
+#### OPS-004 CI 门禁（§3.28 + 80% 覆盖率）
+
+- **目标**：交付 GitHub Actions PR 阻塞工作流 + 本地等价 merge-gate 脚本；强制执行 §3.28 Unit+Contract+Integration 三层门禁、`scripts/check_env_example.py` CI 校验（闭合 OPS-003 F-009/F-017）、`memory_system.domain` + `memory_system.application` **80%** 行覆盖率阈值；`ruff`/`mypy`/`uv sync --locked`。
+- **非目标**：E2E-001 全链路；REL-001；`runtime_contract_gate` 默认 CI；DEV-006/PR#13；业务 Domain/Application 语义变更；真实计费 API。
+- **前置**：OPS-003 completed（PR #57）；OPS-001/002 completed；DEV-003-002 runtime_contract_gate 分层；baseline `main @ 85c1470`。
+- **规格章节**：§3.28、§3.30 P1、§3.32 #3（交叉引用）。
+- **审计结论（规划态 preliminary）**：无 `.github/workflows/`；`check_env_example` 脚本存在未 CI 接线；`fail_under` 未配置；初步基线 unit+contract **15 fail**（5 fail 排除 scope-boundary 后）；coverage **91%** domain；BL-001..005 见 Task Plan §4.1。
+- **关键设计**：三 job（`static` / `unit-contract-coverage` / `integration`）；新 marker `task_scope_boundary` 排除 CON/EXT task git-diff 守卫；默认 CI 排除 `e2e` + `runtime_contract_gate`；Fake LLM/Embedding；`.env.example` fixture 无 Secret。
+- **预期生产变更**：`.github/workflows/ci.yml`；`scripts/ci/run_merge_gate.sh`；`pyproject.toml`（`fail_under` + marker）；`README.md`（CI 文档）。
+- **测试**：`test_ops004_ci_workflow_contract.py`；条件修 `test_extraction_llm_service` / `test_extraction_task_consumer_service` mock；scope-boundary marker 分层。
+- **计划文件**：`02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md`
+- **状态备注**：`planned`（规划态 2026-08-14）；`next_action=计划审查`；不得触碰 DEV-006/PR#13；不得自动开始实施。
 
 ---
 
@@ -1633,5 +1646,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 依赖 / Migration 结论 | `dependency_changes_expected=NONE`；`migration_changes_expected=NONE` |
 | 是否改变技术规格 | 否；仅完成治理状态与证据登记 |
 | 审批 | Release Operator `POST_MERGE_CLEANUP`；`next_action=RET-005 planned / NOT AUTO-STARTED`；不得自动启动 RET-005 |
+
+### CHANGE-078
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-14 |
+| 原因 | 用户显式 `WORKFLOW_MODE=NORMAL` + Orchestrator 调度 OPS-004 规划：登记 CI 门禁（§3.28 + 80% 覆盖率）Task Plan；闭合 OPS-003 deferred F-009/F-017（`check_env_example.py` CI）；**不**自动开始实施 |
+| 受影响任务 | `OPS-004` → `planned`（计划文件 `02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md`）；`E2E-001`/`REL-001` 保持 `planned` / **NOT AUTO-STARTED**；**不**修改 OPS-003 完成状态；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（实现 §3.28/§3.30 P1 既有要求；不改 Contract/Schema） |
+| 审批 | Planner 初版；待 Plan Review → 人工确认；确认前不得 PLAN_LANDING / Developer |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

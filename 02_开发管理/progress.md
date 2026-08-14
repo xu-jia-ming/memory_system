@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — OPS-003 completed (post OPS-003)
+current_phase: Phase 5 — OPS-004 planned (post OPS-003)
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: OPS-003
-current_task_status: completed
+current_task: OPS-004
+current_task_status: planned
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,29 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md
-planning_baseline_main: "93ffefdcbba8fc74a45842b956185bee8d0f2004"
+current_plan_file: 02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md
+planning_baseline_main: "85c1470417c27c4d2c688f22db7a36775b0aef79"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
+formal_OPS-004_plan_file: 02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md
+formal_OPS-004_status: planned
+formal_OPS-004_workflow_mode: NORMAL
+formal_OPS-004_workflow_mode_source: explicit
+formal_OPS-004_baseline: "85c1470417c27c4d2c688f22db7a36775b0aef79"
+formal_OPS-004_branch: "feat/OPS-004-ci-gates-coverage-threshold"
+formal_OPS-004_prerequisite: "SATISFIED — OPS-003 completed (PR #57 MERGED); OPS-001/002 completed; DEV-003-002 runtime_contract_gate layering; CON/STM/EXT/RET all completed"
+formal_OPS-004_scope: "§3.28 Unit+Contract+Integration CI gates + §3.30 P1 check_env_example.py CI + 80% domain/application coverage threshold; GitHub Actions workflow(s); task_scope_boundary marker layering (NOT E2E-001/REL-001)"
+formal_OPS-004_blocking_open_issues: []
+formal_OPS-004_nonblocking_open_issues: []
+formal_OPS-004_dependency_changes_expected: NONE
+formal_OPS-004_migration_changes_expected: NONE
+formal_OPS-004_production_file_whitelist: ".github/workflows/ci.yml; scripts/ci/run_merge_gate.sh; pyproject.toml; README.md"
+formal_OPS-004_test_file_whitelist: "tests/contract/test_ops004_ci_workflow_contract.py; tests/contract/test_con001..005_scope_boundaries.py; tests/contract/test_ext009_extraction_pipeline_contract.py; tests/unit/test_extraction_llm_service.py; tests/unit/test_extraction_task_consumer_service.py"
+formal_OPS-004_baseline_audit: "preliminary — unit+contract 15 fail (5 after scope exclude); coverage 91% domain; BL-001..005 documented in plan §4.1"
+formal_OPS-004_note: "规划态 Amendment 001；闭合 OPS-003 F-009/F-017；不得触碰 DEV-006/PR#13；不得吸收 E2E-001"
+formal_OPS-004_amendment: "001 — uv run static job alignment; merge-gate required; task_scope_boundary canonical; C-OPS4-04 pinned"
+formal_OPS-004_plan_review_round: 1
+formal_OPS-004_next_action: "计划审查"
 formal_OPS-003_plan_file: 02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md
 formal_OPS-003_status: completed
 formal_OPS-003_workflow_mode: NORMAL
@@ -144,7 +163,7 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "OPS-004 planned / NOT AUTO-STARTED"
+next_action: 计划审查
 last_role_result: RELEASE_OPERATOR
 blocking_reason: null
 formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
