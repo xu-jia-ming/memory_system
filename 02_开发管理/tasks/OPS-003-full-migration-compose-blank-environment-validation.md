@@ -5,13 +5,13 @@
 ```yaml
 task_id: OPS-003
 task_name: Full Migration, Compose & Blank-Environment Validation
-status: tested
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "93ffefdcbba8fc74a45842b956185bee8d0f2004"
 branch: "feat/OPS-003-full-migration-compose-blank-environment-validation"
 created_at: "2026-08-14 03:48 UTC"
-updated_at: "2026-08-14 03:57 UTC"
+updated_at: "2026-08-14 04:30 UTC"
 spec_sections:
   - "§3.3 Docker Compose 服务拓扑"
   - "§3.12 基础设施初始化"
@@ -621,6 +621,7 @@ protected_regression_tests:
 | 2026-08-14 04:12 UTC | Step 0 Phase A | 只读审计确认 F-008/F-011/F-013 COMPLIANT；BLANK-ENV-001 锁定 `none`；production whitelist 收缩为 NONE | contract inventory 7 pass | 3 HARD_BLOCK 仅需测试 remediations |
 | 2026-08-14 04:15 UTC | Step 1–3 implement | 新建 C-OPS3 inventory + I-OPS3 bootstrap/INJ；对齐 test_api_readiness INT-SKIP-001 | 见 §23 | 无 production 文件变更 |
 | 2026-08-14 04:18 UTC | Step 4 regression | scoped §16 全套 PASS | 53 pass / 1 skip (legacy readiness) | ruff/mypy scoped PASS |
+| 2026-08-14 04:30 UTC | IMPLEMENTATION_RELEASE | implementation `978ae9c` pushed feat；docs(status): record on feat | scoped 53 pass / 1 skip | phase=IMPLEMENTATION_RELEASE；WAITING_FOR_PR_MERGE |
 
 ## 23. 实际执行结果
 
@@ -665,10 +666,10 @@ review_report: null
 ```yaml
 branch: feat/OPS-003-full-migration-compose-blank-environment-validation
 plan_commit: 6d007ea00dfd565b5e3ac0f193de4b18867ba336
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 978ae9ccaf80a87c772a6691a7f1b66db2b3c846
+implementation_commit_message: "test(ops): add OPS-003 blank environment bootstrap tests"
 ```
 
 ### 最终状态
 
-`tested`
+`committed`

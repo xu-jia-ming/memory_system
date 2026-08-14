@@ -733,7 +733,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 |---|---|---|---|---|
 | OPS-001 | Graceful Shutdown、连接池、Timeout 与 Retry 总检 | §3.24, §3.25 | 前述全部业务阶段 | completed |
 | OPS-002 | 日志、指标、敏感信息与用户隔离审计 | §3.27, §3.21 | 前述全部 | completed |
-| OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | tested |
+| OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | committed |
 | OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | planned |
 | E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | planned |
 | REL-001 | MVP RC Review 与验收清单 | `05_测试与验收/mvp_acceptance_checklist.md` | E2E-001 | planned |
@@ -771,7 +771,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **预期生产变更**：默认 NONE；可能 `README.md` / `scripts/*` / `runtime.py` / compose health depends（见 Task Plan §19）；**禁止**改 001–004 migration 文件内容。
 - **测试**：`test_ops003_*` contract + blank bootstrap integration；回归 migrate/compose wrapper contracts。
 - **计划文件**：`02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md`
-- **状态备注**：`tested`（plan `6d007ea`；Phase A F-008/F-011/F-013 COMPLIANT → production NONE；BLANK-ENV-001 `--embedding=none`；3 HARD_BLOCK remediated via I-OPS3-01/02 + INJ-OPS3-01；scoped 53 pass / 1 skip；ruff/mypy PASS；`next_action=Code Reviewer`；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`committed`（plan `6d007ea`；implementation `978ae9ccaf80a87c772a6691a7f1b66db2b3c846`；Phase A F-008/F-011/F-013 COMPLIANT → production NONE；BLANK-ENV-001 `--embedding=none`；3 HARD_BLOCK remediated via I-OPS3-01/02 + INJ-OPS3-01；scoped 53 pass / 1 skip；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0；`next_action=WAITING_FOR_PR_MERGE`；不得触碰 DEV-006/PR#13）。
 
 ---
 

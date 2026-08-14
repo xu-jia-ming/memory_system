@@ -12,7 +12,7 @@ phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: OPS-003
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/OPS-003-full-migration-compose-blank-environment-validation
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -26,7 +26,7 @@ planning_baseline_main: "93ffefdcbba8fc74a45842b956185bee8d0f2004"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_OPS-003_plan_file: 02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md
-formal_OPS-003_status: tested
+formal_OPS-003_status: committed
 formal_OPS-003_workflow_mode: NORMAL
 formal_OPS-003_workflow_mode_source: explicit
 formal_OPS-003_baseline: "93ffefdcbba8fc74a45842b956185bee8d0f2004"
@@ -54,7 +54,9 @@ formal_OPS-003_plan_landing_completed_at: "2026-08-14 04:05 UTC"
 formal_OPS-003_scoped_tests: "53 passed / 1 skipped (legacy readiness host:8000)"
 formal_OPS-003_ruff: PASS
 formal_OPS-003_mypy: PASS
-formal_OPS-003_next_action: "Code Reviewer — scoped §16 regression"
+formal_OPS-003_implementation_commit: "978ae9ccaf80a87c772a6691a7f1b66db2b3c846"
+formal_OPS-003_implementation_commit_message: "test(ops): add OPS-003 blank environment bootstrap tests"
+formal_OPS-003_next_action: "WAITING_FOR_PR_MERGE"
 planning_baseline_EXT-009: "779963257e33a93ad02ef4e3f997b3c9f6706802"
 formal_EXT-009_plan_file: 02_开发管理/tasks/EXT-009-extraction-e2e-pipeline-wiring.md
 formal_EXT-009_status: completed
@@ -1866,6 +1868,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 | 日期时间 | Task | 状态变化 | 说明 |
 | 2026-08-14 04:05 UTC | OPS-003 | approved → PLAN_LANDING | Release Operator PLAN_LANDING；plan_commit `6d007ea` on main；push via 17890 proxy；feat `feat/OPS-003-full-migration-compose-blank-environment-validation` created @ 6d007ea | 未实施 | 不得触碰 DEV-006/PR#13 |
+| 2026-08-14 04:30 UTC | OPS-003 | tested → committed | IMPLEMENTATION_RELEASE；implementation `978ae9c` pushed feat；docs(status): record on feat | scoped 53 pass / 1 skip | WAITING_FOR_PR_MERGE；禁 push main |
 | 2026-08-14 10:29 UTC | OPS-002 | planned (Amendment 001) | Round 1 PLAN_REJECTED 修订：MF-1 `api/app.py`；MF-2 F-006 方案 A（7-file HARD_BLOCK inventory + 4-file DEFERRED）；SF-1 MET-AUDIT-001 解释 A；SF-2 F-007 optional；SF-3 scoped test commands；SF-4 structlog rationale；未实施 | MUST_FIX #1/#2 + SHOULD_FIX 已落实；`next_action=计划审查 Round 2`；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 02:17 UTC | OPS-002 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan；preliminary Findings §12；同步 progress/master_plan 规划态；baseline `c7011aa` MATCH | `approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 10:04 UTC | OPS-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；fetch 后 origin/main 已通过 `--ff-only` 同步；验证 main 包含 implementation `61afe0d9fc44116e8a8f08b1058840a3d3f4701c`、record `70b5084cc67251dbfb193459b3840a6fb52141e7`、merge `9749bd6a86d94919daf4a59be4035872d070fe1e`；仅更新 OPS-001 三份治理文件并创建 `docs(status): complete OPS-001 after PR merge`；exact feat 分支已删 | CODE_REVIEW_APPROVED R2 P0=0/P1=0/P2=2/P3=2 non-blocking；F-008/F-011 shared 270s budget；scoped 20 unit + entrypoint regression passed；ruff/mypy PASS；Amendment 001；`next_action=OPS-002 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13 |
