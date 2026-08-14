@@ -10,8 +10,10 @@ from typing import Any
 import pytest
 from tests.integration.support.compose_stack import (
     docker_available,
+    reset_shared_stack_state,
     run_init_infra_once,
     shared_stack_enabled,
+    stack_destroy_allowed,
     teardown_session_stack,
 )
 
@@ -63,6 +65,17 @@ def _is_forbidden_infra_skip(reason: str) -> bool:
     return any(fragment in reason for fragment in _FORBIDDEN_SKIP_SUBSTRINGS_WHEN_DOCKER)
 
 
+@pytest.fixture(scope="module")
+def isolated_compose_stack() -> Iterator[None]:
+    """Allow real ``down -v`` / init-infra for migrate and OPS-003 modules."""
+    os.environ["INTEGRATION_ALLOW_DESTROY"] = "1"
+    reset_shared_stack_state()
+    try:
+        yield
+    finally:
+        os.environ.pop("INTEGRATION_ALLOW_DESTROY", None)
+
+
 @pytest.fixture(scope="session", autouse=True)
 def _integration_shared_compose_stack() -> Iterator[None]:
     if not shared_stack_enabled():
@@ -79,13 +92,16 @@ def _integration_shared_compose_stack() -> Iterator[None]:
         argv = cmd if isinstance(cmd, list) else []
         joined = " ".join(str(part) for part in argv)
         if "compose.sh" in joined:
-            if (
-                "down" in argv
-                and "-v" in argv
-                and os.environ.get("INTEGRATION_ALLOW_DESTROY") != "1"
-            ):
-                return subprocess.CompletedProcess(argv, 0, "", "")
+            if "down" in argv and "-v" in argv:
+                if not stack_destroy_allowed():
+                    return subprocess.CompletedProcess(argv, 0, "", "")
+                result = real_run(cmd, *args, **kwargs)
+                if result.returncode == 0:
+                    reset_shared_stack_state()
+                return result
             if "run" in argv and "init-infra" in joined:
+                if stack_destroy_allowed():
+                    return real_run(cmd, *args, **kwargs)
                 run_init_infra_once()
                 return subprocess.CompletedProcess(argv, 0, "", "")
         return real_run(cmd, *args, **kwargs)
@@ -95,7 +111,8 @@ def _integration_shared_compose_stack() -> Iterator[None]:
         yield
     finally:
         subprocess.run = real_run  # type: ignore[assignment]
-        if os.environ.get("INTEGRATION_ALLOW_DESTROY") != "1":
+        os.environ.pop("INTEGRATION_ALLOW_DESTROY", None)
+        if shared_stack_enabled():
             teardown_session_stack()
 
 
@@ -126,7 +143,7 @@ def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
 def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]) -> Any:
     outcome = yield
     report = outcome.get_result()
-    if report.when != "call" or not report.skipped:
+    if report.when not in ("setup", "call") or not report.skipped:
         return
     if os.environ.get("PYTEST_INTEGRATION_STRICT_SKIPS", "").strip() != "1":
         return

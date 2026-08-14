@@ -46,6 +46,8 @@ _INIT_INFRA_DONE = False
 _SESSION_BOOTSTRAPPED = False
 _MIGRATING = False
 
+MONGODB_DATABASE = "memory_system"
+
 
 def _compose_raw(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
     cmd = [str(COMPOSE_SH), "--stack=test", "--embedding=none", *args]
@@ -67,6 +69,31 @@ def _compose_raw(*args: str, check: bool = True) -> subprocess.CompletedProcess[
 
 def shared_stack_enabled() -> bool:
     return os.environ.get("INTEGRATION_SHARED_STACK", "").strip() == "1"
+
+
+def stack_destroy_allowed() -> bool:
+    return os.environ.get("INTEGRATION_ALLOW_DESTROY", "").strip() == "1"
+
+
+def reset_shared_stack_state() -> None:
+    global _INIT_INFRA_DONE, _SESSION_BOOTSTRAPPED
+    _INIT_INFRA_DONE = False
+    _SESSION_BOOTSTRAPPED = False
+
+
+def neo4j_uri_from_container() -> str:
+    ip = wait_container_ip(CONTAINER_NAMES["neo4j"])
+    return f"neo4j://{ip}:7687"
+
+
+def mongo_uri_from_container() -> str:
+    ip = wait_container_ip(CONTAINER_NAMES["mongodb"])
+    return f"mongodb://{ip}:27017/{MONGODB_DATABASE}"
+
+
+def elasticsearch_url_from_container() -> str:
+    ip = wait_container_ip(CONTAINER_NAMES["elasticsearch"])
+    return wait_elasticsearch_http(ip)
 
 
 def docker_available() -> bool:
@@ -187,8 +214,7 @@ def teardown_session_stack() -> None:
     if not _SESSION_BOOTSTRAPPED:
         return
     compose("down", "-v", check=False)
-    _SESSION_BOOTSTRAPPED = False
-    _INIT_INFRA_DONE = False
+    reset_shared_stack_state()
 
 
 def start_services(

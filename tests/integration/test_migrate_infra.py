@@ -29,7 +29,7 @@ from typing import Any
 
 import pytest
 
-pytestmark = [pytest.mark.usefixtures("integration_allow_stack_destroy")]
+pytestmark = [pytest.mark.usefixtures("isolated_compose_stack")]
 
 _neo4j_mod = importlib.import_module("scripts.migrations.002_initial_neo4j")
 NEO4J_SCHEMA_NAMES: tuple[str, ...] = _neo4j_mod.NEO4J_SCHEMA_NAMES
