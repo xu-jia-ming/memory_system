@@ -61,7 +61,11 @@ def _docker_available() -> bool:
 
 
 if not _docker_available():
-    pytestmark = pytest.mark.skip(reason="Docker not available (INT-SKIP-001)")
+    pytestmark = [
+        pytest.mark.skip(reason="Docker not available (INT-SKIP-001)"),
+    ]
+else:
+    pytestmark = [pytest.mark.usefixtures("integration_allow_stack_destroy")]
 
 
 def _compose_env() -> dict[str, str]:

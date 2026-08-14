@@ -50,6 +50,10 @@ jobs:
       - uses: astral-sh/setup-uv@v4
       - run: uv sync --locked
       - run: cp .env.example .env
+      - run: bash scripts/ci/prewarm_integration_stack.sh
+      - env:
+          INTEGRATION_SHARED_STACK: "1"
+          PYTEST_INTEGRATION_STRICT_SKIPS: "1"
       - run: |
           uv run pytest tests/integration \
             -m "not runtime_contract_gate" \

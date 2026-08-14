@@ -25,7 +25,9 @@ uv run pytest tests/unit tests/contract \
 
 echo "=== Integration ==="
 if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
-  cp .env.example .env
+  bash scripts/ci/prewarm_integration_stack.sh
+  export INTEGRATION_SHARED_STACK=1
+  export PYTEST_INTEGRATION_STRICT_SKIPS=1
   uv run pytest tests/integration \
     -m "not runtime_contract_gate" \
     -q

@@ -29,6 +29,9 @@ UNIT_CONTRACT_INVENTORY = (
 
 INTEGRATION_INVENTORY = (
     "cp .env.example .env",
+    "prewarm_integration_stack.sh",
+    "INTEGRATION_SHARED_STACK",
+    "PYTEST_INTEGRATION_STRICT_SKIPS",
     "uv run pytest tests/integration",
     "not runtime_contract_gate",
 )
