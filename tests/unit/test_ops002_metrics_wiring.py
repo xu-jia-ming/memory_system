@@ -16,7 +16,9 @@ from memory_system.domain.models.archive_created_event import (
     ArchiveCreatedEvent,
 )
 from memory_system.domain.models.extraction_task import ExtractionLastError, MemoryExtractionTask
-from memory_system.domain.services.compression_coordinator_service import run_compression_coordination
+from memory_system.domain.services.compression_coordinator_service import (
+    run_compression_coordination,
+)
 from memory_system.domain.services.extraction_pipeline_port import PipelineTerminalDecision
 from memory_system.domain.services.extraction_task_consumer_service import (
     process_archive_created_event,
@@ -146,7 +148,9 @@ async def test_u_ops2_11_extraction_terminal_metrics(valid_env: None) -> None:
         ),
         patch(
             "memory_system.domain.services.extraction_task_consumer_service.repo.mark_failed",
-            new=AsyncMock(return_value=task.model_copy(update={"status": ExtractionTaskStatus.FAILED})),
+            new=AsyncMock(
+                return_value=task.model_copy(update={"status": ExtractionTaskStatus.FAILED}),
+            ),
         ),
         patch(
             "memory_system.domain.services.extraction_task_consumer_service.repo.find_extraction_task_by_archive_id",

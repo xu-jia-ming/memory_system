@@ -3,19 +3,12 @@
 from __future__ import annotations
 
 import asyncio
-import json
-import os
-import shutil
-import subprocess
-import time
 import uuid
-from collections.abc import AsyncIterator, Callable, Iterator
-from pathlib import Path
+from collections.abc import Callable, Iterator
 from typing import Any, cast
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-import redis
 import redis.asyncio as aioredis
 from pymongo import AsyncMongoClient
 
@@ -55,136 +48,10 @@ from memory_system.infrastructure.redis.working_memory_repository import (
 )
 from memory_system.settings import get_settings
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-COMPOSE_SH = REPO_ROOT / "scripts" / "compose.sh"
-ENV_EXAMPLE = REPO_ROOT / ".env.example"
-TEST_PROJECT = "memory-system-test"
-REDIS_CONTAINER = "memory-system-redis-test"
-MONGODB_CONTAINER = "memory-system-mongodb-test"
-MONGODB_DATABASE = "memory_system"
+pytest_plugins = ("tests.integration.support.redis_mongo_fixtures",)
+
 FIXED_NOW = 1_700_000_000
 TOPIC = "context.archive.created"
-
-
-def _docker_available() -> bool:
-    if shutil.which("docker") is None:
-        return False
-    result = subprocess.run(["docker", "info"], capture_output=True, check=False)
-    return result.returncode == 0
-
-
-def _compose_env() -> dict[str, str]:
-    env = os.environ.copy()
-    env.setdefault("EMBEDDING_EFFECTIVE_RUNTIME_MODE", "cpu")
-    env.setdefault("EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET", "4096")
-    env["PROXY__HTTP_URL"] = ""
-    return env
-
-
-def _compose(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
-    cmd = [str(COMPOSE_SH), "--stack=test", "--embedding=none", *args]
-    result = subprocess.run(
-        cmd,
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        env=_compose_env(),
-        check=False,
-    )
-    if check and result.returncode != 0:
-        raise AssertionError(
-            f"compose failed ({result.returncode}): {' '.join(cmd)}\n"
-            f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}"
-        )
-    return result
-
-
-def _ensure_dotenv() -> None:
-    dotenv = REPO_ROOT / ".env"
-    if not dotenv.exists():
-        shutil.copy(ENV_EXAMPLE, dotenv)
-
-
-def _container_ip(name: str) -> str | None:
-    result = subprocess.run(
-        [
-            "docker",
-            "inspect",
-            "-f",
-            "{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}",
-            name,
-        ],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    return result.stdout.strip() or None
-
-
-def _run_init_infra() -> subprocess.CompletedProcess[str]:
-    return _compose("run", "--rm", "init-infra", check=False)
-
-
-@pytest.fixture(scope="module")
-def redis_mongo_stack() -> Iterator[tuple[str, str]]:
-    if not _docker_available():
-        pytest.skip("Docker not available")
-    _ensure_dotenv()
-    config_result = _compose("config", "--format", "json")
-    config: dict[str, Any] = json.loads(config_result.stdout)
-    assert config.get("name") == TEST_PROJECT
-
-    _compose("up", "-d", "redis", "mongodb")
-    deadline = time.time() + 120
-    redis_ip: str | None = None
-    mongo_ip: str | None = None
-    while time.time() < deadline:
-        redis_ip = _container_ip(REDIS_CONTAINER)
-        mongo_ip = _container_ip(MONGODB_CONTAINER)
-        if redis_ip and mongo_ip:
-            break
-        time.sleep(2)
-    else:
-        pytest.skip("Redis/Mongo not ready")
-
-    migrate = _run_init_infra()
-    if migrate.returncode != 0:
-        pytest.skip(f"init-infra failed: {migrate.stderr[-500:]}")
-
-    assert redis_ip and mongo_ip
-    yield f"redis://{redis_ip}:6379/0", f"mongodb://{mongo_ip}:27017/{MONGODB_DATABASE}"
-    _compose("down", check=False)
-
-
-@pytest.fixture
-async def async_redis(redis_mongo_stack: tuple[str, str]) -> AsyncIterator[aioredis.Redis]:
-    client = aioredis.from_url(redis_mongo_stack[0], decode_responses=True)
-    try:
-        yield client
-    finally:
-        await client.aclose()
-
-
-@pytest.fixture
-async def mongo_client(redis_mongo_stack: tuple[str, str]) -> AsyncIterator[AsyncMongoClient[Any]]:
-    client: AsyncMongoClient[Any] = AsyncMongoClient(redis_mongo_stack[1])
-    try:
-        await client.admin.command("ping")
-        db = client.get_default_database()
-        if db is not None:
-            await db[CONTEXT_ARCHIVE_COLLECTION].delete_many({})
-        yield client
-        if db is not None:
-            await db[CONTEXT_ARCHIVE_COLLECTION].delete_many({})
-    finally:
-        await client.close()
-
-
-@pytest.fixture
-def sync_redis(redis_mongo_stack: tuple[str, str]) -> Iterator[redis.Redis]:
-    client = redis.from_url(redis_mongo_stack[0], decode_responses=True)
-    yield client
-    client.close()
 
 
 @pytest.fixture(autouse=True)

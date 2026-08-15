@@ -5,6 +5,10 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.task_scope_boundary
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PLAN_COMMIT = "2862b7a"
 

@@ -11,7 +11,6 @@ from memory_system.domain.models.authoritative_recall import (
     AuthoritativeRecallFailure,
     AuthoritativeRecallOutcome,
     AuthoritativeRecallSuccess,
-    InternalRetrievalWarning,
 )
 from memory_system.domain.models.bm25_retrieval import (
     Bm25RetrievalFailure,
@@ -24,7 +23,6 @@ from memory_system.domain.models.hybrid_retrieval import (
     FusedRetrievalCandidate,
     HybridRetrievalSuccess,
 )
-from memory_system.domain.models.retrieval_memory_snapshot import RetrievalEntitySnapshot
 from memory_system.domain.models.retrieval_scoring import (
     ActRScoreComponents,
     RetrievalScoringFailure,
@@ -84,6 +82,8 @@ def make_hybrid_success() -> HybridRetrievalSuccess:
 def make_authoritative_success() -> AuthoritativeRecallSuccess:
     from tests.unit.test_retrieval_scoring_service import (
         make_authoritative_success as _make_auth,
+    )
+    from tests.unit.test_retrieval_scoring_service import (
         make_validated,
     )
 
@@ -314,7 +314,9 @@ def make_service(
         vector_service=vector if vector is not None else FakeVectorService(),
         embedding_client=embedding if embedding is not None else FakeEmbeddingClient(),
         tokenize_client=tokenize if tokenize is not None else FakeTokenizeClient(),
-        authoritative_service=authoritative if authoritative is not None else FakeAuthoritativeService(),
+        authoritative_service=(
+            authoritative if authoritative is not None else FakeAuthoritativeService()
+        ),
         scoring_service=scoring if scoring is not None else FakeScoringService(),
         statistics_repository=stats if stats is not None else FakeStatisticsRepository(),
         settings=SETTINGS,

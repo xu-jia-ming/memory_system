@@ -124,7 +124,9 @@ class FakeWriteService:
         )
 
 
-def _scored(memory_id: str, importance: float = 0.5, version: int = 1) -> ConsolidationScoredCandidate:
+def _scored(
+    memory_id: str, importance: float = 0.5, version: int = 1
+) -> ConsolidationScoredCandidate:
     return ConsolidationScoredCandidate(
         memory_id=memory_id,
         new_importance=importance,

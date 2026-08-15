@@ -133,11 +133,32 @@ Formal CPU TEI `mem_limit` is **12g** (model-runtime-profile-specific fixed cont
 
 Preflight **Check 8** CPU MemAvailable: min **16** GiB / rec **20** GiB (`12/16 + (D-8)`, D=12). **Check 13a** verifies host `MemTotal >= 14` (ES 2g + TEI 12g). **Check 13b** runs a real TEI CPU runtime probe under formal `mem_limit: 12g` (up to ~300s) for `cpu` / `auto→cpu` paths. GPU / `auto→gpu` skip Check 13b.
 
-**Default merge-gate tests** (exclude `tests/runtime_contract_gate/`):
+**Default merge-gate tests** (exclude `tests/runtime_contract_gate/`, `task_scope_boundary`, and `tests/e2e/`):
 
 ```bash
-uv run pytest tests/unit tests/contract tests/integration -q
+bash scripts/ci/run_merge_gate.sh
 ```
+
+Equivalent manual commands (full merge-gate: `uv run pytest tests/unit tests/contract tests/integration` with marker exclusions below):
+
+```bash
+uv sync --locked
+uv run ruff check src tests scripts
+uv run mypy src
+uv run python scripts/check_env_example.py
+uv run pytest tests/unit tests/contract \
+  -m "not runtime_contract_gate and not task_scope_boundary" \
+  --cov=memory_system.domain \
+  --cov=memory_system.application \
+  --cov-report=term-missing \
+  --cov-fail-under=80 \
+  -q
+cp .env.example .env
+uv run pytest tests/integration -m "not runtime_contract_gate" -q
+```
+
+GitHub Actions workflow: `.github/workflows/ci.yml` (jobs: `static`, `unit-contract-coverage`, `integration`).
+Coverage threshold: `fail_under=80` in `pyproject.toml` for `memory_system.domain` + `memory_system.application`.
 
 **Explicit reference runtime contract gate** (not default CI; dual fixtures: historical CONFLICT@8g + approved PASS@12g):
 

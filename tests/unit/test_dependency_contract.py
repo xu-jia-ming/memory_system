@@ -38,6 +38,7 @@ EXPECTED_TEST = [
     "pytest>=9.1,<9.2",
     "pytest-asyncio>=1.4,<1.5",
     "pytest-cov>=7.1,<7.2",
+    "pytest-timeout>=2.4,<2.5",
 ]
 
 EXPECTED_BUILD_REQUIRES = ["uv_build>=0.11.32,<0.13"]

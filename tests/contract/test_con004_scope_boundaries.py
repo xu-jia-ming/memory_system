@@ -6,10 +6,14 @@ import ast
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from memory_system.infrastructure.neo4j.consolidation_user_enumeration_repository import (
     Q_LIST_USER_IDS,
     authorized_enumeration_cypher_queries,
 )
+
+pytestmark = pytest.mark.task_scope_boundary
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PLAN_COMMIT = "e124b23"

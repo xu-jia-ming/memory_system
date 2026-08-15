@@ -5,10 +5,14 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from memory_system.infrastructure.neo4j.consolidation_memory_write_repository import (
     Q_WRITE_IMPORTANCE_BATCH,
     authorized_write_cypher_queries,
 )
+
+pytestmark = pytest.mark.task_scope_boundary
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PLAN_COMMIT = "0146b5dd53d37dfbdec0ea9bc9e87d6fe373221a"

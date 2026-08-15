@@ -135,8 +135,10 @@ def test_infra() -> Iterator[str]:
         _compose("down", "-v", check=False)
         pytest.skip("Could not resolve Elasticsearch container IP")
 
-    yield f"http://{es_ip}:9200"
-    _compose("down", "-v", check=False)
+    try:
+        yield f"http://{es_ip}:9200"
+    finally:
+        _compose("down", "-v", check=False)
 
 
 @pytest.fixture

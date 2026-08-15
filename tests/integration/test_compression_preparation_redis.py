@@ -4,14 +4,9 @@ from __future__ import annotations
 
 import asyncio
 import json
-import os
-import shutil
-import subprocess
-import time
 import uuid
 from collections.abc import Iterator
-from pathlib import Path
-from typing import Any, cast
+from typing import cast
 from unittest.mock import AsyncMock
 
 import pytest
@@ -41,77 +36,11 @@ from memory_system.infrastructure.redis.working_memory_repository import (
 )
 from memory_system.settings import get_settings
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-COMPOSE_SH = REPO_ROOT / "scripts" / "compose.sh"
-ENV_EXAMPLE = REPO_ROOT / ".env.example"
-TEST_PROJECT = "memory-system-test"
-REDIS_CONTAINER = "memory-system-redis-test"
+pytest_plugins = ("tests.integration.support.redis_fixtures",)
 
 FIXED_NOW = 1_700_000_000
 TOPIC = "context.archive.created"
 TTL = 420
-
-
-def _docker_available() -> bool:
-    if shutil.which("docker") is None:
-        return False
-    result = subprocess.run(["docker", "info"], capture_output=True, check=False)
-    return result.returncode == 0
-
-
-def _compose_env() -> dict[str, str]:
-    env = os.environ.copy()
-    env.setdefault("EMBEDDING_EFFECTIVE_RUNTIME_MODE", "cpu")
-    env.setdefault("EMBEDDING_CLIENT_TOTAL_TOKEN_BUDGET", "4096")
-    env["PROXY__HTTP_URL"] = ""
-    return env
-
-
-def _compose(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
-    cmd = [str(COMPOSE_SH), "--stack=test", "--embedding=none", *args]
-    result = subprocess.run(
-        cmd,
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        env=_compose_env(),
-        check=False,
-    )
-    if check and result.returncode != 0:
-        raise AssertionError(
-            f"compose failed ({result.returncode}): {' '.join(cmd)}\n"
-            f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}"
-        )
-    return result
-
-
-def _ensure_dotenv() -> None:
-    dotenv = REPO_ROOT / ".env"
-    if not dotenv.exists():
-        shutil.copy(ENV_EXAMPLE, dotenv)
-
-
-def _assert_test_isolation() -> None:
-    config_result = _compose("config", "--format", "json")
-    config: dict[str, Any] = json.loads(config_result.stdout)
-    assert config.get("name") == TEST_PROJECT
-
-
-def _redis_container_ip() -> str | None:
-    result = subprocess.run(
-        [
-            "docker",
-            "inspect",
-            "-f",
-            "{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}",
-            REDIS_CONTAINER,
-        ],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    ip = result.stdout.strip()
-    return ip or None
 
 
 def _new_ids() -> tuple[str, str, str, str]:
@@ -142,41 +71,6 @@ def _input(
         pending_archive_estimated_tokens=tokens,
         lock_owner_token=lock_owner_token,
     )
-
-
-@pytest.fixture(scope="module")
-def test_redis() -> Iterator[str]:
-    if not _docker_available():
-        pytest.skip("Docker not available")
-    _ensure_dotenv()
-    _assert_test_isolation()
-    _compose("up", "-d", "redis")
-    deadline = time.time() + 60
-    while time.time() < deadline:
-        ip = _redis_container_ip()
-        if ip:
-            break
-        time.sleep(2)
-    else:
-        pytest.skip("Test Redis container did not become ready in time")
-    ip = _redis_container_ip()
-    if not ip:
-        pytest.skip("Could not resolve test Redis container IP")
-    yield f"redis://{ip}:6379/0"
-    _compose("down", check=False)
-
-
-@pytest.fixture
-def async_redis_client(test_redis: str) -> Iterator[aioredis.Redis]:
-    client = aioredis.from_url(test_redis, decode_responses=True)
-    yield client
-
-
-@pytest.fixture
-def redis_client(test_redis: str) -> Iterator[redis.Redis]:
-    client = redis.from_url(test_redis, decode_responses=True)
-    yield client
-    client.close()
 
 
 @pytest.fixture(autouse=True)

@@ -37,6 +37,15 @@ def valid_extraction_payload(**overrides: Any) -> dict[str, Any]:
     return payload
 
 
+def persisted_extraction_payload(**overrides: Any) -> dict[str, Any]:
+    """Durable extraction_result shape after EXT-003 application enrichment."""
+    payload = valid_extraction_payload(**overrides)
+    for memory in payload["memories"]:
+        memory.setdefault("candidate_source_time", 1_700_000_000)
+        memory.setdefault("candidate_fingerprint", "sha256:ext003-test-fingerprint")
+    return payload
+
+
 def valid_extraction_json(**overrides: Any) -> str:
     return json.dumps(valid_extraction_payload(**overrides))
 

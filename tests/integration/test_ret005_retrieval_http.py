@@ -4,10 +4,11 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from typing import Any
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import MagicMock
 
 import pytest
 from fastapi.testclient import TestClient
+from tests.unit.test_retrieval_api_service import make_scored_memory
 
 from memory_system.api.app import create_app
 from memory_system.domain.services.retrieval_api_service import (
@@ -16,10 +17,11 @@ from memory_system.domain.services.retrieval_api_service import (
     RetrievalApiSuccess,
     RetrievalApiValidationError,
 )
-from memory_system.domain.services.retrieval_response_mapper import map_scored_memory_to_response_item
+from memory_system.domain.services.retrieval_response_mapper import (
+    map_scored_memory_to_response_item,
+)
 from memory_system.infrastructure.runtime import AppState
 from memory_system.settings import get_settings
-from tests.unit.test_retrieval_api_service import make_scored_memory
 
 VALID_ENV: dict[str, str] = {
     "APP_ENV": "test",
@@ -78,7 +80,9 @@ class FakeRetrievalApiService:
         self.mode = mode
         self.calls: list[RetrievalApiInput] = []
 
-    async def retrieve(self, input_data: RetrievalApiInput, *, deadline: float) -> RetrievalApiSuccess:
+    async def retrieve(
+        self, input_data: RetrievalApiInput, *, deadline: float
+    ) -> RetrievalApiSuccess:
         self.calls.append(input_data)
         if self.mode == "validation":
             raise RetrievalApiValidationError("query_too_long", "query too long")

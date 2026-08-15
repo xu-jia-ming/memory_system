@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import pytest
 
-from memory_system.domain.models.authoritative_recall import CandidateOrigin, RetrievalSource
 from memory_system.domain.models.retrieval_memory_snapshot import RetrievalEntitySnapshot
 from memory_system.domain.models.retrieval_scoring import ActRScoreComponents, ScoredRetrievalMemory
 from memory_system.domain.services.retrieval_response_mapper import (

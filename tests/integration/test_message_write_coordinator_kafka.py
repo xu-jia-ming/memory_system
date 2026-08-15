@@ -327,7 +327,13 @@ async def _seed_for_trigger(
         assert result.status == MessageWriteStatus.SUCCESS
 
 
-async def _consume_one(bootstrap: str, *, group_id: str) -> dict[str, Any]:
+async def _consume_one(
+    bootstrap: str,
+    *,
+    group_id: str,
+    user_id: str,
+    session_id: str,
+) -> dict[str, Any]:
     consumer = AIOKafkaConsumer(
         TOPIC,
         bootstrap_servers=bootstrap,
@@ -340,11 +346,15 @@ async def _consume_one(bootstrap: str, *, group_id: str) -> dict[str, Any]:
     try:
         deadline = time.time() + 20
         while time.time() < deadline:
-            batch = await consumer.getmany(timeout_ms=1000, max_records=10)
+            batch = await consumer.getmany(timeout_ms=1000, max_records=20)
             for messages in batch.values():
                 for msg in messages:
                     payload: dict[str, Any] = json.loads(msg.value.decode("utf-8"))
-                    return payload
+                    if (
+                        payload.get("user_id") == user_id
+                        and payload.get("session_id") == session_id
+                    ):
+                        return payload
             await asyncio.sleep(0.2)
         return {}
     finally:
@@ -379,7 +389,12 @@ async def test_i_h_kafka_event_emitted(
         ),
         clock=lambda: FIXED_NOW + 10,
     )
-    payload = await _consume_one(bootstrap, group_id=f"stm009-h-{uuid.uuid4().hex[:8]}")
+    payload = await _consume_one(
+        bootstrap,
+        group_id=f"stm009-h-{uuid.uuid4().hex[:8]}",
+        user_id=user_id,
+        session_id=session_id,
+    )
     assert set(payload.keys()) == set(ARCHIVE_CREATED_EVENT_FIELD_NAMES)
     assert payload["event_type"] == TOPIC
     assert payload["user_id"] == user_id

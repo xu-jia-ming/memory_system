@@ -236,9 +236,9 @@ async def test_u_ops2_03b_extraction_llm_json_without_prompt_content(
 ) -> None:
     configure_logging(settings, service_name="memory-extraction-worker")
     secret = "PRIVATE_ARCHIVE_MESSAGE_CONTENT"
+    from memory_system.domain.enums.working_memory import MessageRole
     from memory_system.domain.models.extraction_llm import ExtractionLlmInput
     from memory_system.domain.models.extraction_preprocessing import ExtractionReadyArchive
-    from memory_system.domain.enums.working_memory import MessageRole
 
     archive = ExtractionReadyArchive.model_validate(
         {
@@ -334,7 +334,9 @@ async def test_u_ops2_04_extraction_consumer_failed_log_fields(
         ),
         patch(
             "memory_system.domain.services.extraction_task_consumer_service.repo.mark_failed",
-            new=AsyncMock(return_value=task.model_copy(update={"status": ExtractionTaskStatus.FAILED})),
+            new=AsyncMock(
+                return_value=task.model_copy(update={"status": ExtractionTaskStatus.FAILED}),
+            ),
         ),
         patch(
             "memory_system.domain.services.extraction_task_consumer_service.repo.find_extraction_task_by_archive_id",
