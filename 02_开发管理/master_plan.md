@@ -735,7 +735,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | OPS-002 | 日志、指标、敏感信息与用户隔离审计 | §3.27, §3.21 | 前述全部 | completed |
 | OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | completed |
 | OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | completed |
-| E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | planned |
+| E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | approved |
 | REL-001 | MVP RC Review 与验收清单 | `05_测试与验收/mvp_acceptance_checklist.md` | E2E-001 | planned |
 
 #### OPS-001 Graceful Shutdown、连接池、Timeout 与 Retry 总检
@@ -785,6 +785,18 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：`test_ops004_ci_workflow_contract.py`；条件修 `test_extraction_llm_service` / `test_extraction_task_consumer_service` mock；scope-boundary marker 分层。
 - **计划文件**：`02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md`
 - **状态备注**：`completed`（plan `4d5d519`；implementation `5996501`；PR #58 MERGED `3e6f8fa` mergedAt `2026-08-15T01:56:08Z`；CI green 1399 unit+contract / 246 integration；feat 分支已删；`next_action=E2E-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13）。
+
+#### E2E-001 全链路 E2E 与全部失败注入
+
+- **目标**：在 compose.test 真实基础设施 + Fake LLM/Embedding 上 **组合** 既有 STM-013 / EXT-009 / RET-006 / CON-005 垂直切片，交付 §3.32 #4 全链路 `Session → Message → Archive → Compression → Extraction → Elasticsearch Sync → Retrieval → Consolidation → Session Close`；覆盖 §3.28 五条失败注入与 §3.32 #5 幂等、#6 人工恢复（STM-011 republish / close retry / EXT-008 Admin retry）；#7 CPU Fake embedding；#8 HTTP/隔离 E2E 子集。
+- **非目标**：REL-001 RC 清单；将 E2E 纳入 OPS-004 默认 CI；重写四切片测试矩阵；改 API/Schema/错误码/状态机；DEV-006/PR#13；真实计费 API / 真实 BGE-M3 / GPU E2E；`src/**` 生产变更（默认）。
+- **前置**：OPS-003 completed（PR #57）— **SATISFIED**；OPS-004 completed（PR #58）；STM/EXT/RET/CON/OPS-001/002 completed；baseline `main @ bb0d387`。
+- **规格章节**：§3.28、§3.32 #4/#5/#6/#7/#8（#1/#2/#3/#9 消费 OPS-003/004）。
+- **进程模型**：compose.test infra + in-process FastAPI / Extraction pipeline / ConsolidationRunService；**不**用 extraction-worker 容器跑 happy path（默认真实 LLM）。
+- **预期生产变更**：NONE。
+- **测试**：`tests/e2e/test_e2e001_full_chain.py` + idempotency + failure_injection；`tests/e2e/conftest.py` teardown `down -v`；scope-boundary contract。
+- **计划文件**：`02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md`
+- **状态备注**：`approved` / `PLAN_LANDING`（Round 2 PLAN_APPROVED session `20220a4e-dd78-4a44-b130-9eeec0b11d74` BLOCKER=0 MUST_FIX=0；人类 `PLAN_APPROVED` @ 2026-08-15 02:38 UTC；`human_plan_approved=true`；`developer_authorized=false` 直至 feat `feat/E2E-001-full-chain-e2e-failure-injection` 存在；**非** completed；**不得**在 main 上启动 Developer；不得触碰 DEV-006/PR#13）。
 
 ---
 
@@ -1656,5 +1668,35 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `OPS-004` → `planned`（计划文件 `02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md`）；`E2E-001`/`REL-001` 保持 `planned` / **NOT AUTO-STARTED**；**不**修改 OPS-003 完成状态；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否**（实现 §3.28/§3.30 P1 既有要求；不改 Contract/Schema） |
 | 审批 | Planner 初版；待 Plan Review → 人工确认；确认前不得 PLAN_LANDING / Developer |
+
+### CHANGE-079
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | 用户显式 `WORKFLOW_MODE=NORMAL` + `START_EXISTING_TASK` 授权 E2E-001 规划：登记全链路 E2E 与 §3.28 失败注入 Task Plan；覆盖 OPS-004 `next_action=E2E-001 planned / NOT AUTO-STARTED`；**不**自动开始实施 |
+| 受影响任务 | `E2E-001` → `planned`（计划文件 `02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md`）；`REL-001` 保持 `planned` / **NOT AUTO-STARTED**；**不**修改 OPS-004 完成状态；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（实现 §3.28/§3.32 既有 E2E 要求；不改 Contract/Schema） |
+| 审批 | Planner 初版；待 Plan Review → 人工确认；确认前不得 PLAN_LANDING / Developer |
+
+### CHANGE-080
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Round 1 Plan Reviewer PLAN_REJECTED（session `570cb388`；BLOCKER=0 MUST_FIX=3）；人类 re-invoke `/orchestrate-task` 授权 **Amendment 001** 规划修订：MF-1 INJ-1 §1.2.6 #10/I-I；MF-2 HP Compression succeeded；MF-3 INJ-5 两次 close §1.2.3 #11；吸收 SF-1..8（生产 ES wrap、INJ-4 F1、SIGTERM lag=0、-v 起止、PLAN_LANDING 状态机、白名单 §12、mypy src only） |
+| 受影响任务 | `E2E-001` 保持 `planned` / `AWAIT_PLAN_REVIEW` Round 2（计划文件 `02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md`）；`REL-001` 保持 `planned` / **NOT AUTO-STARTED**；**不**修改 OPS-004 完成状态；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（仅锁测试断言与恢复路径；不改 Contract/Schema） |
+| 审批 | Planner Amendment 001；待 Round 2 Plan Review → 人工确认；确认前不得 PLAN_LANDING / Developer |
+
+### CHANGE-081
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Round 2 Plan Reviewer PLAN_APPROVED（session `20220a4e-dd78-4a44-b130-9eeec0b11d74`；BLOCKER=0 MUST_FIX=0）；人类 gate `PLAN_APPROVED`；Release Operator `PLAN_LANDING` 将已批准计划落到 main 并创建 exact feat |
+| 受影响任务 | `E2E-001` → `approved` / `PLAN_LANDING`（计划文件 `02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md`）；**非** completed；`REL-001` 保持 `planned` / **NOT AUTO-STARTED**；**不**修改 OPS-004 完成状态；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（仅治理状态：approved + PLAN_LANDING；不改 Contract/Schema） |
+| 审批 | Human PLAN_APPROVED；Release Operator PLAN_LANDING；`developer_authorized=false` 直至 feat 存在；feat 创建后 next_action=Developer on feat |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

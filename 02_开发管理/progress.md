@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — OPS-004 completed; E2E-001 planned / NOT AUTO-STARTED
+current_phase: Phase 5 — E2E-001 approved / PLAN_LANDING
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: OPS-004
-current_task_status: completed
+current_task: E2E-001
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,34 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md
-planning_baseline_main: "85c1470417c27c4d2c688f22db7a36775b0aef79"
+current_plan_file: 02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md
+planning_baseline_main: "bb0d387f509c38194cf511f580b98cf86f44b5a7"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
+formal_E2E-001_plan_file: 02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md
+formal_E2E-001_status: approved
+formal_E2E-001_workflow_mode: NORMAL
+formal_E2E-001_workflow_mode_source: explicit
+formal_E2E-001_baseline: "bb0d387f509c38194cf511f580b98cf86f44b5a7"
+formal_E2E-001_branch: "feat/E2E-001-full-chain-e2e-failure-injection"
+formal_E2E-001_prerequisite: "SATISFIED — OPS-003 completed (PR #57 MERGED); OPS-004 completed (PR #58 MERGED); OPS-001/002 completed; STM/EXT/RET/CON all completed"
+formal_E2E-001_scope: "§3.28/§3.32 #4 full-chain E2E compose of STM-013+EXT-009+RET-006+CON-005 slices; §3.28 five failure injections; §3.32 #5 idempotency; #6 recovery; #7 CPU Fake embedding; #8 HTTP/isolation subset; production_file_whitelist=NONE; NOT OPS-004 CI expansion; NOT REL-001"
+formal_E2E-001_blocking_open_issues: []
+formal_E2E-001_nonblocking_open_issues:
+  - "OI-E2E1-VOL — e2e conftest down missing -v; Amendment 001: -v on infra_stack start AND end; --stack=test / memory-system-test only"
+  - "OI-E2E1-SIGTERM — worker container defaults to real LLM; leftover events on shared stack can hit DeepSeek; Amendment 001: lag=0 idle + docker stop not-running + no LLM HTTP; in-process F1 = INJ-4"
+formal_E2E-001_dependency_changes_expected: NONE
+formal_E2E-001_migration_changes_expected: NONE
+formal_E2E-001_production_file_whitelist: NONE
+formal_E2E-001_test_file_whitelist: "tests/e2e/helpers/e2e001_helpers.py; tests/support/e2e001_failure_doubles.py; tests/e2e/test_e2e001_full_chain.py; tests/e2e/test_e2e001_idempotency.py; tests/e2e/test_e2e001_failure_injection.py; tests/e2e/conftest.py; tests/contract/test_e2e001_scope_boundaries.py"
+formal_E2E-001_human_plan_approved: true
+formal_E2E-001_human_plan_approved_at: "2026-08-15 02:38 UTC"
+formal_E2E-001_approval_posture: "PLAN_LANDING — human PLAN_APPROVED; docs(plan) landing on main then feat create"
+formal_E2E-001_plan_review_round: 2
+formal_E2E-001_plan_review: "Round 2 PLAN_APPROVED (session 20220a4e-dd78-4a44-b130-9eeec0b11d74; BLOCKER=0 MUST_FIX=0); Amendment 001 absorbed; Round 1 PLAN_REJECTED (session 570cb388) retained as history"
+formal_E2E-001_amendment: "001 — MF-1 INJ-1 §1.2.6 #10/I-I Mongo Archive not WM; MF-2 HP compression succeeded + compressed_context; MF-3 INJ-5 two-step close §1.2.3 #11; SF-1 production ES wrap; SF-2 INJ-4 F1 second run_worker_once; SF-3 SIGTERM lag=0; SF-4 -v both downs; SF-5 PLAN_LANDING before Developer; SF-6 whitelist §12; SF-8 mypy src only"
+formal_E2E-001_developer_authorized: false
+formal_E2E-001_note: "Human PLAN_APPROVED; Round 2 PLAN_APPROVED session 20220a4e BLOCKER=0 MUST_FIX=0; current_task_status=approved; current_branch=main until feat created; next_action=PLAN_LANDING then Developer on feat/E2E-001-full-chain-e2e-failure-injection; developer_authorized=false until feat exists; no src/**; 不得触碰 DEV-006/PR#13"
 formal_OPS-004_plan_file: 02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md
 formal_OPS-004_status: completed
 formal_OPS-004_workflow_mode: NORMAL
@@ -188,8 +212,8 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: 开发实施
-last_role_result: RELEASE_OPERATOR
+next_action: PLAN_LANDING then Developer on feat/E2E-001-full-chain-e2e-failure-injection
+last_role_result: PLAN_APPROVED
 blocking_reason: null
 formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
 formal_OPS-002_status: completed
@@ -1928,6 +1952,9 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-15 02:38 UTC | E2E-001 | planned → approved / PLAN_LANDING | Human PLAN_APPROVED；Round 2 PLAN_APPROVED（session 20220a4e-dd78-4a44-b130-9eeec0b11d74；BLOCKER=0 MUST_FIX=0）；Amendment 001 absorbed；`human_plan_approved=true`；`developer_authorized=false` until feat exists；Release Operator PLAN_LANDING docs(plan) on main then create `feat/E2E-001-full-chain-e2e-failure-injection`；next_action=Developer on feat after this phase；未实施 | 未运行（规划-only） | OPS-004 completed records unchanged；不得触碰 DEV-006/PR#13 |
+| 2026-08-15 02:25 UTC | E2E-001 | planned (Amendment 001 / Round 2) | Round 1 PLAN_REJECTED（session 570cb388；BLOCKER=0 MUST_FIX=3）修订：MF-1 INJ-1 §1.2.6 #10/I-I（Mongo Archive 保存点，不要求 WM 仍持消息）；MF-2 HP Compression succeeded + compressed_context；MF-3 INJ-5 两次 close（503 closing → 200 closed）；SF-1 生产 ES wrap；SF-2 INJ-4 F1 二次 run_worker_once；SF-3 SIGTERM lag=0；SF-4 -v 起止；SF-5 PLAN_LANDING 后才 Developer；SF-6 白名单 §12；SF-8 mypy src only；未实施、未 Git 写 | 未运行（规划-only） | `plan_review_round=2`；`next_action=计划审查`；`human_plan_approved=false`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
+| 2026-08-15 02:10 UTC | E2E-001 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan `02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md`；人类 START_EXISTING_TASK 覆盖 OPS-004 `next_action=E2E-001 planned / NOT AUTO-STARTED`；baseline `bb0d387f509c38194cf511f580b98cf86f44b5a7` MATCH；git status clean；组合 STM-013/EXT-009/RET-006/CON-005 为 §3.32 #4 全链；§3.28 五条失败注入；`production_file_whitelist=NONE`；不扩 OPS-004 CI；不吸收 REL-001；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 02:00 UTC | OPS-004 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #58 MERGED `3e6f8fa2b7c1bf36a332e28f027fe79445bcf1ec` mergedAt `2026-08-15T01:56:08Z`；ff-only 同步 main；CI GREEN 1399 unit+contract / 246 integration（run 31857428972）；exact feat 已删；`next_action=E2E-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13；不得自动启动 E2E-001 |
 | 2026-08-15 01:40 UTC | OPS-004 | committed (CI hotfix) | PR #58：pytest_plugins 不得加载 test_*.py；EXT-002 改加载 mongo_kafka_fixtures（无 autouse）；避免 migrate/OPS-003 down -v 后 stale Mongo ping；契约扫描回归 | unit/contract scoped | 待 push 后等 CI；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 07:55 UTC | OPS-004 | planned (Amendment 002) → tested | Amendment 002：`uv run mypy src` CI scope；BL-RUFF-001 8-file ruff auto-fix；ruff/mypy src PASS；1395 pass / 91.26% cov；9 C-OPS4 PASS；merge_gate static+unit PASS | 未 Git 写 | `next_action=Code Reviewer`；不得触碰 DEV-006/PR#13 |
