@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — REL-001 completed
+current_phase: Phase 5 follow-up — DEV-010 approved / PLAN_LANDING
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: REL-001
-current_task_status: completed
+current_task: DEV-010
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,40 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md
-planning_baseline_main: "412fb7b858120927aecad63962990587038df340"
+current_plan_file: 02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md
+planning_baseline_main: "fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
+formal_DEV-010_plan_file: 02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md
+formal_DEV-010_status: approved
+formal_DEV-010_workflow_mode: NORMAL
+formal_DEV-010_workflow_mode_source: explicit
+formal_DEV-010_baseline: "fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a"
+formal_DEV-010_branch: "feat/DEV-010-siliconflow-embedding-token-estimation-routing"
+formal_DEV-010_prerequisite: "SATISFIED — REL-001 completed (PR #60 MERGED); DEV-007/STM-001/OI-012/EXT-006/007/RET-005 completed; DEV-006 PAUSED / PR #13 DO_NOT_MERGE"
+formal_DEV-010_scope: "provider-aware tokenize count-source routing (siliconflow=STM-001 estimate_tokens heuristic; local_tei=TeiTokenizeClient); minimal spec delta; NOT new tokenizer; NOT extraction schema; NOT OI-012 exact 1024 expansion; NOT TEIEmbeddingClient"
+formal_DEV-010_insertion_reason: NEW_UNPLANNED_FEATURE
+formal_DEV-010_changes_technical_spec: true
+formal_DEV-010_blocking_open_issues: []
+formal_DEV-010_nonblocking_open_issues:
+  - "OI-DEV010-ITEM9 — spec tokenize mandate is §2.1.13 prep item 9 (brief said #4)"
+  - "OI-DEV010-TEI-CHAPTERS — leftover TEIEmbeddingClient /tokenize sentences in §2.2.6/§3.2/§3.10 not rewritten"
+  - "OI-DEV010-HEURISTIC-GAP — estimate_tokens vs BGE-M3 tokenizer at 1024 boundary accepted"
+  - "OI-DEV010-LOCAL-TEI-SPLIT — local_tei tokenize still TeiTokenizeClient; embedding factory still NotImplementedError"
+formal_DEV-010_dependency_changes_expected: NONE
+formal_DEV-010_migration_changes_expected: NONE
+formal_DEV-010_settings_fields_expected: NONE
+formal_DEV-010_production_file_whitelist: "src/memory_system/infrastructure/tokenize/__init__.py; src/memory_system/infrastructure/tokenize/factory.py; src/memory_system/infrastructure/tokenize/heuristic_token_count_adapter.py; src/memory_system/domain/ports/tokenize_client.py; src/memory_system/domain/services/production_extraction_pipeline.py; src/memory_system/domain/services/retrieval_api_service.py"
+formal_DEV-010_test_file_whitelist: "tests/unit/test_heuristic_token_count_adapter.py; tests/unit/test_tokenize_client_factory.py; tests/contract/test_dev010_tokenize_provider_routing.py; tests/e2e/helpers/e2e001_helpers.py"
+formal_DEV-010_spec_file_whitelist: "01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md"
+formal_DEV-010_human_plan_approved: true
+formal_DEV-010_human_plan_approved_at: "2026-08-15 08:03 UTC"
+formal_DEV-010_developer_authorized: false
+formal_DEV-010_approval_posture: PLAN_LANDING
+formal_DEV-010_plan_review_round: 1
+formal_DEV-010_plan_review: "Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2 (implementation Step 0; no Amendment this phase)"
+formal_DEV-010_next_action: "Developer on feat after PLAN_LANDING"
+formal_DEV-010_note: "Human PLAN_APPROVED 2026-08-15 08:03 UTC；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2（实施 Step 0）；PLAN_LANDING docs(plan) on main then create exact feat；developer_authorized=false until feat exists；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13；不得创建 OI-013"
 formal_REL-001_plan_file: 02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md
 formal_REL-001_status: completed
 formal_REL-001_workflow_mode: NORMAL
@@ -272,8 +302,8 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "REL-001 completed — NO AUTO-START (Phase 5 has no subsequent Task); HUMAN: annotated tag v0.9.0-mvp-rc1 only (suggested object 412fb7b858120927aecad63962990587038df340); DO NOT create v1.0.0-mvp (A.1 Preflight still unchecked)"
-last_role_result: Release Operator POST_MERGE_CLEANUP; PR #60 MERGED 4e8ceff74b95880b1c035d518bf2be43d2bbc907 mergedAt 2026-08-15T06:01:06Z; no git tag
+next_action: "Developer on feat after PLAN_LANDING"
+last_role_result: Release Operator PLAN_LANDING DEV-010 approved; docs(plan) on main then create exact feat; REL-001 completed facts unchanged
 blocking_reason: null
 formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
 formal_OPS-002_status: completed
@@ -963,7 +993,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: PLAN_LANDING
+current_task_approval_posture: AWAIT_PLAN_REVIEW
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -2012,6 +2042,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-15 08:06 UTC | DEV-010 | planned → approved / PLAN_LANDING | Human PLAN_APPROVED 2026-08-15 08:03 UTC；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2（实施 Step 0，本 phase 无 Amendment）；`human_plan_approved=true`；`developer_authorized=false` until feat exists；Release Operator PLAN_LANDING docs(plan) on main then create `feat/DEV-010-siliconflow-embedding-token-estimation-routing`；`next_action=Developer on feat after PLAN_LANDING`；未实施；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
+| 2026-08-15 07:50 UTC | DEV-010 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan `02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md`；用户显式 NEW_UNPLANNED_FEATURE（workflow_mode=NORMAL explicit）；baseline `fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a` MATCH；git status 规划前 clean；最小 spec delta + provider-aware tokenize 路由；`changes_technical_spec=true`；不单独 OI-013；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；`human_plan_approved=false`；`developer_authorized=false`；不得 PLAN_LANDING/实施本轮；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 06:05 UTC | REL-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #60 MERGED `4e8ceff74b95880b1c035d518bf2be43d2bbc907` mergedAt `2026-08-15T06:01:06Z`；ff-only 同步 main；main 含 merge `4e8ceff` 与 implementation `703bb105`；仅更新 REL-001 三份治理文件并创建 `docs(status): complete REL-001 after PR merge`；exact feat 已删；未 git tag；未勾 A.1；清单 F.Git干净保持未勾（POST_MERGE 不 add 清单；POST_MERGE 后工作树干净）；`next_action=本任务完成 / NOT AUTO-STARTED`（Phase 5 无后续 Task）；HUMAN `v0.9.0-mvp-rc1` 仅人工 tag（建议对象 `412fb7b858120927aecad63962990587038df340`）；`v1.0.0-mvp` 不得创建（A.1 Preflight 仍未勾）；E2E-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 04:50 UTC | REL-001 | approved → in_progress → implemented → tested | Developer exact feat `feat/REL-001-mvp-rc-review-acceptance-checklist` HEAD `04c4a7e8`；吸收 SHOULD_FIX=5；Preflight `--mode=cpu` exit 1（`vm.max_map_count`）A.1 未勾；ruff PASS / mypy src 0；清单除 A.1/F.Git干净/F.Review 外已按证据勾选；未 git tag；未改 src/tests；`next_action=Code Review`；E2E-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 04:25 UTC | REL-001 | planned → approved / PLAN_LANDING | Human PLAN_APPROVED；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5（实施 Step 0，本 phase 无 Amendment）；`human_plan_approved=true`；`developer_authorized=false` until feat exists；Release Operator PLAN_LANDING docs(plan) on main then create `feat/REL-001-mvp-rc-review-acceptance-checklist`；`next_action=PLAN_LANDING`；未实施；E2E-001 completed 事实不变；不得触碰 DEV-006/PR#13 |

@@ -33,6 +33,7 @@ planned
 ```text
 DEV-004  → ES 版本化 Index + Mapping + Alias（唯一创建方）
 DEV-007  → SiliconFlow Embedding Client MVP（EXT-007 与 Retrieval 共享前置；OI-012 后）
+DEV-010  → SiliconFlow embedding token-estimation routing（EXT + RET 共享计数来源；非 EXT-010 / RET-007）
 DEV-006  → TEI Embedding Client（PAUSED / SUPERSEDED_FOR_MVP；PR #13 DO_NOT_MERGE）
 EXT-007  → 仅 Retrieval Document 同步；不创建/修改 Mapping 或 Alias
 RET-001  → 仅 BM25 查询；Integration 使用 ES Fixture；不硬依赖 EXT-007
@@ -810,6 +811,25 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **计划文件**：`02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=412fb7b858120927aecad63962990587038df340` MATCH；`human_plan_approved=true` @ `2026-08-15 04:25 UTC`；`developer_authorized=true`；feat slug 锁定 `feat/REL-001-mvp-rc-review-acceptance-checklist`；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5（实施 Step 0 已吸收；无 Amendment）；不得触碰 DEV-006/PR#13。
 - **状态备注**：`completed`（plan `04c4a7e8f6a49d0092d175b40a98513eadc47e0a`；implementation `703bb105fa18cc0814bd750843295c7044c6d4b9`；PR #60 MERGED `4e8ceff74b95880b1c035d518bf2be43d2bbc907` mergedAt `2026-08-15T06:01:06Z`；CODE_REVIEW_APPROVED P0=0/P1=0 P3=1；A.1 仍未勾（preflight exit 1 `vm.max_map_count`）；F.Git干净清单未勾（POST_MERGE 不 add 清单；POST_MERGE 后工作树干净）；**不得**宣称可打 `v1.0.0-mvp`；未 `git tag`；feat 分支已删；`next_action=本任务完成 / NOT AUTO-STARTED`（Phase 5 无后续 Task）；HUMAN `v0.9.0-mvp-rc1` 仅人工 tag（建议对象 `412fb7b858120927aecad63962990587038df340`）；E2E-001 completed 事实不变；不得触碰 DEV-006/PR#13）。
+
+### Phase 5 之后：未规划跟进（NEW_UNPLANNED_FEATURE）
+
+| Task ID | Task | 规格章节 | 前置依赖 | 状态 |
+|---|---|---|---|---|
+| DEV-010 | SiliconFlow embedding token-estimation routing | §1.2.1, §2.1.13, §2.2.3, §2.2.5, §3.1, §3.10.0 | REL-001 completed; DEV-007; STM-001; OI-012 | approved |
+
+#### DEV-010 SiliconFlow embedding token-estimation routing
+
+- **目标**：复用 STM-001 `estimate_tokens`，按 `memory_retrieval.embedding_provider` 分流 EXT/RET 1024 门闩的 **token-count 来源**：`siliconflow` → 启发式 `estimate_tokens`（不得调用 TEI `/tokenize`，不得仅因计数要求 `embedding-service`）；`local_tei` → 既有 `TeiTokenizeClient`。最小规格 delta 澄清该分流。不是新 tokenizer。
+- **非目标**：HF tokenizer / tiktoken / transformers / SiliconFlow count-tokens API；新 tokenizer 产品；扩大 OI-012 精确 1024 强制；extraction schema；`TEIEmbeddingClient`；DEV-006/PR#13；compose/preflight；改 `estimate_tokens` 公式；改错误码/Schema/状态机；`SiliconFlowEmbeddingClient` 内精确 1024 预检。
+- **前置**：REL-001 completed（PR #60 MERGED）— **SATISFIED**；DEV-007 / STM-001 / OI-012 / EXT-006/007 / RET-005 completed；baseline `main @ fc3fbd0`。
+- **为何 DEV-010**：DEV-008/009 已被 OI-012 Amendment 002 取消；本任务是 EXT+RET 共享基础设施路由，类比 DEV-007 factory，不是 EXT-010 或 RET-007。本轮不单独创建 OI-013。
+- **规格冲突**：§2.1.13 item 9、§2.2.3 #4/#7、§2.2.5 #3 仍无条件要求 TEI `/tokenize` 精确计数；§3.1 / §3.10.0 / OI-012 已声明 SiliconFlow 非 TEI 级精确。授权最小 delta 只改计数来源。
+- **预期生产变更**：`create_tokenize_client` factory + `HeuristicTokenCountAdapter`；接线 `production_extraction_pipeline.py` 与 `create_retrieval_api_service_from_app_state` 两处硬编码 `TeiTokenizeClient`。
+- **测试**：Unit + Contract（默认 CI 无 live TEI / live SiliconFlow）；更新 E2E-001 helper patch；不新增完整 E2E 套件。
+- **计划文件**：`02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md`
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a` MATCH；`human_plan_approved=true` @ `2026-08-15 08:03 UTC`；`developer_authorized=false` until feat exists；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2（实施 Step 0；本 phase 无 Amendment）；`changes_technical_spec=true`；不得触碰 DEV-006/PR#13。
+- **状态备注**：`approved` / `PLAN_LANDING`（Human PLAN_APPROVED；Release Operator docs(plan) on main 后创建 exact feat；未实施）。
 
 ---
 
@@ -1811,5 +1831,25 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `REL-001` → `completed`（计划文件 `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`）；Phase 5 无后续 Task，**不得**自动启动下一任务；**不**修改 E2E-001 completed 事实；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否**（仅治理状态：completed + PR MERGED；不改 Contract/Schema；不勾 A.1；不 git tag） |
 | 审批 | PR #60 MERGED `4e8ceff74b95880b1c035d518bf2be43d2bbc907` mergedAt `2026-08-15T06:01:06Z`；CODE_REVIEW_APPROVED P0=0/P1=0 P3=1；v0.9.0-mvp-rc1 仅人工 tag（建议对象 `412fb7b858120927aecad63962990587038df340`）；v1.0.0-mvp 不得创建（A.1 Preflight 仍未勾） |
+
+### CHANGE-092
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Planner：用户显式 NEW_UNPLANNED_FEATURE DEV-010 planning-only；新建 Task Plan；progress 规划态切到 DEV-010 `planned` / `计划审查` |
+| 受影响任务 | `DEV-010` → `planned` / `AWAIT_PLAN_REVIEW`（计划文件 `02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md`）；**不**修改 REL-001 completed 事实；**不**标 DEV-010 approved/completed；**不**创建 OI-013；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **是**（最小 provider-aware tokenize 计数来源澄清；不改 Schema/错误码/状态机） |
+| 审批 | 待独立 Plan Review；`human_plan_approved=false`；`developer_authorized=false`；本轮不得 PLAN_LANDING / 实施 |
+
+### CHANGE-093
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Human PLAN_APPROVED + Release Operator PLAN_LANDING：DEV-010 计划批准后 docs(plan) 落 main，再创建 exact feat |
+| 受影响任务 | `DEV-010` → `approved` / `PLAN_LANDING`（计划文件 `02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md`）；**不**修改 REL-001 completed 事实；**不**标 DEV-010 completed；**不**创建 OI-013；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **是**（最小 provider-aware tokenize 计数来源澄清；不改 Schema/错误码/状态机） |
+| 审批 | Human PLAN_APPROVED 2026-08-15 08:03 UTC；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2（实施 Step 0；本 phase 无 Amendment）；`developer_authorized=false` until feat exists |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。
