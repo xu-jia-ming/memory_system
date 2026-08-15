@@ -5,14 +5,14 @@
 ```yaml
 task_id: E2E-001
 task_name: 全链路 E2E 与全部失败注入
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "bb0d387f509c38194cf511f580b98cf86f44b5a7"
 branch: "feat/E2E-001-full-chain-e2e-failure-injection"
 milestone: "v0.9.0-mvp-rc1 (E2E suite delivery only; RC checklist = REL-001 OUT OF SCOPE)"
 created_at: "2026-08-15 02:10 UTC"
-updated_at: "2026-08-15 03:45 UTC"
+updated_at: "2026-08-15 03:55 UTC"
 plan_amendment: "001 — Round 1 PLAN_REJECTED remediation (session 570cb388); Round 2 PLAN_APPROVED (session 20220a4e-dd78-4a44-b130-9eeec0b11d74)"
 spec_sections:
   - "§3.28 测试策略（E2E 层；独立 DB/Index/Topic/Volume；Fake LLM 默认；CI 不计费 API；失败注入五条；合并前 Unit+Contract+Integration；发布前完整 E2E）"
@@ -64,7 +64,7 @@ approval_gates:
   developer_authorized: true
   reviewer_authorized: true
   release_operator_authorized: true
-  next_action: "WAITING_FOR_PR_MERGE"
+  next_action: "REL-001 planned / NOT AUTO-STARTED"
   post_human_plan_approved_state_machine: |
     Human PLAN_APPROVED received. status=approved; next_action=PLAN_LANDING then Developer on feat.
     developer_authorized=false until exact feat/E2E-001-full-chain-e2e-failure-injection exists.
@@ -82,7 +82,7 @@ test_file_whitelist_default: "see §12"
 ### 1.1 本轮门禁
 
 ```yaml
-phase: committed
+phase: completed
 must_not_this_round:
   - "编写业务实现或测试实现（Developer 仅在 feat 存在后启动）"
   - "在 main 上启动 Developer / Code Reviewer / Commit Recorder"
@@ -615,6 +615,7 @@ Fail-closed：白名单外路径不得 `git add`。
 | 2026-08-15 03:00 UTC | Developer implemented | whitelist tests + conftest `-v` both downs；zero `src/**` | 待跑 §9.1 | Fake extraction JSON 用 Archive 真实 user `message_id`（EXT-003 source 校验）；非 Contract 变更 |
 | 2026-08-15 03:05 UTC | Developer tested | 同上 | E2E 11 passed / 502.16s；contract 3 passed；ruff PASS；mypy src 0 | READY_FOR_CODE_REVIEW；未 commit |
 | 2026-08-15 03:45 UTC | IMPLEMENTATION_RELEASE | implementation `4a44e99009e04bcbce5717df0a3073fffff9faf0` pushed feat；PR #59 OPEN；docs(status): record on feat | 见 §15 | phase=IMPLEMENTATION_RELEASE；WAITING_FOR_PR_MERGE；禁 push main |
+| 2026-08-15 03:55 UTC | POST_MERGE_CLEANUP | status=completed；PR #59 MERGED `43b6975a5dc4a92cde2f898acacd73a508831a48` mergedAt `2026-08-15T03:53:42Z`；docs(status): complete on main；exact feat 删除 | 见 §15 | next_action=REL-001 planned / NOT AUTO-STARTED；不得自动启动 REL-001；不得触碰 DEV-006/PR#13 |
 
 ---
 
@@ -667,14 +668,19 @@ branch: feat/E2E-001-full-chain-e2e-failure-injection
 plan_commit: c2afaaa576107329ca6153a846fcb071c9383445
 implementation_commit: 4a44e99009e04bcbce5717df0a3073fffff9faf0
 implementation_commit_message: "test(e2e): add full-chain e2e and failure injection suite"
+status_record_committed: 526c8403cff8b05d05ca73b1d513aeb30e7dea76
 pr: "#59"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/59"
-pr_state: OPEN
+pr_state: MERGED
 pr_base: main
 pr_head: feat/E2E-001-full-chain-e2e-failure-injection
-working_tree: docs(status) record pending this commit
+pr_head_sha: 526c8403cff8b05d05ca73b1d513aeb30e7dea76
+merge_commit: 43b6975a5dc4a92cde2f898acacd73a508831a48
+merged_at: "2026-08-15T03:53:42Z"
+feat_branch: deleted
+working_tree: clean
 ```
 
 ### 最终状态
 
-`committed`
+`completed`
