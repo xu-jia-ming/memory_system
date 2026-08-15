@@ -439,11 +439,11 @@ def e2e_dotenv() -> Iterator[DotenvBackup]:
 @pytest.fixture(scope="module")
 def infra_stack(e2e_dotenv: DotenvBackup) -> Iterator[InfraStack]:
     del e2e_dotenv
-    _compose("down", "--remove-orphans", check=False)
+    _compose("down", "-v", "--remove-orphans", check=False)
     stack = _start_infra()
     with _patch_kafka_resolution(stack.kafka_ip):
         yield stack
-    _compose("down", "--remove-orphans", check=False)
+    _compose("down", "-v", "--remove-orphans", check=False)
 
 
 @pytest.fixture(scope="module")
