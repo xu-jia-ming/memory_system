@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — E2E-001 completed
+current_phase: Phase 5 — REL-001 approved / PLAN_LANDING
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: E2E-001
-current_task_status: completed
+current_task: REL-001
+current_task_status: approved
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -21,10 +21,34 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md
-planning_baseline_main: "bb0d387f509c38194cf511f580b98cf86f44b5a7"
+current_plan_file: 02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md
+planning_baseline_main: "412fb7b858120927aecad63962990587038df340"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
+formal_REL-001_plan_file: 02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md
+formal_REL-001_status: approved
+formal_REL-001_workflow_mode: NORMAL
+formal_REL-001_workflow_mode_source: explicit
+formal_REL-001_baseline: "412fb7b858120927aecad63962990587038df340"
+formal_REL-001_branch: "feat/REL-001-mvp-rc-review-acceptance-checklist"
+formal_REL-001_prerequisite: "SATISFIED — E2E-001 completed (PR #59 MERGED); OPS-001..004 completed; STM/EXT/RET/CON all completed"
+formal_REL-001_scope: "MVP RC Review + mvp_acceptance_checklist.md A–F evidence mapping; production_file_whitelist=NONE; test_file_whitelist=NONE; checklist checkoff only after evidence; v0.9.0-mvp-rc1 and v1.0.0-mvp HALT/human tags (not RO); NOT retest vertical slices; NOT Contract changes"
+formal_REL-001_blocking_open_issues: []
+formal_REL-001_nonblocking_open_issues:
+  - "OI-REL1-TAG — git tag outside Release Operator command set; human annotated tags only"
+  - "OI-REL1-TEI — test_matrix real TEI vs spec optional local BGE-M3; not CPU MVP blocking"
+formal_REL-001_dependency_changes_expected: NONE
+formal_REL-001_migration_changes_expected: NONE
+formal_REL-001_production_file_whitelist: NONE
+formal_REL-001_test_file_whitelist: NONE
+formal_REL-001_acceptance_artifact_whitelist: "05_测试与验收/mvp_acceptance_checklist.md (checkoff only after evidence; planning round must not check boxes)"
+formal_REL-001_human_plan_approved: true
+formal_REL-001_human_plan_approved_at: "2026-08-15 04:25 UTC"
+formal_REL-001_developer_authorized: false
+formal_REL-001_approval_posture: PLAN_LANDING
+formal_REL-001_plan_review_round: 1
+formal_REL-001_plan_review: "Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5 (implementation Step 0; no Amendment this phase)"
+formal_REL-001_note: "Human PLAN_APPROVED; PLAN_LANDING docs(plan) on main then create exact feat; E2E-001 completed facts retained; next_action=PLAN_LANDING; developer_authorized=false until feat exists; 不得触碰 DEV-006/PR#13"
 formal_E2E-001_plan_file: 02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md
 formal_E2E-001_status: completed
 formal_E2E-001_workflow_mode: NORMAL
@@ -229,8 +253,8 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: REL-001 planned / NOT AUTO-STARTED
-last_role_result: POST_MERGE_CLEANUP completed; PR #59 MERGED
+next_action: PLAN_LANDING
+last_role_result: Human PLAN_APPROVED REL-001; Release Operator PLAN_LANDING
 blocking_reason: null
 formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
 formal_OPS-002_status: completed
@@ -920,7 +944,7 @@ formal_EXT-006_plan_review_must_fix: 0
 formal_EXT-006_plan_review_should_fix: 5
 formal_EXT-006_human_plan_approved: true
 formal_EXT-006_human_plan_approved_at: "2026-08-12T18:32:00Z"
-current_task_approval_posture: "POST_MERGE_CLEANUP — completed"
+current_task_approval_posture: PLAN_LANDING
 formal_EXT-004_scoped_tests: "53 passed"
 formal_EXT-004_ruff: PASS
 formal_EXT-004_mypy: PASS
@@ -1969,6 +1993,8 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-15 04:25 UTC | REL-001 | planned → approved / PLAN_LANDING | Human PLAN_APPROVED；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5（实施 Step 0，本 phase 无 Amendment）；`human_plan_approved=true`；`developer_authorized=false` until feat exists；Release Operator PLAN_LANDING docs(plan) on main then create `feat/REL-001-mvp-rc-review-acceptance-checklist`；`next_action=PLAN_LANDING`；未实施；E2E-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
+| 2026-08-15 04:15 UTC | REL-001 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`；人类 START_EXISTING_TASK 覆盖 E2E-001 `next_action=REL-001 planned / NOT AUTO-STARTED`；baseline `412fb7b858120927aecad63962990587038df340` MATCH；git status 规划前 clean；RC Review + 清单证据化；`production_file_whitelist=NONE`；`test_file_whitelist=NONE`；tag HALT/人工；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；`human_plan_approved=false`；`developer_authorized=false`；不得 PLAN_LANDING/实施本轮；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 03:55 UTC | E2E-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #59 MERGED `43b6975a5dc4a92cde2f898acacd73a508831a48` mergedAt `2026-08-15T03:53:42Z`；ff-only 同步 main；main 含 merge `43b6975` 与 implementation `4a44e99`；仅更新 E2E-001 三份治理文件并创建 `docs(status): complete E2E-001 after PR merge`；exact feat 已删；`next_action=REL-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13；不得自动启动 REL-001 |
 | 2026-08-15 02:38 UTC | E2E-001 | planned → approved / PLAN_LANDING | Human PLAN_APPROVED；Round 2 PLAN_APPROVED（session 20220a4e-dd78-4a44-b130-9eeec0b11d74；BLOCKER=0 MUST_FIX=0）；Amendment 001 absorbed；`human_plan_approved=true`；`developer_authorized=false` until feat exists；Release Operator PLAN_LANDING docs(plan) on main then create `feat/E2E-001-full-chain-e2e-failure-injection`；next_action=Developer on feat after this phase；未实施 | 未运行（规划-only） | OPS-004 completed records unchanged；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 02:25 UTC | E2E-001 | planned (Amendment 001 / Round 2) | Round 1 PLAN_REJECTED（session 570cb388；BLOCKER=0 MUST_FIX=3）修订：MF-1 INJ-1 §1.2.6 #10/I-I（Mongo Archive 保存点，不要求 WM 仍持消息）；MF-2 HP Compression succeeded + compressed_context；MF-3 INJ-5 两次 close（503 closing → 200 closed）；SF-1 生产 ES wrap；SF-2 INJ-4 F1 二次 run_worker_once；SF-3 SIGTERM lag=0；SF-4 -v 起止；SF-5 PLAN_LANDING 后才 Developer；SF-6 白名单 §12；SF-8 mypy src only；未实施、未 Git 写 | 未运行（规划-only） | `plan_review_round=2`；`next_action=计划审查`；`human_plan_approved=false`；Developer NOT authorized；不得触碰 DEV-006/PR#13 |
