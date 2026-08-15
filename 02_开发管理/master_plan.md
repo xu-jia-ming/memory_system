@@ -735,7 +735,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | OPS-002 | 日志、指标、敏感信息与用户隔离审计 | §3.27, §3.21 | 前述全部 | completed |
 | OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | completed |
 | OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | completed |
-| E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | approved |
+| E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | committed |
 | REL-001 | MVP RC Review 与验收清单 | `05_测试与验收/mvp_acceptance_checklist.md` | E2E-001 | planned |
 
 #### OPS-001 Graceful Shutdown、连接池、Timeout 与 Retry 总检
@@ -796,7 +796,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **预期生产变更**：NONE。
 - **测试**：`tests/e2e/test_e2e001_full_chain.py` + idempotency + failure_injection；`tests/e2e/conftest.py` teardown `down -v`；scope-boundary contract。
 - **计划文件**：`02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md`
-- **状态备注**：`approved` / `PLAN_LANDING`（Round 2 PLAN_APPROVED session `20220a4e-dd78-4a44-b130-9eeec0b11d74` BLOCKER=0 MUST_FIX=0；人类 `PLAN_APPROVED` @ 2026-08-15 02:38 UTC；`human_plan_approved=true`；`developer_authorized=false` 直至 feat `feat/E2E-001-full-chain-e2e-failure-injection` 存在；**非** completed；**不得**在 main 上启动 Developer；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`committed`（plan `c2afaaa576107329ca6153a846fcb071c9383445`；implementation `4a44e99009e04bcbce5717df0a3073fffff9faf0`；PR #59 OPEN base=main head=`feat/E2E-001-full-chain-e2e-failure-injection`；CODE_REVIEW_APPROVED P0=0/P1=0；E2E 11 passed / contract 3 passed / ruff PASS / mypy src 0；zero `src/**`；**非** completed；next_action=WAITING_FOR_PR_MERGE；不得触碰 DEV-006/PR#13）。
 
 ---
 
@@ -1698,5 +1698,35 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `E2E-001` → `approved` / `PLAN_LANDING`（计划文件 `02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md`）；**非** completed；`REL-001` 保持 `planned` / **NOT AUTO-STARTED**；**不**修改 OPS-004 完成状态；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否**（仅治理状态：approved + PLAN_LANDING；不改 Contract/Schema） |
 | 审批 | Human PLAN_APPROVED；Release Operator PLAN_LANDING；`developer_authorized=false` 直至 feat 存在；feat 创建后 next_action=Developer on feat |
+
+### CHANGE-082
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Developer 在 exact feat 上开始实施 E2E-001（PLAN_LANDING 已完成；`developer_authorized=true`） |
+| 受影响任务 | `E2E-001` → `in_progress`（计划文件 `02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md`）；**非** completed；`REL-001` 保持 `planned` / **NOT AUTO-STARTED**；**不**修改 OPS-004 完成状态；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（仅治理状态：in_progress；不改 Contract/Schema） |
+| 审批 | Human PLAN_APPROVED + Round 2 PLAN_APPROVED + PLAN_LANDING completed；Developer 按白名单实施 |
+
+### CHANGE-083
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Developer 完成 E2E-001 白名单实施与 §9.1 验收（E2E 11 passed；contract 3 passed；ruff/mypy PASS；零 `src/**`） |
+| 受影响任务 | `E2E-001` → `tested` / `AWAIT_CODE_REVIEW`（计划文件 `02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md`）；**非** completed；`REL-001` 保持 `planned` / **NOT AUTO-STARTED**；**不**修改 OPS-004 完成状态；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（仅测试套件与治理状态；不改 Contract/Schema） |
+| 审批 | Developer tested；待独立 Code Review；未 commit |
+
+### CHANGE-084
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Release Operator IMPLEMENTATION_RELEASE：implementation commit + push feat + PR #59 OPEN；docs(status): record committed 于 feat（禁 push main） |
+| 受影响任务 | `E2E-001` → `committed` / `WAITING_FOR_PR_MERGE`（计划文件 `02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md`）；**非** completed；`REL-001` 保持 `planned` / **NOT AUTO-STARTED**；**不**修改 OPS-004 完成状态；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（仅治理状态：committed + PR OPEN；不改 Contract/Schema） |
+| 审批 | CODE_REVIEW_APPROVED P0=0/P1=0；READY_FOR_HUMAN_COMMIT；IMPLEMENTATION_RELEASE on feat only |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

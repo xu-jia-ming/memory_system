@@ -5,14 +5,14 @@
 ```yaml
 task_id: E2E-001
 task_name: 全链路 E2E 与全部失败注入
-status: approved
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "bb0d387f509c38194cf511f580b98cf86f44b5a7"
 branch: "feat/E2E-001-full-chain-e2e-failure-injection"
 milestone: "v0.9.0-mvp-rc1 (E2E suite delivery only; RC checklist = REL-001 OUT OF SCOPE)"
 created_at: "2026-08-15 02:10 UTC"
-updated_at: "2026-08-15 02:38 UTC"
+updated_at: "2026-08-15 03:45 UTC"
 plan_amendment: "001 — Round 1 PLAN_REJECTED remediation (session 570cb388); Round 2 PLAN_APPROVED (session 20220a4e-dd78-4a44-b130-9eeec0b11d74)"
 spec_sections:
   - "§3.28 测试策略（E2E 层；独立 DB/Index/Topic/Volume；Fake LLM 默认；CI 不计费 API；失败注入五条；合并前 Unit+Contract+Integration；发布前完整 E2E）"
@@ -59,12 +59,12 @@ approval_gates:
   human_plan_approved_at: "2026-08-15 02:38 UTC"
   plan_review_round: 2
   plan_review_status: "Round 2 PLAN_APPROVED (session 20220a4e-dd78-4a44-b130-9eeec0b11d74; BLOCKER=0 MUST_FIX=0); Amendment 001 absorbed; Round 1 PLAN_REJECTED (session 570cb388) retained as history"
-  plan_commit: null
-  plan_landing_completed_at: null
-  developer_authorized: false
-  reviewer_authorized: false
+  plan_commit: "c2afaaa576107329ca6153a846fcb071c9383445"
+  plan_landing_completed_at: "2026-08-15 02:42 UTC"
+  developer_authorized: true
+  reviewer_authorized: true
   release_operator_authorized: true
-  next_action: "PLAN_LANDING then Developer on feat/E2E-001-full-chain-e2e-failure-injection"
+  next_action: "WAITING_FOR_PR_MERGE"
   post_human_plan_approved_state_machine: |
     Human PLAN_APPROVED received. status=approved; next_action=PLAN_LANDING then Developer on feat.
     developer_authorized=false until exact feat/E2E-001-full-chain-e2e-failure-injection exists.
@@ -82,7 +82,7 @@ test_file_whitelist_default: "see §12"
 ### 1.1 本轮门禁
 
 ```yaml
-phase: approved
+phase: committed
 must_not_this_round:
   - "编写业务实现或测试实现（Developer 仅在 feat 存在后启动）"
   - "在 main 上启动 Developer / Code Reviewer / Commit Recorder"
@@ -434,20 +434,20 @@ Compression-path LLM timeout（STM-013 E4）**不重写**；INJ-2 覆盖 **Extra
 
 ## 9. 验收标准
 
-- [ ] `uv run pytest tests/e2e/test_e2e001_full_chain.py tests/e2e/test_e2e001_idempotency.py tests/e2e/test_e2e001_failure_injection.py -q` — Docker 可用时全部 PASS（skip 仅当 Docker 不可用，与既有 e2e 一致）
-- [ ] E2E-HP 单测断言链上 **每段** 均发生：HTTP session；至少一条 message；Mongo archive；**Compression succeeded**（`completed` 或 `partial_completed`）且 WM `compressed_context` 非空（STM-013 HP）；Kafka event；extraction `completed`；Neo4j Memory；ES document；retrieval 命中；consolidation 写回；session close。**不得**仅凭 `write_until_compression_trigger` 返回判定 HP 成功
-- [ ] IDEM-1..4 无重复五类实体
-- [ ] INJ-1..5 全绿；原文/已写 Archive 不丢；恢复路径按条分流（INJ-1 STM-011；INJ-2/INJ-3 EXT-008；INJ-4 二次 `run_worker_once`；INJ-5 第二次 close 无注入）；**无**新 HTTP 恢复端点
-- [ ] INJ-1：Kafka 失败后 Mongo Archive + `messages` 保留；**不**要求 WM 仍持有已归档消息；republish → Extraction `completed`（§1.2.6 #10 / I-I）
-- [ ] INJ-5：第一次 close 503 `close_incomplete` + `closing` + Archive 持久化；第二次 close 无注入 200 `closed` + 同 `archive_batch_key` + Redis WM 删除（§1.2.3 #11）
-- [ ] INJ-SIGTERM：启动前 `memory-extraction-group` lag=0 / 无待消费 `context.archive.created`；`docker stop` 后容器未运行；窗口内无 LLM HTTP（不以「无 API Key」代替）
-- [ ] `tests/e2e/conftest.py` `infra_stack` **起止两次** teardown 含 `down -v`；compose 命令含 `--stack=test`；不得出现对非 test project 的 `down -v`
-- [ ] `uv run pytest tests/contract/test_e2e001_scope_boundaries.py -q` PASS
-- [ ] `uv run ruff check tests/e2e/helpers/e2e001_helpers.py tests/support/e2e001_failure_doubles.py tests/e2e/test_e2e001_full_chain.py tests/e2e/test_e2e001_idempotency.py tests/e2e/test_e2e001_failure_injection.py tests/e2e/conftest.py tests/contract/test_e2e001_scope_boundaries.py`
-- [ ] `uv run mypy src` PASS（0 errors）。**不对** `tests/` 跑 mypy 作为本任务验收（OPS-004 BL-MYPY-001）
-- [ ] **零** `src/**` diff；`dependency_changes_expected: NONE`；`migration_changes_expected: NONE`
-- [ ] 未修改 `.github/workflows/ci.yml` / `scripts/ci/run_merge_gate.sh` / OPS-004 默认门禁
-- [ ] 未触碰 DEV-006 / PR #13；未提交 Secret
+- [x] `uv run pytest tests/e2e/test_e2e001_full_chain.py tests/e2e/test_e2e001_idempotency.py tests/e2e/test_e2e001_failure_injection.py -q` — Docker 可用时全部 PASS（skip 仅当 Docker 不可用，与既有 e2e 一致）
+- [x] E2E-HP 单测断言链上 **每段** 均发生：HTTP session；至少一条 message；Mongo archive；**Compression succeeded**（`completed` 或 `partial_completed`）且 WM `compressed_context` 非空（STM-013 HP）；Kafka event；extraction `completed`；Neo4j Memory；ES document；retrieval 命中；consolidation 写回；session close。**不得**仅凭 `write_until_compression_trigger` 返回判定 HP 成功
+- [x] IDEM-1..4 无重复五类实体
+- [x] INJ-1..5 全绿；原文/已写 Archive 不丢；恢复路径按条分流（INJ-1 STM-011；INJ-2/INJ-3 EXT-008；INJ-4 二次 `run_worker_once`；INJ-5 第二次 close 无注入）；**无**新 HTTP 恢复端点
+- [x] INJ-1：Kafka 失败后 Mongo Archive + `messages` 保留；**不**要求 WM 仍持有已归档消息；republish → Extraction `completed`（§1.2.6 #10 / I-I）
+- [x] INJ-5：第一次 close 503 `close_incomplete` + `closing` + Archive 持久化；第二次 close 无注入 200 `closed` + 同 `archive_batch_key` + Redis WM 删除（§1.2.3 #11）
+- [x] INJ-SIGTERM：启动前 `memory-extraction-group` lag=0 / 无待消费 `context.archive.created`；`docker stop` 后容器未运行；窗口内无 LLM HTTP（不以「无 API Key」代替）
+- [x] `tests/e2e/conftest.py` `infra_stack` **起止两次** teardown 含 `down -v`；compose 命令含 `--stack=test`；不得出现对非 test project 的 `down -v`
+- [x] `uv run pytest tests/contract/test_e2e001_scope_boundaries.py -q` PASS
+- [x] `uv run ruff check tests/e2e/helpers/e2e001_helpers.py tests/support/e2e001_failure_doubles.py tests/e2e/test_e2e001_full_chain.py tests/e2e/test_e2e001_idempotency.py tests/e2e/test_e2e001_failure_injection.py tests/e2e/conftest.py tests/contract/test_e2e001_scope_boundaries.py`
+- [x] `uv run mypy src` PASS（0 errors）。**不对** `tests/` 跑 mypy 作为本任务验收（OPS-004 BL-MYPY-001）
+- [x] **零** `src/**` diff；`dependency_changes_expected: NONE`；`migration_changes_expected: NONE`
+- [x] 未修改 `.github/workflows/ci.yml` / `scripts/ci/run_merge_gate.sh` / OPS-004 默认门禁
+- [x] 未触碰 DEV-006 / PR #13；未提交 Secret
 - [ ] Review 无 P0/P1
 
 ### 9.1 Scoped 运行命令（实施验收 canonical）
@@ -611,6 +611,10 @@ Fail-closed：白名单外路径不得 `git add`。
 | 2026-08-15 02:10 UTC | Planner Round 1 | 创建本计划 | 未实施 | AWAIT_PLAN_REVIEW |
 | 2026-08-15 02:25 UTC | Planner Amendment 001 | Round 1 PLAN_REJECTED 修订 MF-1..3 + SF-1..8；progress/master_plan 规划态 | 未实施 | `plan_review_round=2`；`next_action=计划审查`；Developer NOT authorized |
 | 2026-08-15 02:38 UTC | Human PLAN_APPROVED + PLAN_LANDING | status=approved；Round 2 PLAN_APPROVED session 20220a4e；human_plan_approved=true；developer_authorized=false until feat exists | 未实施 | next_action=PLAN_LANDING then Developer on feat；不得在 main 上启动 Developer |
+| 2026-08-15 02:50 UTC | Developer start | status=in_progress；kept PLAN_LANDING fields (feat branch, plan_commit, developer_authorized=true) | 实施中 | next_action=implement whitelist tests; no src/** |
+| 2026-08-15 03:00 UTC | Developer implemented | whitelist tests + conftest `-v` both downs；zero `src/**` | 待跑 §9.1 | Fake extraction JSON 用 Archive 真实 user `message_id`（EXT-003 source 校验）；非 Contract 变更 |
+| 2026-08-15 03:05 UTC | Developer tested | 同上 | E2E 11 passed / 502.16s；contract 3 passed；ruff PASS；mypy src 0 | READY_FOR_CODE_REVIEW；未 commit |
+| 2026-08-15 03:45 UTC | IMPLEMENTATION_RELEASE | implementation `4a44e99009e04bcbce5717df0a3073fffff9faf0` pushed feat；PR #59 OPEN；docs(status): record on feat | 见 §15 | phase=IMPLEMENTATION_RELEASE；WAITING_FOR_PR_MERGE；禁 push main |
 
 ---
 
@@ -620,22 +624,31 @@ Fail-closed：白名单外路径不得 `git add`。
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `tests/e2e/helpers/e2e001_helpers.py` | 创建 — HTTP 压缩成功断言、extraction JSON keyword、in-process app、worker/consolidation/SIGTERM helpers |
+| `tests/support/e2e001_failure_doubles.py` | 创建 — Kafka send_and_wait fail；生产 ES bulk 一次性失败 wrap；close terminal fail |
+| `tests/e2e/test_e2e001_full_chain.py` | 创建 — E2E-HP + #8 隔离 |
+| `tests/e2e/test_e2e001_idempotency.py` | 创建 — IDEM-1..4 |
+| `tests/e2e/test_e2e001_failure_injection.py` | 创建 — INJ-1..5 + INJ-SIGTERM |
+| `tests/e2e/conftest.py` | 修改 — `infra_stack` 起止两次 `_compose("down", "-v", "--remove-orphans")` |
+| `tests/contract/test_e2e001_scope_boundaries.py` | 创建 — 零 src diff + 测试白名单 |
+| `02_开发管理/progress.md` / `master_plan.md` / 本计划 | 修改 — in_progress → implemented → tested 执行记录；保留 PLAN_LANDING 字段 |
 
 ### 与原计划的差异
 
-暂无。
+- Fake extraction `success_content` 必须使用 HTTP Archive 中真实 user `message_id`（EXT-003 `source_message_id not in archive` 否则 `llm_invalid_output`）。Keyword 仍锁定 `e2e001fullchainkeyword`。非 Contract 变更。
+- `e2e001_app_client` 实现为 helpers 中 `build_e2e001_app_client` 上下文管理器，而非 conftest fixture（conftest 仅改 `-v`）。
+- INJ-SIGTERM 在启动生产 worker 前如有 leftover 则用 `memory-extraction-group` in-process drain 至 lag=0（计划允许）。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | 不适用（无新增） |  |
-| Contract | `uv run pytest tests/contract/test_e2e001_scope_boundaries.py -q` |  |
-| Integration | 不适用（无新增） |  |
-| E2E | `uv run pytest tests/e2e/test_e2e001_*.py -q` |  |
-| Ruff | 见 §9.1 |  |
-| Mypy | `uv run mypy src` |  |
+| Unit | 不适用（无新增） | N/A |
+| Contract | `uv run pytest tests/contract/test_e2e001_scope_boundaries.py -q` | 3 passed in 0.04s |
+| Integration | 不适用（无新增） | N/A |
+| E2E | `uv run pytest tests/e2e/test_e2e001_full_chain.py tests/e2e/test_e2e001_idempotency.py tests/e2e/test_e2e001_failure_injection.py -q` | 11 passed in 502.16s (0:08:22) |
+| Ruff | 见 §9.1 | All checks passed |
+| Mypy | `uv run mypy src` | Success: no issues found in 197 source files |
 
 ### Review 结果
 
@@ -644,18 +657,24 @@ p0: 0
 p1: 0
 p2: 0
 p3: 0
-review_report: null
+review_report: "CODE_REVIEW_APPROVED session b8f90d2d; P0=0 P1=0"
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/E2E-001-full-chain-e2e-failure-injection
+plan_commit: c2afaaa576107329ca6153a846fcb071c9383445
+implementation_commit: 4a44e99009e04bcbce5717df0a3073fffff9faf0
+implementation_commit_message: "test(e2e): add full-chain e2e and failure injection suite"
+pr: "#59"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/59"
+pr_state: OPEN
+pr_base: main
+pr_head: feat/E2E-001-full-chain-e2e-failure-injection
+working_tree: docs(status) record pending this commit
 ```
 
 ### 最终状态
 
-`planned`
+`committed`
