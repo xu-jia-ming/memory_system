@@ -6,7 +6,7 @@
 task_id: DEV-010
 task_name: SiliconFlow embedding token-estimation routing
 task_slug: siliconflow-embedding-token-estimation-routing
-status: reviewed
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a"
@@ -15,7 +15,7 @@ insertion_reason: NEW_UNPLANNED_FEATURE
 human_plan_approved: true
 developer_authorized: true
 created_at: "2026-08-15 07:50 UTC"
-updated_at: "2026-08-15 08:30 UTC"
+updated_at: "2026-08-15 08:40 UTC"
 branch: "feat/DEV-010-siliconflow-embedding-token-estimation-routing"
 spec_sections:
   - "§1.2.1 estimated_tokens 字符比例公式（复用；不得改公式）"
@@ -60,10 +60,10 @@ approval_gates:
   human_plan_approved: true
   human_plan_approved_at: "2026-08-15 08:03 UTC"
   developer_authorized: true
-  approval_posture: IMPLEMENTATION_RELEASE
+  approval_posture: "IMPLEMENTATION_RELEASE — committed; await human merge"
   plan_review_round: 1
   plan_review_status: "Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2 (implementation Step 0; no Amendment this phase)"
-  next_action: "IMPLEMENTATION_RELEASE on feat; do not push origin main"
+  next_action: "await human merge of PR #61; POST_MERGE_CLEANUP only after MERGED; do not push origin main this phase"
   post_human_plan_approved_state_machine: |
     Human PLAN_APPROVED received. status=approved; next_action=PLAN_LANDING then Developer on feat.
     developer_authorized=false until exact feat/DEV-010-siliconflow-embedding-token-estimation-routing exists.
@@ -584,6 +584,7 @@ IMPLEMENTATION_RELEASE 可 add 路径 = §6 白名单（生产 + 测试 + 规格
 | 2026-08-15 08:20 UTC | Steps 0–4 implemented | spec 六处 delta；factory+adapter；两处生产接线；U1–U8 + RET runtime + C1–C5 tightened；E1 helper patch | 待跑 | SHOULD_FIX 无 Amendment；无 Git 写 |
 | 2026-08-15 08:25 UTC | Step 5 tested | status=implemented → tested；白名单测试 + ruff + mypy + 聚焦回归 | unit+contract 18 passed；ruff PASS；mypy src 0；regression 56 passed | 未 commit；next_action=CODE_REVIEW |
 | 2026-08-15 08:30 UTC | Code Review + Commit Recorder | status=tested → reviewed；CODE_REVIEW_APPROVED session 93de8d64；P0=0 P1=0 P3=2；READY_FOR_HUMAN_COMMIT session 44cb5320 | 未复跑 | implementation_commit=null until feat git rev-parse；next_action=IMPLEMENTATION_RELEASE |
+| 2026-08-15 08:40 UTC | IMPLEMENTATION_RELEASE | status=reviewed → committed；feat implementation + PR #61 OPEN；同 feat docs(status): record | 未复跑 | implementation `7bf341ee7cd988d5a1f728ad138c38bbc4f31932`；不得 push origin main |
 
 ---
 
@@ -640,10 +641,16 @@ review_report: "CODE_REVIEW_APPROVED session 93de8d64-bcaf-478c-8c57-f0c77c8e867
 ```yaml
 branch: feat/DEV-010-siliconflow-embedding-token-estimation-routing
 plan_commit: a55f99167863f508ef09033e13134348ab5e8b60
-implementation_commit: null
-implementation_commit_message: null
+implementation_commit: 7bf341ee7cd988d5a1f728ad138c38bbc4f31932
+implementation_commit_message: "feat(tokenize): route siliconflow token counts through estimate_tokens"
+pr: "#61"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/61"
+pr_state: OPEN
+pr_base: main
+pr_head: feat/DEV-010-siliconflow-embedding-token-estimation-routing
+status_record_committed: null
 ```
 
 ### 最终状态
 
-`reviewed`
+`committed`
