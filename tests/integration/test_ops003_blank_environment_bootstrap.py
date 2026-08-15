@@ -21,6 +21,7 @@ from typing import Any
 
 import httpx
 import pytest
+from tests.integration.support.compose_stack import parse_compose_ps_rows
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 COMPOSE_SH = REPO_ROOT / "scripts" / "compose.sh"
@@ -120,13 +121,7 @@ def _assert_test_isolation() -> None:
 
 
 def _parse_compose_ps_rows(stdout: str) -> list[dict[str, Any]]:
-    text = stdout.strip()
-    if not text:
-        return []
-    if text.startswith("["):
-        rows: list[dict[str, Any]] = json.loads(text)
-        return rows
-    return [json.loads(line) for line in text.splitlines() if line.strip()]
+    return parse_compose_ps_rows(stdout)
 
 
 def _wait_infra_healthy(deadline_seconds: float = HEALTH_POLL_SECONDS) -> None:
@@ -276,7 +271,8 @@ def blank_bootstrap_stack() -> Iterator[str]:
     _ensure_dotenv()
     _assert_test_isolation()
     _compose("down", "-v", check=False)
-    up = _compose("up", "-d", "--build", *INFRA_SERVICES, check=False)
+    time.sleep(2)
+    up = _compose("up", "-d", *INFRA_SERVICES, check=False)
     if up.returncode != 0:
         pytest.fail(
             f"Unable to start compose test infra (exit {up.returncode}): "
@@ -364,7 +360,8 @@ def migrate_not_ready_stack() -> Iterator[None]:
     _ensure_dotenv()
     _assert_test_isolation()
     _compose("down", "-v", check=False)
-    up = _compose("up", "-d", "--build", *INFRA_SERVICES, check=False)
+    time.sleep(2)
+    up = _compose("up", "-d", *INFRA_SERVICES, check=False)
     if up.returncode != 0:
         pytest.fail(f"infra up failed: {up.stderr[-500:]}")
     _wait_infra_healthy()

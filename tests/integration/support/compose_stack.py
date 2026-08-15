@@ -151,6 +151,32 @@ def container_ip(container: str) -> str | None:
     return ip or None
 
 
+def parse_compose_ps_rows(stdout: str) -> list[dict[str, Any]]:
+    """Parse ``docker compose ps --format json`` (array or NDJSON, ignore noise)."""
+    text = stdout.strip()
+    if not text:
+        return []
+    if text.startswith("["):
+        start = text.find("[")
+        end = text.rfind("]")
+        if start >= 0 and end > start:
+            parsed = json.loads(text[start : end + 1])
+            return parsed if isinstance(parsed, list) else []
+        return []
+    rows: list[dict[str, Any]] = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line.startswith("{"):
+            continue
+        try:
+            item = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(item, dict):
+            rows.append(item)
+    return rows
+
+
 def wait_container_ip(container: str, *, deadline_seconds: float = 180.0) -> str:
     deadline = time.time() + deadline_seconds
     while time.time() < deadline:
@@ -231,6 +257,12 @@ def start_services(
     ensure_dotenv()
     assert_test_isolation()
     if shared_stack_enabled() and not isolated:
+        up = compose("up", "-d", *services, check=False)
+        if up.returncode != 0:
+            raise AssertionError(
+                "Unable to start compose test infra "
+                f"(exit {up.returncode}): {up.stderr[-800:] or up.stdout[-800:]}"
+            )
         for service in services:
             wait_container_ip(CONTAINER_NAMES[service], deadline_seconds=180.0)
         if migrate:

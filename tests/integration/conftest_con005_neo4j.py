@@ -19,15 +19,6 @@ async def con005_neo4j_driver(integration_neo4j_driver: AsyncDriver) -> AsyncIte
     yield integration_neo4j_driver
 
 
-@pytest.fixture(autouse=True)
-async def _clean_graph(con005_neo4j_driver: AsyncDriver) -> AsyncIterator[None]:
-    async with con005_neo4j_driver.session() as session:
-        await session.run("MATCH (n) DETACH DELETE n")
-    yield
-    async with con005_neo4j_driver.session() as session:
-        await session.run("MATCH (n) DETACH DELETE n")
-
-
 @pytest.fixture
 def con005_settings(monkeypatch: pytest.MonkeyPatch) -> Settings:
     monkeypatch.setenv("NEO4J__URI", "neo4j://127.0.0.1:7687")

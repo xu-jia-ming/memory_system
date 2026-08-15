@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from tests.integration.support.compose_stack import parse_compose_ps_rows
 
 pytestmark = [pytest.mark.usefixtures("isolated_compose_stack")]
 
@@ -131,9 +132,10 @@ def test_stack() -> Iterator[None]:
 
     # Fresh volumes for deterministic first-run.
     _compose("down", "-v", check=False)
-    up = _compose("up", "-d", "--build", *INFRA_SERVICES, check=False)
+    time.sleep(2)
+    up = _compose("up", "-d", *INFRA_SERVICES, check=False)
     if up.returncode != 0:
-        pytest.skip(
+        pytest.fail(
             "Unable to start compose test infra "
             f"(exit {up.returncode}): {up.stderr[-800:] or up.stdout[-800:]}"
         )
@@ -144,17 +146,8 @@ def test_stack() -> Iterator[None]:
         if ps.returncode != 0:
             time.sleep(3)
             continue
-        # compose ps --format json may be NDJSON or a list
-        text = ps.stdout.strip()
-        rows: list[dict[str, Any]] = []
-        if text.startswith("["):
-            rows = json.loads(text)
-        else:
-            for line in text.splitlines():
-                if line.strip():
-                    rows.append(json.loads(line))
         healthy_services: set[str] = set()
-        for row in rows:
+        for row in parse_compose_ps_rows(ps.stdout):
             svc = row.get("Service")
             health = str(row.get("Health", "")).lower()
             state = str(row.get("State", "")).lower()
@@ -166,7 +159,7 @@ def test_stack() -> Iterator[None]:
         time.sleep(3)
     else:
         _compose("down", "-v", check=False)
-        pytest.skip("Test infra did not become healthy within timeout")
+        pytest.fail("Test infra did not become healthy within timeout")
 
     yield
 

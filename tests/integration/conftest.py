@@ -152,8 +152,10 @@ def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]) ->
         return
     reason = _skip_reason(report)
     if _is_forbidden_infra_skip(reason):
-        pytest.fail(
+        # Mutate the report in-place. Raising pytest.fail() from makereport
+        # aborts the whole session with INTERNALERROR and hides other failures.
+        report.outcome = "failed"
+        report.longrepr = (
             "Integration test skipped due to infra/setup failure in CI "
-            f"(forbidden skip): {reason}",
-            pytrace=False,
+            f"(forbidden skip): {reason}"
         )

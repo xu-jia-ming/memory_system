@@ -309,6 +309,8 @@ async def _consume_one(
     *,
     group_id: str,
     timeout_s: float = 20.0,
+    archive_id: str | None = None,
+    user_id: str | None = None,
 ) -> tuple[bytes | None, dict[str, Any]]:
     consumer = AIOKafkaConsumer(
         TOPIC,
@@ -322,10 +324,14 @@ async def _consume_one(
     try:
         deadline = time.time() + timeout_s
         while time.time() < deadline:
-            batch = await consumer.getmany(timeout_ms=1000, max_records=10)
+            batch = await consumer.getmany(timeout_ms=1000, max_records=20)
             for _tp, messages in batch.items():
                 for msg in messages:
                     payload = json.loads(msg.value.decode("utf-8"))
+                    if archive_id is not None and payload.get("archive_id") != archive_id:
+                        continue
+                    if user_id is not None and payload.get("user_id") != user_id:
+                        continue
                     return msg.key, payload
             await asyncio.sleep(0.2)
         return None, {}
@@ -363,6 +369,8 @@ async def test_i1_mongo_seed_and_republish_publishes_six_field_event(
     key, payload = await _consume_one(
         bootstrap,
         group_id=f"stm011-i1-{uuid.uuid4().hex[:8]}",
+        archive_id=archive_id,
+        user_id=user_id,
     )
     assert key == user_id.encode("utf-8")
     assert set(payload.keys()) == set(ARCHIVE_CREATED_EVENT_FIELD_NAMES)
