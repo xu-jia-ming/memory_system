@@ -5,7 +5,7 @@
 ```yaml
 task_id: REL-001
 task_name: MVP RC Review 与验收清单
-status: reviewed
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "412fb7b858120927aecad63962990587038df340"
@@ -13,7 +13,7 @@ branch: "feat/REL-001-mvp-rc-review-acceptance-checklist"
 milestone_rc1: "v0.9.0-mvp-rc1 — 条件=E2E-001 与审查完成（已满足）；本任务拥有打 tag，但 tag 超出自动 Release Operator 命令集 → HALT/人工"
 milestone_v1: "v1.0.0-mvp — 条件=MVP 验收清单全部阻塞项通过；未全绿不得创建"
 created_at: "2026-08-15 04:15 UTC"
-updated_at: "2026-08-15 04:52 UTC"
+updated_at: "2026-08-15 04:55 UTC"
 spec_sections:
   - "05_测试与验收/mvp_acceptance_checklist.md（A–F 阻塞项；文首：只有全部阻塞项通过才可创建 v1.0.0-mvp）"
   - "§3.32 MVP 开发完成验收标准 #1–#9"
@@ -65,7 +65,7 @@ approval_gates:
   p1: 0
   p2: 0
   p3: 1
-  next_action: "IMPLEMENTATION_RELEASE"
+  next_action: "WAITING_FOR_PR_MERGE"
   post_human_plan_approved_state_machine: |
     Human PLAN_APPROVED received. status=approved; next_action=PLAN_LANDING then Developer on feat.
     developer_authorized=false until exact feat/REL-001-mvp-rc-review-acceptance-checklist exists.
@@ -441,7 +441,7 @@ E2E-001 正式前置 **SATISFIED**。master_plan Phase 5 REL-001 行状态 `plan
 ```yaml
 branch: "feat/REL-001-mvp-rc-review-acceptance-checklist"
 planning_baseline_main: "412fb7b858120927aecad63962990587038df340"
-this_round: "tested; CODE_REVIEW_APPROVED P0=0 P1=0 P3=1; IMPLEMENTATION_RELEASE on feat; next_action=push/PR"
+this_round: "tested; CODE_REVIEW_APPROVED P0=0 P1=0 P3=1; IMPLEMENTATION_RELEASE on feat; implementation_commit=703bb105fa18cc0814bd750843295c7044c6d4b9; PR #60 OPEN; next_action=WAITING_FOR_PR_MERGE"
 developer_authorized: true
 human_plan_approved: true
 release_phases:
@@ -553,6 +553,7 @@ Fail-closed：白名单外路径不得 `git add`。
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
+| 2026-08-15 04:55 UTC | IMPLEMENTATION_RELEASE (record) | 回写 implementation `703bb105fa18cc0814bd750843295c7044c6d4b9`；PR #60 OPEN；status `reviewed`→`committed` | N/A | record 仅 feat；未 push main；未 git tag；A.1/F.Git干净仍未勾 |
 | 2026-08-15 04:52 UTC | IMPLEMENTATION_RELEASE (pre-commit) | 回写 CODE_REVIEW_APPROVED P0=0 P1=0 P3=1；§11 this_round（P3-001）；F.Review 勾选；status `tested`→`reviewed` | N/A | A.1/F.Git干净未勾；未宣称 v1.0.0-mvp；未 git tag；implementation_commit 待 rev-parse |
 | 2026-08-15 04:50 UTC | Step 6 | 回写本计划 §14–§15、progress.md、master_plan.md CHANGE-088；status `in_progress`→`implemented`→`tested`；`next_action=Code Review` | ruff PASS；mypy src 0 | 未 commit；developer_authorized=true 保持；A.1/F.Git干净/F.Review 未勾 |
 | 2026-08-15 04:48 UTC | Step 5 | Tag 门禁 HALT/人工；**未**执行 `git tag` | N/A | v0.9.0-mvp-rc1 条件已满足；v1.0.0-mvp 因 A.1 与 F 两行未勾 **不得**宣称可打 |
@@ -739,12 +740,17 @@ review_report: "CODE_REVIEW_APPROVED session 0d353b11; P0=0 P1=0 P3=1 (this_roun
 ```yaml
 branch: "feat/REL-001-mvp-rc-review-acceptance-checklist"
 plan_commit: "04c4a7e8f6a49d0092d175b40a98513eadc47e0a"
-implementation_commit: null
+implementation_commit: "703bb105fa18cc0814bd750843295c7044c6d4b9"
 implementation_commit_message: "docs(rel): record MVP RC evidence and acceptance checklist"
-next_action: IMPLEMENTATION_RELEASE
+pr: "#60"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/60"
+pr_state: OPEN
+pr_base: main
+pr_head: "feat/REL-001-mvp-rc-review-acceptance-checklist"
+next_action: WAITING_FOR_PR_MERGE
 developer_authorized: true
 ```
 
 ### 最终状态
 
-`reviewed`
+`committed`

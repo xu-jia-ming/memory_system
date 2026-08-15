@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — REL-001 reviewed / IMPLEMENTATION_RELEASE
+current_phase: Phase 5 — REL-001 committed / WAITING_FOR_PR_MERGE
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: REL-001
-current_task_status: reviewed
+current_task_status: committed
 current_branch: feat/REL-001-mvp-rc-review-acceptance-checklist
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -26,7 +26,7 @@ planning_baseline_main: "412fb7b858120927aecad63962990587038df340"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_REL-001_plan_file: 02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md
-formal_REL-001_status: reviewed
+formal_REL-001_status: committed
 formal_REL-001_workflow_mode: NORMAL
 formal_REL-001_workflow_mode_source: explicit
 formal_REL-001_baseline: "412fb7b858120927aecad63962990587038df340"
@@ -54,8 +54,14 @@ formal_REL-001_p0: 0
 formal_REL-001_p1: 0
 formal_REL-001_p2: 0
 formal_REL-001_p3: 1
+formal_REL-001_implementation_commit: "703bb105fa18cc0814bd750843295c7044c6d4b9"
 formal_REL-001_implementation_commit_message: "docs(rel): record MVP RC evidence and acceptance checklist"
-formal_REL-001_note: "CODE_REVIEW_APPROVED P0=0 P1=0 P3=1; plan_commit=04c4a7e8f6a49d0092d175b40a98513eadc47e0a; current_branch=feat/REL-001-mvp-rc-review-acceptance-checklist; F.Review checked; A.1 still unchecked (preflight exit 1 vm.max_map_count); F.Git干净 still unchecked (whitelist dirty until implementation commit); not all-green so 不得 v1.0.0-mvp; no git tag; next_action=IMPLEMENTATION_RELEASE; 不得触碰 DEV-006/PR#13"
+formal_REL-001_pr: "#60"
+formal_REL-001_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/60"
+formal_REL-001_pr_state: OPEN
+formal_REL-001_pr_base: main
+formal_REL-001_pr_head: "feat/REL-001-mvp-rc-review-acceptance-checklist"
+formal_REL-001_note: "IMPLEMENTATION_RELEASE on feat; implementation=703bb105fa18cc0814bd750843295c7044c6d4b9; PR #60 OPEN; CODE_REVIEW_APPROVED P0=0 P1=0 P3=1; F.Review checked; A.1 still unchecked (preflight exit 1 vm.max_map_count); F.Git干净 still unchecked; not all-green so 不得 v1.0.0-mvp; no git tag; no push main; next_action=WAITING_FOR_PR_MERGE; 不得触碰 DEV-006/PR#13"
 formal_E2E-001_plan_file: 02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md
 formal_E2E-001_status: completed
 formal_E2E-001_workflow_mode: NORMAL
@@ -260,8 +266,8 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: IMPLEMENTATION_RELEASE
-last_role_result: Code Reviewer CODE_REVIEW_APPROVED P0=0 P1=0 P3=1; Commit Recorder READY_FOR_HUMAN_COMMIT; Release Operator IMPLEMENTATION_RELEASE
+next_action: WAITING_FOR_PR_MERGE
+last_role_result: Release Operator IMPLEMENTATION_RELEASE; implementation 703bb105fa18cc0814bd750843295c7044c6d4b9; PR #60 OPEN
 blocking_reason: null
 formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
 formal_OPS-002_status: completed
