@@ -816,7 +816,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 
 | Task ID | Task | 规格章节 | 前置依赖 | 状态 |
 |---|---|---|---|---|
-| DEV-010 | SiliconFlow embedding token-estimation routing | §1.2.1, §2.1.13, §2.2.3, §2.2.5, §3.1, §3.10.0 | REL-001 completed; DEV-007; STM-001; OI-012 | committed |
+| DEV-010 | SiliconFlow embedding token-estimation routing | §1.2.1, §2.1.13, §2.2.3, §2.2.5, §3.1, §3.10.0 | REL-001 completed; DEV-007; STM-001; OI-012 | completed |
 
 #### DEV-010 SiliconFlow embedding token-estimation routing
 
@@ -829,7 +829,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **测试**：Unit + Contract（默认 CI 无 live TEI / live SiliconFlow）；更新 E2E-001 helper patch；不新增完整 E2E 套件。
 - **计划文件**：`02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md`
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a` MATCH；`human_plan_approved=true` @ `2026-08-15 08:03 UTC`；`developer_authorized=true` persisted at in_progress；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2（实施 Step 0；本 phase 无 Amendment）；`changes_technical_spec=true`；不得触碰 DEV-006/PR#13。
-- **状态备注**：`committed`（implementation `7bf341ee7cd988d5a1f728ad138c38bbc4f31932`；PR #61 OPEN https://github.com/xu-jia-ming/memory_system/pull/61；plan_commit `a55f99167863f508ef09033e13134348ab5e8b60`；CODE_REVIEW_APPROVED P0=0 P1=0 P3=2；unit+contract 18 passed；ruff PASS；mypy src 0；`next_action=await human merge`；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`completed`（plan_commit `a55f99167863f508ef09033e13134348ab5e8b60`；implementation `7bf341ee7cd988d5a1f728ad138c38bbc4f31932`；record `83f3443aff413b458c900c3f59ee4a63384676bc`；PR #61 MERGED `29e4a3d7d747d2ec80d4a345da55e70f11076cf1` mergedAt `2026-08-15T08:41:28Z`；CODE_REVIEW_APPROVED P0=0 P1=0 P3=2；unit+contract 18 passed；ruff PASS；mypy src 0；feat 分支已删；未 git tag；`next_action=DEV-010 completed — NO AUTO-START`；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13）。
 
 ---
 
@@ -1891,5 +1891,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `DEV-010` → `committed`（计划文件 `02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md`）；**不**修改 REL-001 completed 事实；**不**标 DEV-010 completed；**不**创建 OI-013；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **是**（最小 provider-aware tokenize 计数来源澄清；不改 Schema/错误码/状态机） |
 | 审批 | CODE_REVIEW_APPROVED P0=0 P1=0 P3=2；implementation `7bf341ee7cd988d5a1f728ad138c38bbc4f31932`；PR #61 OPEN base=main |
+
+### CHANGE-098
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Release Operator POST_MERGE_CLEANUP：PR #61 MERGED；docs(status): complete on main；删 exact feat |
+| 受影响任务 | `DEV-010` → `completed`（计划文件 `02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md`）；**不**修改 REL-001 completed 事实；**不**创建 OI-013；**不**触碰 DEV-006/PR #13；**不** git tag；**不**自动启动下一任务 |
+| 是否改变技术规格 | **是**（最小 provider-aware tokenize 计数来源澄清；不改 Schema/错误码/状态机） |
+| 审批 | Release Operator POST_MERGE_CLEANUP；PR #61 MERGED `29e4a3d7d747d2ec80d4a345da55e70f11076cf1` mergedAt `2026-08-15T08:41:28Z`；`next_action=DEV-010 completed — NO AUTO-START` |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

@@ -6,7 +6,7 @@
 task_id: DEV-010
 task_name: SiliconFlow embedding token-estimation routing
 task_slug: siliconflow-embedding-token-estimation-routing
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a"
@@ -15,7 +15,7 @@ insertion_reason: NEW_UNPLANNED_FEATURE
 human_plan_approved: true
 developer_authorized: true
 created_at: "2026-08-15 07:50 UTC"
-updated_at: "2026-08-15 08:40 UTC"
+updated_at: "2026-08-15 08:45 UTC"
 branch: "feat/DEV-010-siliconflow-embedding-token-estimation-routing"
 spec_sections:
   - "§1.2.1 estimated_tokens 字符比例公式（复用；不得改公式）"
@@ -60,10 +60,10 @@ approval_gates:
   human_plan_approved: true
   human_plan_approved_at: "2026-08-15 08:03 UTC"
   developer_authorized: true
-  approval_posture: "IMPLEMENTATION_RELEASE — committed; await human merge"
+  approval_posture: "POST_MERGE_CLEANUP — completed"
   plan_review_round: 1
   plan_review_status: "Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2 (implementation Step 0; no Amendment this phase)"
-  next_action: "await human merge of PR #61; POST_MERGE_CLEANUP only after MERGED; do not push origin main this phase"
+  next_action: "DEV-010 completed — NO AUTO-START (no subsequent Task unless human starts one)"
   post_human_plan_approved_state_machine: |
     Human PLAN_APPROVED received. status=approved; next_action=PLAN_LANDING then Developer on feat.
     developer_authorized=false until exact feat/DEV-010-siliconflow-embedding-token-estimation-routing exists.
@@ -585,6 +585,7 @@ IMPLEMENTATION_RELEASE 可 add 路径 = §6 白名单（生产 + 测试 + 规格
 | 2026-08-15 08:25 UTC | Step 5 tested | status=implemented → tested；白名单测试 + ruff + mypy + 聚焦回归 | unit+contract 18 passed；ruff PASS；mypy src 0；regression 56 passed | 未 commit；next_action=CODE_REVIEW |
 | 2026-08-15 08:30 UTC | Code Review + Commit Recorder | status=tested → reviewed；CODE_REVIEW_APPROVED session 93de8d64；P0=0 P1=0 P3=2；READY_FOR_HUMAN_COMMIT session 44cb5320 | 未复跑 | implementation_commit=null until feat git rev-parse；next_action=IMPLEMENTATION_RELEASE |
 | 2026-08-15 08:40 UTC | IMPLEMENTATION_RELEASE | status=reviewed → committed；feat implementation + PR #61 OPEN；同 feat docs(status): record | 未复跑 | implementation `7bf341ee7cd988d5a1f728ad138c38bbc4f31932`；不得 push origin main |
+| 2026-08-15 08:45 UTC | POST_MERGE_CLEANUP | status=committed → completed；PR #61 MERGED `29e4a3d7d747d2ec80d4a345da55e70f11076cf1` mergedAt `2026-08-15T08:41:28Z`；docs(status): complete on main；exact feat 删除 | N/A | 未 git tag；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13；`next_action=DEV-010 completed — NO AUTO-START` |
 
 ---
 
@@ -605,9 +606,9 @@ IMPLEMENTATION_RELEASE 可 add 路径 = §6 白名单（生产 + 测试 + 规格
 | `tests/unit/test_tokenize_client_factory.py` | 创建；U3–U8 + RET runtime assertion |
 | `tests/contract/test_dev010_tokenize_provider_routing.py` | 创建；C1–C5（C1 tightened） |
 | `tests/e2e/helpers/e2e001_helpers.py` | patch `create_tokenize_client` |
-| `02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md` | 执行记录 / tested |
-| `02_开发管理/progress.md` | in_progress → tested |
-| `02_开发管理/master_plan.md` | DEV-010 tested + CHANGE-094/095 |
+| `02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md` | 执行记录 / completed |
+| `02_开发管理/progress.md` | committed → completed |
+| `02_开发管理/master_plan.md` | DEV-010 completed + CHANGE-098 |
 
 ### 与原计划的差异
 
@@ -643,14 +644,19 @@ branch: feat/DEV-010-siliconflow-embedding-token-estimation-routing
 plan_commit: a55f99167863f508ef09033e13134348ab5e8b60
 implementation_commit: 7bf341ee7cd988d5a1f728ad138c38bbc4f31932
 implementation_commit_message: "feat(tokenize): route siliconflow token counts through estimate_tokens"
+status_record_committed: 83f3443aff413b458c900c3f59ee4a63384676bc
 pr: "#61"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/61"
-pr_state: OPEN
+pr_state: MERGED
 pr_base: main
 pr_head: feat/DEV-010-siliconflow-embedding-token-estimation-routing
-status_record_committed: null
+merge_commit: 29e4a3d7d747d2ec80d4a345da55e70f11076cf1
+merged_at: "2026-08-15T08:41:28Z"
+feat_branch: deleted
+working_tree: clean
+next_action: "DEV-010 completed — NO AUTO-START (no subsequent Task unless human starts one)"
 ```
 
 ### 最终状态
 
-`committed`
+`completed`
