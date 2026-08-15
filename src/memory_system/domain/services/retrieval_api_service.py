@@ -62,10 +62,8 @@ from memory_system.infrastructure.neo4j.retrieval_statistics_repository import (
     RetrievalStatisticsRepository,
     RetrievalStatisticsWriteError,
 )
-from memory_system.infrastructure.tei.tei_tokenize_client import (
-    TeiTokenizeClient,
-    TokenizeServiceError,
-)
+from memory_system.infrastructure.tei.tei_tokenize_client import TokenizeServiceError
+from memory_system.infrastructure.tokenize.factory import create_tokenize_client
 from memory_system.observability.metrics import record_retrieval
 from memory_system.settings.models import Settings
 
@@ -731,7 +729,7 @@ def create_retrieval_api_service_from_app_state(
     bm25_service = create_bm25_retrieval_service(elasticsearch, settings=settings)
     vector_service = create_vector_retrieval_service(elasticsearch, settings=settings)
     embedding_client = create_embedding_client(settings, http_client)
-    tokenize_client = TeiTokenizeClient(settings, http_client)
+    tokenize_client = create_tokenize_client(settings, http_client)
     authoritative_service = create_authoritative_recall_service(
         neo4j_driver=neo4j_driver,
         es_client=elasticsearch,

@@ -2201,7 +2201,7 @@ merged_confidence = min(
 6. 对每条已有 Memory 计算布尔字段 `increment_memory_version`。只要聚合后的操作会修改内容状态字段，或者会将一个或多个新的 `Evidence-[:SUPPORTS]->Memory` 关系连接到该 Memory，该字段就设为 `true`；同一 Archive、同一事务内只能递增一次。
 7. 为每个聚合后的新 Memory 组生成唯一 `memory_id`，并将组内全部 Evidence 写入计划指向同一 `memory_id`。新 Memory 的字段值必须按照 `2.1.11` 的确定性规则生成。
 8. 从最终非 `SKIP` Memory 操作中收集实际引用的主体和客体 Entity，生成 `referenced_entity_write_set`。只有该集合中的 Entity 才能进入创建、复用或别名更新计划；没有被有效 Memory 引用的候选 Entity 必须丢弃。
-9. 根据最终写入计划和当前图谱构建 `planned_index_sync_memory_set`，为每条计划写入或受 Entity 更新影响的 Memory 生成不含 aliases 的 `core_search_text`，并通过 TEI `/tokenize` 精确校验 Token 数。任一 `core_search_text` 超过 `1024` Token 时返回 `memory_search_text_too_long`，不得开启 Neo4j 写事务。该检查必须发生在图谱提交前，防止产生永久无法同步的 Memory。
+9. 根据最终写入计划和当前图谱构建 `planned_index_sync_memory_set`，为每条计划写入或受 Entity 更新影响的 Memory 生成不含 aliases 的 `core_search_text`，并通过 provider-aware token-count source 校验 Token 数：`embedding_provider=siliconflow` 时使用 §1.2.1 `estimate_tokens`（启发式字符比例；不得调用 TEI `/tokenize`；不得仅因 token 计数要求 `embedding-service`）；`embedding_provider=local_tei` 时通过同一 TEI 实例的 `/tokenize` 精确计数。任一 `core_search_text` 超过 `1024` Token 时返回 `memory_search_text_too_long`，不得开启 Neo4j 写事务。该检查必须发生在图谱提交前，防止产生永久无法同步的 Memory。SiliconFlow 路径比较的是 estimated tokens，不得宣称达到 TEI `/tokenize` 级精确；本条不实现 OI-012 已 DEFERRED 的精确 1024 tokenizer 强制。
 10. 生成不可变的最终图谱写入计划，写事务内不得再次调用 LLM、重新执行候选召回、重新计算长度策略或按照原始候选顺序重新决策。
 
 事务内写入：
@@ -2534,10 +2534,10 @@ search_text = core_search_text + aliases_that_fit_budget
 1. 忽略 `null`、空字符串和重复值，所有片段执行 NFKC、首尾去空白和连续空格压缩。
 2. 当主体或客体为当前用户保留实体 `user:{user_id}` 时，不将其 `canonical_name=current_user` 和 aliases 拼接到检索文本；用户隔离已经由 `user_id` Filter 保证。
 3. `content`、主体名称、`predicate` 和客体名称或普通值属于核心字段，不能为了满足长度限制被省略、截断或重新排序。
-4. 在 Neo4j 写事务前，Worker 必须为 `planned_index_sync_memory_set` 构建 `core_search_text`，通过同一 TEI 实例的 `/tokenize` 精确计数。核心文本超过 `1024` Token 时返回 `memory_search_text_too_long`，不得提交图谱事务。
+4. 在 Neo4j 写事务前，Worker 必须为 `planned_index_sync_memory_set` 构建 `core_search_text`，并通过同一 provider-aware token-count source 计数：`embedding_provider=siliconflow` 时使用 §1.2.1 `estimate_tokens`（启发式；不得调用 TEI `/tokenize`；不得仅因 token 计数要求 `embedding-service`）；`embedding_provider=local_tei` 时通过同一 TEI 实例的 `/tokenize` 精确计数。核心文本超过 `1024` Token 时返回 `memory_search_text_too_long`，不得提交图谱事务。SiliconFlow 路径比较 estimated tokens，不得宣称 TEI 级精确。
 5. Entity aliases 分别执行去重和 Unicode Code Point 升序排序，主体 aliases 先于客体 aliases。按该稳定顺序逐条尝试追加；只有追加后的完整 `search_text` 仍不超过 `1024` Token 时才保留该 Alias，否则跳过该 Alias并继续检查后续 Alias。
 6. Alias 被跳过只影响 Elasticsearch 检索文本，不删除 Neo4j 中保存的 Alias。每个 Document 记录内部构建结果 `omitted_alias_count` 供日志和指标使用，但 MVP 不要求将该字段写入 Elasticsearch Mapping；累计指标为 `memory_search_text_omitted_alias_total`。
-7. 最终 `search_text` 必须再次通过 `/tokenize` 校验 `1 <= token_count <= 1024`，相同 Neo4j 数据必须生成逐字节一致的文本。
+7. 最终 `search_text` 必须再次通过同一 provider-aware token-count source 校验 `1 <= token_count <= 1024`（`embedding_provider=siliconflow` 使用 `estimate_tokens`；`embedding_provider=local_tei` 使用 TEI `/tokenize`），相同 Neo4j 数据必须生成逐字节一致的文本。
 8. Embedding 统一基于最终 `search_text` 生成；不得对索引文本静默截断。
 9. Elasticsearch Document ID 固定使用 `memory_id`，重复 Upsert 不创建重复文档。
 10. Bulk API 必须检查 HTTP 状态和每一个 Item 的执行结果；任意 Item 失败都视为本次同步失败。Elasticsearch Bulk 不提供跨 Item 原子性，部分成功的 Document 可能已经写入。
@@ -2742,7 +2742,7 @@ Request：
 
 1. `user_id` 和 `query` 不能为空。
 2. Query 标准化后字符长度必须在 `1` 至 `2000` 之间；超过 `2000` 字符返回 `query_too_long`。
-3. 字符长度合法后，Vector 通道使用 TEI `/tokenize` 计算精确 Token 数。`1` 至 `1024` Token 正常生成 Query Embedding；超过 `1024` Token 时不调用 `/v1/embeddings`，跳过 Vector 通道并继续 BM25，返回 Warning `vector_skipped_query_too_long`。
+3. 字符长度合法后，Vector 通道按 `memory_retrieval.embedding_provider` 使用 provider-aware token-count source：`siliconflow` 使用 §1.2.1 `estimate_tokens`（启发式；不得宣称精确）；`local_tei` 使用 TEI `/tokenize` 精确计数。`1` 至 `1024` Token 正常生成 Query Embedding；超过 `1024` Token 时不调用 `/v1/embeddings`，跳过 Vector 通道并继续 BM25，返回 Warning `vector_skipped_query_too_long`。
 4. `memory_types` 只能包含 `fact`、`preference`、`event`、`profile`，并进行去重；缺省或去重后为空数组时表示不限制 Memory 类型。
 5. 当 `memory_types` 缺省或为空数组时，BM25 Query 和 Vector Query 中不得生成 `memory_type` 的 `terms` Filter。
 6. `top_k` 超出范围时返回 `invalid_top_k`，不得静默截断。
@@ -4212,7 +4212,7 @@ MVP 暂不实现：
 | Embedding Model | 开源模型 `BAAI/bge-m3`，仅使用 Dense Embedding，输出维度固定为 `1024` |
 | Embedding Engine | **默认** SiliconFlow Hosted API；**可选** Hugging Face Text Embeddings Inference（TEI）`1.9.3` 自托管，镜像使用 Digest 锁定 |
 | Embedding Runtime | SiliconFlow 托管为默认路径；TEI 自托管时默认 CPU，RTX A5000 空闲时使用 Ampere 8.6 GPU；通过 Compose Override 在启动前选择 |
-| Embedding Input Limit | 单条文本最多 `1024` Token；TEI 路径使用 `/tokenize` 精确校验；SiliconFlow 路径见 §3.10.0 与 DEV-007 Contract |
+| Embedding Input Limit | 单条文本最多 `1024` Token；`local_tei` EXT/RET 门闩使用 TEI `/tokenize` 精确校验；`siliconflow` EXT/RET 门闩使用 §1.2.1 `estimate_tokens`（启发式；见 §3.10.0）。SiliconFlow Embedding Client 仍按 DEV-007 Amendment 001：Client 内无精确 1024 预检，超长依赖 API 400 |
 | 消息队列 | Apache Kafka，单节点 KRaft Combined Mode |
 | MongoDB 部署 | 单节点 Standalone；MVP 不使用跨文档事务和 Change Stream |
 | Elasticsearch | `9.4.4`，单节点，开发与测试环境设置 `xpack.security.enabled=false` |
@@ -4721,6 +4721,8 @@ Provider-specific batch limits（各自 Client Contract 内分片）：
 - **TEI**：每 HTTP 请求最多 **64** 条
 
 `SiliconFlowEmbeddingClient` 实现 Contract（**DEV-007**）摘要 **M1–M11**：保留 `EmbeddingClient` Protocol；`POST https://api.siliconflow.cn/v1/embeddings`；`httpx`（无 SDK）；`SILICONFLOW_API_KEY`（`SecretStr`）；默认 `embedding_provider=siliconflow`；429/5xx/timeout **有界重试**：**1 次初始 + 最多 2 次重试 = 最多 3 次 HTTP attempt**；400/401/403 fail-fast；空字符串零 HTTP；observability 最小集（provider、status_code、trace_id、bounded sanitized error；禁止 key/auth/全文/vectors）。SiliconFlow 向量 L2 归一化：**UNKNOWN / DEV-007 规划决策**（不得猜测）。本地 HF tokenizer 体系：**DEFERRED**（MVP 不建）。
+
+EXT/RET 1024 计数来源按 `memory_retrieval.embedding_provider` 路由：`siliconflow` → STM-001 `estimate_tokens`（零 HTTP；启发式字符比例；非精确 tokenizer；不得 POST `/tokenize`）；`local_tei` → `TeiTokenizeClient`（TEI `/tokenize` 精确）。错误码、阈值 `1024`、Schema 与状态机不变。这不是新 tokenizer，不是 OI-012 D6 精确强制，也不是 `SiliconFlowEmbeddingClient` 内精确 1024 预检。
 
 #### 3.10.1 固定选型
 

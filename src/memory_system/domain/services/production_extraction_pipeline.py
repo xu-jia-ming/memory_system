@@ -72,7 +72,7 @@ from memory_system.infrastructure.mongodb import extraction_task_repository as t
 from memory_system.infrastructure.neo4j.retrieval_index_read_repository import (
     RetrievalIndexReadRepository,
 )
-from memory_system.infrastructure.tei.tei_tokenize_client import TeiTokenizeClient
+from memory_system.infrastructure.tokenize import create_tokenize_client
 from memory_system.settings.models import Settings
 
 Clock = Callable[[], int]
@@ -374,7 +374,7 @@ def create_production_extraction_pipeline(
 ) -> ProductionExtractionPipeline:
     """Build the production pipeline while allowing deterministic test clients."""
     resolved_llm_client = llm_client or DeepSeekLlmClient(settings)
-    resolved_tokenize_client = tokenize_client or TeiTokenizeClient(settings, http_client)
+    resolved_tokenize_client = tokenize_client or create_tokenize_client(settings, http_client)
     resolved_embedding_client = embedding_client or create_embedding_client(settings, http_client)
     resolved_server_time_provider = server_time_provider or clock
     resolved_replay_loader = replay_index_sync_memory_set_loader

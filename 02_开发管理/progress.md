@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 follow-up — DEV-010 approved / PLAN_LANDING
+current_phase: Phase 5 follow-up — DEV-010 committed / PR OPEN
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: DEV-010
-current_task_status: approved
-current_branch: main
+current_task_status: committed
+current_branch: feat/DEV-010-siliconflow-embedding-token-estimation-routing
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -26,7 +26,7 @@ planning_baseline_main: "fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_DEV-010_plan_file: 02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md
-formal_DEV-010_status: approved
+formal_DEV-010_status: committed
 formal_DEV-010_workflow_mode: NORMAL
 formal_DEV-010_workflow_mode_source: explicit
 formal_DEV-010_baseline: "fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a"
@@ -49,12 +49,28 @@ formal_DEV-010_test_file_whitelist: "tests/unit/test_heuristic_token_count_adapt
 formal_DEV-010_spec_file_whitelist: "01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md"
 formal_DEV-010_human_plan_approved: true
 formal_DEV-010_human_plan_approved_at: "2026-08-15 08:03 UTC"
-formal_DEV-010_developer_authorized: false
-formal_DEV-010_approval_posture: PLAN_LANDING
+formal_DEV-010_developer_authorized: true
+formal_DEV-010_approval_posture: "IMPLEMENTATION_RELEASE — committed; await human merge"
 formal_DEV-010_plan_review_round: 1
 formal_DEV-010_plan_review: "Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2 (implementation Step 0; no Amendment this phase)"
-formal_DEV-010_next_action: "Developer on feat after PLAN_LANDING"
-formal_DEV-010_note: "Human PLAN_APPROVED 2026-08-15 08:03 UTC；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2（实施 Step 0）；PLAN_LANDING docs(plan) on main then create exact feat；developer_authorized=false until feat exists；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13；不得创建 OI-013"
+formal_DEV-010_plan_commit: "a55f99167863f508ef09033e13134348ab5e8b60"
+formal_DEV-010_code_review: CODE_REVIEW_APPROVED
+formal_DEV-010_code_review_session: "93de8d64-bcaf-478c-8c57-f0c77c8e8670"
+formal_DEV-010_p0: 0
+formal_DEV-010_p1: 0
+formal_DEV-010_p2: 0
+formal_DEV-010_p3: 2
+formal_DEV-010_commit_recorder_session: "44cb5320-381f-4ebe-95ac-b46b9f74c9ab"
+formal_DEV-010_implementation_commit: "7bf341ee7cd988d5a1f728ad138c38bbc4f31932"
+formal_DEV-010_implementation_commit_message: "feat(tokenize): route siliconflow token counts through estimate_tokens"
+formal_DEV-010_pr: "#61"
+formal_DEV-010_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/61"
+formal_DEV-010_pr_state: OPEN
+formal_DEV-010_pr_base: main
+formal_DEV-010_pr_head: "feat/DEV-010-siliconflow-embedding-token-estimation-routing"
+formal_DEV-010_status_record_committed: null
+formal_DEV-010_next_action: "await human merge of PR #61; POST_MERGE_CLEANUP only after MERGED; do not push origin main this phase"
+formal_DEV-010_note: "IMPLEMENTATION_RELEASE on feat；implementation 7bf341ee7cd988d5a1f728ad138c38bbc4f31932；PR #61 OPEN https://github.com/xu-jia-ming/memory_system/pull/61 base=main head=feat/DEV-010-siliconflow-embedding-token-estimation-routing；plan_commit a55f99167863f508ef09033e13134348ab5e8b60；CODE_REVIEW_APPROVED P0=0 P1=0 P3=2；unit+contract 18 passed；ruff PASS；mypy src 0；status_record_committed=null until after this record commit rev-parse（no self-ref）；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13；不得创建 OI-013；不得 git push origin main"
 formal_REL-001_plan_file: 02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md
 formal_REL-001_status: completed
 formal_REL-001_workflow_mode: NORMAL
@@ -302,8 +318,8 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: "Developer on feat after PLAN_LANDING"
-last_role_result: Release Operator PLAN_LANDING DEV-010 approved; docs(plan) on main then create exact feat; REL-001 completed facts unchanged
+next_action: "await human merge of PR #61; POST_MERGE_CLEANUP only after MERGED"
+last_role_result: IMPLEMENTATION_RELEASE DEV-010 committed; implementation 7bf341ee7cd988d5a1f728ad138c38bbc4f31932; PR #61 OPEN; record commit pending rev-parse
 blocking_reason: null
 formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
 formal_OPS-002_status: completed
@@ -2042,6 +2058,10 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-15 08:40 UTC | DEV-010 | reviewed → committed | Release Operator IMPLEMENTATION_RELEASE on feat；implementation `7bf341ee7cd988d5a1f728ad138c38bbc4f31932`；PR #61 OPEN https://github.com/xu-jia-ming/memory_system/pull/61；base=main head=feat/DEV-010-siliconflow-embedding-token-estimation-routing；`docs(status): record` 同 feat 不推 main；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
+| 2026-08-15 08:30 UTC | DEV-010 | tested → reviewed | CODE_REVIEW_APPROVED session 93de8d64-bcaf-478c-8c57-f0c77c8e8670；P0=0 P1=0 P3=2；Commit Recorder READY_FOR_HUMAN_COMMIT session 44cb5320-381f-4ebe-95ac-b46b9f74c9ab；implementation_commit=null until feat `git rev-parse`；`next_action=IMPLEMENTATION_RELEASE`；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
+| 2026-08-15 08:25 UTC | DEV-010 | in_progress → implemented → tested | Developer：spec 六处 delta + `create_tokenize_client` + HeuristicTokenCountAdapter + 两处生产接线 + SHOULD_FIX RET runtime/C1；unit+contract **18 passed**；ruff PASS；mypy src 0；focused regression **56 passed**；未 Git commit；`next_action=CODE_REVIEW`；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
+| 2026-08-15 08:11 UTC | DEV-010 | approved → in_progress | Developer on exact feat `feat/DEV-010-siliconflow-embedding-token-estimation-routing` HEAD `a55f99167863f508ef09033e13134348ab5e8b60`；persist `developer_authorized=true`；吸收 SHOULD_FIX Step 0（RET runtime assertion + C1 import tighten）；无 Git 写；`next_action=implement whitelist then Code Review`；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 08:06 UTC | DEV-010 | planned → approved / PLAN_LANDING | Human PLAN_APPROVED 2026-08-15 08:03 UTC；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2（实施 Step 0，本 phase 无 Amendment）；`human_plan_approved=true`；`developer_authorized=false` until feat exists；Release Operator PLAN_LANDING docs(plan) on main then create `feat/DEV-010-siliconflow-embedding-token-estimation-routing`；`next_action=Developer on feat after PLAN_LANDING`；未实施；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 07:50 UTC | DEV-010 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan `02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md`；用户显式 NEW_UNPLANNED_FEATURE（workflow_mode=NORMAL explicit）；baseline `fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a` MATCH；git status 规划前 clean；最小 spec delta + provider-aware tokenize 路由；`changes_technical_spec=true`；不单独 OI-013；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；`human_plan_approved=false`；`developer_authorized=false`；不得 PLAN_LANDING/实施本轮；REL-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 06:05 UTC | REL-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #60 MERGED `4e8ceff74b95880b1c035d518bf2be43d2bbc907` mergedAt `2026-08-15T06:01:06Z`；ff-only 同步 main；main 含 merge `4e8ceff` 与 implementation `703bb105`；仅更新 REL-001 三份治理文件并创建 `docs(status): complete REL-001 after PR merge`；exact feat 已删；未 git tag；未勾 A.1；清单 F.Git干净保持未勾（POST_MERGE 不 add 清单；POST_MERGE 后工作树干净）；`next_action=本任务完成 / NOT AUTO-STARTED`（Phase 5 无后续 Task）；HUMAN `v0.9.0-mvp-rc1` 仅人工 tag（建议对象 `412fb7b858120927aecad63962990587038df340`）；`v1.0.0-mvp` 不得创建（A.1 Preflight 仍未勾）；E2E-001 completed 事实不变；不得触碰 DEV-006/PR#13 |

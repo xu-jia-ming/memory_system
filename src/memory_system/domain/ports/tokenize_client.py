@@ -1,4 +1,4 @@
-"""Tokenize client port for TEI /tokenize exact counts (EXT-006)."""
+"""Provider-aware token-count port (TEI /tokenize exact vs STM-001 heuristic)."""
 
 from __future__ import annotations
 

@@ -6,16 +6,16 @@
 task_id: DEV-010
 task_name: SiliconFlow embedding token-estimation routing
 task_slug: siliconflow-embedding-token-estimation-routing
-status: approved
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a"
 changes_technical_spec: true
 insertion_reason: NEW_UNPLANNED_FEATURE
 human_plan_approved: true
-developer_authorized: false
+developer_authorized: true
 created_at: "2026-08-15 07:50 UTC"
-updated_at: "2026-08-15 08:06 UTC"
+updated_at: "2026-08-15 08:40 UTC"
 branch: "feat/DEV-010-siliconflow-embedding-token-estimation-routing"
 spec_sections:
   - "§1.2.1 estimated_tokens 字符比例公式（复用；不得改公式）"
@@ -59,11 +59,11 @@ approval_gates:
   planning: approved
   human_plan_approved: true
   human_plan_approved_at: "2026-08-15 08:03 UTC"
-  developer_authorized: false
-  approval_posture: PLAN_LANDING
+  developer_authorized: true
+  approval_posture: "IMPLEMENTATION_RELEASE — committed; await human merge"
   plan_review_round: 1
   plan_review_status: "Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2 (implementation Step 0; no Amendment this phase)"
-  next_action: "PLAN_LANDING then Developer on feat after feat exists"
+  next_action: "await human merge of PR #61; POST_MERGE_CLEANUP only after MERGED; do not push origin main this phase"
   post_human_plan_approved_state_machine: |
     Human PLAN_APPROVED received. status=approved; next_action=PLAN_LANDING then Developer on feat.
     developer_authorized=false until exact feat/DEV-010-siliconflow-embedding-token-estimation-routing exists.
@@ -443,20 +443,20 @@ else        -> ValueError(f"unsupported embedding_provider: {provider!r}")
 
 ## 9. 验收标准
 
-- [ ] 规格白名单六处（§2.1.13 item 9、§2.2.3 #4、§2.2.3 #7、§2.2.5 #3、§3.1 Embedding Input Limit、§3.10.0）已按 §5 Step 1 语义补丁；未重写 §3.10 TEI 大章 / §3.3 / §3.18 / OI-011 12g / extraction schema
-- [ ] `create_tokenize_client` 存在且分流：siliconflow → heuristic adapter；local_tei → `TeiTokenizeClient`；其他 → `ValueError`
-- [ ] adapter `count_tokens` 与 `estimate_tokens` 相等；零 HTTP；公式未复制、未修改
-- [ ] `production_extraction_pipeline.py` 与 `create_retrieval_api_service_from_app_state` 默认使用 factory；siliconflow 生产路径不构造 `TeiTokenizeClient`
-- [ ] 1024 门闩错误码/Warning 不变：`memory_search_text_too_long`、`vector_skipped_query_too_long`；比较逻辑仅经注入 client
-- [ ] 未实现 `TEIEmbeddingClient`；`create_embedding_client(local_tei)` 仍 `NotImplementedError`
-- [ ] 未新增依赖 / Settings 字段 / Migration / compose/preflight
-- [ ] 未在 `SiliconFlowEmbeddingClient` 内做精确 1024 预检
-- [ ] `tests/e2e/helpers/e2e001_helpers.py` 改为 patch factory
-- [ ] Unit + Contract 本任务白名单测试全部通过
-- [ ] `uv run ruff check src tests` 通过
-- [ ] `uv run mypy src` 通过
+- [x] 规格白名单六处（§2.1.13 item 9、§2.2.3 #4、§2.2.3 #7、§2.2.5 #3、§3.1 Embedding Input Limit、§3.10.0）已按 §5 Step 1 语义补丁；未重写 §3.10 TEI 大章 / §3.3 / §3.18 / OI-011 12g / extraction schema
+- [x] `create_tokenize_client` 存在且分流：siliconflow → heuristic adapter；local_tei → `TeiTokenizeClient`；其他 → `ValueError`
+- [x] adapter `count_tokens` 与 `estimate_tokens` 相等；零 HTTP；公式未复制、未修改
+- [x] `production_extraction_pipeline.py` 与 `create_retrieval_api_service_from_app_state` 默认使用 factory；siliconflow 生产路径不构造 `TeiTokenizeClient`
+- [x] 1024 门闩错误码/Warning 不变：`memory_search_text_too_long`、`vector_skipped_query_too_long`；比较逻辑仅经注入 client
+- [x] 未实现 `TEIEmbeddingClient`；`create_embedding_client(local_tei)` 仍 `NotImplementedError`
+- [x] 未新增依赖 / Settings 字段 / Migration / compose/preflight
+- [x] 未在 `SiliconFlowEmbeddingClient` 内做精确 1024 预检
+- [x] `tests/e2e/helpers/e2e001_helpers.py` 改为 patch factory
+- [x] Unit + Contract 本任务白名单测试全部通过
+- [x] `uv run ruff check src tests` 通过
+- [x] `uv run mypy src` 通过
 - [ ] Review 无 P0/P1
-- [ ] 未触碰 DEV-006 / PR #13
+- [x] 未触碰 DEV-006 / PR #13
 
 建议命令（实施后；规划轮次不跑）：
 
@@ -580,6 +580,11 @@ IMPLEMENTATION_RELEASE 可 add 路径 = §6 白名单（生产 + 测试 + 规格
 | 2026-08-15 07:50 UTC | Planner 初版 | 创建本 Task Plan；progress/master_plan 规划态 | 未实施 | 无 Git 写；待计划审查 |
 | 2026-08-15 08:03 UTC | Human PLAN_APPROVED | 用户模板 PLAN_APPROVED；独立 Plan Reviewer Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=2（session 9ef8a973-95d9-4798-8203-a63181c3b2b0） | 未实施 | SHOULD_FIX 留给 Developer Step 0；本 phase 无 Amendment |
 | 2026-08-15 08:06 UTC | PLAN_LANDING | status=approved；三份治理文件回写；docs(plan) 落 main 后创建 exact feat；plan_commit 不写入本 commit | 未实施 | developer_authorized=false until feat exists；无实现文件 |
+| 2026-08-15 08:11 UTC | Developer start | status=approved → in_progress；persist developer_authorized=true；HEAD=plan_commit a55f991；branch=feat/DEV-010-siliconflow-embedding-token-estimation-routing | 未实施 | 吸收 SHOULD_FIX Step 0；无 Git 写 |
+| 2026-08-15 08:20 UTC | Steps 0–4 implemented | spec 六处 delta；factory+adapter；两处生产接线；U1–U8 + RET runtime + C1–C5 tightened；E1 helper patch | 待跑 | SHOULD_FIX 无 Amendment；无 Git 写 |
+| 2026-08-15 08:25 UTC | Step 5 tested | status=implemented → tested；白名单测试 + ruff + mypy + 聚焦回归 | unit+contract 18 passed；ruff PASS；mypy src 0；regression 56 passed | 未 commit；next_action=CODE_REVIEW |
+| 2026-08-15 08:30 UTC | Code Review + Commit Recorder | status=tested → reviewed；CODE_REVIEW_APPROVED session 93de8d64；P0=0 P1=0 P3=2；READY_FOR_HUMAN_COMMIT session 44cb5320 | 未复跑 | implementation_commit=null until feat git rev-parse；next_action=IMPLEMENTATION_RELEASE |
+| 2026-08-15 08:40 UTC | IMPLEMENTATION_RELEASE | status=reviewed → committed；feat implementation + PR #61 OPEN；同 feat docs(status): record | 未复跑 | implementation `7bf341ee7cd988d5a1f728ad138c38bbc4f31932`；不得 push origin main |
 
 ---
 
@@ -589,22 +594,37 @@ IMPLEMENTATION_RELEASE 可 add 路径 = §6 白名单（生产 + 测试 + 规格
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `01_技术规格/记忆系统设计文档_全链路MVP技术选型版(9).md` | 六处 provider-aware 计数来源补丁 |
+| `src/memory_system/infrastructure/tokenize/heuristic_token_count_adapter.py` | 创建；async `estimate_tokens` 包装 |
+| `src/memory_system/infrastructure/tokenize/factory.py` | 创建；`create_tokenize_client` 分流 |
+| `src/memory_system/infrastructure/tokenize/__init__.py` | 创建；导出 factory/adapter |
+| `src/memory_system/domain/ports/tokenize_client.py` | docstring 改为 provider-aware |
+| `src/memory_system/domain/services/production_extraction_pipeline.py` | 默认 `create_tokenize_client`；删除 `TeiTokenizeClient` 导入 |
+| `src/memory_system/domain/services/retrieval_api_service.py` | 默认 `create_tokenize_client`；保留 `TokenizeServiceError` |
+| `tests/unit/test_heuristic_token_count_adapter.py` | 创建；U1/U2 |
+| `tests/unit/test_tokenize_client_factory.py` | 创建；U3–U8 + RET runtime assertion |
+| `tests/contract/test_dev010_tokenize_provider_routing.py` | 创建；C1–C5（C1 tightened） |
+| `tests/e2e/helpers/e2e001_helpers.py` | patch `create_tokenize_client` |
+| `02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md` | 执行记录 / tested |
+| `02_开发管理/progress.md` | in_progress → tested |
+| `02_开发管理/master_plan.md` | DEV-010 tested + CHANGE-094/095 |
 
 ### 与原计划的差异
 
-暂无。
+无 Amendment。吸收 Plan Review SHOULD_FIX=2：U 侧 RET `create_retrieval_api_service_from_app_state` runtime 断言；C1 禁止两处生产文件 `import TeiTokenizeClient`。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit | `uv run pytest tests/unit/test_heuristic_token_count_adapter.py tests/unit/test_tokenize_client_factory.py -q` | **passed**（计入下方 18） |
+| Contract | `uv run pytest tests/contract/test_dev010_tokenize_provider_routing.py -q` | **passed**（计入下方 18） |
+| Unit+Contract（计划命令） | `uv run pytest tests/unit/test_heuristic_token_count_adapter.py tests/unit/test_tokenize_client_factory.py tests/contract/test_dev010_tokenize_provider_routing.py -q` | **18 passed** in 1.73s；exit=0 |
+| Integration | 默认不新增 | 未跑 live TEI / live SiliconFlow |
+| E2E | 仅 helper 补丁；不新增套件 | 未跑完整 E2E-001 |
+| Focused regression | `uv run pytest tests/unit/test_production_extraction_pipeline.py tests/unit/test_retrieval_api_service.py tests/unit/test_siliconflow_embedding_client.py tests/unit/test_token_estimator.py -q` | **56 passed** in 2.03s；exit=0 |
+| Ruff | `uv run ruff check src tests` | **All checks passed**；exit=0 |
+| Mypy | `uv run mypy src` | **Success: no issues found in 200 source files**；exit=0 |
 
 ### Review 结果
 
@@ -612,19 +632,25 @@ IMPLEMENTATION_RELEASE 可 add 路径 = §6 白名单（生产 + 测试 + 规格
 p0: 0
 p1: 0
 p2: 0
-p3: 0
-review_report: null
+p3: 2
+review_report: "CODE_REVIEW_APPROVED session 93de8d64-bcaf-478c-8c57-f0c77c8e8670; P0=0 P1=0 P3=2 (non-blocking)"
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/DEV-010-siliconflow-embedding-token-estimation-routing
+plan_commit: a55f99167863f508ef09033e13134348ab5e8b60
+implementation_commit: 7bf341ee7cd988d5a1f728ad138c38bbc4f31932
+implementation_commit_message: "feat(tokenize): route siliconflow token counts through estimate_tokens"
+pr: "#61"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/61"
+pr_state: OPEN
+pr_base: main
+pr_head: feat/DEV-010-siliconflow-embedding-token-estimation-routing
+status_record_committed: null
 ```
 
 ### 最终状态
 
-`approved`
+`committed`

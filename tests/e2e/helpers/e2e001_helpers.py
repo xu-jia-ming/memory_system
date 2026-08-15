@@ -167,7 +167,7 @@ def _install_fake_retrieval_clients(monkeypatch: Any) -> None:
         fake_embedding_factory,
     )
     monkeypatch.setattr(
-        "memory_system.domain.services.retrieval_api_service.TeiTokenizeClient",
+        "memory_system.domain.services.retrieval_api_service.create_tokenize_client",
         fake_tokenize_factory,
     )
 
