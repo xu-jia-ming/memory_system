@@ -1923,6 +1923,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-15 01:40 UTC | OPS-004 | committed (CI hotfix) | PR #58：pytest_plugins 不得加载 test_*.py；EXT-002 改加载 mongo_kafka_fixtures（无 autouse）；避免 migrate/OPS-003 down -v 后 stale Mongo ping；契约扫描回归 | unit/contract scoped | 待 push 后等 CI；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 07:55 UTC | OPS-004 | planned (Amendment 002) → tested | Amendment 002：`uv run mypy src` CI scope；BL-RUFF-001 8-file ruff auto-fix；ruff/mypy src PASS；1395 pass / 91.26% cov；9 C-OPS4 PASS；merge_gate static+unit PASS | 未 Git 写 | `next_action=Code Reviewer`；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 07:47 UTC | OPS-004 | tested → planned (Amendment 002) | CODE_REVIEW_REJECTED P1-1 — CI static job ruff/mypy baseline debt；Amendment 002：`uv run mypy src` CI scope + BL-RUFF-001 8-file whitelist auto-fix + BL-MYPY-001 DEFERRED | 未实施 | `next_action=DEVELOPER_RESUME Amendment 002`；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 06:06 UTC | OPS-004 | approved → PLAN_LANDING | Release Operator PLAN_LANDING；plan_commit `4d5d519` on main；push via 17890 proxy；feat `feat/OPS-004-ci-gates-coverage-threshold` created @ 4d5d519 | 未实施 | 不得触碰 DEV-006/PR#13 |

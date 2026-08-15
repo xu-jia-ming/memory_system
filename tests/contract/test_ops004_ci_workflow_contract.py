@@ -99,6 +99,44 @@ def test_merge_gate_script_aligns_with_workflow() -> None:
         assert fragment in script, f"merge-gate script missing fragment: {fragment!r}"
 
 
+_PYTEST_PLUGINS_RE = re.compile(r"^pytest_plugins\s*=\s*(.+)$", re.MULTILINE)
+_TEST_MODULE_PLUGIN_RE = re.compile(
+    r"tests\.(?:integration|e2e|unit|contract)\.test_[A-Za-z0-9_]+"
+)
+
+
+def test_pytest_plugins_do_not_load_test_modules() -> None:
+    """Loading a test_*.py via pytest_plugins registers its autouse fixtures session-wide.
+
+    That leaked mongo_client pings after isolated compose down -v (migrate / OPS-003).
+    """
+    violations: list[str] = []
+    for path in (REPO_ROOT / "tests").rglob("*.py"):
+        text = path.read_text(encoding="utf-8")
+        for match in _PYTEST_PLUGINS_RE.finditer(text):
+            assignment = match.group(1)
+            if assignment.startswith("("):
+                end = text.find(")", match.end() - len(assignment))
+                assignment = text[match.start() : end + 1] if end >= 0 else assignment
+            for plugin in _TEST_MODULE_PLUGIN_RE.findall(assignment):
+                violations.append(f"{path.relative_to(REPO_ROOT)}: {plugin}")
+    assert not violations, (
+        "pytest_plugins must not point at test modules (session-global autouse leak): "
+        f"{violations}"
+    )
+
+
+def test_integration_support_plugins_have_no_autouse() -> None:
+    """Support plugins are session-global; autouse there leaks into isolated modules."""
+    support = REPO_ROOT / "tests" / "integration" / "support"
+    violations: list[str] = []
+    for path in sorted(support.glob("*.py")):
+        text = path.read_text(encoding="utf-8")
+        if re.search(r"autouse\s*=\s*True", text):
+            violations.append(str(path.relative_to(REPO_ROOT)))
+    assert not violations, f"integration support plugins must not use autouse: {violations}"
+
+
 def test_readme_default_merge_gate_command_inventory() -> None:
     """C-OPS4-04: README Default merge-gate tests section inventory."""
     readme = _read(README_PATH)

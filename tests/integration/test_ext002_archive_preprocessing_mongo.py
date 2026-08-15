@@ -31,7 +31,7 @@ from memory_system.infrastructure.mongodb.extraction_task_repository import (
     find_extraction_task_by_archive_id,
 )
 
-pytest_plugins = ("tests.integration.test_extraction_consumer_kafka",)
+pytest_plugins = ("tests.integration.support.mongo_kafka_fixtures",)
 
 
 class _FailingRedactor:

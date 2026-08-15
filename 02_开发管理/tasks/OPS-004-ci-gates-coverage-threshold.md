@@ -770,6 +770,12 @@ pr_url: "https://github.com/xu-jia-ming/memory_system/pull/58"
 pr_state: OPEN
 ```
 
+### CI hotfix（2026-08-15）
+
+- `pytest_plugins` 禁止指向 `tests/**/test_*.py`（session-global autouse 会在 isolated `down -v` 后 ping 旧 Mongo IP）。
+- EXT-002 / EXT-001 改为加载 `tests.integration.support.mongo_kafka_fixtures`（无 autouse）。
+- 契约：`test_pytest_plugins_do_not_load_test_modules`、`test_integration_support_plugins_have_no_autouse`。
+
 ### 最终状态
 
 `committed`（implementation `5996501`；PR #58 OPEN；CODE_REVIEW_APPROVED P0=0/P1=0；await merge）

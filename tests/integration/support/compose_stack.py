@@ -96,6 +96,11 @@ def mongo_uri_from_container() -> str:
     return f"mongodb://{ip}:27017/{MONGODB_DATABASE}"
 
 
+def kafka_bootstrap_from_container() -> str:
+    ip = wait_container_ip(CONTAINER_NAMES["kafka"])
+    return f"{ip}:9092"
+
+
 def elasticsearch_url_from_container() -> str:
     ip = wait_container_ip(CONTAINER_NAMES["elasticsearch"])
     return wait_elasticsearch_http(ip)
@@ -152,7 +157,7 @@ def container_ip(container: str) -> str | None:
 
 
 def parse_compose_ps_rows(stdout: str) -> list[dict[str, Any]]:
-    """Parse ``docker compose ps --format json`` (array or NDJSON, ignore noise)."""
+    """Parse ``compose ps --format json`` (array or NDJSON, ignore noise)."""
     text = stdout.strip()
     if not text:
         return []
