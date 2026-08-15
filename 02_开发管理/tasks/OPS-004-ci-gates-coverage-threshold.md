@@ -5,13 +5,13 @@
 ```yaml
 task_id: OPS-004
 task_name: CI Gates & 80% Coverage Threshold
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "85c1470417c27c4d2c688f22db7a36775b0aef79"
 branch: "feat/OPS-004-ci-gates-coverage-threshold"
 created_at: "2026-08-14 05:55 UTC"
-updated_at: "2026-08-14 07:55 UTC"
+updated_at: "2026-08-15 02:00 UTC"
 spec_sections:
   - "§3.28 测试策略（Unit/Contract/Integration 门禁 + 80% 覆盖率）"
   - "§3.30 P1（check_env_example.py CI + GitHub Actions）"
@@ -686,6 +686,7 @@ protected_regression_tests:
 | 2026-08-14 07:43 UTC | resume Step 8 | 复跑 integration + scoped lint | integration **71 passed**, 183 skipped, 3442s | 全量 ruff/mypy baseline 债务不变；scoped PASS |
 | 2026-08-14 07:47 UTC | planning (Amendment 002) | CODE_REVIEW_REJECTED P1-1：`mypy src` CI scope + BL-RUFF-001 白名单 8 文件 + BL-MYPY-001 DEFERRED | 未实施 | Developer resume；不改 `src/**` |
 | 2026-08-14 07:55 UTC | Amendment 002 实施 | Step 8b ruff auto-fix 8 文件；CI/merge-gate/contract mypy → `uv run mypy src` | ruff/mypy src PASS；1395 pass / 91.26% cov；9 C-OPS4 PASS | merge_gate static+unit PASS；integration 沿用 Step 8 71 pass |
+| 2026-08-15 02:00 UTC | POST_MERGE_CLEANUP | PR #58 MERGED；complete 文档上 main；exact feat 删除 | CI GREEN 1399 unit+contract / 246 integration run 31857428972 | next_action=E2E-001 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13 |
 
 ## 18. 实际执行结果
 
@@ -767,7 +768,11 @@ implementation_commit: 599650108a3441f92e9fd586a9ae7ac020c81548
 implementation_commit_message: "ci(ops): add GitHub Actions merge-gate and coverage threshold"
 pr: "#58"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/58"
-pr_state: OPEN
+pr_state: MERGED
+pr_head: "780359a6bc34253aa62b3266ba990e2b1d3edb23"
+merge_commit: 3e6f8fa2b7c1bf36a332e28f027fe79445bcf1ec
+merged_at: "2026-08-15T01:56:08Z"
+feat_branch: deleted
 ```
 
 ### CI hotfix（2026-08-15）
@@ -778,4 +783,4 @@ pr_state: OPEN
 
 ### 最终状态
 
-`committed`（implementation `5996501`；PR #58 OPEN；CODE_REVIEW_APPROVED P0=0/P1=0；await merge）
+`completed`（implementation `5996501`；PR #58 MERGED `3e6f8fa2b7c1bf36a332e28f027fe79445bcf1ec` mergedAt `2026-08-15T01:56:08Z`；CI GREEN 1399 unit+contract / 246 integration run 31857428972；feat 已删；`next_action=E2E-001 planned / NOT AUTO-STARTED`）

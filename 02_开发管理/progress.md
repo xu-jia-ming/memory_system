@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — OPS-004 approved (post OPS-003)
+current_phase: Phase 5 — OPS-004 completed; E2E-001 planned / NOT AUTO-STARTED
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: OPS-004
-current_task_status: committed
-current_branch: feat/OPS-004-ci-gates-coverage-threshold
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -26,7 +26,7 @@ planning_baseline_main: "85c1470417c27c4d2c688f22db7a36775b0aef79"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_OPS-004_plan_file: 02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md
-formal_OPS-004_status: committed
+formal_OPS-004_status: completed
 formal_OPS-004_workflow_mode: NORMAL
 formal_OPS-004_workflow_mode_source: explicit
 formal_OPS-004_baseline: "85c1470417c27c4d2c688f22db7a36775b0aef79"
@@ -40,12 +40,12 @@ formal_OPS-004_dependency_changes_expected: NONE
 formal_OPS-004_migration_changes_expected: NONE
 formal_OPS-004_production_file_whitelist: ".github/workflows/ci.yml; scripts/ci/run_merge_gate.sh; pyproject.toml; README.md"
 formal_OPS-004_test_file_whitelist: "tests/contract/test_ops004_ci_workflow_contract.py; tests/contract/test_con001..005_scope_boundaries.py; tests/contract/test_ext009_extraction_pipeline_contract.py; tests/unit/test_extraction_llm_service.py; tests/unit/test_extraction_task_consumer_service.py; tests/integration/test_ret005_retrieval_http.py; tests/unit/test_consolidation_run_service.py; tests/unit/test_consolidation_scheduler.py; tests/unit/test_ops002_logging_context.py; tests/unit/test_ops002_metrics_wiring.py; tests/unit/test_ops002_sensitive_log_guards.py; tests/unit/test_retrieval_api_service.py; tests/unit/test_retrieval_response_mapper.py"
-formal_OPS-004_scoped_tests: "1395 unit+contract pass / 91.26% cov; 71 integration pass / 183 skip; 9 OPS-004 contract pass"
+formal_OPS-004_scoped_tests: "CI GREEN run 31857428972 — unit-contract 1399 passed, 1 skipped, 33 deselected, 91.26% coverage; integration 246 passed, 4 skipped, 4 deselected (opt-in/host skips; STRICT_SKIPS did not fail); static PASS"
 formal_OPS-004_baseline_audit: "BL-001..002 task_scope_boundary marker; BL-003/004 test mock fixed; BL-005 integration PASS (Docker available)"
 formal_OPS-004_ruff: "PASS — uv run ruff check src tests scripts (BL-RUFF-001 8-file auto-fix Amendment 002)"
 formal_OPS-004_mypy: "PASS — uv run mypy src = 0 errors (CI gate); BL-MYPY-001 DEFERRED — tests/scripts 207 errors optional follow-up"
-formal_OPS-004_merge_gate: "static+unit PASS (ruff/mypy src/coverage); integration 71 pass / 183 skip (Step 8 baseline)"
-formal_OPS-004_note: "Amendment 002 — mypy src CI scope + BL-RUFF-001 whitelist 8 files + BL-MYPY-001 DEFERRED；闭合 OPS-003 F-009/F-017；不得触碰 DEV-006/PR#13；不得吸收 E2E-001"
+formal_OPS-004_merge_gate: "static PASS; unit-contract 1399 passed / 1 skipped / 91.26% cov; integration 246 passed / 4 skipped / 4 deselected; CI https://github.com/xu-jia-ming/memory_system/actions/runs/31857428972"
+formal_OPS-004_note: "POST_MERGE_CLEANUP completed；plan 4d5d5199f071d4205d7ce7c4aa3d67efe9ef5436；implementation 599650108a3441f92e9fd586a9ae7ac020c81548；PR head 780359a6bc34253aa62b3266ba990e2b1d3edb23；PR #58 MERGED（base=main，head=feat/OPS-004-ci-gates-coverage-threshold，merge 3e6f8fa2b7c1bf36a332e28f027fe79445bcf1ec，mergedAt=2026-08-15T01:56:08Z）；CI green 1399 unit+contract / 246 integration run 31857428972；CODE_REVIEW_APPROVED P0=0/P1=0；feat 分支本地/远程已删除；next_action=E2E-001 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13；不得自动启动 E2E-001"
 formal_OPS-004_amendment: "002 — mypy CI scope narrowed to `uv run mypy src`; BL-RUFF-001 ruff auto-fix 8 whitelist files (18 errors); BL-MYPY-001 tests/scripts mypy debt DEFERRED; C-OPS4-01/§5.2/§5.6/§10/§11 aligned"
 formal_OPS-004_plan_review_round: 2
 formal_OPS-004_plan_review: PLAN_APPROVED
@@ -60,10 +60,15 @@ formal_OPS-004_p0: 0
 formal_OPS-004_p1: 0
 formal_OPS-004_pr: "#58"
 formal_OPS-004_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/58"
-formal_OPS-004_pr_state: OPEN
+formal_OPS-004_pr_state: MERGED
 formal_OPS-004_pr_base: main
 formal_OPS-004_pr_head: "feat/OPS-004-ci-gates-coverage-threshold"
-formal_OPS-004_next_action: "await human PR #58 merge; POST_MERGE_CLEANUP after MERGED"
+formal_OPS-004_pr_head_sha: "780359a6bc34253aa62b3266ba990e2b1d3edb23"
+formal_OPS-004_merge_commit: 3e6f8fa2b7c1bf36a332e28f027fe79445bcf1ec
+formal_OPS-004_merged_at: "2026-08-15T01:56:08Z"
+formal_OPS-004_next_action: "E2E-001 planned / NOT AUTO-STARTED"
+formal_OPS-004_release_gate: COMPLETED
+formal_OPS-004_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_OPS-003_plan_file: 02_开发管理/tasks/OPS-003-full-migration-compose-blank-environment-validation.md
 formal_OPS-003_status: completed
 formal_OPS-003_workflow_mode: NORMAL
@@ -1923,6 +1928,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-15 02:00 UTC | OPS-004 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #58 MERGED `3e6f8fa2b7c1bf36a332e28f027fe79445bcf1ec` mergedAt `2026-08-15T01:56:08Z`；ff-only 同步 main；CI GREEN 1399 unit+contract / 246 integration（run 31857428972）；exact feat 已删；`next_action=E2E-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13；不得自动启动 E2E-001 |
 | 2026-08-15 01:40 UTC | OPS-004 | committed (CI hotfix) | PR #58：pytest_plugins 不得加载 test_*.py；EXT-002 改加载 mongo_kafka_fixtures（无 autouse）；避免 migrate/OPS-003 down -v 后 stale Mongo ping；契约扫描回归 | unit/contract scoped | 待 push 后等 CI；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 07:55 UTC | OPS-004 | planned (Amendment 002) → tested | Amendment 002：`uv run mypy src` CI scope；BL-RUFF-001 8-file ruff auto-fix；ruff/mypy src PASS；1395 pass / 91.26% cov；9 C-OPS4 PASS；merge_gate static+unit PASS | 未 Git 写 | `next_action=Code Reviewer`；不得触碰 DEV-006/PR#13 |
 | 2026-08-14 07:47 UTC | OPS-004 | tested → planned (Amendment 002) | CODE_REVIEW_REJECTED P1-1 — CI static job ruff/mypy baseline debt；Amendment 002：`uv run mypy src` CI scope + BL-RUFF-001 8-file whitelist auto-fix + BL-MYPY-001 DEFERRED | 未实施 | `next_action=DEVELOPER_RESUME Amendment 002`；不得触碰 DEV-006/PR#13 |
