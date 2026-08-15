@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — E2E-001 tested / AWAIT_CODE_REVIEW
+current_phase: Phase 5 — E2E-001 committed / WAITING_FOR_PR_MERGE
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: E2E-001
-current_task_status: tested
+current_task_status: committed
 current_branch: feat/E2E-001-full-chain-e2e-failure-injection
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -26,7 +26,7 @@ planning_baseline_main: "bb0d387f509c38194cf511f580b98cf86f44b5a7"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_E2E-001_plan_file: 02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md
-formal_E2E-001_status: tested
+formal_E2E-001_status: committed
 formal_E2E-001_workflow_mode: NORMAL
 formal_E2E-001_workflow_mode_source: explicit
 formal_E2E-001_baseline: "bb0d387f509c38194cf511f580b98cf86f44b5a7"
@@ -43,13 +43,24 @@ formal_E2E-001_production_file_whitelist: NONE
 formal_E2E-001_test_file_whitelist: "tests/e2e/helpers/e2e001_helpers.py; tests/support/e2e001_failure_doubles.py; tests/e2e/test_e2e001_full_chain.py; tests/e2e/test_e2e001_idempotency.py; tests/e2e/test_e2e001_failure_injection.py; tests/e2e/conftest.py; tests/contract/test_e2e001_scope_boundaries.py"
 formal_E2E-001_human_plan_approved: true
 formal_E2E-001_human_plan_approved_at: "2026-08-15 02:38 UTC"
-formal_E2E-001_approval_posture: "tested — AWAIT_CODE_REVIEW"
+formal_E2E-001_approval_posture: "committed — WAITING_FOR_PR_MERGE"
 formal_E2E-001_plan_review_round: 2
 formal_E2E-001_plan_review: "Round 2 PLAN_APPROVED (session 20220a4e-dd78-4a44-b130-9eeec0b11d74; BLOCKER=0 MUST_FIX=0); Amendment 001 absorbed; Round 1 PLAN_REJECTED (session 570cb388) retained as history"
 formal_E2E-001_amendment: "001 — MF-1 INJ-1 §1.2.6 #10/I-I Mongo Archive not WM; MF-2 HP compression succeeded + compressed_context; MF-3 INJ-5 two-step close §1.2.3 #11; SF-1 production ES wrap; SF-2 INJ-4 F1 second run_worker_once; SF-3 SIGTERM lag=0; SF-4 -v both downs; SF-5 PLAN_LANDING before Developer; SF-6 whitelist §12; SF-8 mypy src only"
 formal_E2E-001_developer_authorized: true
 formal_E2E-001_plan_commit: "c2afaaa576107329ca6153a846fcb071c9383445"
-formal_E2E-001_note: "PLAN_LANDING completed; plan_commit c2afaaa576107329ca6153a846fcb071c9383445; current_branch=feat/E2E-001-full-chain-e2e-failure-injection; developer_authorized=true; status=tested; E2E 11 passed / contract 3 passed / ruff PASS / mypy src 0; zero src/**; next_action=independent Code Review; 不得触碰 DEV-006/PR#13"
+formal_E2E-001_implementation_commit: "4a44e99009e04bcbce5717df0a3073fffff9faf0"
+formal_E2E-001_implementation_commit_message: "test(e2e): add full-chain e2e and failure injection suite"
+formal_E2E-001_code_review: CODE_REVIEW_APPROVED
+formal_E2E-001_p0: 0
+formal_E2E-001_p1: 0
+formal_E2E-001_pr: "#59"
+formal_E2E-001_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/59"
+formal_E2E-001_pr_state: OPEN
+formal_E2E-001_pr_base: main
+formal_E2E-001_pr_head: "feat/E2E-001-full-chain-e2e-failure-injection"
+formal_E2E-001_next_action: "WAITING_FOR_PR_MERGE"
+formal_E2E-001_note: "IMPLEMENTATION_RELEASE; plan_commit c2afaaa576107329ca6153a846fcb071c9383445; implementation 4a44e99009e04bcbce5717df0a3073fffff9faf0; PR #59 OPEN (base=main, head=feat/E2E-001-full-chain-e2e-failure-injection); CODE_REVIEW_APPROVED P0=0/P1=0; E2E 11 passed / contract 3 passed / ruff PASS / mypy src 0; zero src/**; status=committed; next_action=WAITING_FOR_PR_MERGE; 不得触碰 DEV-006/PR#13"
 formal_OPS-004_plan_file: 02_开发管理/tasks/OPS-004-ci-gates-coverage-threshold.md
 formal_OPS-004_status: completed
 formal_OPS-004_workflow_mode: NORMAL
@@ -213,8 +224,8 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: independent Code Reviewer on feat/E2E-001-full-chain-e2e-failure-injection
-last_role_result: READY_FOR_CODE_REVIEW
+next_action: WAITING_FOR_PR_MERGE
+last_role_result: IMPLEMENTATION_RELEASE committed; PR #59 OPEN
 blocking_reason: null
 formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
 formal_OPS-002_status: completed
