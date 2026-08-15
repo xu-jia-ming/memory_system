@@ -736,7 +736,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | completed |
 | OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | completed |
 | E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | completed |
-| REL-001 | MVP RC Review 与验收清单 | `05_测试与验收/mvp_acceptance_checklist.md` | E2E-001 | approved |
+| REL-001 | MVP RC Review 与验收清单 | `05_测试与验收/mvp_acceptance_checklist.md` | E2E-001 | committed |
 
 #### OPS-001 Graceful Shutdown、连接池、Timeout 与 Retry 总检
 
@@ -808,8 +808,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **验收产物**：`05_测试与验收/mvp_acceptance_checklist.md` 仅在证据满足后勾选；规划阶段保持未勾。
 - **Tag**：`v0.9.0-mvp-rc1` 条件已满足但 **HALT/人工**（超出 Release Operator 三 phase 命令集）；`v1.0.0-mvp` 未全绿不得创建；同样仅人类 annotated tag。
 - **计划文件**：`02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`
-- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=412fb7b858120927aecad63962990587038df340` MATCH；`human_plan_approved=true` @ `2026-08-15 04:25 UTC`；`developer_authorized=false` until feat exists；`approval_posture=PLAN_LANDING`；`status=approved`；`next_action=PLAN_LANDING`；feat slug 锁定 `feat/REL-001-mvp-rc-review-acceptance-checklist`；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5（实施 Step 0）；不得触碰 DEV-006/PR#13。
-- **状态备注**：`approved` / `PLAN_LANDING`（**非** completed；E2E-001 completed 事实不变）。
+- **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=412fb7b858120927aecad63962990587038df340` MATCH；`human_plan_approved=true` @ `2026-08-15 04:25 UTC`；`developer_authorized=true`；feat slug 锁定 `feat/REL-001-mvp-rc-review-acceptance-checklist`；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5（实施 Step 0 已吸收；无 Amendment）；不得触碰 DEV-006/PR#13。
+- **状态备注**：`committed` / `WAITING_FOR_PR_MERGE`（**非** completed；E2E-001 completed 事实不变）。implementation `703bb105fa18cc0814bd750843295c7044c6d4b9`；PR #60 OPEN（base=main，head=`feat/REL-001-mvp-rc-review-acceptance-checklist`）；CODE_REVIEW_APPROVED P0=0/P1=0 P3=1；F.Review 已勾；A.1 与 F.Git干净仍未勾 → **不得**宣称可打 `v1.0.0-mvp`；未 `git tag`；未 `git push origin main`。
 
 ---
 
@@ -1771,5 +1771,35 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `REL-001` → `approved` / `PLAN_LANDING`（计划文件 `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`）；**非** completed；**不**修改 E2E-001 completed 事实；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否**（仅治理批准态 + PLAN_LANDING；不改 Contract/Schema） |
 | 审批 | Human PLAN_APPROVED；Plan Reviewer Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5；`human_plan_approved=true`；`developer_authorized=false` until feat exists |
+
+### CHANGE-088
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Developer REL-001 Steps 0–6：证据 inventory + SHOULD_FIX=5 吸收；preflight `--mode=cpu` exit 1（A.1 未勾）；清单其余 SATISFIED 行勾选；ruff/mypy 回归 PASS；tag HALT/人工 |
+| 受影响任务 | `REL-001` → `tested` / `AWAIT_CODE_REVIEW`（计划文件 `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`）；**非** completed；**不**修改 E2E-001 completed 事实；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（仅验收清单勾选 + 治理执行记录；不改 Contract/Schema） |
+| 审批 | 待独立 Code Review；`developer_authorized=true`；未 git tag；未 commit |
+
+### CHANGE-089
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Code Reviewer CODE_REVIEW_APPROVED P0=0 P1=0 P3=1；Release Operator IMPLEMENTATION_RELEASE：回写审查事实；F.Review 勾选；A.1/F.Git干净仍未勾 |
+| 受影响任务 | `REL-001` → `reviewed` / `IMPLEMENTATION_RELEASE`（计划文件 `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`）；**非** completed；**不**修改 E2E-001 completed 事实；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（仅治理审查态 + 清单 F.Review；不改 Contract/Schema） |
+| 审批 | CODE_REVIEW_APPROVED P0=0/P1=0 P3=1；READY_FOR_HUMAN_COMMIT；IMPLEMENTATION_RELEASE on feat only；未 git tag；未宣称 v1.0.0-mvp |
+
+### CHANGE-090
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Release Operator IMPLEMENTATION_RELEASE：implementation commit + push feat + PR #60 OPEN；docs(status): record committed 于 feat（禁 push main） |
+| 受影响任务 | `REL-001` → `committed` / `WAITING_FOR_PR_MERGE`（计划文件 `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`）；**非** completed；**不**修改 E2E-001 completed 事实；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（仅治理状态：committed + PR OPEN；不改 Contract/Schema） |
+| 审批 | CODE_REVIEW_APPROVED P0=0/P1=0 P3=1；READY_FOR_HUMAN_COMMIT；IMPLEMENTATION_RELEASE on feat only；未 git tag；未宣称 v1.0.0-mvp |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

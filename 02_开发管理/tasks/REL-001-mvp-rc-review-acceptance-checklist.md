@@ -5,7 +5,7 @@
 ```yaml
 task_id: REL-001
 task_name: MVP RC Review 与验收清单
-status: approved
+status: committed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "412fb7b858120927aecad63962990587038df340"
@@ -13,7 +13,7 @@ branch: "feat/REL-001-mvp-rc-review-acceptance-checklist"
 milestone_rc1: "v0.9.0-mvp-rc1 — 条件=E2E-001 与审查完成（已满足）；本任务拥有打 tag，但 tag 超出自动 Release Operator 命令集 → HALT/人工"
 milestone_v1: "v1.0.0-mvp — 条件=MVP 验收清单全部阻塞项通过；未全绿不得创建"
 created_at: "2026-08-15 04:15 UTC"
-updated_at: "2026-08-15 04:25 UTC"
+updated_at: "2026-08-15 04:55 UTC"
 spec_sections:
   - "05_测试与验收/mvp_acceptance_checklist.md（A–F 阻塞项；文首：只有全部阻塞项通过才可创建 v1.0.0-mvp）"
   - "§3.32 MVP 开发完成验收标准 #1–#9"
@@ -56,11 +56,16 @@ approval_gates:
   planning: "approved"
   human_plan_approved: true
   human_plan_approved_at: "2026-08-15 04:25 UTC"
-  developer_authorized: false
-  approval_posture: PLAN_LANDING
+  developer_authorized: true
+  approval_posture: IMPLEMENTATION_RELEASE
   plan_review_round: 1
   plan_review_status: "Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5 (implementation Step 0; no Amendment this phase)"
-  next_action: "PLAN_LANDING then Developer on feat"
+  code_review: CODE_REVIEW_APPROVED
+  p0: 0
+  p1: 0
+  p2: 0
+  p3: 1
+  next_action: "WAITING_FOR_PR_MERGE"
   post_human_plan_approved_state_machine: |
     Human PLAN_APPROVED received. status=approved; next_action=PLAN_LANDING then Developer on feat.
     developer_authorized=false until exact feat/REL-001-mvp-rc-review-acceptance-checklist exists.
@@ -190,19 +195,19 @@ nonblocking_open_issues:
 
 #### B. 业务链路 ↔ §3.32 #4
 
-全部规划分类 `SATISFIED_BY_EVIDENCE`，单一权威测试：`tests/e2e/test_e2e001_full_chain.py::test_hp_session_to_close_full_chain`（E2E-001 PR #59；11 E2E passed）。链上对应：Session 创建 → Message 写入 → Archive → Compression（succeeded + 非空 `compressed_context`）→ Extraction → Neo4j → ES exists → Retrieval HTTP 200 → Consolidation writeback → Session Close。重复 Message 幂等见 C / IDEM-1，不在 HP 单测内重复实现。
+全部规划分类 `SATISFIED_BY_EVIDENCE`。链上 Session→Close 权威测试：`tests/e2e/test_e2e001_full_chain.py::test_hp_session_to_close_full_chain`（E2E-001 PR #59；11 E2E passed）：Session 创建 → Message 写入 → Archive → Compression（succeeded + 非空 `compressed_context`）→ Extraction → Neo4j → ES exists → Retrieval HTTP 200 → Consolidation writeback → Session Close。**B.「重复 Message 幂等」不得按 HP 口头勾选**（SHOULD_FIX-1 / Step 0）：权威=`tests/e2e/test_e2e001_idempotency.py::test_idem_1_duplicate_message_id_then_single_extraction`（IDEM-1）。
 
 #### C. 一致性与恢复 ↔ §3.32 #5 #6 #8 隔离
 
 | 清单项 | 规划分类 | 权威证据 | 本任务动作 |
 |---|---|---|---|
 | Pending Archive 可恢复 | `SATISFIED_BY_EVIDENCE` | E2E-001 INJ-1 `test_inj_1_kafka_publish_fail_then_stm011_republish`；STM-011 republish | 对照 |
-| 压缩失败不丢消息 | `SATISFIED_BY_EVIDENCE` | STM-013 compression LLM timeout 垂直切片；E2E-001 INJ-1 Mongo Archive/messages 保留 | 对照；不重测 STM-013 |
+| 压缩失败不丢消息 | `SATISFIED_BY_EVIDENCE` | **权威（SHOULD_FIX-2 / Step 0）**：STM-013 `tests/e2e/test_stm013_short_term_memory_e2e.py::test_e4_llm_failure_post_write_http_200_compression_failed`（压缩 LLM 失败、HTTP 200、消息不丢）。E2E-001 INJ-1 `test_inj_1_kafka_publish_fail_then_stm011_republish` 是 Kafka 发布失败而非压缩 LLM 失败，不得作为本行权威 | 对照；不重测 STM-013 |
 | 重复 Kafka Event 不重复写入 | `SATISFIED_BY_EVIDENCE` | E2E-001 IDEM-2 `test_idem_2_replay_same_archive_event_no_duplicate_entities` | 对照 |
 | Worker 重启不重复 Memory/Evidence | `SATISFIED_BY_EVIDENCE` | E2E-001 IDEM-3 `test_idem_3_crash_after_graph_second_worker_stable_identity` | 对照 |
 | Neo4j Commit 后异常可恢复 Elasticsearch | `SATISFIED_BY_EVIDENCE` | E2E-001 INJ-4 `test_inj_4_neo4j_commit_then_exit_second_worker_converges` | 对照 |
 | Session Close 部分成功可继续 | `SATISFIED_BY_EVIDENCE` | E2E-001 INJ-5 `test_inj_5_close_incomplete_then_retry_without_injection` | 对照 |
-| Version Conflict 不覆盖新状态 | `SATISFIED_BY_EVIDENCE` | CON-005 E2E-4 `tests/e2e/test_con005_consolidation_e2e.py`；STM-008 Finalize version gate | **清单对照**；禁止本任务重跑 CON/STM 矩阵 |
+| Version Conflict 不覆盖新状态 | `SATISFIED_BY_EVIDENCE` | CON-005 `tests/e2e/test_con005_consolidation_e2e.py::test_e2e4_version_conflict_partial_success`；STM-008 侧（SHOULD_FIX-4 / Step 0）：`tests/integration/test_compression_finalize_redis.py::test_i7_version_conflict` | **清单对照**；禁止本任务重跑 CON/STM 矩阵 |
 | 所有用户资源强制 `user_id` 隔离 | `SATISFIED_BY_EVIDENCE` | E2E-001 HP `other_user_id` retrieval 不含本 `memory_id`；OPS-002 F-015/F-016 + `tests/contract/test_ops002_user_isolation_inventory.py` | 对照 |
 
 #### D. 测试门禁 ↔ §3.32 #3 #4 #6
@@ -240,7 +245,7 @@ nonblocking_open_issues:
 | YAML 与 Pydantic Settings 一致 | `SATISFIED_BY_EVIDENCE` | 既有 settings/compose contract（DEV-003 / OPS-001） | 对照 |
 | Compose 命令统一经过 Wrapper | `SATISFIED_BY_EVIDENCE` | `tests/unit/test_compose_wrapper_contract.py` | 对照 |
 | README 启动命令有效 | `SATISFIED_BY_EVIDENCE` | OPS-003 C-OPS3-01 README vs §3.17 | 对照 |
-| 无影响主流程的 TODO | `NEEDS_REL001_ARTIFACT` | OPS-003 ENG-05 规划时扫描；需在 **本 baseline HEAD** 再确认 | 实施 Step 6：`rg` `src/` `scripts/` 主流程 `TODO`/`NotImplemented`/`pass`；发现主流程占位 → `HARD_BLOCK` **停止并报告**，禁止顺手改 Contract |
+| 无影响主流程的 TODO | `NEEDS_REL001_ARTIFACT` | OPS-003 ENG-05 规划时扫描；需在 **本 baseline HEAD** 再确认 | 实施 **Step 3**（SHOULD_FIX-5；§5 grep=Step 3，非 Step 6）：`rg` `src/` `scripts/` 主流程 `TODO`/`NotImplemented`/`pass`；发现主流程占位 → `HARD_BLOCK` **停止并报告**，禁止顺手改 Contract |
 | 无占位实现 | `NEEDS_REL001_ARTIFACT` | 同上 | 同上 |
 | Git 工作区干净 | `NEEDS_REL001_ARTIFACT` | 规划时 clean；实施完成与 POST_MERGE 时再确认 | 记录 `git status --short` 为空 |
 | Review 无 P0/P1 | `NEEDS_REL001_ARTIFACT` | 前置任务均 CODE_REVIEW_APPROVED P0=0/P1=0；**本任务**自身 Code Review 必须 P0=0/P1=0 | 勾选不得早于本任务 CODE_REVIEW_APPROVED |
@@ -256,7 +261,7 @@ E2E-001 非目标：超出 §3.28 五条的矩阵条目垂直切片已覆盖，E
 | Retrieval 单通道失败 | RET-006：`tests/e2e/test_ret006_retrieval_e2e.py::test_e2e4a_single_channel_bm25_degradation` | 对照 |
 | Retrieval 总超时 | RET-006：`test_e2e5a_total_timeout_before_response` / `test_e2e5b_total_timeout_degraded_after_response` | 对照 |
 | Consolidation 批次写入失败 | CON-005：`tests/e2e/test_con005_consolidation_e2e.py::test_e2e5_write_read_failure_mutex_overlap_and_release`；`tests/unit/test_consolidation_run_service.py` batch write failed | 对照 |
-| Worker 在 Task completed 后、Offset commit 前退出 | EXT-009 E2E 垂直切片（offset-after-terminal） | 对照；非本任务重测 |
+| Worker 在 Task completed 后、Offset commit 前退出 | EXT-009（SHOULD_FIX-3 / Step 0）：`tests/e2e/test_ext009_extraction_e2e.py::test_e2e1_happy_path_commits_after_terminal`；交叉 `tests/unit/test_extraction_pipeline_ext002.py::test_RED_19_terminal_persistence_failure_prevents_offset_commit` | 对照；非本任务重测 |
 | Embedding 服务不可用 | RET-006 E2E-3 通道/embedding 失败降级 | 对照 |
 | Version Conflict | 见 C 行 CON-005 E2E-4 | 对照 |
 | §4 禁止行为「发布验收必须真实 CPU TEI + BGE-M3」 | 与唯一规格 §3.28 #4 可选本地测试、§3.32 #7、E2E-001 Fake CPU **张力** | `DEFERRED_WITH_AUTHORITY`（OI-REL1-TEI）；**不**作为 CPU MVP 阻塞；**不**改规格正文 |
@@ -405,17 +410,17 @@ E2E-001 正式前置 **SATISFIED**。master_plan Phase 5 REL-001 行状态 `plan
 
 ## 9. 验收标准
 
-- [ ] A–F 每项在 §13 有分类与证据指针；无口头通过
-- [ ] `mvp_acceptance_checklist.md` 仅对已确认项勾选；规划轮次文件保持未勾（本轮已满足）
-- [ ] `production_file_whitelist=NONE`；`test_file_whitelist=NONE`；无 `src/**` / 无新测试 / 无 Migration / 无新依赖
-- [ ] 未将 E2E 纳入 OPS-004 默认 CI
-- [ ] 未触碰 DEV-006/PR#13；未读/提交 Secret；未启动计费 API
-- [ ] `v0.9.0-mvp-rc1` 仅人类 annotated tag；RO 三 phase 无 tag 命令；未全绿不得 `v1.0.0-mvp`
-- [ ] test_matrix 超额条目仅对照，未重测重写
-- [ ] 对应测试：无新增；可选既有 E2E-001 / ruff / mypy src 回归通过
-- [ ] Ruff 通过（`uv run ruff check src tests scripts`）
-- [ ] Mypy 通过（`uv run mypy src`）
-- [ ] Review 无 P0/P1
+- [x] A–F 每项在 §14 Step 0 inventory 有分类与证据指针；无口头通过
+- [x] `mvp_acceptance_checklist.md` 仅对已确认项勾选；规划轮次文件保持未勾（本轮已满足）
+- [x] `production_file_whitelist=NONE`；`test_file_whitelist=NONE`；无 `src/**` / 无新测试 / 无 Migration / 无新依赖
+- [x] 未将 E2E 纳入 OPS-004 默认 CI
+- [x] 未触碰 DEV-006/PR#13；未读/提交 Secret；未启动计费 API
+- [x] `v0.9.0-mvp-rc1` 仅人类 annotated tag；RO 三 phase 无 tag 命令；未全绿不得 `v1.0.0-mvp`
+- [x] test_matrix 超额条目仅对照，未重测重写
+- [x] 对应测试：无新增；可选既有 E2E-001 / ruff / mypy src 回归通过
+- [x] Ruff 通过（`uv run ruff check src tests scripts`）
+- [x] Mypy 通过（`uv run mypy src`）
+- [x] Review 无 P0/P1
 
 ---
 
@@ -436,8 +441,8 @@ E2E-001 正式前置 **SATISFIED**。master_plan Phase 5 REL-001 行状态 `plan
 ```yaml
 branch: "feat/REL-001-mvp-rc-review-acceptance-checklist"
 planning_baseline_main: "412fb7b858120927aecad63962990587038df340"
-this_round: "PLAN_LANDING after human PLAN_APPROVED; docs(plan) on main then create exact feat; developer_authorized=false until feat exists"
-developer_authorized: false
+this_round: "tested; CODE_REVIEW_APPROVED P0=0 P1=0 P3=1; IMPLEMENTATION_RELEASE on feat; implementation_commit=703bb105fa18cc0814bd750843295c7044c6d4b9; PR #60 OPEN; next_action=WAITING_FOR_PR_MERGE"
+developer_authorized: true
 human_plan_approved: true
 release_phases:
   PLAN_LANDING:
@@ -548,8 +553,144 @@ Fail-closed：白名单外路径不得 `git add`。
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
+| 2026-08-15 04:55 UTC | IMPLEMENTATION_RELEASE (record) | 回写 implementation `703bb105fa18cc0814bd750843295c7044c6d4b9`；PR #60 OPEN；status `reviewed`→`committed` | N/A | record 仅 feat；未 push main；未 git tag；A.1/F.Git干净仍未勾 |
+| 2026-08-15 04:52 UTC | IMPLEMENTATION_RELEASE (pre-commit) | 回写 CODE_REVIEW_APPROVED P0=0 P1=0 P3=1；§11 this_round（P3-001）；F.Review 勾选；status `tested`→`reviewed` | N/A | A.1/F.Git干净未勾；未宣称 v1.0.0-mvp；未 git tag；implementation_commit 待 rev-parse |
+| 2026-08-15 04:50 UTC | Step 6 | 回写本计划 §14–§15、progress.md、master_plan.md CHANGE-088；status `in_progress`→`implemented`→`tested`；`next_action=Code Review` | ruff PASS；mypy src 0 | 未 commit；developer_authorized=true 保持；A.1/F.Git干净/F.Review 未勾 |
+| 2026-08-15 04:48 UTC | Step 5 | Tag 门禁 HALT/人工；**未**执行 `git tag` | N/A | v0.9.0-mvp-rc1 条件已满足；v1.0.0-mvp 因 A.1 与 F 两行未勾 **不得**宣称可打 |
+| 2026-08-15 04:47 UTC | Step 4 | `mvp_acceptance_checklist.md` 仅勾选 §14 已确认 SATISFIED 行 | N/A | A.1 / F.Git干净 / F.Review 保持 `- [ ]`；OI-REL1-TEI 等 DEFERRED 非独立清单行 |
+| 2026-08-15 04:40 UTC | Step 3 | 只读 `rg` `src/` `scripts/`（TODO/FIXME/NotImplemented/bare pass） | 无主流程占位 | local_tei `NotImplementedError` 非 CPU 主流程（OI-REL1-TEI/DEV-007）；`pass` 均为 except 空分支；F.TODO/占位 → SATISFIED |
+| 2026-08-15 04:37 UTC | Step 2 | 只读确认 B/C/D/E 指针；feat 复跑 ruff/mypy | ruff All checks passed；mypy 197 files 0 issues | Docker 可用；可选 E2E-001 三文件 **未复跑**（对照 E2E-001 completed 11 passed）；禁止扩 CI |
+| 2026-08-15 04:37 UTC | Step 1 | 只读 `scripts/preflight/check_linux_host.sh --mode=cpu`；未改脚本；未 Read `.env` | exit **1** | HARD_FAILURE=`vm.max_map_count=65530 (< 1048576)`；A.1 **不勾选**；不改阈值；非 Contract 停写 |
+| 2026-08-15 04:35 UTC | Step 0 | 冻结 A–F / §4.5 inventory；吸收 SHOULD_FIX=5（函数名补全；无 Amendment） | 所列测试文件/函数均存在 | A.1 仍 NEEDS 直至 Step 1；分类未无证据改 SATISFIED |
+| 2026-08-15 04:32 UTC | Developer start | status `approved`→`in_progress`；exact feat HEAD=`04c4a7e8` | 门禁复核 | 工作树仅白名单治理 dirty（PLAN_LANDING leftover） |
 | 2026-08-15 04:25 UTC | PLAN_LANDING | Human PLAN_APPROVED；status=approved；docs(plan) on main then create exact feat | 未实施 | developer_authorized=false until feat exists；SHOULD_FIX=5 deferred to implementation Step 0；no Amendment |
 | 2026-08-15 04:15 UTC | planning | 创建本 Task Plan；progress/master_plan 规划态 | 未实施 | baseline `412fb7b`；production/test whitelist=NONE；tag=HALT/人工 |
+
+### Step 0 证据精度修正（吸收 Plan Reviewer SHOULD_FIX=5；不改 Contract；无 Amendment）
+
+1. B.「重复 Message 幂等」权威=`tests/e2e/test_e2e001_idempotency.py::test_idem_1_duplicate_message_id_then_single_extraction`（IDEM-1）。**不得**按 HP 口头勾选。文件/函数已打开确认存在（L84）。
+2. C.「压缩失败不丢消息」权威=`tests/e2e/test_stm013_short_term_memory_e2e.py::test_e4_llm_failure_post_write_http_200_compression_failed`（STM-013 E4，L352）。INJ-1=`test_inj_1_kafka_publish_fail_then_stm011_republish` 是 Kafka 发布失败，不是压缩 LLM 失败。
+3. §4.5 offset-after-terminal 精确路径=`tests/e2e/test_ext009_extraction_e2e.py::test_e2e1_happy_path_commits_after_terminal`（L44）；交叉=`tests/unit/test_extraction_pipeline_ext002.py::test_RED_19_terminal_persistence_failure_prevents_offset_commit`（L181）。
+4. C. Version Conflict STM-008 侧=`tests/integration/test_compression_finalize_redis.py::test_i7_version_conflict`（L381）；CON-005=`tests/e2e/test_con005_consolidation_e2e.py::test_e2e4_version_conflict_partial_success`（L175）已正确。
+5. grep 执行步骤按 §5 = **Step 3**（规划表曾误写 Step 6）。已在 §4.4 F 行改为 Step 3。
+
+### Step 0 confirmed inventory（文件真实存在；分类）
+
+SHA 锚点：`planning_baseline_main=412fb7b858120927aecad63962990587038df340`；E2E-001 implementation `4a44e99009e04bcbce5717df0a3073fffff9faf0`；PR #59 merge `43b6975a5dc4a92cde2f898acacd73a508831a48`；OPS-004 CI run `31857428972` merge `3e6f8fa`；OPS-003 merge `89912ec`。
+
+#### A. 空白环境
+
+| 清单项 | 确认分类 | 证据指针 | 勾选 |
+|---|---|---|---|
+| Linux Preflight 通过 | Step 0=`NEEDS_REL001_ARTIFACT`；Step 1 后 **HARD_BLOCK（host sysctl，非 Contract）** | `scripts/preflight/check_linux_host.sh --mode=cpu` exit=1；`hard_failures=1 warnings=0`；FAIL `vm.max_map_count=65530 (< 1048576)`；其余 PASS（OS/Docker/Compose v2/socket/Mem/13a/13b TEI warmup/lock digests）。禁止改脚本阈值。Developer 未 Read `.env`（脚本内部仅探测 PROXY__HTTP_URL 是否设置，未记录 Secret） | **否** |
+| Docker Engine 和 Compose v2 可用 | `SATISFIED_BY_EVIDENCE` | OPS-003 I-OPS3-01；本机 Step 1 `PASS: docker info` + `PASS: Compose v2 plugin`；`docker compose version` = v2.35.1 | 是 |
+| CPU Embedding 模式可启动 | `SATISFIED_BY_EVIDENCE` | E2E-001 HP `assert get_settings().embedding_effective_runtime_mode == "cpu"`；OPS-003 C-OPS3-03 `scripts/start_embedding.sh`；真实 TEI/BGE-M3 **非** CPU MVP 阻塞（OI-REL1-TEI） | 是 |
+| Migration 首次执行成功 | `SATISFIED_BY_EVIDENCE` | `tests/integration/test_migrate_infra.py::test_migrate_first_run_idempotent_checksum_and_stores`；OPS-003 I-OPS3-01 | 是 |
+| Migration 重复执行幂等 | `SATISFIED_BY_EVIDENCE` | 同上 second run | 是 |
+| 修改已执行 Migration Checksum 后失败 | `SATISFIED_BY_EVIDENCE` | 同上 tamper + `tests/unit/test_migrate_runner.py` | 是 |
+| 三个应用 Entrypoint 启动 | `SATISFIED_BY_EVIDENCE` | OPS-003 I-OPS3-01 三容器 `up -d`；`tests/integration/test_ops003_blank_environment_bootstrap.py::test_blank_environment_full_bootstrap_readiness` | 是 |
+| Readiness 正确反映依赖状态 | `SATISFIED_BY_EVIDENCE` | OPS-003 I-OPS3-01/02；`test_readiness_migrations_not_ready_before_init_infra`；`tests/integration/test_api_readiness.py` | 是 |
+
+#### B. 业务链路
+
+| 清单项 | 确认分类 | 证据指针 | 勾选 |
+|---|---|---|---|
+| Session / Message / Archive / Compression / Extraction / Neo4j / ES / Retrieval / Consolidation / Close | `SATISFIED_BY_EVIDENCE` | `tests/e2e/test_e2e001_full_chain.py::test_hp_session_to_close_full_chain`（L50）；`drive_compression_succeeded`；`run_extraction_for_archive`；Neo4j `graph_memory_ids`；ES `exists`；Retrieval HTTP 200；close `assert_request_id_echo` | 是 |
+| 重复 Message 幂等 | `SATISFIED_BY_EVIDENCE` | **IDEM-1** `tests/e2e/test_e2e001_idempotency.py::test_idem_1_duplicate_message_id_then_single_extraction`（L84） | 是 |
+
+#### C. 一致性与恢复
+
+| 清单项 | 确认分类 | 证据指针 | 勾选 |
+|---|---|---|---|
+| Pending Archive 可恢复 | `SATISFIED_BY_EVIDENCE` | `tests/e2e/test_e2e001_failure_injection.py::test_inj_1_kafka_publish_fail_then_stm011_republish`（L63）+ STM-011 republish | 是 |
+| 压缩失败不丢消息 | `SATISFIED_BY_EVIDENCE` | STM-013 `test_e4_llm_failure_post_write_http_200_compression_failed`（L352） | 是 |
+| 重复 Kafka Event 不重复写入 | `SATISFIED_BY_EVIDENCE` | IDEM-2 `test_idem_2_replay_same_archive_event_no_duplicate_entities`（L176） | 是 |
+| Worker 重启不重复 Memory/Evidence | `SATISFIED_BY_EVIDENCE` | IDEM-3 `test_idem_3_crash_after_graph_second_worker_stable_identity`（L253） | 是 |
+| Neo4j Commit 后异常可恢复 ES | `SATISFIED_BY_EVIDENCE` | INJ-4 `test_inj_4_neo4j_commit_then_exit_second_worker_converges`（L363） | 是 |
+| Session Close 部分成功可继续 | `SATISFIED_BY_EVIDENCE` | INJ-5 `test_inj_5_close_incomplete_then_retry_without_injection`（L487） | 是 |
+| Version Conflict 不覆盖新状态 | `SATISFIED_BY_EVIDENCE` | CON-005 `test_e2e4_version_conflict_partial_success`（L175）+ STM-008 `test_i7_version_conflict`（L381） | 是 |
+| 所有用户资源强制 user_id 隔离 | `SATISFIED_BY_EVIDENCE` | HP `other_user_id` retrieval（L58/L137）；OPS-002 F-015/F-016；`tests/contract/test_ops002_user_isolation_inventory.py` | 是 |
+
+#### D. 测试门禁
+
+| 清单项 | 确认分类 | 证据指针 | 勾选 |
+|---|---|---|---|
+| Unit 全部通过 | `SATISFIED_BY_EVIDENCE` | OPS-004 CI run 31857428972：1399 unit+contract passed | 是 |
+| Contract 全部通过 | `SATISFIED_BY_EVIDENCE` | 同上 | 是 |
+| Integration 全部通过 | `SATISFIED_BY_EVIDENCE` | OPS-004 246 passed / 4 skipped / 4 deselected；STRICT_SKIPS 未失败 | 是 |
+| 完整 E2E 通过 | `SATISFIED_BY_EVIDENCE` | E2E-001 11 passed（implementation `4a44e99` / PR #59）。本任务 Docker 可用但 **未复跑** 三文件（计划允许对照 completed 证据） | 是 |
+| 失败注入全部通过 | `SATISFIED_BY_EVIDENCE` | INJ-1..5 + `test_inj_sigterm_idle_extraction_worker`（L557） | 是 |
+| domain/application 覆盖率 ≥ 80% | `SATISFIED_BY_EVIDENCE` | OPS-004 91.26%；`fail_under=80` | 是 |
+| Ruff 通过 | `SATISFIED_BY_EVIDENCE` | 本 feat 复跑 `uv run ruff check src tests scripts` → All checks passed | 是 |
+| Mypy 通过 | `SATISFIED_BY_EVIDENCE` | 本 feat 复跑 `uv run mypy src` → Success, 197 files, 0 issues。BL-MYPY-001 tests/scripts **DEFERRED_WITH_AUTHORITY** | 是 |
+
+#### E. 安全与可观测性
+
+| 清单项 | 确认分类 | 证据指针 | 勾选 |
+|---|---|---|---|
+| API Key constant-time | `SATISFIED_BY_EVIDENCE` | `tests/unit/test_api_key_security.py::test_verify_api_key_uses_compare_digest`（L29） | 是 |
+| Secret 不出现在日志 | `SATISFIED_BY_EVIDENCE` | OPS-002 F-002；`tests/unit/test_ops002_sensitive_log_guards.py` | 是 |
+| 完整用户消息不出现在日志 | `SATISFIED_BY_EVIDENCE` | OPS-002 privacy tests + E2E-001 失败路径禁令 | 是 |
+| 完整 Prompt/Response 不出现在日志 | `SATISFIED_BY_EVIDENCE` | OPS-002；EXT-003 U14 `test_u14_malformed_then_valid_succeeds` | 是 |
+| 统一错误响应 | `SATISFIED_BY_EVIDENCE` | DEV-005 / E2E-001 HTTP 包络断言 | 是 |
+| Request ID 全链路一致 | `SATISFIED_BY_EVIDENCE` | HP `assert_request_id_echo` Session/Retrieval/Close；Worker 用 `task_run_id`（§3.23 #3） | 是 |
+| Metrics 暴露并受保护 | `SATISFIED_BY_EVIDENCE` | DEV-005 `tests/contract/test_api_shell_contract.py` Admin Key；OPS-002 接线。F-013 `kafka_consumer_lag` **DEFERRED_WITH_AUTHORITY**（非独立清单行） | 是 |
+| Graceful Shutdown 验证 | `SATISFIED_BY_EVIDENCE` | OPS-001 shared 270s；`tests/unit/test_ops001_*`；E2E-001 INJ-SIGTERM | 是 |
+
+#### F. 工程一致性
+
+| 清单项 | 确认分类 | 证据指针 | 勾选 |
+|---|---|---|---|
+| `.env.example` 完整且无 Secret | `SATISFIED_BY_EVIDENCE` | OPS-004 `scripts/check_env_example.py` CI | 是 |
+| versions.env / versions.lock.env 与运行镜像一致 | `SATISFIED_BY_EVIDENCE` | OPS-003 ENG-03 / compose image contracts；Step 1 PASS TEI CPU/GPU `@sha256` digest | 是 |
+| YAML 与 Pydantic Settings 一致 | `SATISFIED_BY_EVIDENCE` | DEV-003 / OPS-001 settings/compose contract | 是 |
+| Compose 命令统一经过 Wrapper | `SATISFIED_BY_EVIDENCE` | `tests/unit/test_compose_wrapper_contract.py` | 是 |
+| README 启动命令有效 | `SATISFIED_BY_EVIDENCE` | OPS-003 C-OPS3-01 README vs §3.17 | 是 |
+| 无影响主流程的 TODO | Step 0=`NEEDS_REL001_ARTIFACT`；Step 3 后 **`SATISFIED_BY_EVIDENCE`** | `rg` `src/` `scripts/`：无主流程 `TODO`/`FIXME`。`scripts/` 无 TODO。`compression_prompts.py` 「placeholder」= prompt `{messages}` 模板槽，非未实现 | 是 |
+| 无占位实现 | Step 0=`NEEDS_REL001_ARTIFACT`；Step 3 后 **`SATISFIED_BY_EVIDENCE`** | `src/.../embedding/factory.py` `local_tei` `NotImplementedError` = 非 CPU 主流程显式拒绝（OI-REL1-TEI / DEV-007），非静默占位。三处 `pass`：DuplicateKeyError upsert、JSONDecodeError、CancelledError shutdown。`extraction_worker`/`consolidation_worker` catch `NotImplementedError` = 信号处理器平台差异。`scripts/start_embedding.sh` placeholder digest = **失败守卫** | 是 |
+| Git 工作区干净 | `NEEDS_REL001_ARTIFACT`（未完成） | Developer **不 commit**；工作树含本任务白名单未提交变更。待 IMPLEMENTATION_RELEASE / POST_MERGE 再确认 | **否** |
+| Review 无 P0/P1 | `SATISFIED_BY_EVIDENCE` | 本任务 `CODE_REVIEW_APPROVED` P0=0 P1=0 P3=1（非阻塞；§11 this_round 滞后已吸收）。前置 E2E/OPS 审查不代替本任务 Review | **是** |
+
+#### §4.5 test_matrix 超额（对照 only；未重跑）
+
+| 条目 | 确认路径存在 | 分类 |
+|---|---|---|
+| Extraction LLM 非法 JSON | `test_u14_malformed_then_valid_succeeds` / `test_u16_both_attempts_invalid` / `test_i3_fake_retry_sequence` | `SATISFIED_BY_EVIDENCE`（对照） |
+| Redis Finalize 前锁失效 | `test_i5_lock_not_acquired_wrong_token` / `test_i6_lock_not_acquired_missing` | 对照 |
+| Retrieval 单通道失败 | `test_e2e4a_single_channel_bm25_degradation` | 对照 |
+| Retrieval 总超时 | `test_e2e5a_total_timeout_before_response` / `test_e2e5b_total_timeout_degraded_after_response` | 对照 |
+| Consolidation 批次写入失败 | `test_e2e5_write_read_failure_mutex_overlap_and_release` | 对照 |
+| Offset after terminal | `test_e2e1_happy_path_commits_after_terminal` + `test_RED_19_terminal_persistence_failure_prevents_offset_commit` | 对照 |
+| Embedding 服务不可用 | `tests/e2e/test_ret006_retrieval_e2e.py::test_e2e3_embedding_unavailable_degradation` | 对照 |
+| Version Conflict | CON-005 E2E-4 + STM-008 I7 | 对照 |
+| 真实 CPU TEI + BGE-M3 | OI-REL1-TEI | `DEFERRED_WITH_AUTHORITY`；**不**阻塞 CPU MVP；**不**改规格 |
+
+### Step 1 Preflight 非机密摘要
+
+```text
+command: bash scripts/preflight/check_linux_host.sh --mode=cpu
+PREFLIGHT_EXIT=1
+hard_failures=1 warnings=0
+mode=cpu resolved_mode=cpu resolved_budget=4096
+FAIL: vm.max_map_count=65530 (< 1048576)
+PASS: OS Linux; docker info; Compose v2; docker socket; 127.0.0.1:7890 reachable (PROXY__HTTP_URL set, value not recorded);
+      filesystem 7092 GiB; cpu MemAvailable=894.04 GiB; Check 13a MemTotal 1008 GiB;
+      Check 13b TEI CPU warm-up within 12g mem_limit (script-owned probe; not REL-001 billing API start);
+      TEI_CPU_IMAGE / TEI_GPU_IMAGE valid @sha256; resolved mode/budget consistent
+SKIP: NVIDIA checks skipped in cpu mode
+HALT for A.1 checkoff only. Did not change script thresholds. Did not check A.1.
+```
+
+Check 13b 为既有 preflight 脚本行为（最长 ~300s）；Developer 未另行启动计费 DeepSeek/SiliconFlow API。`.runtime/` 在 `.gitignore`，未引入白名单外 dirty。
+
+### Step 3 rg 结论
+
+无主流程 TODO/占位 → F.TODO / F.无占位 **SATISFIED_BY_EVIDENCE**。未把 `local_tei` 显式拒绝升级为 HARD_BLOCK（非 CPU 主流程；与 OI-REL1-TEI 一致）。
+
+### Step 5 Tag 门禁（HALT/人工；未执行 git tag）
+
+- `v0.9.0-mvp-rc1`：条件已满足（E2E-001 completed + CODE_REVIEW_APPROVED P0=0/P1=0）。执行者=**人类**。建议 annotated tag 对象=`412fb7b858120927aecad63962990587038df340`（`docs(status): complete E2E-001 after PR merge`）。RELEASE_PHASE=**NONE**。本角色 **HALT**，未 `git tag` / push tag。
+- `v1.0.0-mvp`：**不得宣称可打**。A–F 仍有未勾行：A. Linux Preflight；F. Git 工作区干净。F. Review 已勾（CODE_REVIEW_APPROVED P0=0/P1=0）。
 
 ---
 
@@ -559,42 +700,57 @@ Fail-closed：白名单外路径不得 `git add`。
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `05_测试与验收/mvp_acceptance_checklist.md` | 证据满足行 `- [x]`；F.Review 已勾（CODE_REVIEW_APPROVED）；A.1 / F.Git干净保持未勾 |
+| `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md` | Step 0 证据精度修正（SHOULD_FIX 1–5）；§14–§15 执行记录；status `tested` |
+| `02_开发管理/progress.md` | REL-001 实施态；E2E-001 completed 事实未破坏 |
+| `02_开发管理/master_plan.md` | REL-001 状态备注 + CHANGE-088 |
+| `src/**` / `tests/**` | **未修改** |
 
 ### 与原计划的差异
 
-暂无。
+- A.1：规划 `NEEDS_REL001_ARTIFACT`；实施收集后 host `vm.max_map_count` HARD_FAILURE → 该项 HARD_BLOCK（host，非 Contract），保持未勾。未改 preflight 阈值。
+- 可选 E2E-001 三文件未复跑：Docker 可用；对照 E2E-001 completed 11 passed（计划允许）。
+- SHOULD_FIX=5 吸收为证据函数名/步骤编号补全；无 Amendment。
+- F.Git干净保持未勾（IMPLEMENTATION_RELEASE 工作树仍 dirty 直至本 Commit）。F.Review 已勾（CODE_REVIEW_APPROVED P0=0/P1=0 P3=1）。
+- 无 API/Schema/错误码/状态机/幂等/恢复变更；无新依赖/Migration；无 `git tag`。A.1 未勾 → **不得**宣称可打 `v1.0.0-mvp`。
 
 ### 测试结果
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit | N/A（无新增） |  |
-| Contract | N/A（无新增） |  |
-| Integration | N/A（无新增） |  |
-| E2E | 可选既有 E2E-001 三文件 |  |
-| Ruff | `uv run ruff check src tests scripts` |  |
-| Mypy | `uv run mypy src` |  |
+| Unit | N/A（无新增；`test_file_whitelist=NONE`） | 未新增；对照 OPS-004 CI 1399 passed |
+| Contract | N/A（无新增） | 未新增；对照 OPS-004 |
+| Integration | N/A（无新增） | 未新增；对照 OPS-004 246 passed |
+| E2E | 可选既有 E2E-001 三文件 | **未复跑**；对照 E2E-001 completed 11 passed @ `4a44e99` / PR #59 |
+| Ruff | `uv run ruff check src tests scripts` | **PASS**（All checks passed） |
+| Mypy | `uv run mypy src` | **PASS**（Success: no issues found in 197 source files） |
 
 ### Review 结果
 
 ```yaml
-p0: null
-p1: null
-p2: null
-p3: null
-review_report: null
+p0: 0
+p1: 0
+p2: 0
+p3: 1
+review_report: "CODE_REVIEW_APPROVED session 0d353b11; P0=0 P1=0 P3=1 (this_round lag; absorbed)"
 ```
 
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: "feat/REL-001-mvp-rc-review-acceptance-checklist"
+plan_commit: "04c4a7e8f6a49d0092d175b40a98513eadc47e0a"
+implementation_commit: "703bb105fa18cc0814bd750843295c7044c6d4b9"
+implementation_commit_message: "docs(rel): record MVP RC evidence and acceptance checklist"
+pr: "#60"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/60"
+pr_state: OPEN
+pr_base: main
+pr_head: "feat/REL-001-mvp-rc-review-acceptance-checklist"
+next_action: WAITING_FOR_PR_MERGE
+developer_authorized: true
 ```
 
 ### 最终状态
 
-`approved`
+`committed`
