@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 — REL-001 committed / WAITING_FOR_PR_MERGE
+current_phase: Phase 5 — REL-001 completed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: REL-001
-current_task_status: committed
-current_branch: feat/REL-001-mvp-rc-review-acceptance-checklist
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -26,7 +26,7 @@ planning_baseline_main: "412fb7b858120927aecad63962990587038df340"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_REL-001_plan_file: 02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md
-formal_REL-001_status: committed
+formal_REL-001_status: completed
 formal_REL-001_workflow_mode: NORMAL
 formal_REL-001_workflow_mode_source: explicit
 formal_REL-001_baseline: "412fb7b858120927aecad63962990587038df340"
@@ -45,7 +45,7 @@ formal_REL-001_acceptance_artifact_whitelist: "05_测试与验收/mvp_acceptance
 formal_REL-001_human_plan_approved: true
 formal_REL-001_human_plan_approved_at: "2026-08-15 04:25 UTC"
 formal_REL-001_developer_authorized: true
-formal_REL-001_approval_posture: IMPLEMENTATION_RELEASE
+formal_REL-001_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_REL-001_plan_review_round: 1
 formal_REL-001_plan_review: "Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5 (implementation Step 0; no Amendment this phase)"
 formal_REL-001_plan_commit: "04c4a7e8f6a49d0092d175b40a98513eadc47e0a"
@@ -58,10 +58,16 @@ formal_REL-001_implementation_commit: "703bb105fa18cc0814bd750843295c7044c6d4b9"
 formal_REL-001_implementation_commit_message: "docs(rel): record MVP RC evidence and acceptance checklist"
 formal_REL-001_pr: "#60"
 formal_REL-001_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/60"
-formal_REL-001_pr_state: OPEN
+formal_REL-001_pr_state: MERGED
 formal_REL-001_pr_base: main
 formal_REL-001_pr_head: "feat/REL-001-mvp-rc-review-acceptance-checklist"
-formal_REL-001_note: "IMPLEMENTATION_RELEASE on feat; implementation=703bb105fa18cc0814bd750843295c7044c6d4b9; PR #60 OPEN; CODE_REVIEW_APPROVED P0=0 P1=0 P3=1; F.Review checked; A.1 still unchecked (preflight exit 1 vm.max_map_count); F.Git干净 still unchecked; not all-green so 不得 v1.0.0-mvp; no git tag; no push main; next_action=WAITING_FOR_PR_MERGE; 不得触碰 DEV-006/PR#13"
+formal_REL-001_pr_head_sha: "725c89b237eca07220059b058561fa8afa91894a"
+formal_REL-001_merge_commit: 4e8ceff74b95880b1c035d518bf2be43d2bbc907
+formal_REL-001_merged_at: "2026-08-15T06:01:06Z"
+formal_REL-001_status_record_committed: 725c89b237eca07220059b058561fa8afa91894a
+formal_REL-001_next_action: "REL-001 completed — NO AUTO-START (Phase 5 has no subsequent Task); HUMAN: annotated tag v0.9.0-mvp-rc1 only (suggested object 412fb7b858120927aecad63962990587038df340); DO NOT create v1.0.0-mvp (A.1 Preflight still unchecked)"
+formal_REL-001_release_gate: COMPLETED
+formal_REL-001_note: "POST_MERGE_CLEANUP completed；plan 04c4a7e8f6a49d0092d175b40a98513eadc47e0a；implementation 703bb105fa18cc0814bd750843295c7044c6d4b9；PR head/record 725c89b237eca07220059b058561fa8afa91894a；PR #60 MERGED（base=main，head=feat/REL-001-mvp-rc-review-acceptance-checklist，merge 4e8ceff74b95880b1c035d518bf2be43d2bbc907，mergedAt=2026-08-15T06:01:06Z）；CODE_REVIEW_APPROVED P0=0/P1=0 P3=1；A.1 still unchecked (preflight exit 1 vm.max_map_count)；F.Git干净 checklist box unchanged (POST_MERGE 不 add 清单；POST_MERGE 后工作树干净)；not all-green so 不得 v1.0.0-mvp；no git tag；feat 分支本地/远程已删除；next_action=本任务完成 / NOT AUTO-STARTED（Phase 5 无后续 Task）；HUMAN v0.9.0-mvp-rc1 仅人工 tag（建议对象 412fb7b858120927aecad63962990587038df340）；不得触碰 DEV-006/PR#13"
 formal_E2E-001_plan_file: 02_开发管理/tasks/E2E-001-full-chain-e2e-failure-injection.md
 formal_E2E-001_status: completed
 formal_E2E-001_workflow_mode: NORMAL
@@ -266,8 +272,8 @@ formal_EXT-008_status_record_committed: eefb52edea62c1d1a917f2393ff157c64421a2b0
 formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
-next_action: WAITING_FOR_PR_MERGE
-last_role_result: Release Operator IMPLEMENTATION_RELEASE; implementation 703bb105fa18cc0814bd750843295c7044c6d4b9; PR #60 OPEN
+next_action: "REL-001 completed — NO AUTO-START (Phase 5 has no subsequent Task); HUMAN: annotated tag v0.9.0-mvp-rc1 only (suggested object 412fb7b858120927aecad63962990587038df340); DO NOT create v1.0.0-mvp (A.1 Preflight still unchecked)"
+last_role_result: Release Operator POST_MERGE_CLEANUP; PR #60 MERGED 4e8ceff74b95880b1c035d518bf2be43d2bbc907 mergedAt 2026-08-15T06:01:06Z; no git tag
 blocking_reason: null
 formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
 formal_OPS-002_status: completed
@@ -2006,6 +2012,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 ## 最近执行记录
 
 | 日期时间 | Task | 状态变化 | 说明 |
+| 2026-08-15 06:05 UTC | REL-001 | committed → completed | Release Operator `POST_MERGE_CLEANUP`；PR #60 MERGED `4e8ceff74b95880b1c035d518bf2be43d2bbc907` mergedAt `2026-08-15T06:01:06Z`；ff-only 同步 main；main 含 merge `4e8ceff` 与 implementation `703bb105`；仅更新 REL-001 三份治理文件并创建 `docs(status): complete REL-001 after PR merge`；exact feat 已删；未 git tag；未勾 A.1；清单 F.Git干净保持未勾（POST_MERGE 不 add 清单；POST_MERGE 后工作树干净）；`next_action=本任务完成 / NOT AUTO-STARTED`（Phase 5 无后续 Task）；HUMAN `v0.9.0-mvp-rc1` 仅人工 tag（建议对象 `412fb7b858120927aecad63962990587038df340`）；`v1.0.0-mvp` 不得创建（A.1 Preflight 仍未勾）；E2E-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 04:50 UTC | REL-001 | approved → in_progress → implemented → tested | Developer exact feat `feat/REL-001-mvp-rc-review-acceptance-checklist` HEAD `04c4a7e8`；吸收 SHOULD_FIX=5；Preflight `--mode=cpu` exit 1（`vm.max_map_count`）A.1 未勾；ruff PASS / mypy src 0；清单除 A.1/F.Git干净/F.Review 外已按证据勾选；未 git tag；未改 src/tests；`next_action=Code Review`；E2E-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 04:25 UTC | REL-001 | planned → approved / PLAN_LANDING | Human PLAN_APPROVED；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5（实施 Step 0，本 phase 无 Amendment）；`human_plan_approved=true`；`developer_authorized=false` until feat exists；Release Operator PLAN_LANDING docs(plan) on main then create `feat/REL-001-mvp-rc-review-acceptance-checklist`；`next_action=PLAN_LANDING`；未实施；E2E-001 completed 事实不变；不得触碰 DEV-006/PR#13 |
 | 2026-08-15 04:15 UTC | REL-001 | NOT AUTO-STARTED → planned | Planner 创建 Task Plan `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`；人类 START_EXISTING_TASK 覆盖 E2E-001 `next_action=REL-001 planned / NOT AUTO-STARTED`；baseline `412fb7b858120927aecad63962990587038df340` MATCH；git status 规划前 clean；RC Review + 清单证据化；`production_file_whitelist=NONE`；`test_file_whitelist=NONE`；tag HALT/人工；`approval_posture=AWAIT_PLAN_REVIEW`；`next_action=计划审查`；`human_plan_approved=false`；`developer_authorized=false`；不得 PLAN_LANDING/实施本轮；不得触碰 DEV-006/PR#13 |

@@ -736,7 +736,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | OPS-003 | 全量 Migration、Compose 与空白环境验证 | §3.17, §3.32 | 前述全部 | completed |
 | OPS-004 | CI 门禁（§3.28 + 80% 覆盖率） | §3.28, §3.30 P1 | OPS-003 | completed |
 | E2E-001 | 全链路 E2E 与全部失败注入 | §3.28, §3.32 | OPS-003 | completed |
-| REL-001 | MVP RC Review 与验收清单 | `05_测试与验收/mvp_acceptance_checklist.md` | E2E-001 | committed |
+| REL-001 | MVP RC Review 与验收清单 | `05_测试与验收/mvp_acceptance_checklist.md` | E2E-001 | completed |
 
 #### OPS-001 Graceful Shutdown、连接池、Timeout 与 Retry 总检
 
@@ -809,7 +809,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **Tag**：`v0.9.0-mvp-rc1` 条件已满足但 **HALT/人工**（超出 Release Operator 三 phase 命令集）；`v1.0.0-mvp` 未全绿不得创建；同样仅人类 annotated tag。
 - **计划文件**：`02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=412fb7b858120927aecad63962990587038df340` MATCH；`human_plan_approved=true` @ `2026-08-15 04:25 UTC`；`developer_authorized=true`；feat slug 锁定 `feat/REL-001-mvp-rc-review-acceptance-checklist`；Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5（实施 Step 0 已吸收；无 Amendment）；不得触碰 DEV-006/PR#13。
-- **状态备注**：`committed` / `WAITING_FOR_PR_MERGE`（**非** completed；E2E-001 completed 事实不变）。implementation `703bb105fa18cc0814bd750843295c7044c6d4b9`；PR #60 OPEN（base=main，head=`feat/REL-001-mvp-rc-review-acceptance-checklist`）；CODE_REVIEW_APPROVED P0=0/P1=0 P3=1；F.Review 已勾；A.1 与 F.Git干净仍未勾 → **不得**宣称可打 `v1.0.0-mvp`；未 `git tag`；未 `git push origin main`。
+- **状态备注**：`completed`（plan `04c4a7e8f6a49d0092d175b40a98513eadc47e0a`；implementation `703bb105fa18cc0814bd750843295c7044c6d4b9`；PR #60 MERGED `4e8ceff74b95880b1c035d518bf2be43d2bbc907` mergedAt `2026-08-15T06:01:06Z`；CODE_REVIEW_APPROVED P0=0/P1=0 P3=1；A.1 仍未勾（preflight exit 1 `vm.max_map_count`）；F.Git干净清单未勾（POST_MERGE 不 add 清单；POST_MERGE 后工作树干净）；**不得**宣称可打 `v1.0.0-mvp`；未 `git tag`；feat 分支已删；`next_action=本任务完成 / NOT AUTO-STARTED`（Phase 5 无后续 Task）；HUMAN `v0.9.0-mvp-rc1` 仅人工 tag（建议对象 `412fb7b858120927aecad63962990587038df340`）；E2E-001 completed 事实不变；不得触碰 DEV-006/PR#13）。
 
 ---
 
@@ -1801,5 +1801,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | 受影响任务 | `REL-001` → `committed` / `WAITING_FOR_PR_MERGE`（计划文件 `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`）；**非** completed；**不**修改 E2E-001 completed 事实；**不**触碰 DEV-006/PR #13 |
 | 是否改变技术规格 | **否**（仅治理状态：committed + PR OPEN；不改 Contract/Schema） |
 | 审批 | CODE_REVIEW_APPROVED P0=0/P1=0 P3=1；READY_FOR_HUMAN_COMMIT；IMPLEMENTATION_RELEASE on feat only；未 git tag；未宣称 v1.0.0-mvp |
+
+### CHANGE-091
+
+| 字段 | 内容 |
+|---|---|
+| 日期 | 2026-08-15 |
+| 原因 | Release Operator POST_MERGE_CLEANUP：PR #60 MERGED；docs(status): complete on main；exact feat 删除；未 git tag；未勾 A.1 |
+| 受影响任务 | `REL-001` → `completed`（计划文件 `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md`）；Phase 5 无后续 Task，**不得**自动启动下一任务；**不**修改 E2E-001 completed 事实；**不**触碰 DEV-006/PR #13 |
+| 是否改变技术规格 | **否**（仅治理状态：completed + PR MERGED；不改 Contract/Schema；不勾 A.1；不 git tag） |
+| 审批 | PR #60 MERGED `4e8ceff74b95880b1c035d518bf2be43d2bbc907` mergedAt `2026-08-15T06:01:06Z`；CODE_REVIEW_APPROVED P0=0/P1=0 P3=1；v0.9.0-mvp-rc1 仅人工 tag（建议对象 `412fb7b858120927aecad63962990587038df340`）；v1.0.0-mvp 不得创建（A.1 Preflight 仍未勾） |
 
 Master Plan 如需再变，必须新增变更编号，禁止静默修改任务目标、依赖或验收标准。

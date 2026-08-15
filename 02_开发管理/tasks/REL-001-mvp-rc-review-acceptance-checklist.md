@@ -5,7 +5,7 @@
 ```yaml
 task_id: REL-001
 task_name: MVP RC Review 与验收清单
-status: committed
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "412fb7b858120927aecad63962990587038df340"
@@ -13,7 +13,7 @@ branch: "feat/REL-001-mvp-rc-review-acceptance-checklist"
 milestone_rc1: "v0.9.0-mvp-rc1 — 条件=E2E-001 与审查完成（已满足）；本任务拥有打 tag，但 tag 超出自动 Release Operator 命令集 → HALT/人工"
 milestone_v1: "v1.0.0-mvp — 条件=MVP 验收清单全部阻塞项通过；未全绿不得创建"
 created_at: "2026-08-15 04:15 UTC"
-updated_at: "2026-08-15 04:55 UTC"
+updated_at: "2026-08-15 06:05 UTC"
 spec_sections:
   - "05_测试与验收/mvp_acceptance_checklist.md（A–F 阻塞项；文首：只有全部阻塞项通过才可创建 v1.0.0-mvp）"
   - "§3.32 MVP 开发完成验收标准 #1–#9"
@@ -57,7 +57,7 @@ approval_gates:
   human_plan_approved: true
   human_plan_approved_at: "2026-08-15 04:25 UTC"
   developer_authorized: true
-  approval_posture: IMPLEMENTATION_RELEASE
+  approval_posture: "POST_MERGE_CLEANUP — completed"
   plan_review_round: 1
   plan_review_status: "Round 1 PLAN_APPROVED BLOCKER=0 MUST_FIX=0 SHOULD_FIX=5 (implementation Step 0; no Amendment this phase)"
   code_review: CODE_REVIEW_APPROVED
@@ -65,7 +65,7 @@ approval_gates:
   p1: 0
   p2: 0
   p3: 1
-  next_action: "WAITING_FOR_PR_MERGE"
+  next_action: "REL-001 completed — NO AUTO-START (Phase 5 has no subsequent Task); HUMAN: annotated tag v0.9.0-mvp-rc1 only (suggested object 412fb7b858120927aecad63962990587038df340); DO NOT create v1.0.0-mvp (A.1 Preflight still unchecked)"
   post_human_plan_approved_state_machine: |
     Human PLAN_APPROVED received. status=approved; next_action=PLAN_LANDING then Developer on feat.
     developer_authorized=false until exact feat/REL-001-mvp-rc-review-acceptance-checklist exists.
@@ -553,6 +553,7 @@ Fail-closed：白名单外路径不得 `git add`。
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
+| 2026-08-15 06:05 UTC | POST_MERGE_CLEANUP | status=`completed`；PR #60 MERGED `4e8ceff74b95880b1c035d518bf2be43d2bbc907` mergedAt `2026-08-15T06:01:06Z`；docs(status): complete on main；exact feat 删除；POST_MERGE 后工作树干净 | N/A | 未 git tag；未勾 A.1；清单 F.Git干净保持未勾（POST_MERGE 不 add `mvp_acceptance_checklist.md`）；Phase 5 无后续 Task，不得自动启动下一任务；HUMAN `v0.9.0-mvp-rc1` 仅人工 tag（建议对象 `412fb7b858120927aecad63962990587038df340`）；`v1.0.0-mvp` 不得创建 |
 | 2026-08-15 04:55 UTC | IMPLEMENTATION_RELEASE (record) | 回写 implementation `703bb105fa18cc0814bd750843295c7044c6d4b9`；PR #60 OPEN；status `reviewed`→`committed` | N/A | record 仅 feat；未 push main；未 git tag；A.1/F.Git干净仍未勾 |
 | 2026-08-15 04:52 UTC | IMPLEMENTATION_RELEASE (pre-commit) | 回写 CODE_REVIEW_APPROVED P0=0 P1=0 P3=1；§11 this_round（P3-001）；F.Review 勾选；status `tested`→`reviewed` | N/A | A.1/F.Git干净未勾；未宣称 v1.0.0-mvp；未 git tag；implementation_commit 待 rev-parse |
 | 2026-08-15 04:50 UTC | Step 6 | 回写本计划 §14–§15、progress.md、master_plan.md CHANGE-088；status `in_progress`→`implemented`→`tested`；`next_action=Code Review` | ruff PASS；mypy src 0 | 未 commit；developer_authorized=true 保持；A.1/F.Git干净/F.Review 未勾 |
@@ -648,7 +649,7 @@ SHA 锚点：`planning_baseline_main=412fb7b858120927aecad63962990587038df340`�
 | README 启动命令有效 | `SATISFIED_BY_EVIDENCE` | OPS-003 C-OPS3-01 README vs §3.17 | 是 |
 | 无影响主流程的 TODO | Step 0=`NEEDS_REL001_ARTIFACT`；Step 3 后 **`SATISFIED_BY_EVIDENCE`** | `rg` `src/` `scripts/`：无主流程 `TODO`/`FIXME`。`scripts/` 无 TODO。`compression_prompts.py` 「placeholder」= prompt `{messages}` 模板槽，非未实现 | 是 |
 | 无占位实现 | Step 0=`NEEDS_REL001_ARTIFACT`；Step 3 后 **`SATISFIED_BY_EVIDENCE`** | `src/.../embedding/factory.py` `local_tei` `NotImplementedError` = 非 CPU 主流程显式拒绝（OI-REL1-TEI / DEV-007），非静默占位。三处 `pass`：DuplicateKeyError upsert、JSONDecodeError、CancelledError shutdown。`extraction_worker`/`consolidation_worker` catch `NotImplementedError` = 信号处理器平台差异。`scripts/start_embedding.sh` placeholder digest = **失败守卫** | 是 |
-| Git 工作区干净 | `NEEDS_REL001_ARTIFACT`（未完成） | Developer **不 commit**；工作树含本任务白名单未提交变更。待 IMPLEMENTATION_RELEASE / POST_MERGE 再确认 | **否** |
+| Git 工作区干净 | `NEEDS_REL001_ARTIFACT`（清单未勾） | POST_MERGE 后工作树干净（`git status --short` 空）。POST_MERGE 命令集不含清单文件，**不**为勾选去 add `05_测试与验收/mvp_acceptance_checklist.md`；清单勾选保持原样 | **否** |
 | Review 无 P0/P1 | `SATISFIED_BY_EVIDENCE` | 本任务 `CODE_REVIEW_APPROVED` P0=0 P1=0 P3=1（非阻塞；§11 this_round 滞后已吸收）。前置 E2E/OPS 审查不代替本任务 Review | **是** |
 
 #### §4.5 test_matrix 超额（对照 only；未重跑）
@@ -690,7 +691,7 @@ Check 13b 为既有 preflight 脚本行为（最长 ~300s）；Developer 未另�
 ### Step 5 Tag 门禁（HALT/人工；未执行 git tag）
 
 - `v0.9.0-mvp-rc1`：条件已满足（E2E-001 completed + CODE_REVIEW_APPROVED P0=0/P1=0）。执行者=**人类**。建议 annotated tag 对象=`412fb7b858120927aecad63962990587038df340`（`docs(status): complete E2E-001 after PR merge`）。RELEASE_PHASE=**NONE**。本角色 **HALT**，未 `git tag` / push tag。
-- `v1.0.0-mvp`：**不得宣称可打**。A–F 仍有未勾行：A. Linux Preflight；F. Git 工作区干净。F. Review 已勾（CODE_REVIEW_APPROVED P0=0/P1=0）。
+- `v1.0.0-mvp`：**不得宣称可打** / **不得创建**。A–F 仍有未勾行：A. Linux Preflight（禁止勾选 A.1）。F. Git 工作区干净清单勾选保持原样（POST_MERGE 后工作树干净，但不 add 清单文件）。F. Review 已勾（CODE_REVIEW_APPROVED P0=0/P1=0）。POST_MERGE 未 `git tag`。
 
 ---
 
@@ -700,10 +701,10 @@ Check 13b 为既有 preflight 脚本行为（最长 ~300s）；Developer 未另�
 
 | 文件 | 结果 |
 |---|---|
-| `05_测试与验收/mvp_acceptance_checklist.md` | 证据满足行 `- [x]`；F.Review 已勾（CODE_REVIEW_APPROVED）；A.1 / F.Git干净保持未勾 |
-| `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md` | Step 0 证据精度修正（SHOULD_FIX 1–5）；§14–§15 执行记录；status `tested` |
-| `02_开发管理/progress.md` | REL-001 实施态；E2E-001 completed 事实未破坏 |
-| `02_开发管理/master_plan.md` | REL-001 状态备注 + CHANGE-088 |
+| `05_测试与验收/mvp_acceptance_checklist.md` | 证据满足行 `- [x]`；F.Review 已勾（CODE_REVIEW_APPROVED）；A.1 / F.Git干净保持未勾（POST_MERGE 未 add 本文件） |
+| `02_开发管理/tasks/REL-001-mvp-rc-review-acceptance-checklist.md` | Step 0 证据精度修正（SHOULD_FIX 1–5）；§14–§15 执行记录；status `completed` |
+| `02_开发管理/progress.md` | REL-001 `completed`；E2E-001 completed 事实未破坏 |
+| `02_开发管理/master_plan.md` | REL-001 状态备注 completed + CHANGE-091 |
 | `src/**` / `tests/**` | **未修改** |
 
 ### 与原计划的差异
@@ -711,8 +712,8 @@ Check 13b 为既有 preflight 脚本行为（最长 ~300s）；Developer 未另�
 - A.1：规划 `NEEDS_REL001_ARTIFACT`；实施收集后 host `vm.max_map_count` HARD_FAILURE → 该项 HARD_BLOCK（host，非 Contract），保持未勾。未改 preflight 阈值。
 - 可选 E2E-001 三文件未复跑：Docker 可用；对照 E2E-001 completed 11 passed（计划允许）。
 - SHOULD_FIX=5 吸收为证据函数名/步骤编号补全；无 Amendment。
-- F.Git干净保持未勾（IMPLEMENTATION_RELEASE 工作树仍 dirty 直至本 Commit）。F.Review 已勾（CODE_REVIEW_APPROVED P0=0/P1=0 P3=1）。
-- 无 API/Schema/错误码/状态机/幂等/恢复变更；无新依赖/Migration；无 `git tag`。A.1 未勾 → **不得**宣称可打 `v1.0.0-mvp`。
+- F.Git干净清单保持未勾（POST_MERGE 工作树干净，但不 add 清单）。F.Review 已勾（CODE_REVIEW_APPROVED P0=0/P1=0 P3=1）。
+- 无 API/Schema/错误码/状态机/幂等/恢复变更；无新依赖/Migration；无 `git tag`。A.1 未勾 → **不得**宣称可打 / **不得创建** `v1.0.0-mvp`。
 
 ### 测试结果
 
@@ -742,15 +743,21 @@ branch: "feat/REL-001-mvp-rc-review-acceptance-checklist"
 plan_commit: "04c4a7e8f6a49d0092d175b40a98513eadc47e0a"
 implementation_commit: "703bb105fa18cc0814bd750843295c7044c6d4b9"
 implementation_commit_message: "docs(rel): record MVP RC evidence and acceptance checklist"
+status_record_committed: "725c89b237eca07220059b058561fa8afa91894a"
 pr: "#60"
 pr_url: "https://github.com/xu-jia-ming/memory_system/pull/60"
-pr_state: OPEN
+pr_state: MERGED
 pr_base: main
 pr_head: "feat/REL-001-mvp-rc-review-acceptance-checklist"
-next_action: WAITING_FOR_PR_MERGE
+pr_head_sha: "725c89b237eca07220059b058561fa8afa91894a"
+merge_commit: 4e8ceff74b95880b1c035d518bf2be43d2bbc907
+merged_at: "2026-08-15T06:01:06Z"
+feat_branch: deleted
+working_tree: clean
+next_action: "REL-001 completed — NO AUTO-START (Phase 5 has no subsequent Task); HUMAN: annotated tag v0.9.0-mvp-rc1 only (suggested object 412fb7b858120927aecad63962990587038df340); DO NOT create v1.0.0-mvp (A.1 Preflight still unchecked)"
 developer_authorized: true
 ```
 
 ### 最终状态
 
-`committed`
+`completed`
