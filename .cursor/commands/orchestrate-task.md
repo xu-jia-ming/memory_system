@@ -49,7 +49,7 @@
 ## 必读文件
 
 1. `.cursor/rules/00-memory-system-governance.mdc`
-2. `03_AI_Prompts/00_全局开发规则.md`
+2. `docs/ai-workflow/prompts/00_全局开发规则.md`
 3. `02_开发管理/progress.md`
 4. `02_开发管理/master_plan.md`
 5. 当前 Task Plan

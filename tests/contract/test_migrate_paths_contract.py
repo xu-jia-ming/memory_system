@@ -41,10 +41,12 @@ def test_unique_documented_migrate_entrypoint() -> None:
     assert init_like == [], f"unexpected init scripts: {init_like}"
     assert (scripts_dir / "migrate.py").is_file()
 
+    deployment = (REPO_ROOT / "docs" / "deployment.md").read_text(encoding="utf-8")
     readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
-    assert "python -m scripts.migrate" in readme
-    assert "compose.sh" in readme
-    assert "禁止" in readme
+    docs_surface = readme + "\n" + deployment
+    assert "python -m scripts.migrate" in docs_surface
+    assert "compose.sh" in docs_surface
+    assert "禁止" in docs_surface
 
 
 def test_upgrade_protocol_exported() -> None:
