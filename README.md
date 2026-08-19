@@ -171,6 +171,15 @@ bash scripts/ci/run_merge_gate.sh
 
 ---
 
+## References
+
+| 资源 | 链接 | 与本项目关系 |
+| --- | --- | --- |
+| **LoCoMo** | [Project](https://snap-research.github.io/locomo/) · [GitHub](https://github.com/snap-research/locomo) · [Paper (ACL 2024)](https://aclanthology.org/2024.acl-long.747/) | 端到端记忆问答评测基准（conv-30 子集） |
+| **MemoryBear（红熊 AI）** | [GitHub](https://github.com/SuanmoSuanyangTechnology/MemoryBear) · [Technical Report](https://memorybear.ai/pdf/memoryBear) | 记忆生命周期与认知启发式设计的重要参考（萃取 / 巩固 / 遗忘） |
+
+---
+
 ## License
 
 [MIT License](LICENSE)
