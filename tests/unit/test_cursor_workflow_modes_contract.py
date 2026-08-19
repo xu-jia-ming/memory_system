@@ -17,7 +17,7 @@ COMMIT_RECORDER_PATH = AGENTS_DIR / "commit-recorder.md"
 GOVERNANCE_RULE_PATH = (
     REPO_ROOT / ".cursor" / "rules" / "00-memory-system-governance.mdc"
 )
-GLOBAL_PROMPT_PATH = REPO_ROOT / "03_AI_Prompts" / "00_全局开发规则.md"
+GLOBAL_PROMPT_PATH = REPO_ROOT / "docs" / "ai-workflow" / "prompts" / "00_全局开发规则.md"
 GIT_WORKFLOW_PATH = REPO_ROOT / "04_Git规范" / "git_workflow.md"
 
 

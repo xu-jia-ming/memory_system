@@ -1,6 +1,6 @@
 """Contract tests for DEV-OPS-005 human project operations playbook.
 
-Locks durable behavior in 03_AI_Prompts/01_项目日常操作手册.md via
+Locks durable behavior in docs/ai-workflow/prompts/01_项目日常操作手册.md via
 substring / existence assertions — not fragile full-paragraph copies.
 """
 
@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-PLAYBOOK_PATH = REPO_ROOT / "03_AI_Prompts" / "01_项目日常操作手册.md"
+PLAYBOOK_PATH = REPO_ROOT / "docs" / "ai-workflow" / "prompts" / "01_项目日常操作手册.md"
 
 TEMPLATE_IDS = (
     "START_EXISTING_TASK",

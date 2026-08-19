@@ -1,6 +1,6 @@
 """Contract tests for DEV-OPS-004 local Mihomo network fallback policy.
 
-Locks the authoritative AI-facing policy in 03_AI_Prompts/00_全局开发规则.md.
+Locks the authoritative AI-facing policy in docs/ai-workflow/prompts/00_全局开发规则.md.
 Static substring assertions only — no real network, /opt/mihomo, or docker pull.
 """
 
@@ -9,7 +9,7 @@ from __future__ import annotations
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-GLOBAL_PROMPT_PATH = REPO_ROOT / "03_AI_Prompts" / "00_全局开发规则.md"
+GLOBAL_PROMPT_PATH = REPO_ROOT / "docs" / "ai-workflow" / "prompts" / "00_全局开发规则.md"
 
 # English classification codes required in the policy body.
 REQUIRED_CLASSIFICATION_CODES = (
