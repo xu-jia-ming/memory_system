@@ -1,6 +1,33 @@
 # Memory System MVP
 
-Python monorepo for the Memory System MVP (API + extraction worker + consolidation worker).
+认知启发式 Agent 长期记忆服务 — 独立 Memory Service，围绕**萃取、检索、巩固与遗忘**构建完整记忆生命周期（API + extraction worker + consolidation worker）。
+
+## 项目概览
+
+面向 Agent 跨会话长期记忆场景，系统采用「存 → 压 → 抽 → 检 → 忘」闭环：
+
+| 链路 | 能力 |
+| --- | --- |
+| 短期记忆 | Redis 活跃会话上下文 + MongoDB 不可变归档 |
+| 记忆萃取 | Kafka 异步触发，LLM 结构化抽取、实体对齐、五态融合（CREATE / MERGE / SUPERSEDE / CONFLICT），双写 Neo4j + Elasticsearch |
+| 混合检索 | BM25 + BGE-M3 并行召回，RRF 融合，Neo4j 一跳图谱扩展，ACT-R 多因子加权 Top-K |
+| 巩固与遗忘 | 按记忆类型、置信度与独立归档证据重算重要度；半衰期指数衰减实现软遗忘（仅调 `importance`，不删数据） |
+
+**技术栈**：Python 3.12、FastAPI、Redis、MongoDB、Kafka、Neo4j、Elasticsearch、BGE-M3、Docker Compose。
+
+## LoCoMo 评测结果（conv-30 子集）
+
+在 [LoCoMo](https://github.com/snap-research/locomo) **conv-30 评测子集（81 题）**上的端到端记忆问答评测（冻结配置，J-score 协议）。指标口径与简历一致，便于复现核对。
+
+| 维度 | 指标 | 说明 |
+| --- | --- | --- |
+| **端到端** | **J-score 62.6%** | 3 次复验：50 / 51 / 51（均值 50.7/81） |
+| **记忆萃取** | 归档萃取成功率 **63.2% → 100%** | 无定向修复时 12/19 归档首次通过；7/19 经按条目定向修复后全通过 |
+| **混合检索** | 检索难例候选并集召回 **75% → 100%** | 12 道排序失败样本；单路 BM25 33.3%、向量 75%、并集 100% |
+| **时间推理** | Temporal QA **57.7% → 73.1%** | 26 道 Temporal 题（15/26 → 19/26）；确定性时间解析 + 问题相关证据筛选（评测链路上下文组装） |
+| **记忆巩固** | 软遗忘机制 | 分类型半衰期（如 fact 180d、event 60d、superseded 30d）；刻意不使用 `retrieval_count` 参与长期权重，避免正反馈 |
+
+评测脚本与报告目录：`scripts/locomo_eval/`、`data/locomo/`。权威设计规格见文末 **Specification**。
 
 ## Status
 
