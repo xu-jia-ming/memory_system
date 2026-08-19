@@ -16,7 +16,18 @@ GitHub Actions：`.github/workflows/ci.yml`
 bash scripts/ci/run_merge_gate.sh
 ```
 
-或手动：
+或手动执行完整 merge gate（与 CI 一致）：
+
+```bash
+uv run pytest tests/unit tests/contract tests/integration \
+  -m "not runtime_contract_gate and not task_scope_boundary" \
+  --cov=memory_system.domain \
+  --cov=memory_system.application \
+  --cov-fail-under=80 \
+  -q
+```
+
+或分步手动：
 
 ```bash
 uv sync --locked

@@ -99,10 +99,10 @@ def test_compose_test_stack_isolation_keys() -> None:
         assert marker in test_yaml
 
 
-def test_readme_section317_command_inventory() -> None:
-    readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8")
+def test_deployment_section317_command_inventory() -> None:
+    deployment = (REPO_ROOT / "docs" / "deployment.md").read_text(encoding="utf-8")
     for fragment in README_SECTION317_SUBSTRINGS:
-        assert fragment in readme, f"README missing §3.17 fragment: {fragment!r}"
+        assert fragment in deployment, f"docs/deployment.md missing §3.17 fragment: {fragment!r}"
 
 
 def test_compose_yaml_lists_app_and_infra_services() -> None:

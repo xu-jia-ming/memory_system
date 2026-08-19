@@ -10,6 +10,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW_PATH = REPO_ROOT / ".github" / "workflows" / "ci.yml"
 MERGE_GATE_SCRIPT = REPO_ROOT / "scripts" / "ci" / "run_merge_gate.sh"
 README_PATH = REPO_ROOT / "README.md"
+OPERATIONS_PATH = REPO_ROOT / "docs" / "operations.md"
 
 STATIC_INVENTORY = (
     "uv sync --locked",
@@ -137,15 +138,17 @@ def test_integration_support_plugins_have_no_autouse() -> None:
     assert not violations, f"integration support plugins must not use autouse: {violations}"
 
 
-def test_readme_default_merge_gate_command_inventory() -> None:
-    """C-OPS4-04: README Default merge-gate tests section inventory."""
+def test_operations_default_merge_gate_command_inventory() -> None:
+    """C-OPS4-04: docs/operations.md CI / merge-gate inventory."""
     readme = _read(README_PATH)
+    operations = _read(OPERATIONS_PATH)
+    docs_surface = readme + "\n" + operations
     section_match = re.search(
-        r"\*\*Default merge-gate tests\*\*.*?(?=\n\*\*|\n### |\Z)",
-        readme,
+        r"(## CI / Quality Gate|\*\*Default merge-gate tests\*\*).*?(?=\n## |\Z)",
+        docs_surface,
         re.DOTALL,
     )
-    assert section_match is not None, "README missing Default merge-gate tests section"
+    assert section_match is not None, "docs missing CI / merge-gate section"
     section = section_match.group(0)
     assert "uv run pytest tests/unit tests/contract tests/integration" in section
     assert "runtime_contract_gate" in section
