@@ -15,10 +15,10 @@ from deterministic_temporal_resolver import (  # noqa: E402
     resolve_temporal_expression,
 )
 from memory_evidence_context import (  # noqa: E402
-    format_memories,
-    select_source_message_ids,
     SourceMessageIndex,
     SourceMessageRecord,
+    format_memories,
+    select_source_message_ids,
 )
 
 JAN_20_TS = int(datetime(2023, 1, 20, 12, 0, 0).timestamp())

@@ -14,12 +14,12 @@ import sys
 import time
 import traceback
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from pymongo import MongoClient
 from neo4j import GraphDatabase
+from pymongo import MongoClient
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _SCRIPT_DIR.parent.parent
@@ -31,9 +31,7 @@ from answer_pipeline import answer_with_no_info_expand_retry
 from deterministic_temporal_resolver import ResolutionStatus, resolve_temporal_expression
 from evaluate import (
     append_jsonl,
-    build_parser as evaluate_build_parser,
     dump_json,
-    evaluate_questions,
     gold_text,
     ingest_conversation,
     labeled_turn_content,
@@ -183,7 +181,7 @@ def build_manifest(args: argparse.Namespace, inventory: dict[str, Any]) -> dict[
     return {
         "evaluation_type": "final_frozen_full_locomo",
         "tuning_allowed": False,
-        "created_at": datetime.now(timezone.utc).isoformat(),
+        "created_at": datetime.now(UTC).isoformat(),
         "git": git_info(_REPO_ROOT),
         "dataset": {
             "path": str(dataset_path),
@@ -315,7 +313,7 @@ def preflight_checks(args: argparse.Namespace) -> dict[str, Any]:
         status = payload.get("status")
         results["checks"]["elasticsearch"] = f"ok ({status})"
         if status == "red":
-            results["checks"]["elasticsearch"] = f"WARN: cluster status red"
+            results["checks"]["elasticsearch"] = "WARN: cluster status red"
     except Exception as exc:
         results["checks"]["elasticsearch"] = f"FAIL: {exc}"
         results["ok"] = False

@@ -6,7 +6,7 @@ import calendar
 import re
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 # Word number map one–thirty.
@@ -60,7 +60,7 @@ _SAFE_IN_WORD_DAYS_RE = re.compile(
 )
 
 
-class ResolutionStatus(str, Enum):
+class ResolutionStatus(StrEnum):
     SAFE = "SAFE"
     AMBIGUOUS = "AMBIGUOUS"
     AMBIGUOUS_MULTIPLE_EXPRESSIONS = "AMBIGUOUS_MULTIPLE_EXPRESSIONS"

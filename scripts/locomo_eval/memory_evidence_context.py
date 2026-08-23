@@ -5,9 +5,10 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Mapping
+from typing import Any
 
 from deterministic_temporal_resolver import (
     TemporalResolutionTelemetry,

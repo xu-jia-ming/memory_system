@@ -15,11 +15,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from openai import AsyncOpenAI
-
 from adapter import MemoryApiError, MemorySystemAdapter
 from answer_pipeline import answer_with_no_info_expand_retry
 from memory_evidence_context import SourceMessageIndex
+from openai import AsyncOpenAI
 from prompts import (
     ANSWER_SYSTEM_PROMPT,
     ANSWER_USER_PROMPT,
