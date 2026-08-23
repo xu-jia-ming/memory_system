@@ -2392,3 +2392,22 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 14. **EXT-006**：`completed`（PR #40 MERGED `372e0232c1e5cfa1d71e2bb0152a22f59e60cd03` mergedAt `2026-08-12T12:12:38Z`；implementation `b19e913af3848e932b8adb404dc5d5304167fb73`；record `eafc07a3e01f376f4bd2c6c658c1dd5536c3b61f`；scoped **44** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0 P3=2 non-blocking；atomic Neo4j graph write + `index_sync_memory_set` handoff；zero task completed/offset；OI-006 non-blocking；feat 分支已删）。
 15. **EXT-007**：`completed`（PR #41 MERGED `afb2fee9ca6f7a5e049f0d9b1b22825de4c665dd` mergedAt `2026-08-12T13:27:51Z`；implementation `2cf93ec5bcb03daae6e266984df2804a09f19a0c`；record `d385f4b3553d310f89b17e832ea07c29b50d9761`；scoped **30** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0 P2=3 P3=2 non-blocking；§2.2.3 index sync + ES bulk upsert + first `mark_completed` gate；completed-before-offset gate preserved；zero upstream/offset diff；feat 分支已删；不得触碰 DEV-006/PR#13）。
 16. **EXT-008**：`committed`（PR #42 OPEN `https://github.com/xu-jia-ming/memory_system/pull/42`；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；scoped **25** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0；§2.1.14 GET/retry/rebuild Admin HTTP + OI-006 rebuild；LD-3 Mongo before Kafka；zero consumer/worker/pipeline diff；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；不得触碰 DEV-006/PR#13）。
+
+---
+
+## FAST-MVP-TEMPORAL-SAFE-RANGE-EVIDENCE-EXPAND (2026-08-23)
+
+```yaml
+task_id: FAST-MVP-TEMPORAL-SAFE-RANGE-EVIDENCE-EXPAND
+status: implemented
+plan_review: PLAN_APPROVED
+code_review: CODE_REVIEW_APPROVED
+implementation_summary: |
+  - Temporal SAFE_RANGE for next/last/this month|week in deterministic_temporal_resolver.py
+  - NO_INFO single evidence expand retry via answer_pipeline.py
+  - Integrated into evaluate.py and full_locomo_final_eval.py
+  - Ablation script: scripts/locomo_eval/temporal_evidence_expand_ab_conv30.py
+unit_tests: "31 passed (temporal resolver + answer pipeline expand)"
+ablation: "pending live conv-30 run (requires Mongo + LLM)"
+branch: feat/fast-mvp-temporal-safe-range-evidence-expand
+```
