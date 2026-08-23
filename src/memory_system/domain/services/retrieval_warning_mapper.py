@@ -13,6 +13,7 @@ WARNING_ORDER: tuple[str, ...] = (
     "vector_skipped_query_too_long",
     "bm25_retrieval_failed",
     "vector_retrieval_failed",
+    "rerank_failed",
     "graph_expansion_failed",
     "dirty_index_document",
     "stale_index_document",
@@ -26,6 +27,7 @@ _CHANNEL_KINDS = frozenset(
         "vector_skipped_query_too_long",
         "bm25_retrieval_failed",
         "vector_retrieval_failed",
+        "rerank_failed",
         "graph_expansion_failed",
         "retrieval_stat_update_failed",
         "retrieval_timeout_degraded",
@@ -73,6 +75,8 @@ def warnings_from_internal(
             entries.append(WarningEntry(warning.kind, memory_id=warning.memory_id))
         elif warning.kind == "graph_expansion_failed":
             entries.append(WarningEntry("graph_expansion_failed"))
+        elif warning.kind == "rerank_failed":
+            entries.append(WarningEntry("rerank_failed"))
     return entries
 
 

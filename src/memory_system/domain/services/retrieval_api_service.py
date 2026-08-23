@@ -238,6 +238,7 @@ class RetrievalApiService:
                     include_conflicted=input_data.include_conflicted,
                     include_history=input_data.include_history,
                     graph_expand=input_data.graph_expand,
+                    normalized_query=normalized_query,
                 ),
             ),
             deadline=deadline,
@@ -734,6 +735,7 @@ def create_retrieval_api_service_from_app_state(
         neo4j_driver=neo4j_driver,
         es_client=elasticsearch,
         settings=settings,
+        http_client=http_client,
     )
     scoring_service = create_retrieval_scoring_service(
         neo4j_driver=neo4j_driver,

@@ -103,6 +103,12 @@ class MemoryRetrievalSettings(BaseModel):
     recency_weight: float = 0.10
     conflicted_penalty: float = 0.85
     superseded_penalty: float = 0.60
+    rerank_enabled: bool = True
+    rerank_model: str = "BAAI/bge-reranker-v2-m3"
+    rerank_top_n: int = 30
+    rerank_timeout_seconds: int = 5
+    rerank_max_chunks_per_doc: int | None = None
+    rerank_overlap_tokens: int | None = None
 
 
 class MemoryConsolidationSettings(BaseModel):

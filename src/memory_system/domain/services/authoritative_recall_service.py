@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Protocol
 
+import httpx
 from elasticsearch import AsyncElasticsearch
 from neo4j import AsyncDriver
 
@@ -17,6 +18,7 @@ from memory_system.domain.models.authoritative_recall import (
 )
 from memory_system.domain.models.hybrid_retrieval import FusedRetrievalCandidate
 from memory_system.domain.models.retrieval_memory_snapshot import RetrievalMemorySnapshot
+from memory_system.domain.services.cross_encoder_rerank_service import rerank_direct_candidates
 from memory_system.domain.services.graph_expansion_ranker import (
     AggregatedExpansionCandidate,
     ExpansionEdge,
@@ -38,6 +40,7 @@ from memory_system.infrastructure.neo4j.retrieval_memory_read_repository import 
     RetrievalMemoryReadError,
     RetrievalMemoryReadRepository,
 )
+from memory_system.infrastructure.rerank.types import RerankClient
 from memory_system.settings.models import Settings
 
 
@@ -74,10 +77,12 @@ class AuthoritativeRecallService:
         mget_repo: MgetRetrievalPort,
         *,
         settings: Settings,
+        rerank_client: RerankClient,
     ) -> None:
         self._neo4j_repo = neo4j_repo
         self._mget_repo = mget_repo
         self._settings = settings
+        self._rerank_client = rerank_client
 
     async def recall(self, query: AuthoritativeRecallQuery) -> AuthoritativeRecallOutcome:
         memory_types = normalize_memory_types(query.memory_types)
@@ -112,6 +117,16 @@ class AuthoritativeRecallService:
             include_history=query.include_history,
             es_hit_ids=es_hit_ids,
         )
+
+        if direct_candidates:
+            rerank_outcome = await rerank_direct_candidates(
+                query=query.normalized_query,
+                candidates=direct_candidates,
+                settings=self._settings,
+                client=self._rerank_client,
+            )
+            direct_candidates = rerank_outcome.direct_candidates
+            warnings.extend(rerank_outcome.warnings)
 
         expanded_candidates: list[ValidatedRetrievalCandidate] = []
         if query.graph_expand and direct_candidates:
@@ -214,7 +229,7 @@ class AuthoritativeRecallService:
         try:
             raw_edges = await self._neo4j_repo.expand_one_hop(
                 user_id,
-                sorted(candidate.memory_id for candidate in direct_candidates),
+                [candidate.memory_id for candidate in direct_candidates],
             )
         except RetrievalMemoryReadError:
             warnings.append(InternalRetrievalWarning(kind="graph_expansion_failed"))
@@ -377,15 +392,20 @@ def create_authoritative_recall_service(
     neo4j_driver: AsyncDriver,
     es_client: AsyncElasticsearch,
     settings: Settings,
+    http_client: httpx.AsyncClient,
 ) -> AuthoritativeRecallService:
+    from memory_system.infrastructure.rerank.factory import create_rerank_client
+
     retrieval_settings = settings.memory_retrieval
     neo4j_repo = RetrievalMemoryReadRepository(
         neo4j_driver,
         neo4j_timeout_seconds=float(retrieval_settings.neo4j_timeout_seconds),
     )
     mget_repo = MgetRetrievalRepository(es_client)
+    rerank_client = create_rerank_client(settings, http_client)
     return AuthoritativeRecallService(
         neo4j_repo=neo4j_repo,
         mget_repo=mget_repo,
         settings=settings,
+        rerank_client=rerank_client,
     )

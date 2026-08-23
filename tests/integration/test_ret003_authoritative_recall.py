@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
+import httpx
 import pytest
 from elasticsearch import AsyncElasticsearch
 from neo4j import AsyncDriver, AsyncGraphDatabase
@@ -226,10 +227,18 @@ def _service(
     neo4j_driver: AsyncDriver,
     es_client: AsyncElasticsearch,
 ) -> AuthoritativeRecallService:
+    settings = get_settings().model_copy(
+        update={
+            "memory_retrieval": get_settings().memory_retrieval.model_copy(
+                update={"rerank_enabled": False},
+            ),
+        },
+    )
     return create_authoritative_recall_service(
         neo4j_driver=neo4j_driver,
         es_client=es_client,
-        settings=get_settings(),
+        settings=settings,
+        http_client=httpx.AsyncClient(),
     )
 
 

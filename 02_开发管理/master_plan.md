@@ -597,6 +597,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | completed |
 | RET-005 | Retrieval API、降级/超时、统计更新 | §2.2.5, §2.2.13–2.2.15 | RET-004, DEV-005 | completed |
 | RET-006 | Retrieval 阶段 E2E + 失败注入 | §2.2.16, §3.28 | RET-005, EXT-007 | completed |
+| RET-007 | SiliconFlow Cross-Encoder Rerank | §2.2.10a, §2.2.15–17 | RET-003..005, DEV-007 | tested |
 
 #### RET-001 BM25 查询
 
@@ -661,6 +662,15 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **Task Plan**：`02_开发管理/tasks/RET-006-retrieval-e2e-failure-injection.md`。
 - **规划备注**：`workflow_mode=NORMAL`（explicit）；`planning_baseline_main=538cf13ac3d33d1f337a9e5f5b450626ddd6529d` MATCH；`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`；`durable_write_scope=existing RET-005 stats + EXT-007 ES upsert only`；里程碑 `v0.4.0-memory-retrieval`；不得触碰 DEV-006/PR#13。
 - **状态备注**：`completed`（plan `e1abc1ca77566da645a8087844d0da28cd8c87fe`；implementation `6e5517c11f0c7b6417264064d718937dd0aca62b`；record `4637279313e2fac61b986bbe45be8dfb847318b2`；PR #49 MERGED `295c5faa3b0160db349b926dc8eb0a001d67c7ce` mergedAt `2026-08-13T08:48:22Z`；scoped 9 passed（E2E-1,2,3,4a,4b,5a,5b,6 + auth）；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=1 P3=2 non-blocking；§2.2.16 Retrieval stage E2E + §3.28 failure injection；EXT-007 write→retrieve（E2E-2）；零 `src/**` diff；feat 分支已删）；**closes `v0.4.0-memory-retrieval` milestone**；`next_action=CON-001 planned / NOT AUTO-STARTED`；不得触碰 DEV-006/PR#13）。
+
+#### RET-007 SiliconFlow Cross-Encoder Rerank
+
+- **目标**：RRF 融合并完成 Neo4j direct 权威校验后，对 direct 候选调用 SiliconFlow `BAAI/bge-reranker-v2-m3` Cross-Encoder 重排；更新 `normalized_retrieval_score`；图扩展 seed 顺序跟随 rerank；失败降级 `rerank_failed` warning。
+- **非目标**：修改 BM25/Vector/RRF；HTTP Contract 变更；LoCoMo eval LLM rerank；新依赖/Migration。
+- **前置**：**RET-003, RET-004, RET-005, DEV-007**。
+- **测试**：Unit（SiliconFlowRerankClient、CrossEncoderRerankService）；Contract（AuthoritativeRecallService rerank + graph seed order）；回归 authoritative recall / warning mapper。
+- **Task Plan**：`02_开发管理/tasks/RET-007-siliconflow-cross-encoder-rerank.md`。
+- **状态备注**：`tested`（plan `52742369c248e46efeba9ac71cff96f867a0acab`；implementation on `feat/RET-007-siliconflow-cross-encoder-rerank`；scoped 30 passed；Ruff PASS；Mypy PASS；`READY_FOR_CODE_REVIEW`；不得触碰 DEV-006/PR#13）。
 
 ---
 

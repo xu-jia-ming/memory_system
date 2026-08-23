@@ -159,6 +159,7 @@ def validate_memory_retrieval(settings: object, info: ValidationInfo) -> None:
         "max_top_k",
         "max_source_message_ids",
         "recency_half_life_days",
+        "rerank_top_n",
     )
     for field_name in positive_int_fields:
         if getattr(retrieval, field_name) <= 0:
@@ -170,6 +171,15 @@ def validate_memory_retrieval(settings: object, info: ValidationInfo) -> None:
         )
     if retrieval.fused_top_n < retrieval.max_top_k:
         raise ValueError("memory_retrieval.fused_top_n must be >= memory_retrieval.max_top_k")
+    if retrieval.rerank_top_n > retrieval.fused_top_n:
+        raise ValueError("memory_retrieval.rerank_top_n must be <= memory_retrieval.fused_top_n")
+
+    if not retrieval.rerank_model.strip():
+        raise ValueError("memory_retrieval.rerank_model must be non-empty")
+    if retrieval.rerank_max_chunks_per_doc is not None and retrieval.rerank_max_chunks_per_doc <= 0:
+        raise ValueError("memory_retrieval.rerank_max_chunks_per_doc must be > 0 when set")
+    if retrieval.rerank_overlap_tokens is not None and retrieval.rerank_overlap_tokens < 0:
+        raise ValueError("memory_retrieval.rerank_overlap_tokens must be >= 0 when set")
 
     score_weights = (
         retrieval.retrieval_score_weight,
@@ -205,6 +215,7 @@ def validate_memory_retrieval(settings: object, info: ValidationInfo) -> None:
         retrieval.embedding_timeout_seconds,
         retrieval.elasticsearch_timeout_seconds,
         retrieval.neo4j_timeout_seconds,
+        retrieval.rerank_timeout_seconds,
         retrieval.retrieval_total_timeout_seconds,
     )
     if any(value <= 0 for value in timeout_fields):
@@ -214,6 +225,7 @@ def validate_memory_retrieval(settings: object, info: ValidationInfo) -> None:
         retrieval.embedding_timeout_seconds,
         retrieval.elasticsearch_timeout_seconds,
         retrieval.neo4j_timeout_seconds,
+        retrieval.rerank_timeout_seconds,
     )
     if any(value > retrieval.retrieval_total_timeout_seconds for value in stage_timeouts):
         raise ValueError(
@@ -226,6 +238,12 @@ def validate_memory_retrieval(settings: object, info: ValidationInfo) -> None:
             raise ValueError(
                 "SILICONFLOW_API_KEY is required when memory_retrieval.embedding_provider "
                 "is siliconflow"
+            )
+    if retrieval.rerank_enabled and retrieval.embedding_provider == "siliconflow":
+        if siliconflow_api_key is None or not siliconflow_api_key.get_secret_value().strip():
+            raise ValueError(
+                "SILICONFLOW_API_KEY is required when memory_retrieval.rerank_enabled is true "
+                "and embedding_provider is siliconflow"
             )
 
 
