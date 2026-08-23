@@ -5,13 +5,13 @@
 ```yaml
 task_id: RET-007
 task_name: SiliconFlow Cross-Encoder Rerank（BAAI/bge-reranker-v2-m3）
-status: approved
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "188305b9e689f8a760fb57904fbadeb3f4ccdad1"
 branch: "feat/RET-007-siliconflow-cross-encoder-rerank"
 created_at: "2026-08-23 08:00 UTC"
-updated_at: "2026-08-23 08:05 UTC"
+updated_at: "2026-08-23 16:15 UTC"
 spec_sections:
   - "§2.2.9 RRF 多路结果融合（消费 fused 候选；不修改 RRF 算法）"
   - "§2.2.10 Neo4j Memory 加载与一跳图谱扩展（插入点：权威 direct 校验之后、图扩展之前）"
@@ -45,7 +45,7 @@ approval_gates:
   approval_posture: "PLAN_APPROVED — human confirmed 2026-08-23"
   amendment_recorded: true
   human_plan_approved: true
-  developer_authorized: false
+  developer_authorized: true
   reviewer_authorized: false
   release_operator_authorized: false
 release_phases:
@@ -398,3 +398,37 @@ fuse_rrf → AuthoritativeRecallService.recall（含 rerank）→ RetrievalScori
 ---
 
 **Planner 输出**：`READY_FOR_PLAN_REVIEW`
+
+---
+
+## 13. implementation_progress（Developer 2026-08-23）
+
+```yaml
+status: tested
+developer_authorized: true
+verification:
+  unit_contract_scoped: "30 passed"
+  ruff: PASS
+  mypy: PASS
+files_added:
+  - src/memory_system/infrastructure/rerank/*
+  - src/memory_system/domain/services/cross_encoder_rerank_service.py
+  - tests/unit/test_siliconflow_rerank_client.py
+  - tests/unit/test_cross_encoder_rerank_service.py
+  - tests/contract/test_authoritative_recall_rerank.py
+  - tests/support/fake_rerank_client.py
+files_modified:
+  - src/memory_system/domain/services/authoritative_recall_service.py
+  - src/memory_system/domain/models/authoritative_recall.py
+  - src/memory_system/settings/models.py
+  - src/memory_system/settings/validators.py
+  - configs/base.yaml
+  - src/memory_system/domain/services/retrieval_api_service.py
+  - src/memory_system/domain/services/retrieval_warning_mapper.py
+  - tests/unit/test_authoritative_recall_service.py
+  - tests/unit/test_retrieval_warning_mapper.py
+  - tests/integration/test_ret003_authoritative_recall.py
+notes:
+  - "Graph expand seed IDs now preserve reranked direct order (not sorted)"
+  - "AuthoritativeRecallQuery.normalized_query wired from RetrievalApiService"
+```

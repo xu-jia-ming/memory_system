@@ -21,6 +21,7 @@ from memory_system.infrastructure.elasticsearch.mget_retrieval_repository import
 from memory_system.infrastructure.neo4j.retrieval_memory_read_repository import (
     RetrievalMemoryReadError,
 )
+from memory_system.infrastructure.rerank import NoOpRerankClient
 from memory_system.settings import get_settings
 
 USER_ID = "user-a"
@@ -210,6 +211,17 @@ class FakeMgetRepo:
         return {memory_id for memory_id in memory_ids if memory_id in self.found_ids}
 
 
+def _settings_without_rerank():
+    settings = get_settings()
+    return settings.model_copy(
+        update={
+            "memory_retrieval": settings.memory_retrieval.model_copy(
+                update={"rerank_enabled": False},
+            ),
+        },
+    )
+
+
 def _service(
     neo4j: FakeNeo4jRepo | None = None,
     mget: FakeMgetRepo | None = None,
@@ -217,7 +229,8 @@ def _service(
     return AuthoritativeRecallService(
         neo4j_repo=neo4j or FakeNeo4jRepo(),
         mget_repo=mget or FakeMgetRepo(),
-        settings=get_settings(),
+        settings=_settings_without_rerank(),
+        rerank_client=NoOpRerankClient(),
     )
 
 

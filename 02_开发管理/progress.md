@@ -12,7 +12,7 @@ phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: RET-007
-current_task_status: approved
+current_task_status: tested
 current_branch: feat/RET-007-siliconflow-cross-encoder-rerank
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -2399,18 +2399,25 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ```yaml
 task_id: RET-007
-status: approved
+status: tested
 plan_file: "02_开发管理/tasks/RET-007-siliconflow-cross-encoder-rerank.md"
 plan_review: PLAN_APPROVED
+plan_commit: "52742369c248e46efeba9ac71cff96f867a0acab"
+branch: "feat/RET-007-siliconflow-cross-encoder-rerank"
 model: "BAAI/bge-reranker-v2-m3"
 provider: "SiliconFlow POST /v1/rerank"
 auth: "SILICONFLOW_API_KEY (shared with embedding)"
 insertion: "RRF → Neo4j direct validate → Rerank → graph expand → ACT-R"
-api_smoke_test: |
-  2026-08-23 curl HTTP 200; query "When did Gina get her tattoo?";
-  relevant doc index=0 relevance_score≈0.998; irrelevant≈0
-next_action: Developer implementation on feat branch
-notes: "不得编写业务代码直至 PLAN_APPROVED"
+implementation_summary: |
+  - SiliconFlowRerankClient + create_rerank_client / NoOpRerankClient
+  - CrossEncoderRerankService.rerank_direct_candidates
+  - AuthoritativeRecallService integration (post-validate, pre-expand)
+  - Settings rerank_* + configs/base.yaml defaults
+  - Internal warning rerank_failed + HTTP warning mapper
+  - Graph expand seed order follows reranked direct order
+verification: "scoped 30 passed; ruff PASS; mypy PASS"
+next_action: CODE_REVIEW
+notes: "READY_FOR_CODE_REVIEW"
 ```
 
 ## FAST-MVP-TEMPORAL-SAFE-RANGE-EVIDENCE-EXPAND (2026-08-23)

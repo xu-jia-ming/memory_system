@@ -15,6 +15,7 @@ InternalWarningKind = Literal[
     "dirty_index_document",
     "stale_index_document",
     "graph_expansion_failed",
+    "rerank_failed",
 ]
 
 
@@ -26,6 +27,7 @@ class AuthoritativeRecallQuery(BaseModel):
     include_conflicted: bool = False
     include_history: bool = False
     graph_expand: bool = True
+    normalized_query: str = ""
 
 
 class ValidatedRetrievalCandidate(BaseModel):

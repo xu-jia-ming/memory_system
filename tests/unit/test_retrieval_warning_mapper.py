@@ -30,6 +30,7 @@ def test_u16_warning_order_and_dedupe() -> None:
         WarningEntry("dirty_index_document", memory_id="mem-a"),
         WarningEntry("dirty_index_document", memory_id="mem-a"),
         WarningEntry("vector_retrieval_failed"),
+        WarningEntry("rerank_failed"),
         WarningEntry("graph_expansion_failed"),
         WarningEntry("stale_index_document", memory_id="mem-z"),
     ]
@@ -38,6 +39,7 @@ def test_u16_warning_order_and_dedupe() -> None:
         "embedding_failed",
         "bm25_retrieval_failed",
         "vector_retrieval_failed",
+        "rerank_failed",
         "graph_expansion_failed",
         "dirty_index_document",
         "dirty_index_document",
@@ -88,9 +90,11 @@ def test_warnings_from_internal_maps_kinds() -> None:
         [
             InternalRetrievalWarning(kind="dirty_index_document", memory_id="mem-1"),
             InternalRetrievalWarning(kind="graph_expansion_failed"),
+            InternalRetrievalWarning(kind="rerank_failed"),
         ]
     )
     assert warnings == [
         WarningEntry("dirty_index_document", memory_id="mem-1"),
         WarningEntry("graph_expansion_failed"),
+        WarningEntry("rerank_failed"),
     ]
