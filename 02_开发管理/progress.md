@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 follow-up — DEV-010 completed
+current_phase: Phase 5 follow-up — RET-007 completed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: RET-007
-current_task_status: tested
-current_branch: feat/RET-007-siliconflow-cross-encoder-rerank
+current_task_status: completed
+current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -633,6 +633,42 @@ formal_CON-001_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_CON-001_human_plan_approved: true
 formal_CON-001_developer_authorized: true
 formal_CON-001_next_action: "CON-002 planned / NOT AUTO-STARTED"
+formal_RET-007_plan_file: 02_开发管理/tasks/RET-007-siliconflow-cross-encoder-rerank.md
+formal_RET-007_status: completed
+formal_RET-007_workflow_mode: NORMAL
+formal_RET-007_workflow_mode_source: explicit
+formal_RET-007_baseline: "188305b9e689f8a760fb57904fbadeb3f4ccdad1"
+formal_RET-007_branch: "feat/RET-007-siliconflow-cross-encoder-rerank"
+formal_RET-007_prerequisite: "SATISFIED — RET-003..005 completed; DEV-007 completed"
+formal_RET-007_scope: "SiliconFlow BAAI/bge-reranker-v2-m3 Cross-Encoder rerank after Neo4j direct validation; graph expand seed order; rerank_failed degradation; zero BM25/Vector/RRF/HTTP Contract diff"
+formal_RET-007_blocking_open_issues: []
+formal_RET-007_nonblocking_open_issues:
+  - "LoCoMo conv-30 ablation — optional post-merge quality check; non-blocking"
+formal_RET-007_dependency_changes_expected: NONE
+formal_RET-007_migration_changes_expected: NONE
+formal_RET-007_durable_write_scope: NONE
+formal_RET-007_plan_review: PLAN_APPROVED
+formal_RET-007_approval_posture: "POST_MERGE_CLEANUP — completed"
+formal_RET-007_human_plan_approved: true
+formal_RET-007_human_plan_approved_at: "2026-08-23 08:00 UTC"
+formal_RET-007_developer_authorized: true
+formal_RET-007_code_review: CODE_REVIEW_APPROVED
+formal_RET-007_scoped_tests: "30 passed (unit + contract)"
+formal_RET-007_ruff: PASS
+formal_RET-007_mypy: PASS
+formal_RET-007_plan_commit: "52742369c248e46efeba9ac71cff96f867a0acab"
+formal_RET-007_implementation_commit: "5b635c963b3d957e8e9deac7740ceac805af7e72"
+formal_RET-007_implementation_commit_message: "feat(retrieval): add siliconflow cross-encoder rerank after Neo4j validation"
+formal_RET-007_pr: "#66"
+formal_RET-007_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/66"
+formal_RET-007_pr_state: MERGED
+formal_RET-007_pr_base: main
+formal_RET-007_pr_head: "feat/RET-007-siliconflow-cross-encoder-rerank"
+formal_RET-007_merge_commit: "42ef374729fc1864dccea55a044e413b4acab7b6"
+formal_RET-007_merged_at: "2026-08-23T08:38:21Z"
+formal_RET-007_release_gate: COMPLETED
+formal_RET-007_next_action: "RET-007 completed — NO AUTO-START (no subsequent Task unless human starts one)"
+formal_RET-007_note: "POST_MERGE_CLEANUP completed；plan 52742369c248e46efeba9ac71cff96f867a0acab；implementation 5b635c963b3d957e8e9deac7740ceac805af7e72；PR #66 MERGED（base=main，head=feat/RET-007-siliconflow-cross-encoder-rerank，merge 42ef374729fc1864dccea55a044e413b4acab7b6，mergedAt=2026-08-23T08:38:21Z）；CODE_REVIEW_APPROVED；scoped 30 passed；ruff PASS；mypy PASS；SiliconFlow Cross-Encoder rerank after Neo4j direct validation；feat 分支本地/远程已删除；next_action=RET-007 completed — NO AUTO-START；不得触碰 DEV-006/PR#13"
 formal_RET-006_plan_file: 02_开发管理/tasks/RET-006-retrieval-e2e-failure-injection.md
 formal_RET-006_status: completed
 formal_RET-006_workflow_mode: NORMAL
@@ -2399,9 +2435,10 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ```yaml
 task_id: RET-007
-status: tested
+status: completed
 plan_file: "02_开发管理/tasks/RET-007-siliconflow-cross-encoder-rerank.md"
 plan_review: PLAN_APPROVED
+code_review: CODE_REVIEW_APPROVED
 plan_commit: "52742369c248e46efeba9ac71cff96f867a0acab"
 branch: "feat/RET-007-siliconflow-cross-encoder-rerank"
 model: "BAAI/bge-reranker-v2-m3"
@@ -2415,9 +2452,17 @@ implementation_summary: |
   - Settings rerank_* + configs/base.yaml defaults
   - Internal warning rerank_failed + HTTP warning mapper
   - Graph expand seed order follows reranked direct order
+implementation_commit: "5b635c963b3d957e8e9deac7740ceac805af7e72"
+pr: "#66"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/66"
+pr_state: MERGED
+merge_commit: "42ef374729fc1864dccea55a044e413b4acab7b6"
+merged_at: "2026-08-23T08:38:21Z"
+status_record_committed: "009d7cee6194e221abeba36e91f48611f9521bda"
 verification: "scoped 30 passed; ruff PASS; mypy PASS"
-next_action: CODE_REVIEW
-notes: "READY_FOR_CODE_REVIEW"
+feat_branch: deleted
+next_action: "RET-007 completed — NO AUTO-START"
+notes: "POST_MERGE_CLEANUP complete;不得触碰 DEV-006/PR#13"
 ```
 
 ## FAST-MVP-TEMPORAL-SAFE-RANGE-EVIDENCE-EXPAND (2026-08-23)

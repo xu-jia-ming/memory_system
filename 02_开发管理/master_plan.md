@@ -597,7 +597,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | RET-004 | ACT-R 评分 + Evidence 聚合 | §2.2.11, §2.2.12 | RET-003 | completed |
 | RET-005 | Retrieval API、降级/超时、统计更新 | §2.2.5, §2.2.13–2.2.15 | RET-004, DEV-005 | completed |
 | RET-006 | Retrieval 阶段 E2E + 失败注入 | §2.2.16, §3.28 | RET-005, EXT-007 | completed |
-| RET-007 | SiliconFlow Cross-Encoder Rerank | §2.2.10a, §2.2.15–17 | RET-003..005, DEV-007 | tested |
+| RET-007 | SiliconFlow Cross-Encoder Rerank | §2.2.10a, §2.2.15–17 | RET-003..005, DEV-007 | completed |
 
 #### RET-001 BM25 查询
 
@@ -670,7 +670,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **前置**：**RET-003, RET-004, RET-005, DEV-007**。
 - **测试**：Unit（SiliconFlowRerankClient、CrossEncoderRerankService）；Contract（AuthoritativeRecallService rerank + graph seed order）；回归 authoritative recall / warning mapper。
 - **Task Plan**：`02_开发管理/tasks/RET-007-siliconflow-cross-encoder-rerank.md`。
-- **状态备注**：`tested`（plan `52742369c248e46efeba9ac71cff96f867a0acab`；implementation on `feat/RET-007-siliconflow-cross-encoder-rerank`；scoped 30 passed；Ruff PASS；Mypy PASS；`READY_FOR_CODE_REVIEW`；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`completed`（plan `52742369c248e46efeba9ac71cff96f867a0acab`；implementation `5b635c963b3d957e8e9deac7740ceac805af7e72`；PR #66 MERGED `42ef374729fc1864dccea55a044e413b4acab7b6` mergedAt `2026-08-23T08:38:21Z`；scoped 30 passed；Ruff PASS；Mypy PASS；CODE_REVIEW_APPROVED；SiliconFlow Cross-Encoder rerank after Neo4j direct validation；feat 分支已删；`next_action=RET-007 completed — NO AUTO-START`；不得触碰 DEV-006/PR#13）。
 
 ---
 

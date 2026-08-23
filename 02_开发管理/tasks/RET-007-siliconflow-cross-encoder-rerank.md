@@ -5,13 +5,13 @@
 ```yaml
 task_id: RET-007
 task_name: SiliconFlow Cross-Encoder Rerank（BAAI/bge-reranker-v2-m3）
-status: tested
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "188305b9e689f8a760fb57904fbadeb3f4ccdad1"
 branch: "feat/RET-007-siliconflow-cross-encoder-rerank"
 created_at: "2026-08-23 08:00 UTC"
-updated_at: "2026-08-23 16:15 UTC"
+updated_at: "2026-08-23 16:45 UTC"
 spec_sections:
   - "§2.2.9 RRF 多路结果融合（消费 fused 候选；不修改 RRF 算法）"
   - "§2.2.10 Neo4j Memory 加载与一跳图谱扩展（插入点：权威 direct 校验之后、图扩展之前）"
@@ -46,8 +46,8 @@ approval_gates:
   amendment_recorded: true
   human_plan_approved: true
   developer_authorized: true
-  reviewer_authorized: false
-  release_operator_authorized: false
+  reviewer_authorized: true
+  release_operator_authorized: true
 release_phases:
   PLAN_LANDING: "NORMAL only; after PLAN_APPROVED, Release Operator may land approved planning files on main and create exact feat/RET-007-siliconflow-cross-encoder-rerank"
   IMPLEMENTATION_RELEASE: "only after CODE_REVIEW_APPROVED; feature branch whitelist only; no push to main"
@@ -404,7 +404,7 @@ fuse_rrf → AuthoritativeRecallService.recall（含 rerank）→ RetrievalScori
 ## 13. implementation_progress（Developer 2026-08-23）
 
 ```yaml
-status: tested
+status: completed
 developer_authorized: true
 verification:
   unit_contract_scoped: "30 passed"
@@ -431,4 +431,23 @@ files_modified:
 notes:
   - "Graph expand seed IDs now preserve reranked direct order (not sorted)"
   - "AuthoritativeRecallQuery.normalized_query wired from RetrievalApiService"
+```
+
+## 14. merge_record（POST_MERGE_CLEANUP 2026-08-23）
+
+```yaml
+status: completed
+plan_commit: "52742369c248e46efeba9ac71cff96f867a0acab"
+implementation_commit: "5b635c963b3d957e8e9deac7740ceac805af7e72"
+implementation_commit_message: "feat(retrieval): add siliconflow cross-encoder rerank after Neo4j validation"
+pr: "#66"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/66"
+pr_state: MERGED
+pr_base: main
+pr_head: "feat/RET-007-siliconflow-cross-encoder-rerank"
+merge_commit: "42ef374729fc1864dccea55a044e413b4acab7b6"
+merged_at: "2026-08-23T08:38:21Z"
+verification: "scoped 30 passed; ruff PASS; mypy PASS"
+feat_branch: deleted
+next_action: "RET-007 completed — NO AUTO-START"
 ```
