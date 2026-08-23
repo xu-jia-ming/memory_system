@@ -5,7 +5,7 @@
 ```yaml
 task_id: FAST-MVP-TEMPORAL-SAFE-RANGE-EVIDENCE-EXPAND
 task_name: Temporal SAFE_RANGE + NO_INFO Evidence Expand (retry once)
-status: implemented
+status: completed
 spec_sections:
   - "§2.2 记忆检索 (source_message_ids / evidence_count)"
   - "LoCoMo eval adapter (scripts/locomo_eval, 非规格 Contract 变更)"
@@ -14,7 +14,8 @@ prerequisites:
   - "Mongo context_archive 可通过 SourceMessageIndex 加载"
 branch: "feat/fast-mvp-temporal-safe-range-evidence-expand"
 created_at: "2026-08-23 11:35 UTC"
-updated_at: "2026-08-23 11:35 UTC"
+updated_at: "2026-08-23 04:42 UTC"
+next_action: "FAST-MVP completed — NO AUTO-START"
 ```
 
 ## 2. 任务目标
@@ -400,3 +401,11 @@ ENABLE_NO_INFO_EVIDENCE_EXPAND = True
 4. **预计文件**：见 §7（~9 个文件，2 新增）。
 5. **架构阻碍**：无阻塞；注意 production 无答题链、conv-30 expand 收益可能有限。
 6. **可进入 Developer**：是，待 `PLAN_APPROVED`。
+
+---
+
+## 13. 执行记录
+
+| 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
+|---|---|---|---|---|
+| 2026-08-23 04:42 UTC | POST_MERGE_CLEANUP | status=committed → completed；PR #65 MERGED `87519f28ec406a29f141f6d7fb226ca07b8b612e` mergedAt `2026-08-23T04:40:37Z`；implementation `58c20e6770015776280c52ce924c29f16d6e0bef`；ci fix `b698c4df35e14b62e5f2dac0774e40004201efba`；docs(status): complete on main；exact feat `feat/fast-mvp-temporal-safe-range-evidence-expand` 删除 | unit 31 passed；CI green（static, unit-contract-coverage, integration） | `next_action=FAST-MVP completed — NO AUTO-START`；未 git tag |

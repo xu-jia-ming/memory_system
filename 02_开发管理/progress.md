@@ -322,7 +322,7 @@ formal_EXT-008_release_gate: COMPLETED
 formal_EXT-008_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-008_next_action: "EXT-009 planned / NOT AUTO-STARTED"
 next_action: "DEV-010 completed — NO AUTO-START (no subsequent Task unless human starts one)"
-last_role_result: POST_MERGE_CLEANUP DEV-010 completed; PR #61 MERGED merge 29e4a3d7d747d2ec80d4a345da55e70f11076cf1; record 83f3443aff413b458c900c3f59ee4a63384676bc; feat deleted; NO AUTO-START
+last_role_result: POST_MERGE_CLEANUP FAST-MVP-TEMPORAL-SAFE-RANGE-EVIDENCE-EXPAND completed; PR #65 MERGED merge 87519f28ec406a29f141f6d7fb226ca07b8b612e; feat deleted; NO AUTO-START
 blocking_reason: null
 formal_OPS-002_plan_file: 02_开发管理/tasks/OPS-002-logging-metrics-sensitive-user-isolation-audit.md
 formal_OPS-002_status: completed
@@ -2399,7 +2399,7 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 
 ```yaml
 task_id: FAST-MVP-TEMPORAL-SAFE-RANGE-EVIDENCE-EXPAND
-status: implemented
+status: completed
 plan_review: PLAN_APPROVED
 code_review: CODE_REVIEW_APPROVED
 implementation_summary: |
@@ -2407,7 +2407,16 @@ implementation_summary: |
   - NO_INFO single evidence expand retry via answer_pipeline.py
   - Integrated into evaluate.py and full_locomo_final_eval.py
   - Ablation script: scripts/locomo_eval/temporal_evidence_expand_ab_conv30.py
+implementation_commit: "58c20e6770015776280c52ce924c29f16d6e0bef"
+ci_fix_commit: "b698c4df35e14b62e5f2dac0774e40004201efba"
+pr: "#65"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/65"
+pr_state: MERGED
+merge_commit: "87519f28ec406a29f141f6d7fb226ca07b8b612e"
+merged_at: "2026-08-23T04:40:37Z"
 unit_tests: "31 passed (temporal resolver + answer pipeline expand)"
+ci: "green (static, unit-contract-coverage, integration)"
+feat_branch: deleted
 ablation: "pending live conv-30 run (requires Mongo + LLM)"
-branch: feat/fast-mvp-temporal-safe-range-evidence-expand
+next_action: "FAST-MVP completed — NO AUTO-START"
 ```
