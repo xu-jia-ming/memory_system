@@ -11,9 +11,9 @@ phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
-current_task: DEV-010
-current_task_status: completed
-current_branch: main
+current_task: RET-007
+current_task_status: approved
+current_branch: feat/RET-007-siliconflow-cross-encoder-rerank
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -21,8 +21,8 @@ tooling_status: VALID
 runtime_contract_status: PASS
 dev006_dependency_status: SUPERSEDED_FOR_MVP
 target_default_branch: main
-current_plan_file: 02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md
-planning_baseline_main: "fc3fbd0fdc410aef2e21e6e3932cc6b9f7560a8a"
+current_plan_file: 02_开发管理/tasks/RET-007-siliconflow-cross-encoder-rerank.md
+planning_baseline_main: "188305b9e689f8a760fb57904fbadeb3f4ccdad1"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_DEV-010_plan_file: 02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md
@@ -2394,6 +2394,24 @@ DEV-003：步骤 1–11 均已完成（实现 Commit `d366fb6`；治理 committe
 16. **EXT-008**：`committed`（PR #42 OPEN `https://github.com/xu-jia-ming/memory_system/pull/42`；implementation `e8f15b458a6f1fa6e204393d5300a018bfc5c27b`；scoped **25** passed；ruff/mypy **PASS**；CODE_REVIEW_APPROVED P0=0 P1=0；§2.1.14 GET/retry/rebuild Admin HTTP + OI-006 rebuild；LD-3 Mongo before Kafka；zero consumer/worker/pipeline diff；`next_action=WAITING_FOR_PR_MERGE`；**不得自动 merge**；不得触碰 DEV-006/PR#13）。
 
 ---
+
+## RET-007 SiliconFlow Cross-Encoder Rerank (2026-08-23)
+
+```yaml
+task_id: RET-007
+status: approved
+plan_file: "02_开发管理/tasks/RET-007-siliconflow-cross-encoder-rerank.md"
+plan_review: PLAN_APPROVED
+model: "BAAI/bge-reranker-v2-m3"
+provider: "SiliconFlow POST /v1/rerank"
+auth: "SILICONFLOW_API_KEY (shared with embedding)"
+insertion: "RRF → Neo4j direct validate → Rerank → graph expand → ACT-R"
+api_smoke_test: |
+  2026-08-23 curl HTTP 200; query "When did Gina get her tattoo?";
+  relevant doc index=0 relevance_score≈0.998; irrelevant≈0
+next_action: Developer implementation on feat branch
+notes: "不得编写业务代码直至 PLAN_APPROVED"
+```
 
 ## FAST-MVP-TEMPORAL-SAFE-RANGE-EVIDENCE-EXPAND (2026-08-23)
 
