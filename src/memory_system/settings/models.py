@@ -54,7 +54,7 @@ class ContextSettings(BaseModel):
 
 
 class MemoryExtractionSettings(BaseModel):
-    prompt_version: str = "memory_extraction_v1"
+    prompt_version: str = "memory_extraction_v2"
     llm_timeout_seconds: int = 120
     max_archive_estimated_tokens: int = 8000
     max_memory_candidates_per_archive: int = 50

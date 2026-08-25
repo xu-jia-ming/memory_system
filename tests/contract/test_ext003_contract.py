@@ -133,7 +133,7 @@ def test_c4_memory_fields_match_contract() -> None:
 
 def test_c7_provider_settings_matrix(valid_env: None) -> None:
     settings = get_settings()
-    assert settings.memory_extraction.prompt_version == "memory_extraction_v1"
+    assert settings.memory_extraction.prompt_version == "memory_extraction_v2"
     assert settings.memory_extraction.llm_timeout_seconds == 120
     assert settings.llm.extraction.model == "deepseek-v4-flash"
     assert settings.llm.extraction.max_output_tokens == 8192
@@ -199,6 +199,9 @@ def test_c10_durable_result_schema(valid_env: None) -> None:
 def test_c11_retry_contract_literals() -> None:
     assert "previous response was invalid" in SCHEMA_CORRECTION_INSTRUCTION.lower()
     assert EXTRACTION_SYSTEM_PROMPT.startswith("You are a long-term memory extraction engine.")
+    for memory_type in ("fact", "preference", "event", "profile"):
+        assert memory_type in EXTRACTION_SYSTEM_PROMPT
+    assert "Classification order:" in EXTRACTION_SYSTEM_PROMPT
 
 
 def test_llm_client_protocol_unchanged() -> None:

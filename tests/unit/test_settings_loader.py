@@ -54,7 +54,7 @@ def test_loads_base_yaml_with_app_env_development(
     monkeypatch.setenv("APP_ENV", "development")
     settings = get_settings()
     assert settings.context.compression_trigger_tokens == 5000
-    assert settings.memory_extraction.prompt_version == "memory_extraction_v1"
+    assert settings.memory_extraction.prompt_version == "memory_extraction_v2"
 
 
 def test_environment_yaml_overrides_nested_keys(
