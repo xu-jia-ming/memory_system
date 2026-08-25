@@ -463,6 +463,7 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | EXT-007 | Retrieval Document 同步 | §2.2.3, §2.2.4 | EXT-006, DEV-007, DEV-004 | completed |
 | EXT-008 | Extraction 管理 GET/Retry | §2.1.14 | EXT-007, DEV-005 | completed |
 | EXT-009 | Extraction E2E + 失败注入 | §2.1.15, §3.28 | EXT-008 | completed |
+| EXT-010 | Extraction Prompt 类型定义 | §2.1.2, §2.1.6 | EXT-003, EXT-009 | planned |
 
 #### EXT-001
 
@@ -584,6 +585,17 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **分支**：`feat/EXT-009-extraction-e2e-pipeline-wiring`。
 - **状态备注**：`completed`（implementation `d6a4bf596b78275ce3e8644a79e2dc8d218675d4`；record `ddfb89ca8e466e0802d9e98177295a9effb41725`；PR #43 MERGED `c05691144b650b22be714736de3c200076c340c3` mergedAt `2026-08-13T01:11:57Z`；scoped 33 passed；E2E 4 passed；Ruff PASS；Mypy remediation files PASS，full-repository baseline 143 errors；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0；ProductionExtractionPipeline 闭合 EXT-003→007 continuation；terminal Mongo 持久化先于 Kafka Offset；extraction_result replay 跳过 LLM，Retrieval ES upsert 收敛且无重复 Memory/Evidence/ES 文档；EXT-002..007 阶段语义零 diff；SAFE_AUTO_REMEDIATION 已按 ff-only 完成；feat 分支已删；RET-001 planned / NOT AUTO-STARTED；不得触碰 DEV-006/PR#13）。
 - **测试**：Unit（pipeline 编排 + consumer LD-1）；Contract（零 upstream diff）；Integration（compose.test）；E2E（E2E-1..4 + F1 失败注入）。
+
+#### EXT-010 Extraction Prompt Memory Type Definitions
+
+- **目标**：在 `EXTRACTION_SYSTEM_PROMPT` 中补充 §2.1.2 四类 `memory_type` 定义、示例与 classification order；将运行时 `prompt_version` 升至 `memory_extraction_v2`（configs + settings 默认）；Contract/Unit 测试覆盖 prompt 分类规则与 v2 配置。
+- **非目标**：Schema/API/error code 变更；validation/fingerprint/pipeline 语义变更；规格正文修改；依赖/Migration；LoCoMo/debug 脚本。
+- **计划文件**：`02_开发管理/tasks/EXT-010-extraction-prompt-memory-type-definitions.md`
+- **正式前置依赖**：EXT-003 — **SATISFIED/completed**；EXT-009 — **SATISFIED/completed**。
+- **依赖/Migration**：`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`。
+- **分支**：`feat/EXT-010-extraction-prompt-memory-type-definitions`。
+- **状态备注**：`planned`（Planner 2026-08-25；baseline `94633ef85ca613f90b66518ce8dfcf96a7eebe21`；working tree dirty — 实施前须干净 feat 分支；`next_action=计划审查`；不得触碰 DEV-006/PR#13）。
+- **测试**：Unit（prompt 分类规则 + settings v2）；Contract（EXT-003 C7/C11 更新）。
 
 ---
 
