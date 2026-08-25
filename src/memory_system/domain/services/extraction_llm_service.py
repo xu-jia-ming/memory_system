@@ -101,7 +101,72 @@ EXTRACTION_SYSTEM_PROMPT = (
     "11. Do not extract greetings, temporary formatting requests, unsupported assistant "
     "suggestions, secrets or authentication credentials.\n"
     "12. Use lower_snake_case for predicate.\n"
-    "13. Return only valid JSON matching the required schema."
+    "13. Return only valid JSON matching the Output schema below.\n"
+    "\n"
+    "Output schema:\n"
+    "Return a single JSON object with exactly two top-level keys: entities and memories.\n"
+    "\n"
+    "entities[] fields:\n"
+    "- local_entity_id: unique id within this response (not a database id); "
+    'use reserved value "user" for the current user entity\n'
+    "- name: canonical entity name\n"
+    "- type: entity category\n"
+    "- aliases: array of alternative names (empty array if none)\n"
+    "\n"
+    "memories[] fields:\n"
+    "- memory_type\n"
+    "- content\n"
+    "- subject_entity_id\n"
+    "- predicate\n"
+    "- object_entity_id\n"
+    "- object_value\n"
+    "- event_status\n"
+    "- start_time\n"
+    "- end_time\n"
+    "- original_time_text\n"
+    "- confidence\n"
+    "- source_message_ids\n"
+    "\n"
+    "Example output:\n"
+    "{\n"
+    '  "entities": [\n'
+    '    {\n'
+    '      "local_entity_id": "entity_1",\n'
+    '      "name": "Agent Memory System",\n'
+    '      "type": "project",\n'
+    '      "aliases": ["memory system project"]\n'
+    "    }\n"
+    "  ],\n"
+    '  "memories": [\n'
+    "    {\n"
+    '      "memory_type": "event",\n'
+    '      "content": "The user is developing Agent Memory System",\n'
+    '      "subject_entity_id": "user",\n'
+    '      "predicate": "works_on",\n'
+    '      "object_entity_id": "entity_1",\n'
+    '      "object_value": null,\n'
+    '      "event_status": "ongoing",\n'
+    '      "start_time": null,\n'
+    '      "end_time": null,\n'
+    '      "original_time_text": "currently",\n'
+    '      "confidence": 0.95,\n'
+    '      "source_message_ids": ["msg_000001"]\n'
+    "    }\n"
+    "  ]\n"
+    "}\n"
+    "\n"
+    "Critical field rules:\n"
+    "- Top-level keys must be exactly entities and memories. "
+    "Do not use category or other unauthorized keys.\n"
+    "- Use memory_type (fact, preference, event, or profile), never category.\n"
+    "- entities is required even when empty; use [].\n"
+    "- object_entity_id and object_value must have exactly one non-null value (XOR).\n"
+    "- For non-event memories, event_status, start_time, end_time, and "
+    "original_time_text must all be null.\n"
+    "- Entity type must be one of: person, organization, product, project, "
+    "location, concept, other.\n"
+    "- When memory_type is event, event_status is required and must be one of: "
+    "occurred, ongoing, planned, cancelled, unknown."
 )
 
 EXTRACTION_USER_PROMPT_TEMPLATE = """Current user ID:
@@ -114,8 +179,14 @@ Extract durable long-term memory candidates."""
 
 SCHEMA_CORRECTION_INSTRUCTION = (
     "The previous response was invalid.\n"
-    "Return exactly one valid JSON object matching the required extraction schema, "
-    "using only source_message_ids from the provided archive.\n"
+    "Return exactly one valid JSON object with required top-level keys "
+    "entities and memories.\n"
+    "Use memory_type (not category) for each memory.\n"
+    "entities must be present as an array (may be empty).\n"
+    "Obey object_entity_id XOR object_value: exactly one must be non-null.\n"
+    "For non-event memories, set event_status, start_time, end_time, and "
+    "original_time_text to null.\n"
+    "Use only source_message_ids from the provided archive.\n"
     "Return JSON only."
 )
 

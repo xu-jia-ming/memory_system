@@ -14,7 +14,7 @@ context:
   safety_margin_seconds: 30
 
 memory_extraction:
-  prompt_version: "memory_extraction_v2"
+  prompt_version: "memory_extraction_v3"
   llm_timeout_seconds: 120
   max_archive_estimated_tokens: 8000
   max_memory_candidates_per_archive: 50

@@ -5,15 +5,15 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 follow-up — EXT-011 planned
+current_phase: Phase 5 follow-up — EXT-011 tested
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-011
-current_task_status: planned
-current_branch: main
+current_task_status: tested
+current_branch: feat/EXT-011-extraction-prompt-output-schema
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
 formal_OI-012_status: completed
@@ -59,7 +59,10 @@ formal_EXT-010_approval_posture: "POST_MERGE_CLEANUP — completed"
 formal_EXT-010_note: "POST_MERGE_CLEANUP completed；plan e56c69c；implementation ce6de2e；PR #67 MERGED（base=main，head=feat/EXT-010-extraction-prompt-memory-type-definitions，merge 1ccd78a7c96e9908ebdb86a1ceb65729848029b0，mergedAt=2026-08-25T07:01:02Z）；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0；§2.1.2 memory type definitions + prompt_version v2；scoped 52 passed；ruff PASS；mypy PASS；feat 分支本地/远程已删除；next_action=EXT-010 completed — NO AUTO-START；不得触碰 DEV-006/PR#13"
 formal_EXT-010_next_action: "EXT-010 completed — NO AUTO-START (no subsequent Task unless human starts one)"
 formal_EXT-011_plan_file: 02_开发管理/tasks/EXT-011-extraction-prompt-output-schema.md
-formal_EXT-011_status: planned
+formal_EXT-011_status: tested
+formal_EXT-011_scoped_tests: "32 passed (unit + contract)"
+formal_EXT-011_ruff: PASS
+formal_EXT-011_mypy: PASS
 formal_EXT-011_workflow_mode: NORMAL
 formal_EXT-011_workflow_mode_source: explicit
 formal_EXT-011_baseline: "f161952b8669f6bacab06d953cafdc588a4679bb"
@@ -70,8 +73,8 @@ formal_EXT-011_blocking_open_issues: []
 formal_EXT-011_nonblocking_open_issues: []
 formal_EXT-011_dependency_changes_expected: NONE
 formal_EXT-011_migration_changes_expected: NONE
-formal_EXT-011_note: "Planner 2026-08-25；baseline f161952；working tree dirty — 实施前须干净 feat 分支；investigation: deepseek-v4-flash 缺 Output Schema 时返回 category/缺 entities；嵌入 schema 后 Jon/Gina archive 单次成功；不得触碰 DEV-006/PR#13"
-formal_EXT-011_next_action: "计划审查"
+formal_EXT-011_note: "Developer 2026-08-25；Output Schema + Critical field rules embedded in EXTRACTION_SYSTEM_PROMPT；SCHEMA_CORRECTION_INSTRUCTION strengthened；prompt_version v3；validate_extraction_payload zero diff；scoped 32 passed；ruff PASS；mypy PASS；不得触碰 DEV-006/PR#13"
+formal_EXT-011_next_action: "Code Review — READY_FOR_CODE_REVIEW"
 formal_DEV-010_plan_file: 02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md
 formal_DEV-010_status: completed
 formal_DEV-010_workflow_mode: NORMAL

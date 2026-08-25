@@ -1,7 +1,8 @@
-"""Unit tests for EXTRACTION_SYSTEM_PROMPT memory type guidance (EXT-010)."""
+"""Unit tests for EXTRACTION_SYSTEM_PROMPT (EXT-010 + EXT-011)."""
 
 from __future__ import annotations
 
+from memory_system.domain.models.extraction_llm import ENTITY_TYPES, EVENT_STATUSES
 from memory_system.domain.services.extraction_llm_service import EXTRACTION_SYSTEM_PROMPT
 
 
@@ -40,7 +41,7 @@ def test_extraction_system_prompt_preserves_core_requirements() -> None:
         "Do not extract greetings, temporary formatting requests, unsupported assistant"
         in EXTRACTION_SYSTEM_PROMPT
     )
-    assert "Return only valid JSON matching the required schema." in (
+    assert "Return only valid JSON matching the Output schema below." in (
         EXTRACTION_SYSTEM_PROMPT
     )
 
@@ -48,3 +49,56 @@ def test_extraction_system_prompt_preserves_core_requirements() -> None:
 def test_extraction_system_prompt_event_and_fact_coexistence_rule() -> None:
     assert "both an event and a resulting fact" in EXTRACTION_SYSTEM_PROMPT
     assert "semantically duplicate" in EXTRACTION_SYSTEM_PROMPT
+
+
+def test_extraction_system_prompt_contains_output_schema_keys() -> None:
+    assert "Output schema:" in EXTRACTION_SYSTEM_PROMPT
+    assert '"entities"' in EXTRACTION_SYSTEM_PROMPT
+    assert '"memories"' in EXTRACTION_SYSTEM_PROMPT
+    for field in (
+        "local_entity_id",
+        "name",
+        "type",
+        "aliases",
+        "memory_type",
+        "content",
+        "subject_entity_id",
+        "predicate",
+        "object_entity_id",
+        "object_value",
+        "event_status",
+        "start_time",
+        "end_time",
+        "original_time_text",
+        "confidence",
+        "source_message_ids",
+    ):
+        assert field in EXTRACTION_SYSTEM_PROMPT
+
+
+def test_extraction_system_prompt_xor_rule() -> None:
+    assert "object_entity_id" in EXTRACTION_SYSTEM_PROMPT
+    assert "object_value" in EXTRACTION_SYSTEM_PROMPT
+    assert "exactly one non-null value (XOR)" in EXTRACTION_SYSTEM_PROMPT
+
+
+def test_extraction_system_prompt_non_event_null_rule() -> None:
+    assert "For non-event memories" in EXTRACTION_SYSTEM_PROMPT
+    for field in ("event_status", "start_time", "end_time", "original_time_text"):
+        assert field in EXTRACTION_SYSTEM_PROMPT
+    assert "must all be null" in EXTRACTION_SYSTEM_PROMPT
+
+
+def test_extraction_system_prompt_entity_and_event_enums() -> None:
+    for entity_type in ENTITY_TYPES:
+        assert entity_type in EXTRACTION_SYSTEM_PROMPT
+    for event_status in EVENT_STATUSES:
+        assert event_status in EXTRACTION_SYSTEM_PROMPT
+
+
+def test_extraction_system_prompt_preserves_ext010_content() -> None:
+    assert "Memory type definitions" in EXTRACTION_SYSTEM_PROMPT
+    assert "Classification order:" in EXTRACTION_SYSTEM_PROMPT
+    test_extraction_system_prompt_contains_memory_types()
+    test_extraction_system_prompt_classification_order()
+    test_extraction_system_prompt_examples_present()
