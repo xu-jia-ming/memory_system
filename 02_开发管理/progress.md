@@ -5,14 +5,14 @@
 ```yaml
 project: Memory System MVP
 spec_version: 9
-current_phase: Phase 5 follow-up — EXT-010 planned
+current_phase: Phase 5 follow-up — EXT-010 completed
 phase0_baseline: GREEN
 phase0_readiness: PASS
 phase0_secret_readiness: PASS
 stm_001_entry_gate: GO
 stm_001_secret_gate: GO
 current_task: EXT-010
-current_task_status: planned
+current_task_status: completed
 current_branch: main
 formal_DEV-003-002_status: completed
 formal_OI-011_status: completed
@@ -26,7 +26,7 @@ planning_baseline_main: "94633ef85ca613f90b66518ce8dfcf96a7eebe21"
 workflow_mode_for_this_task: NORMAL
 workflow_mode_source: explicit
 formal_EXT-010_plan_file: 02_开发管理/tasks/EXT-010-extraction-prompt-memory-type-definitions.md
-formal_EXT-010_status: planned
+formal_EXT-010_status: completed
 formal_EXT-010_workflow_mode: NORMAL
 formal_EXT-010_workflow_mode_source: explicit
 formal_EXT-010_baseline: "94633ef85ca613f90b66518ce8dfcf96a7eebe21"
@@ -37,8 +37,27 @@ formal_EXT-010_blocking_open_issues: []
 formal_EXT-010_nonblocking_open_issues: []
 formal_EXT-010_dependency_changes_expected: NONE
 formal_EXT-010_migration_changes_expected: NONE
-formal_EXT-010_note: "Planner 2026-08-25：Task Plan landed；working tree dirty（LoCoMo/debug 实验 + extraction_llm_service 待确认改动）；实施前须干净 feat 分支；不得改规格正文；不得触碰 DEV-006/PR#13"
-formal_EXT-010_next_action: "计划审查"
+formal_EXT-010_plan_commit: "e56c69ca6721f5ad039010eaa85f5fe7e4e16d1c"
+formal_EXT-010_implementation_commit: "ce6de2e16dd560e8b07ad807f7d68cd133926cc5"
+formal_EXT-010_implementation_commit_message: "feat(extraction): add memory type definitions to system prompt v2"
+formal_EXT-010_pr: "#67"
+formal_EXT-010_pr_url: "https://github.com/xu-jia-ming/memory_system/pull/67"
+formal_EXT-010_pr_state: MERGED
+formal_EXT-010_pr_base: main
+formal_EXT-010_pr_head: "feat/EXT-010-extraction-prompt-memory-type-definitions"
+formal_EXT-010_merge_commit: "1ccd78a7c96e9908ebdb86a1ceb65729848029b0"
+formal_EXT-010_merged_at: "2026-08-25T07:01:02Z"
+formal_EXT-010_code_review: CODE_REVIEW_APPROVED
+formal_EXT-010_p0: 0
+formal_EXT-010_p1: 0
+formal_EXT-010_p2: 0
+formal_EXT-010_scoped_tests: "52 passed (unit + contract)"
+formal_EXT-010_ruff: PASS
+formal_EXT-010_mypy: PASS
+formal_EXT-010_release_gate: COMPLETED
+formal_EXT-010_approval_posture: "POST_MERGE_CLEANUP — completed"
+formal_EXT-010_note: "POST_MERGE_CLEANUP completed；plan e56c69c；implementation ce6de2e；PR #67 MERGED（base=main，head=feat/EXT-010-extraction-prompt-memory-type-definitions，merge 1ccd78a7c96e9908ebdb86a1ceb65729848029b0，mergedAt=2026-08-25T07:01:02Z）；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0；§2.1.2 memory type definitions + prompt_version v2；scoped 52 passed；ruff PASS；mypy PASS；feat 分支本地/远程已删除；next_action=EXT-010 completed — NO AUTO-START；不得触碰 DEV-006/PR#13"
+formal_EXT-010_next_action: "EXT-010 completed — NO AUTO-START (no subsequent Task unless human starts one)"
 formal_DEV-010_plan_file: 02_开发管理/tasks/DEV-010-siliconflow-embedding-token-estimation-routing.md
 formal_DEV-010_status: completed
 formal_DEV-010_workflow_mode: NORMAL

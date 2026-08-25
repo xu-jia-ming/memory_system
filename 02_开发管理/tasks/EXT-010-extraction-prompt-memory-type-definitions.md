@@ -5,7 +5,7 @@
 ```yaml
 task_id: EXT-010
 task_name: Extraction Prompt Memory Type Definitions
-status: implemented
+status: completed
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "94633ef85ca613f90b66518ce8dfcf96a7eebe21"
@@ -333,6 +333,7 @@ out_of_scope_changes:
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
 | 2026-08-25 | Step 1–5 | prompt v2 + tests | 52 scoped pytest PASS | clean whitelist only |
+| 2026-08-25 07:01 UTC | POST_MERGE_CLEANUP | fetch + ff-only main sync；验证 PR #67 MERGED 与 implementation/merge facts；更新 progress.md 与 task plan；创建 `docs(status): complete EXT-010`；删除 exact feature branch local/remote | CODE_REVIEW_APPROVED P0=0 P1=0 P2=0；§2.1.2 memory type definitions + prompt_version v2；scoped 52 passed；ruff PASS；mypy PASS | `status=completed`；仅治理白名单；`next_action=EXT-010 completed — NO AUTO-START`；不得触碰 DEV-006/PR#13 |
 
 ## 14. 实际执行结果
 
@@ -372,12 +373,40 @@ review_report: pending re-review after P1 cleanup
 ### Git 记录
 
 ```yaml
-branch: null
-plan_commit: null
-implementation_commit: null
-implementation_commit_message: null
+branch: feat/EXT-010-extraction-prompt-memory-type-definitions
+plan_commit: "e56c69ca6721f5ad039010eaa85f5fe7e4e16d1c"
+implementation_commit: "ce6de2e16dd560e8b07ad807f7d68cd133926cc5"
+implementation_commit_message: "feat(extraction): add memory type definitions to system prompt v2"
+record_commit: null  # pending this docs(status): complete commit SHA
+merge_commit: "1ccd78a7c96e9908ebdb86a1ceb65729848029b0"
+merged_at: "2026-08-25T07:01:02Z"
+pr: "#67"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/67"
+pr_state: MERGED
+pr_base: main
+pr_head: feat/EXT-010-extraction-prompt-memory-type-definitions
+next_action: "EXT-010 completed — NO AUTO-START"
 ```
 
 ### 最终状态
 
-`implemented_pending_review`
+`completed` — POST_MERGE_CLEANUP；implementation `ce6de2e16dd560e8b07ad807f7d68cd133926cc5`；PR #67 MERGED（`https://github.com/xu-jia-ming/memory_system/pull/67`；merge `1ccd78a7c96e9908ebdb86a1ceb65729848029b0`；mergedAt `2026-08-25T07:01:02Z`）；scoped 52 passed；ruff PASS；mypy PASS；CODE_REVIEW_APPROVED P0=0/P1=0/P2=0；§2.1.2 memory type definitions + prompt_version v2；feat 分支本地/远程已删除；`next_action=EXT-010 completed — NO AUTO-START`；**不得触碰 DEV-006/PR#13**。
+
+## 15. merge_record（POST_MERGE_CLEANUP 2026-08-25）
+
+```yaml
+status: completed
+plan_commit: "e56c69ca6721f5ad039010eaa85f5fe7e4e16d1c"
+implementation_commit: "ce6de2e16dd560e8b07ad807f7d68cd133926cc5"
+implementation_commit_message: "feat(extraction): add memory type definitions to system prompt v2"
+pr: "#67"
+pr_url: "https://github.com/xu-jia-ming/memory_system/pull/67"
+pr_state: MERGED
+pr_base: main
+pr_head: "feat/EXT-010-extraction-prompt-memory-type-definitions"
+merge_commit: "1ccd78a7c96e9908ebdb86a1ceb65729848029b0"
+merged_at: "2026-08-25T07:01:02Z"
+verification: "scoped 52 passed; ruff PASS; mypy PASS"
+feat_branch: deleted
+next_action: "EXT-010 completed — NO AUTO-START"
+```
