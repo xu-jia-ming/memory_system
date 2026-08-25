@@ -5,13 +5,13 @@
 ```yaml
 task_id: EXT-011
 task_name: Extraction Prompt Output Schema
-status: planned
+status: tested
 workflow_mode: NORMAL
 workflow_mode_source: explicit
 planning_baseline_main: "f161952b8669f6bacab06d953cafdc588a4679bb"
 branch: "feat/EXT-011-extraction-prompt-output-schema"
 created_at: "2026-08-25 07:22 UTC"
-updated_at: "2026-08-25 07:22 UTC"
+updated_at: "2026-08-25 07:35 UTC"
 spec_sections:
   - "§2.1.6 LLM Structured Extraction 设计（Output Schema + 字段约束）"
   - "Appendix B（extraction output 授权字段，仅 prompt 引用，不修改校验）"
@@ -31,7 +31,7 @@ prerequisites:
 approval_gates:
   planning: "PLAN_APPROVED"
   human_plan_approved: true
-  developer_authorized: false
+  developer_authorized: true
   reviewer_authorized: false
   release_operator_authorized: false
 release_phases:
@@ -327,17 +327,17 @@ uv run mypy src/memory_system/domain/services/extraction_llm_service.py src/memo
 
 ## 9. 验收标准
 
-- [ ] `EXTRACTION_SYSTEM_PROMPT` 含 §2.1.6 Output Schema 结构（`entities` + `memories` 字段列表与示例）
-- [ ] System prompt 含 xor、non-event null、entity type enum、event_status enum 规则
-- [ ] `SCHEMA_CORRECTION_INSTRUCTION` 强化 `entities` 必填、`memory_type` 非 `category`、授权键提醒
-- [ ] `configs/base.yaml` 与 `MemoryExtractionSettings` 默认 `prompt_version=memory_extraction_v3`
-- [ ] `validate_extraction_payload` **零 diff**
-- [ ] `tests/unit/test_extraction_system_prompt.py`（及可选 correction 测试）通过
-- [ ] `tests/contract/test_ext003_contract.py` C7/C11 通过
-- [ ] `tests/unit/test_settings_loader.py` 通过
-- [ ] 无 Schema/API/error code/dependency 变更
-- [ ] Ruff 通过（scoped files）
-- [ ] Mypy 通过（scoped files）
+- [x] `EXTRACTION_SYSTEM_PROMPT` 含 §2.1.6 Output Schema 结构（`entities` + `memories` 字段列表与示例）
+- [x] System prompt 含 xor、non-event null、entity type enum、event_status enum 规则
+- [x] `SCHEMA_CORRECTION_INSTRUCTION` 强化 `entities` 必填、`memory_type` 非 `category`、授权键提醒
+- [x] `configs/base.yaml` 与 `MemoryExtractionSettings` 默认 `prompt_version=memory_extraction_v3`
+- [x] `validate_extraction_payload` **零 diff**
+- [x] `tests/unit/test_extraction_system_prompt.py`（及可选 correction 测试）通过
+- [x] `tests/contract/test_ext003_contract.py` C7/C11 通过
+- [x] `tests/unit/test_settings_loader.py` 通过
+- [x] 无 Schema/API/error code/dependency 变更
+- [x] Ruff 通过（scoped files）
+- [x] Mypy 通过（scoped files）
 - [ ] Review 无 P0/P1
 
 ## 10. 风险与阻塞项
@@ -383,7 +383,11 @@ out_of_scope_changes:
 
 | 时间 | 步骤 | 实际修改 | 测试 | 风险/差异 |
 |---|---|---|---|---|
-|  |  |  |  |  |
+| 2026-08-25 07:35 UTC | Step 1 — EXTRACTION_SYSTEM_PROMPT | 新增 Output schema 段（entities/memories 字段列表 + JSON 示例）与 Critical field rules | U1–U5 pending | 无 |
+| 2026-08-25 07:35 UTC | Step 2 — SCHEMA_CORRECTION_INSTRUCTION | 强化 entities 必填、memory_type not category、xor/non-event 规则 | U6 pending | 无 |
+| 2026-08-25 07:35 UTC | Step 3 — prompt_version v3 | configs/base.yaml + MemoryExtractionSettings 默认 memory_extraction_v3 | U7/C7 pending | 无 |
+| 2026-08-25 07:35 UTC | Step 4–6 — 测试 | C7/C11 contract；U1–U7 unit；新建 test_extraction_schema_correction_prompt.py | 32 passed | validate_extraction_payload 零 diff |
+| 2026-08-25 07:35 UTC | scoped 验证 | ruff + mypy scoped files | PASS | 无 |
 
 ## 14. 实际执行结果
 
@@ -391,7 +395,13 @@ out_of_scope_changes:
 
 | 文件 | 结果 |
 |---|---|
-|  |  |
+| `src/memory_system/domain/services/extraction_llm_service.py` | Output schema + Critical field rules in EXTRACTION_SYSTEM_PROMPT; strengthened SCHEMA_CORRECTION_INSTRUCTION |
+| `configs/base.yaml` | prompt_version memory_extraction_v3 |
+| `src/memory_system/settings/models.py` | MemoryExtractionSettings.prompt_version default v3 |
+| `tests/contract/test_ext003_contract.py` | C7 v3; C11 schema/correction assertions |
+| `tests/unit/test_extraction_system_prompt.py` | U1–U5 output schema + field rules + EXT-010 preserved |
+| `tests/unit/test_extraction_schema_correction_prompt.py` | U6 correction retry keywords (new) |
+| `tests/unit/test_settings_loader.py` | prompt_version v3 assertion |
 
 ### 与原计划的差异
 
@@ -401,12 +411,11 @@ out_of_scope_changes:
 
 | 测试 | 命令 | 结果 |
 |---|---|---|
-| Unit |  |  |
-| Contract |  |  |
-| Integration |  |  |
-| E2E |  |  |
-| Ruff |  |  |
-| Mypy |  |  |
+| Unit + Contract | `uv run pytest tests/unit/test_extraction_system_prompt.py tests/unit/test_extraction_schema_correction_prompt.py tests/unit/test_settings_loader.py tests/contract/test_ext003_contract.py -q` | 32 passed |
+| Ruff | `uv run ruff check ...` (scoped files) | PASS |
+| Mypy | `uv run mypy src/memory_system/domain/services/extraction_llm_service.py src/memory_system/settings/models.py` | PASS |
+| Integration | — | 未新增 |
+| E2E | — | 未新增 |
 
 ### Review 结果
 
@@ -429,4 +438,4 @@ implementation_commit_message: null
 
 ### 最终状态
 
-`planned`
+`tested`
