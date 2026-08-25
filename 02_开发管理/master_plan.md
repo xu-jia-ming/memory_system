@@ -463,7 +463,8 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 | EXT-007 | Retrieval Document 同步 | §2.2.3, §2.2.4 | EXT-006, DEV-007, DEV-004 | completed |
 | EXT-008 | Extraction 管理 GET/Retry | §2.1.14 | EXT-007, DEV-005 | completed |
 | EXT-009 | Extraction E2E + 失败注入 | §2.1.15, §3.28 | EXT-008 | completed |
-| EXT-010 | Extraction Prompt 类型定义 | §2.1.2, §2.1.6 | EXT-003, EXT-009 | planned |
+| EXT-010 | Extraction Prompt 类型定义 | §2.1.2, §2.1.6 | EXT-003, EXT-009 | completed |
+| EXT-011 | Extraction Prompt Output Schema | §2.1.6, Appendix B | EXT-003, EXT-010 | planned |
 
 #### EXT-001
 
@@ -594,8 +595,19 @@ RET-006  → E2E 验证 EXT-007 同步结果可被 BM25/检索链路消费
 - **正式前置依赖**：EXT-003 — **SATISFIED/completed**；EXT-009 — **SATISFIED/completed**。
 - **依赖/Migration**：`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`。
 - **分支**：`feat/EXT-010-extraction-prompt-memory-type-definitions`。
-- **状态备注**：`planned`（Planner 2026-08-25；baseline `94633ef85ca613f90b66518ce8dfcf96a7eebe21`；working tree dirty — 实施前须干净 feat 分支；`next_action=计划审查`；不得触碰 DEV-006/PR#13）。
+- **状态备注**：`completed`（PR #67 MERGED `1ccd78a7c96e9908ebdb86a1ceb65729848029b0` mergedAt `2026-08-25T07:01:02Z`；implementation `ce6de2e16dd560e8b07ad807f7d68cd133926cc5`；scoped 52 passed；ruff/mypy PASS；CODE_REVIEW_APPROVED P0=0 P1=0 P2=0；§2.1.2 memory type definitions + prompt_version v2；feat 分支已删；不得触碰 DEV-006/PR#13）。
 - **测试**：Unit（prompt 分类规则 + settings v2）；Contract（EXT-003 C7/C11 更新）。
+
+#### EXT-011 Extraction Prompt Output Schema
+
+- **目标**：在 `EXTRACTION_SYSTEM_PROMPT` 嵌入 §2.1.6 Output Schema（`entities` + `memories` 字段清单与示例）及 xor/event-null/enum 关键规则；强化 `SCHEMA_CORRECTION_INSTRUCTION`（`entities` 必填、`memory_type` 非 `category`）；`prompt_version` 升至 `memory_extraction_v3`；Contract/Unit 测试覆盖；**零** `validate_extraction_payload` 变更。
+- **非目标**：Schema/API/error code 变更；user prompt 模板变更；validation/fingerprint/pipeline 语义变更；规格正文修改；依赖/Migration；LoCoMo/debug 脚本。
+- **计划文件**：`02_开发管理/tasks/EXT-011-extraction-prompt-output-schema.md`
+- **正式前置依赖**：EXT-003 — **SATISFIED/completed**；EXT-010 — **SATISFIED/completed**（PR #67 MERGED）。
+- **依赖/Migration**：`dependency_changes_expected=NONE`；`migration_changes_expected=NONE`。
+- **分支**：`feat/EXT-011-extraction-prompt-output-schema`。
+- **状态备注**：`planned`（Planner 2026-08-25；baseline `f161952b8669f6bacab06d953cafdc588a4679bb`；working tree dirty — 实施前须干净 feat 分支；investigation 证实缺 Output Schema 时 deepseek-v4-flash 易幻觉 `category`/缺 `entities`；`next_action=计划审查`；不得触碰 DEV-006/PR#13）。
+- **测试**：Unit（output schema + field rules + correction prompt + settings v3）；Contract（EXT-003 C7/C11 更新）。
 
 ---
 
